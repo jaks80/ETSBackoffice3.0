@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : bean-hibernate.xml
+    Created on : 21 September 2010, 23:32
+    Author     : Yusuf
+    Description:
+        Purpose of the document follows.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+    <tx:annotation-driven />
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="configLocation" value="classpath:META-INF/hibernate.cfg.xml" />
+        <property name="annotatedClasses">
+            <list>
+                <value>etsbackoffice.domain.AppSettings</value>
+                <value>etsbackoffice.domain.AcTransaction</value>
+                <value>etsbackoffice.domain.BillingTransaction</value>
+                <value>etsbackoffice.domain.BatchBillingTransaction</value>
+                <value>etsbackoffice.domain.Accounts</value>               
+                <value>etsbackoffice.domain.AccountingDocument</value>
+                <value>etsbackoffice.domain.PurchaseAccountingDocument</value>
+                <value>etsbackoffice.domain.Agent</value>
+                <value>etsbackoffice.domain.Career</value>
+                <value>etsbackoffice.domain.ContactInfo</value>
+                <value>etsbackoffice.domain.Contactable</value>
+                <value>etsbackoffice.domain.Customer</value>
+                <value>etsbackoffice.domain.GDS</value>
+                <value>etsbackoffice.domain.User</value>
+                <value>etsbackoffice.domain.Itinerary</value>
+                <value>etsbackoffice.domain.MasterAgent</value>
+                <value>etsbackoffice.domain.OAccountingDocument</value>
+                <value>etsbackoffice.domain.OAccountingDocumentLine</value>
+                <value>etsbackoffice.domain.OfficeID</value>
+                <value>etsbackoffice.domain.OtherService</value>
+                <value>etsbackoffice.domain.PNR</value>
+                <value>etsbackoffice.domain.PNRRemark</value>
+                <value>etsbackoffice.domain.AccountingDocumentLine</value>
+                <value>etsbackoffice.domain.PurchaseAccountingDocumentLine</value>
+                <value>etsbackoffice.domain.Services</value>
+                <value>etsbackoffice.domain.Ticket</value>
+                <value>etsbackoffice.domain.TicketRefundDetails</value>
+                <value>etsbackoffice.domain.BatchTransaction</value>
+                <value>etsbackoffice.domain.PNRLog</value>
+                <value>etsbackoffice.domain.Vendor</value>
+                <value>etsbackoffice.domain.UserRole</value>
+
+            </list>
+        </property>
+    </bean>
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+        <property name="sessionFactory" ref ="sessionFactory"/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+  <!--sessionFactory will get autowired-->
+    <bean id="hibernateInterceptor" class="org.springframework.orm.hibernate3.HibernateInterceptor">
+        <property name="sessionFactory" ref = "sessionFactory"/>
+    </bean>
+
+<!--sessionFactory will get autowired-->
+    <bean id="mAgentDaoTarget" class="etsbackoffice.datalogic.HibernateMAgentDao" autowire="byName">
+        <property name="sessionFactory" ref = "sessionFactory"/>
+    </bean>
+    
+    <bean id="mAgentDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>etsbackoffice.datalogic.MAgentDao</value>
+        </property>
+
+        <property name="interceptorNames">
+            <list>
+                <value>hibernateInterceptor</value>
+                <value>mAgentDaoTarget</value>
+            </list>
+
+        </property>
+    </bean>
+    
+    <bean id="agentDaoTarget" class="etsbackoffice.datalogic.HibernateAgentDao" autowire="byName">
+        <property name="sessionFactory" ref = "sessionFactory"/>
+    </bean>
+    
+    <bean id="agentDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>etsbackoffice.datalogic.AgentDao</value>
+        </property>
+
+        <property name="interceptorNames">
+            <list>
+                <value>hibernateInterceptor</value>
+                <value>agentDaoTarget</value>
+            </list>
+
+        </property>
+    </bean>
+    
+    <bean id="pnrDaoTarget" class="etsbackoffice.datalogic.HibernatePNRDao" autowire="byName">
+        <property name="sessionFactory" ref = "sessionFactory"/>
+    </bean>
+
+    <bean id="pnrDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>etsbackoffice.datalogic.PNRDao</value>
+        </property>
+
+        <property name="interceptorNames">
+            <list>
+                <value>hibernateInterceptor</value>
+                <value>pnrDaoTarget</value>
+            </list>
+
+        </property>
+        
+    </bean>
+    
+    <bean id="ticketDaoTarget" class="etsbackoffice.datalogic.HibernateTicketDao" autowire="byName">
+        <property name="sessionFactory" ref = "sessionFactory"/>
+    </bean>
+    
+    <bean id="ticketDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>etsbackoffice.datalogic.TicketDao</value>
+        </property>
+
+        <property name="interceptorNames">
+            <list>
+                <value>hibernateInterceptor</value>
+                <value>ticketDaoTarget</value>
+            </list>
+
+        </property>
+    </bean>
+    
+    <bean id="acDocDaoTarget" class="etsbackoffice.datalogic.HibernateAcDocDao" autowire="byName">
+        <property name="sessionFactory" ref = "sessionFactory"/>
+    </bean>
+    
+    <bean id="acDocDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>etsbackoffice.datalogic.AcDocDao</value>
+        </property>
+
+        <property name="interceptorNames">
+            <list>
+                <value>hibernateInterceptor</value>
+                <value>acDocDaoTarget</value>
+            </list>
+
+        </property>
+    </bean>
+    
+ 
+<!--******************************Mapping HibernateDao Beans***********************************-->    
+
+    <bean name="authenticationDao" class="etsbackoffice.datalogic.HibernateAuthenticationDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean name="userDao" class="etsbackoffice.datalogic.HibernateUserDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean name="contactableDao" class="etsbackoffice.datalogic.HibernateContactableDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean name="customerDao" class="etsbackoffice.datalogic.HibernateCustomerDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean name="officeIDDao" class="etsbackoffice.datalogic.HibernateOfficeIDDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean name="careerDao" class="etsbackoffice.datalogic.HibernateCareerDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean name="itineraryDao" class="etsbackoffice.datalogic.HibernateItineraryDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean name="acTransactionDao" class="etsbackoffice.datalogic.HibernateAcTransactionDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean name="reportDao" class="etsbackoffice.report.HibernateReportDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean name="oServiceDao" class="etsbackoffice.datalogic.HibernateOServiceDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean name="oAcDocDao" class="etsbackoffice.datalogic.HibernateOAcDocDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean name="accountsDao" class="etsbackoffice.datalogic.HibernateAccountsDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+<!--******************************Mapping Domain Beans***********************************-->
+
+    <bean id = "agent" class="etsbackoffice.domain.Agent" autowire = "byName">
+        <property name="createdBy" ref="user" />
+        <property name="lastModifiedBy" ref="user" />
+        <property name="officeIDs" ref="officeID" />
+    </bean>
+
+    <bean id = "vendor" class="etsbackoffice.domain.Vendor" autowire = "byName">
+        <property name="createdBy" ref="user" />
+        <property name="lastModifiedBy" ref="user" />        
+    </bean>
+    
+    <bean id = "customer" class="etsbackoffice.domain.Customer" autowire = "byName">
+        <property name="createdBy" ref="user" />
+        <property name="lastModifiedBy" ref="user" />
+    </bean>
+
+    <bean id = "contactable" class="etsbackoffice.domain.Contactable" autowire = "byName">        
+        <property name="accounts" ref="accounts" />        
+    </bean>
+
+
+    <bean id = "mAgent" class="etsbackoffice.domain.MasterAgent" autowire = "byName">
+        <!--<property name="officeIDs" ref="officeID" />-->
+        <property name="createdBy" ref="user" />
+        <property name="lastModifiedBy" ref="user" />
+    </bean>
+
+    <bean id = "officeID" class="etsbackoffice.domain.OfficeID" autowire = "byName">
+        <property name="agent" ref="agent" />
+        <property name="gds" ref="gds" />
+    </bean>
+
+    <bean id = "user" class="etsbackoffice.domain.User" autowire = "byName">
+        <property name="createdBy" ref="user" />
+        <property name="lastModifiedBy" ref="user" />
+        <property name="userRole" ref="userRole" />
+    </bean>
+
+    <bean id = "gds" class="etsbackoffice.domain.GDS" autowire = "byName">
+        <!--<property name="officeIDs" ref="officeID" />-->
+    </bean>
+
+    <bean id = "date" class="java.util.Date" autowire = "byType"></bean>
+
+    <bean id = "career" class="etsbackoffice.domain.Career" autowire = "byName">
+        <!--<property name="officeIDs" ref="officeID" />-->
+    </bean>
+
+    <bean id = "pnr" class="etsbackoffice.domain.PNR" autowire = "byName">
+        <!--<property name="officeIDs" ref="officeID" />-->
+        <property name="accountingDocuments" ref="accountingDocument" />
+        <property name="purchaseAccountingDocuments" ref="purchaseAccountingDocument" />
+        <property name="tickets" ref="ticket" />
+        <property name="services" ref="services" />
+        <property name="leadPax" ref="ticket" />
+        <property name="agent" ref="agent" />
+        <property name="customer" ref="customer" />
+        <property name="segments" ref="itinerary" />
+        <property name="gds" ref="gds" />
+        <property name="acTransactions" ref="acTransaction" />
+        <property name="billingTransactions" ref="billingTransaction" />
+    </bean>
+
+    <bean id = "pnrremark" class="etsbackoffice.domain.PNRRemark" autowire = "byName">
+        <property name="pnr" ref="pnr" />
+    </bean>
+
+    <bean id = "ticket" class="etsbackoffice.domain.Ticket" autowire = "byName">
+        <property name="pnr" ref="pnr" />
+        <property name="ticketRefundDetails" ref="ticketRefundDetails" />
+        
+        <property name="segments" ref="itinerary" />
+        <property name="accountingDocumentLine" ref="accountingDocumentLine" />
+        <property name="purchaseAccountingDocumentLine" ref="purchaseAccountingDocumentLine" />
+    </bean>
+
+    <bean id = "services" class="etsbackoffice.domain.Services" autowire = "byName">
+        <property name="pnr" ref="pnr" />
+        <property name="accountingDocumentLine" ref="accountingDocumentLine" />
+        <property name="otherService" ref="otherService" />
+    </bean> 
+    
+    <bean id = "ticketRefundDetails" class="etsbackoffice.domain.TicketRefundDetails" autowire = "byName">
+        <!--<property name="officeIDs" ref="officeID" />-->
+    </bean>
+
+    <bean id = "itinerary" class="etsbackoffice.domain.Itinerary" autowire = "byName">
+        <property name="tickets" ref="ticket" />
+    </bean>
+
+    <bean id = "accountingDocument" class="etsbackoffice.domain.AccountingDocument" autowire = "byName">
+        <property name="acDocIssuedBy" ref="user" />
+        <property name="acDocModifiedBy" ref="user" />
+        <property name="pnr" ref="pnr" />
+        <property name="accountingDocumentLines" ref="accountingDocumentLine" />
+        <property name="acTransactions" ref="acTransaction" />
+        <property name="purchaseAccountingDocuments" ref="purchaseAccountingDocument" />
+        <property name="accounts" ref="accounts" />
+    </bean>
+
+
+    <bean id = "otherService" class="etsbackoffice.domain.OtherService" autowire = "byName" >
+    </bean>
+    
+    <bean id = "oAccountingDocument" class="etsbackoffice.domain.OAccountingDocument" autowire = "byName">
+        <property name="acDocIssuedBy" ref="user" />
+        <property name="acDocModifiedBy" ref="user" />
+        <property name="oAccountingDocumentLines" ref="oAccountingDocumentLine" />
+        <property name="acTransactions" ref="acTransaction" />        
+    </bean>
+
+    <bean id = "oAccountingDocumentLine" class="etsbackoffice.domain.OAccountingDocumentLine" autowire = "byName" >
+        <property name="oAccountingDocument" ref="oAccountingDocument" />
+        <property name="otherService" ref="otherService" />
+    </bean>
+
+    <bean id = "accountingDocumentLine" class="etsbackoffice.domain.AccountingDocumentLine" autowire = "byName" >
+        <property name="accountingDocument" ref="accountingDocument" />
+        <property name="services" ref="services" />
+        <property name="tickets" ref="ticket" />
+    </bean>
+
+    <bean id = "acTransaction" class="etsbackoffice.domain.AcTransaction" autowire = "byName">
+        <property name="accountingDocument" ref="accountingDocument" />
+        <property name="oAccountingDocument" ref="oAccountingDocument" />
+        <property name="pnr" ref="pnr" />
+        <property name="batchTransaction" ref="batchTransaction" />
+        <property name="accounts" ref="accounts" />        
+    </bean>
+
+    <bean id = "batchTransaction" class="etsbackoffice.domain.BatchTransaction" autowire = "byName">
+        <property name="acTransactions" ref="acTransaction" />
+    </bean>
+
+    <bean id = "batchBillingTransaction" class="etsbackoffice.domain.BatchBillingTransaction" autowire = "byName">
+        <property name="billingTransactions" ref="billingTransaction" />
+        <property name="billingBy" ref="user" />
+        <property name="vendor" ref="agent" />        
+    </bean>
+
+    <bean id = "purchaseAccountingDocument" class="etsbackoffice.domain.PurchaseAccountingDocument" autowire = "byName">
+        <property name="acDocModifiedBy" ref="user" />
+        <property name="pnr" ref="pnr" />
+        <property name="purchaseAcDocLines" ref="purchaseAccountingDocumentLine" />
+        <property name="billingTransactions" ref="billingTransaction" />
+        <property name="accountingDocuments" ref="accountingDocument" />
+        <property name="accounts" ref="accounts" />
+    </bean>
+
+    <bean id = "purchaseAccountingDocumentLine" class="etsbackoffice.domain.PurchaseAccountingDocumentLine" autowire = "byName" >
+        <property name="purchaseAccountingDocument" ref="purchaseAccountingDocument" />
+        <property name="tickets" ref="ticket" />
+    </bean>
+    
+    <bean id = "billingTransaction" class="etsbackoffice.domain.BillingTransaction" autowire = "byName">
+        <property name="purchaseAccountingDocument" ref="purchaseAccountingDocument" />
+        <property name="pnr" ref="pnr" />
+        <property name="batchBillingTransaction" ref="batchBillingTransaction" />
+        <property name="accounts" ref="accounts" />
+    </bean>
+
+    <bean id = "pnrLog" class="etsbackoffice.domain.PNRLog" autowire = "byName">
+        <property name="pnr" ref="pnr" />
+        <property name="user" ref="user" />
+    </bean>
+
+    <bean id = "userRole" class="etsbackoffice.domain.UserRole" autowire = "byName">
+    </bean>
+    
+    <bean id = "appSettings" class="etsbackoffice.domain.AppSettings" autowire = "byName">
+    </bean>
+    
+    <bean id = "accounts" class="etsbackoffice.domain.Accounts" autowire = "byName">
+        <property name="accountingDocument" ref="accountingDocument" />
+        <property name="oAccountingDocument" ref="oAccountingDocument" />     
+        <property name="purchaseAccountingDocument" ref="purchaseAccountingDocument" />
+        <property name="acTransaction" ref="acTransaction" />   
+        <property name="billingTransaction" ref="billingTransaction" />
+        <property name="contactable" ref="contactable" />   
+    </bean>    
+   
+<!--***************************Business Object Beans*********************************-->
+
+    <bean name = "userBo" class="etsbackoffice.businesslogic.UserBo" autowire = "byName">
+        <property name="user" ref="user" />
+        <property name="userDao" ref="userDao" />
+    </bean>
+
+    <bean name = "authenticationBo" class="etsbackoffice.businesslogic.AuthenticationBo" autowire = "byName">
+        <property name="authenticationDao" ref="authenticationDao" />             
+    </bean>
+
+
+    <bean id = "mAgentBo" class="etsbackoffice.businesslogic.MAgentBo" autowire = "byName">
+        <property name="mAgent" ref="mAgent" />
+        <property name="mAgentDao" ref="mAgentDao" />
+    </bean>
+
+    <bean id = "agentBo" class="etsbackoffice.businesslogic.AgentBo" autowire = "byName" >
+        <property name="agent" ref="agent" />
+        <property name="agentDao" ref="agentDao" />
+    </bean>
+    
+    <bean id = "vendorBo" class="etsbackoffice.businesslogic.VendorBo" autowire = "byName" >
+        <property name="vendor" ref="vendor" />
+        <property name="contactableDao" ref="contactableDao" />
+    </bean>
+    
+    <bean id = "customerBo" class="etsbackoffice.businesslogic.CustomerBo" autowire = "byName" >
+        <property name="customer" ref="customer" />
+        <property name="customerDao" ref="customerDao" />
+    </bean>
+    
+    <bean id = "pnrBo" class="etsbackoffice.businesslogic.PNRBo" autowire = "byName">
+        <property name="pnr" ref="pnr" />
+        <property name="pnrDao" ref="pnrDao" />
+        <property name="ticketDao" ref="ticketDao" />
+    </bean>
+
+    <bean id = "itineraryBo" class="etsbackoffice.businesslogic.ItineraryBo" autowire = "byName">
+        <property name="itineraryDao" ref="itineraryDao" />
+        <property name="itinerary" ref="itinerary" />
+    </bean>
+
+    <bean id = "ticketBo" class="etsbackoffice.businesslogic.TicketBo" autowire = "byName">
+        <property name="ticket" ref="ticket" />
+        <property name="ticketDao" ref="ticketDao" />
+    </bean>
+
+    <bean id = "acDocBo" class="etsbackoffice.businesslogic.AccountingDocBo" autowire = "byName">
+        <property name="accountingDocument" ref="accountingDocument" />
+        <property name="purchaseAccountingDocument" ref="purchaseAccountingDocument" />
+        <property name="acDocDao" ref="acDocDao" />
+        <property name="accountsBo" ref="accountsBo" />
+    </bean>
+
+    <bean id = "oAcDocBo" class="etsbackoffice.businesslogic.OAccountingDocBo" autowire = "byName">
+        <property name="oAcDocDao" ref="oAcDocDao" />
+    </bean>
+
+    <bean id = "acTransactionBo" class="etsbackoffice.businesslogic.AcTransactionBo" autowire = "byName">
+        <property name="acTrans" ref="acTransaction" />
+        <property name="bTrans" ref="billingTransaction" />
+        <property name="acTransDao" ref="acTransactionDao" />
+    </bean>
+
+    <bean id = "careerBo" class="etsbackoffice.businesslogic.CareerBo" autowire = "byName">
+        <property name="careerDao" ref="careerDao" />
+    </bean>
+
+    <bean id = "reportBo" class="etsbackoffice.businesslogic.ReportBo" autowire = "byName">
+        <property name="reportDao" ref="reportDao" />
+    </bean>
+
+    <bean id = "oServiceBo" class="etsbackoffice.businesslogic.OServiceBo" autowire = "byName">
+        <property name="oServiceDao" ref="oServiceDao" />
+    </bean>
+
+    <bean id = "accountsBo" class="etsbackoffice.businesslogic.AccountsBo" autowire = "byName">
+        <property name="accounts" ref="accounts" />
+        <property name="accountsDao" ref="accountsDao" />     
+    </bean>
+
+</beans>

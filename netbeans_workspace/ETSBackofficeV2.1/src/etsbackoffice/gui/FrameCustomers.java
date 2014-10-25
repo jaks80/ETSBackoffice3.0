@@ -1,0 +1,857 @@
+package etsbackoffice.gui;
+
+import etsbackoffice.ETSBackofficeApp;
+import etsbackoffice.businesslogic.CustomerBo;
+import etsbackoffice.domain.Customer;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JProgressBar;
+import javax.swing.table.DefaultTableModel;
+import org.jdesktop.application.Action;
+
+/**
+ *
+ * @author Yusuf
+ */
+public class FrameCustomers extends javax.swing.JFrame{
+
+    private Customer customer;
+    private List<Customer> customers = new ArrayList();
+    private CustomerBo customerBo = (CustomerBo) ETSBackofficeApp.getApplication().ctx.getBean("customerBo");
+    private DefaultTableModel customerModel;
+
+    public FrameCustomers(java.awt.Frame parent) {
+        initComponents();        
+    }    
+
+    @Action
+    public void search() {
+        String element="";
+        int type=0;
+        if (!txtName.getText().equals("")) {
+            element = txtName.getText();
+            type = 1;
+        } else if (!txtPostCode.getText().equals("")) {
+            element = txtPostCode.getText();
+            type = 2;
+        } else if (!txtTelNo.getText().equals("")) {
+            element = txtTelNo.getText();
+            type = 3;
+        }else{
+        element = "";
+        type=0;
+        }
+        if (!element.isEmpty()) {
+            new Thread(new threadSearchCustomer(element, type)).start();
+        }else{
+        new Thread(new threadLoadAllCustomer()).start();
+        }
+    }
+
+    @Action
+    public void loadAllCustomer(){
+    new Thread(new threadLoadAllCustomer()).start();
+    }
+    @Action
+    public void newCustomer() {
+        customerBo = (CustomerBo) ETSBackofficeApp.getApplication().ctx.getBean("customerBo");
+        customer = new Customer();
+
+        FrameCustomer frameCustomer = new FrameCustomer(this);
+        frameCustomer.setTitle("New Customer");
+        if (frameCustomer.showCustomerDialog(customer)) {
+            Thread t = new Thread(new threadSaveCustomer());
+            t.start();
+            try {
+                t.join();
+                
+                new Thread(new threadSearchCustomer(customer.getSurName()+"/"+customer.getForeName(),1)).start();
+            } catch (InterruptedException e) {
+                // Thread was interrupted
+            }
+        }
+    }
+
+    @Action
+    public void editcustomer() {
+        if (tblCustomer.getSelectedRow() != -1) {
+            customer = customers.get(tblCustomer.getSelectedRow());
+            FrameCustomer frameCustomer = new FrameCustomer(this);
+            frameCustomer.setTitle("Edit Customer");
+            if (frameCustomer.showCustomerDialog(customer)) {
+                Thread t = new Thread(new threadSaveCustomer());
+                t.start();
+                try {
+                    t.join();                    
+                    new Thread(new threadSearchCustomer(customer.getSurName()+"/"+customer.getForeName(),1)).start();
+                } catch (InterruptedException e) {
+                    // Thread was interrupted
+                }
+            }
+        }
+    }
+
+    private void populateTblCustomer(List<Customer> customers) {
+        customerModel = (DefaultTableModel) tblCustomer.getModel();
+        customerModel.getDataVector().removeAllElements();
+        tblCustomer.repaint();
+        if (customers.size() > 0) {
+            for (int i = 0; i < customers.size(); i++) {
+                //customer = new Customer();
+                customer = customers.get(i);
+                customerModel.insertRow(i, new Object[]{i+1,customer.getContactableId(), customer.getSurName() + "/" + customer.getForeName(),
+                            customer.getAddLine1(), customer.getPostCode(), customer.getTelNo(), customer.getEmail()});
+            }
+        }
+    }
+
+    private void populateCustomerDetails(Customer customer) {
+
+        txtTelNo1.setText(customer.getTelNo1());
+        txtMobile.setText(customer.getMobile());
+        txtFax.setText(customer.getFax());
+
+        txtCreatedBy.setText(customer.getCreatedBy().getSurName());
+        txtCreatedOn.setText(String.valueOf(customer.getCreatedOn()));
+        if (customer.getAddLine1() != null) {
+            txtAddress.setText(customer.getAddLine1() + '\n');
+        }
+        if (customer.getAddLine2() != null) {
+            txtAddress.append(customer.getAddLine2() + '\n');
+        }
+        if (customer.getCity() != null) {
+            txtAddress.append(customer.getCity() + '\n');
+        }
+        if (customer.getProvince() != null) {
+            txtAddress.append(customer.getProvince() + '\n');
+        }
+        if (customer.getPostCode() != null) {
+            txtAddress.append(customer.getPostCode() + '\n');
+        }
+    }
+
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        toolBar = new javax.swing.JToolBar();
+        btnNew = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnLoadAll = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        splitPaneMain = new javax.swing.JSplitPane();
+        searchPanel = new javax.swing.JPanel();
+        lblName = new javax.swing.JLabel();
+        lblPostCode = new javax.swing.JLabel();
+        lblTelNo = new javax.swing.JLabel();
+        btnSearch = new javax.swing.JButton();
+        txtName = new javax.swing.JTextField();
+        txtPostCode = new javax.swing.JTextField();
+        txtTelNo = new javax.swing.JTextField();
+        splitPane1 = new javax.swing.JSplitPane();
+        jPanel1 = new javax.swing.JPanel();
+        lblCreatedBy = new javax.swing.JLabel();
+        lblCreatedOn = new javax.swing.JLabel();
+        lblLastModified = new javax.swing.JLabel();
+        lblLastModifiedBy = new javax.swing.JLabel();
+        txtCreatedBy = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        jTextField4 = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtRemark = new javax.swing.JTextArea();
+        txtCreatedOn = new javax.swing.JTextField();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtAddress = new javax.swing.JTextArea();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        lblTelNo1 = new javax.swing.JLabel();
+        txtTelNo1 = new javax.swing.JTextField();
+        lblMobile = new javax.swing.JLabel();
+        lblFax = new javax.swing.JLabel();
+        txtMobile = new javax.swing.JTextField();
+        txtFax = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblCustomer = new javax.swing.JTable();
+        statusPanel = new javax.swing.JPanel();
+        statusMessageLabel = new javax.swing.JLabel();
+        progressBar = new javax.swing.JProgressBar();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(etsbackoffice.ETSBackofficeApp.class).getContext().getResourceMap(FrameCustomers.class);
+        setTitle(resourceMap.getString("Form.title")); // NOI18N
+        setMinimumSize(new java.awt.Dimension(800, 550));
+        setName("Form"); // NOI18N
+        getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        toolBar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        toolBar.setRollover(true);
+        toolBar.setName("toolBar"); // NOI18N
+
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(etsbackoffice.ETSBackofficeApp.class).getContext().getActionMap(FrameCustomers.class, this);
+        btnNew.setAction(actionMap.get("newCustomer")); // NOI18N
+        btnNew.setFont(resourceMap.getFont("jButton3.font")); // NOI18N
+        btnNew.setIcon(resourceMap.getIcon("btnNew.icon")); // NOI18N
+        btnNew.setText(resourceMap.getString("btnNew.text")); // NOI18N
+        btnNew.setFocusable(false);
+        btnNew.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        btnNew.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnNew.setName("btnNew"); // NOI18N
+        toolBar.add(btnNew);
+
+        btnEdit.setAction(actionMap.get("editcustomer")); // NOI18N
+        btnEdit.setFont(resourceMap.getFont("jButton3.font")); // NOI18N
+        btnEdit.setIcon(resourceMap.getIcon("btnEdit.icon")); // NOI18N
+        btnEdit.setText(resourceMap.getString("btnEdit.text")); // NOI18N
+        btnEdit.setFocusable(false);
+        btnEdit.setName("btnEdit"); // NOI18N
+        toolBar.add(btnEdit);
+
+        btnLoadAll.setAction(actionMap.get("loadAllCustomer")); // NOI18N
+        btnLoadAll.setFont(resourceMap.getFont("btnLoadAll.font")); // NOI18N
+        btnLoadAll.setIcon(resourceMap.getIcon("btnLoadAll.icon")); // NOI18N
+        btnLoadAll.setText(resourceMap.getString("btnLoadAll.text")); // NOI18N
+        btnLoadAll.setFocusable(false);
+        btnLoadAll.setName("btnLoadAll"); // NOI18N
+        toolBar.add(btnLoadAll);
+
+        jButton3.setFont(resourceMap.getFont("jButton3.font")); // NOI18N
+        jButton3.setIcon(resourceMap.getIcon("jButton3.icon")); // NOI18N
+        jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
+        jButton3.setFocusable(false);
+        jButton3.setName("jButton3"); // NOI18N
+        toolBar.add(jButton3);
+
+        jButton4.setFont(resourceMap.getFont("jButton3.font")); // NOI18N
+        jButton4.setIcon(resourceMap.getIcon("jButton4.icon")); // NOI18N
+        jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
+        jButton4.setFocusable(false);
+        jButton4.setName("jButton4"); // NOI18N
+        toolBar.add(jButton4);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 0.1;
+        getContentPane().add(toolBar, gridBagConstraints);
+
+        splitPaneMain.setBorder(null);
+        splitPaneMain.setDividerLocation(230);
+        splitPaneMain.setDividerSize(4);
+        splitPaneMain.setMinimumSize(new java.awt.Dimension(241, 231));
+        splitPaneMain.setName("splitPaneMain"); // NOI18N
+
+        searchPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("searchPanel.border.title"))); // NOI18N
+        searchPanel.setName("searchPanel"); // NOI18N
+        searchPanel.setLayout(new java.awt.GridBagLayout());
+
+        lblName.setText(resourceMap.getString("lblName.text")); // NOI18N
+        lblName.setName("lblName"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        searchPanel.add(lblName, gridBagConstraints);
+
+        lblPostCode.setText(resourceMap.getString("lblPostCode.text")); // NOI18N
+        lblPostCode.setName("lblPostCode"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        searchPanel.add(lblPostCode, gridBagConstraints);
+
+        lblTelNo.setText(resourceMap.getString("lblTelNo.text")); // NOI18N
+        lblTelNo.setName("lblTelNo"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        searchPanel.add(lblTelNo, gridBagConstraints);
+
+        btnSearch.setAction(actionMap.get("search")); // NOI18N
+        btnSearch.setFont(resourceMap.getFont("btnSearch.font")); // NOI18N
+        btnSearch.setIcon(resourceMap.getIcon("btnSearch.icon")); // NOI18N
+        btnSearch.setText(resourceMap.getString("btnSearch.text")); // NOI18N
+        btnSearch.setName("btnSearch"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        searchPanel.add(btnSearch, gridBagConstraints);
+
+        txtName.setText(resourceMap.getString("txtName.text")); // NOI18N
+        txtName.setName("txtName"); // NOI18N
+        txtName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtNameFocusGained(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
+        searchPanel.add(txtName, gridBagConstraints);
+
+        txtPostCode.setText(resourceMap.getString("txtPostCode.text")); // NOI18N
+        txtPostCode.setName("txtPostCode"); // NOI18N
+        txtPostCode.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtPostCodeFocusGained(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
+        searchPanel.add(txtPostCode, gridBagConstraints);
+
+        txtTelNo.setText(resourceMap.getString("txtTelNo.text")); // NOI18N
+        txtTelNo.setName("txtTelNo"); // NOI18N
+        txtTelNo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtTelNoFocusGained(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
+        searchPanel.add(txtTelNo, gridBagConstraints);
+
+        splitPaneMain.setLeftComponent(searchPanel);
+
+        splitPane1.setBorder(null);
+        splitPane1.setDividerSize(4);
+        splitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        splitPane1.setResizeWeight(1.0);
+        splitPane1.setLastDividerLocation(200);
+        splitPane1.setName("splitPane1"); // NOI18N
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
+        jPanel1.setName("jPanel1"); // NOI18N
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+
+        lblCreatedBy.setText(resourceMap.getString("lblCreatedBy.text")); // NOI18N
+        lblCreatedBy.setName("lblCreatedBy"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(lblCreatedBy, gridBagConstraints);
+
+        lblCreatedOn.setText(resourceMap.getString("lblCreatedOn.text")); // NOI18N
+        lblCreatedOn.setName("lblCreatedOn"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(lblCreatedOn, gridBagConstraints);
+
+        lblLastModified.setText(resourceMap.getString("lblLastModified.text")); // NOI18N
+        lblLastModified.setName("lblLastModified"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(lblLastModified, gridBagConstraints);
+
+        lblLastModifiedBy.setText(resourceMap.getString("lblLastModifiedBy.text")); // NOI18N
+        lblLastModifiedBy.setName("lblLastModifiedBy"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(lblLastModifiedBy, gridBagConstraints);
+
+        txtCreatedBy.setBackground(resourceMap.getColor("jTextField3.background")); // NOI18N
+        txtCreatedBy.setEditable(false);
+        txtCreatedBy.setName("txtCreatedBy"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(txtCreatedBy, gridBagConstraints);
+
+        jTextField3.setBackground(resourceMap.getColor("jTextField3.background")); // NOI18N
+        jTextField3.setEditable(false);
+        jTextField3.setText(resourceMap.getString("jTextField3.text")); // NOI18N
+        jTextField3.setName("jTextField3"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(jTextField3, gridBagConstraints);
+
+        jTextField4.setBackground(resourceMap.getColor("jTextField3.background")); // NOI18N
+        jTextField4.setEditable(false);
+        jTextField4.setText(resourceMap.getString("jTextField4.text")); // NOI18N
+        jTextField4.setName("jTextField4"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(jTextField4, gridBagConstraints);
+
+        jScrollPane2.setName("jScrollPane2"); // NOI18N
+
+        txtRemark.setColumns(20);
+        txtRemark.setEditable(false);
+        txtRemark.setFont(resourceMap.getFont("txtRemark.font")); // NOI18N
+        txtRemark.setRows(5);
+        txtRemark.setName("txtRemark"); // NOI18N
+        jScrollPane2.setViewportView(txtRemark);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridheight = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(jScrollPane2, gridBagConstraints);
+
+        txtCreatedOn.setBackground(resourceMap.getColor("jTextField3.background")); // NOI18N
+        txtCreatedOn.setEditable(false);
+        txtCreatedOn.setName("txtCreatedOn"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(txtCreatedOn, gridBagConstraints);
+
+        jScrollPane3.setName("jScrollPane3"); // NOI18N
+
+        txtAddress.setColumns(20);
+        txtAddress.setEditable(false);
+        txtAddress.setFont(resourceMap.getFont("txtAddress.font")); // NOI18N
+        txtAddress.setRows(5);
+        txtAddress.setName("txtAddress"); // NOI18N
+        jScrollPane3.setViewportView(txtAddress);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridheight = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(jScrollPane3, gridBagConstraints);
+
+        jLabel9.setText(resourceMap.getString("jLabel9.text")); // NOI18N
+        jLabel9.setName("jLabel9"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 0.2;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(jLabel9, gridBagConstraints);
+
+        jLabel10.setText(resourceMap.getString("jLabel10.text")); // NOI18N
+        jLabel10.setName("jLabel10"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 0.3;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(jLabel10, gridBagConstraints);
+
+        lblTelNo1.setText(resourceMap.getString("lblTelNo1.text")); // NOI18N
+        lblTelNo1.setName("lblTelNo1"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(lblTelNo1, gridBagConstraints);
+
+        txtTelNo1.setBackground(resourceMap.getColor("jTextField3.background")); // NOI18N
+        txtTelNo1.setEditable(false);
+        txtTelNo1.setName("txtTelNo1"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 0.3;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(txtTelNo1, gridBagConstraints);
+
+        lblMobile.setText(resourceMap.getString("lblMobile.text")); // NOI18N
+        lblMobile.setName("lblMobile"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(lblMobile, gridBagConstraints);
+
+        lblFax.setText(resourceMap.getString("lblFax.text")); // NOI18N
+        lblFax.setName("lblFax"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(lblFax, gridBagConstraints);
+
+        txtMobile.setBackground(resourceMap.getColor("jTextField3.background")); // NOI18N
+        txtMobile.setEditable(false);
+        txtMobile.setName("txtMobile"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(txtMobile, gridBagConstraints);
+
+        txtFax.setBackground(resourceMap.getColor("jTextField3.background")); // NOI18N
+        txtFax.setEditable(false);
+        txtFax.setName("txtFax"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPanel1.add(txtFax, gridBagConstraints);
+
+        splitPane1.setRightComponent(jPanel1);
+
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
+
+        tblCustomer.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "", "ID", "Name", "Address", "PostCode", "TelNo", "Email"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblCustomer.setName("tblCustomer"); // NOI18N
+        tblCustomer.getTableHeader().setReorderingAllowed(false);
+        tblCustomer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCustomerMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblCustomer);
+        tblCustomer.getColumnModel().getColumn(0).setMinWidth(50);
+        tblCustomer.getColumnModel().getColumn(0).setPreferredWidth(50);
+        tblCustomer.getColumnModel().getColumn(0).setMaxWidth(50);
+        tblCustomer.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("tblCustomer.columnModel.title6")); // NOI18N
+        tblCustomer.getColumnModel().getColumn(1).setMinWidth(80);
+        tblCustomer.getColumnModel().getColumn(1).setPreferredWidth(80);
+        tblCustomer.getColumnModel().getColumn(1).setMaxWidth(80);
+        tblCustomer.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("tblCustomer.columnModel.title0")); // NOI18N
+        tblCustomer.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("tblCustomer.columnModel.title1")); // NOI18N
+        tblCustomer.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("tblCustomer.columnModel.title2")); // NOI18N
+        tblCustomer.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("tblCustomer.columnModel.title3")); // NOI18N
+        tblCustomer.getColumnModel().getColumn(5).setHeaderValue(resourceMap.getString("tblCustomer.columnModel.title4")); // NOI18N
+        tblCustomer.getColumnModel().getColumn(6).setHeaderValue(resourceMap.getString("tblCustomer.columnModel.title5")); // NOI18N
+
+        splitPane1.setLeftComponent(jScrollPane1);
+
+        splitPaneMain.setRightComponent(splitPane1);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        getContentPane().add(splitPaneMain, gridBagConstraints);
+
+        statusPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        statusPanel.setName("statusPanel"); // NOI18N
+        statusPanel.setLayout(new java.awt.GridBagLayout());
+
+        statusMessageLabel.setFont(resourceMap.getFont("statusMessageLabel.font")); // NOI18N
+        statusMessageLabel.setName("statusMessageLabel"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        statusPanel.add(statusMessageLabel, gridBagConstraints);
+
+        progressBar.setName("progressBar"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        statusPanel.add(progressBar, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        getContentPane().add(statusPanel, gridBagConstraints);
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void tblCustomerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCustomerMouseClicked
+        if (evt.getClickCount() == 2) {
+            int row = tblCustomer.getSelectedRow();
+
+            customer = customers.get(tblCustomer.getSelectedRow());
+            populateCustomerDetails(customers.get(row));
+        }
+    }//GEN-LAST:event_tblCustomerMouseClicked
+
+    private void txtNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNameFocusGained
+       txtName.setText("");
+       txtPostCode.setText("");
+       txtTelNo.setText("");
+    }//GEN-LAST:event_txtNameFocusGained
+
+    private void txtPostCodeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPostCodeFocusGained
+       txtName.setText("");
+       txtPostCode.setText("");
+       txtTelNo.setText("");
+    }//GEN-LAST:event_txtPostCodeFocusGained
+
+    private void txtTelNoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTelNoFocusGained
+       txtName.setText("");
+       txtPostCode.setText("");
+       txtTelNo.setText("");
+    }//GEN-LAST:event_txtTelNoFocusGained
+
+    /**
+     * @param args the command line arguments
+     */
+   /* public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(new Runnable()  {
+
+            public void run() {
+                new FrameCustomers().setVisible(true);
+            }
+        });
+    }*/
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnLoadAll;
+    private javax.swing.JButton btnNew;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
+    private javax.swing.JLabel lblCreatedBy;
+    private javax.swing.JLabel lblCreatedOn;
+    private javax.swing.JLabel lblFax;
+    private javax.swing.JLabel lblLastModified;
+    private javax.swing.JLabel lblLastModifiedBy;
+    private javax.swing.JLabel lblMobile;
+    private javax.swing.JLabel lblName;
+    private javax.swing.JLabel lblPostCode;
+    private javax.swing.JLabel lblTelNo;
+    private javax.swing.JLabel lblTelNo1;
+    private static javax.swing.JProgressBar progressBar;
+    private javax.swing.JPanel searchPanel;
+    private javax.swing.JSplitPane splitPane1;
+    private javax.swing.JSplitPane splitPaneMain;
+    private static javax.swing.JLabel statusMessageLabel;
+    private javax.swing.JPanel statusPanel;
+    private static javax.swing.JTable tblCustomer;
+    private javax.swing.JToolBar toolBar;
+    private javax.swing.JTextArea txtAddress;
+    private javax.swing.JTextField txtCreatedBy;
+    private javax.swing.JTextField txtCreatedOn;
+    private javax.swing.JTextField txtFax;
+    private javax.swing.JTextField txtMobile;
+    private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtPostCode;
+    private javax.swing.JTextArea txtRemark;
+    private javax.swing.JTextField txtTelNo;
+    private javax.swing.JTextField txtTelNo1;
+    // End of variables declaration//GEN-END:variables
+    public Object frameState = null;
+
+    public void windowOpened(WindowEvent e) {
+        frameState = "opened";
+    }
+
+    public void windowClosing(WindowEvent e) {
+        //frameState = "closing";
+    }
+
+    public void windowClosed(WindowEvent e) {
+        frameState = "closed";
+    }
+
+    public void windowIconified(WindowEvent e) {
+        frameState = "iconified";
+    }
+
+    public void windowDeiconified(WindowEvent e) {
+        frameState = "deiconified";
+    }
+
+    public void windowActivated(WindowEvent e) {
+        frameState = "activated";
+    }
+
+    public void windowDeactivated(WindowEvent e) {
+        frameState = "deactivated";
+    }
+    private long startTime;
+    private long stopTime;
+    private float elapsedTime;
+
+    public class threadSaveCustomer implements Runnable {
+
+        public threadSaveCustomer() {
+        }
+
+        public void run() {
+            progressBar = new JProgressBar();
+            progressBar.setIndeterminate(true); //Set value
+            progressBar.repaint(); //Refresh graphics
+            startTime = System.currentTimeMillis();
+
+            statusMessageLabel.setText("Saving customer...");
+            customerBo.setCustomer(customer);
+            customerBo.saveCustomer(customer);
+
+            statusMessageLabel.setText("Fetching New Data...");
+
+            stopTime = System.currentTimeMillis();
+            elapsedTime = (stopTime - startTime) / 1000;
+            statusMessageLabel.setText("Task Completed in: " + elapsedTime + " seconds");
+            progressBar.setIndeterminate(false);
+            progressBar.repaint(); //Refresh graphics
+        }
+    }
+
+    public class threadLoadAllCustomer implements Runnable {
+
+        public threadLoadAllCustomer() {
+        }
+
+        public void run() {
+
+            progressBar = new JProgressBar();
+            progressBar.setIndeterminate(true); //Set value
+            progressBar.repaint(); //Refresh graphics
+            startTime = System.currentTimeMillis();
+
+            statusMessageLabel.setText("Loading Agents...");
+            customers = customerBo.loadAll();
+
+            statusMessageLabel.setText("Populating Agents...");
+            populateTblCustomer(customers);
+
+            stopTime = System.currentTimeMillis();
+            elapsedTime = stopTime - startTime;
+            statusMessageLabel.setText("Task Completed in: " + elapsedTime / 1000 + " seconds");
+            progressBar.setIndeterminate(false);
+            progressBar.repaint(); //Refresh graphics
+        }
+    }
+           private class threadSearchCustomer implements Runnable {
+
+        String element;
+        int type;
+
+        public threadSearchCustomer(String element, int type) {
+            this.element = element;
+            this.type = type;
+        }
+
+        public void run() {
+
+            progressBar = new JProgressBar();
+            String message="";
+            progressBar.setIndeterminate(true); //Set value
+            progressBar.repaint(); //Refresh graphics
+            startTime = System.currentTimeMillis();
+
+            statusMessageLabel.setText("Searching customer...");
+            customers = customerBo.findCustomer(element, type);
+
+            if(customers.size()>0){
+            statusMessageLabel.setText("Populating result...");
+            populateTblCustomer(customers);
+            }else{
+            message = "No customer found...";
+            }
+            
+            stopTime = System.currentTimeMillis();
+            elapsedTime = (stopTime - startTime);
+            statusMessageLabel.setText(message+" Task Completed in: " + elapsedTime / 1000 + " seconds");
+            progressBar.setIndeterminate(false);
+            progressBar.repaint(); //Refresh graphics
+        }
+    }
+
+}

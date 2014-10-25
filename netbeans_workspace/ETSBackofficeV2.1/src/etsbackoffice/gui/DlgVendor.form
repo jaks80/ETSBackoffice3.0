@@ -1,0 +1,875 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="2"/>
+    <Property name="title" type="java.lang.String" resourceKey="title"/>
+    <Property name="name" type="java.lang.String" value="aboutBox" noResource="true"/>
+    <Property name="resizable" type="boolean" value="false"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="2"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <Component id="jPanel2" min="-2" pref="368" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="10" pref="10" max="10" attributes="0"/>
+                      <Component id="btnSave" min="-2" pref="80" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="btnClose" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="lblInfo" alignment="1" min="-2" pref="280" max="-2" attributes="1"/>
+                  <Component id="jLabel4" alignment="0" min="-2" pref="150" max="-2" attributes="1"/>
+                  <Component id="jSeparator1" alignment="0" max="32767" attributes="1"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jPanel2" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="lblInfo" min="-2" pref="17" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
+                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="btnSave" min="-2" pref="25" max="-2" attributes="0"/>
+                          <Component id="btnClose" min="-2" pref="25" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Container class="javax.swing.JPanel" name="jPanel2">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Vendor">
+              <Property name="titleX" resourceKey="jPanel2.border.title"/>
+            </TitledBorder>
+          </Border>
+        </Property>
+        <Property name="name" type="java.lang.String" value="jPanel2" noResource="true"/>
+      </Properties>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblName">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblName.text"/>
+            <Property name="name" type="java.lang.String" value="lblName" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="0" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtName">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+            <Property name="name" type="java.lang.String" value="txtName" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtNameActionPerformed"/>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtNameFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtNameFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNameKeyPressed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="0" gridWidth="4" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="1.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblAddress">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblAddress.text"/>
+            <Property name="name" type="java.lang.String" value="lblAddress" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="2" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblTelNo1">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblTelNo1.text"/>
+            <Property name="name" type="java.lang.String" value="lblTelNo1" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="8" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtTelNo">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+            <Property name="name" type="java.lang.String" value="txtTelNo" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 20]"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtTelNoFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtTelNoFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtTelNoKeyPressed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="8" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="0.4" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblTelNo2">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblTelNo2.text"/>
+            <Property name="name" type="java.lang.String" value="lblTelNo2" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="9" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtTelNo1">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+            <Property name="name" type="java.lang.String" value="txtTelNo1" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 20]"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtTelNo1FocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtTelNo1FocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtTelNo1KeyPressed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="9" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="0.4" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblFax">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblFax.text"/>
+            <Property name="name" type="java.lang.String" value="lblFax" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="10" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblMobile">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblMobile.text"/>
+            <Property name="name" type="java.lang.String" value="lblMobile" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="11" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblWeb">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblWeb.text"/>
+            <Property name="name" type="java.lang.String" value="lblWeb" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="13" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblIATA">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblIATA.text"/>
+            <Property name="name" type="java.lang.String" value="lblIATA" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="14" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblATOL">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblATOL.text"/>
+            <Property name="name" type="java.lang.String" value="lblATOL" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="7" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblRemark">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblRemark.text"/>
+            <Property name="name" type="java.lang.String" value="lblRemark" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="15" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblEmail">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblEmail.text"/>
+            <Property name="name" type="java.lang.String" value="lblEmail" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="12" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtFax">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+            <Property name="name" type="java.lang.String" value="txtFax" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 20]"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtFaxFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtFaxFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtFaxKeyPressed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="10" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="0.4" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtMobile">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+            <Property name="name" type="java.lang.String" value="txtMobile" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 20]"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtMobileFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtMobileFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtMobileKeyPressed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="11" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="0.4" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtEmail">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+            <Property name="name" type="java.lang.String" value="txtEmail" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtEmailFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtEmailFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtEmailKeyPressed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="12" gridWidth="4" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="1.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtWeb">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+            <Property name="name" type="java.lang.String" value="txtWeb" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtWebFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtWebFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtWebKeyPressed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="13" gridWidth="4" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="1.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtRegNo">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+            <Property name="name" type="java.lang.String" value="txtRegNo" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 20]"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtRegNoFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtRegNoFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtRegNoKeyPressed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="14" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="0.4" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="jScrollPane2" noResource="true"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+          </AuxValues>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="15" gridWidth="4" gridHeight="1" fill="1" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="1.0" weightY="1.0"/>
+            </Constraint>
+          </Constraints>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JTextArea" name="txtRemark">
+              <Properties>
+                <Property name="columns" type="int" value="20"/>
+                <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+                <Property name="lineWrap" type="boolean" value="true"/>
+                <Property name="rows" type="int" value="5"/>
+                <Property name="tabSize" type="int" value="4"/>
+                <Property name="wrapStyleWord" type="boolean" value="true"/>
+                <Property name="name" type="java.lang.String" value="txtRemark" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtRemarkFocusGained"/>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtRemarkFocusLost"/>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtRemarkKeyPressed"/>
+              </Events>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Component class="javax.swing.JLabel" name="lblPostCode">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblPostCode.text"/>
+            <Property name="name" type="java.lang.String" value="lblPostCode" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="6" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtPostCode">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+            <Property name="name" type="java.lang.String" value="txtPostCode" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 20]"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPostCodeFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPostCodeFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPostCodeKeyPressed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="6" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="0.4" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="jLabel1.text"/>
+            <Property name="name" type="java.lang.String" value="jLabel1" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="3" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel2">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="jLabel2.text"/>
+            <Property name="name" type="java.lang.String" value="jLabel2" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="4" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtAddLine1">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="txtAddLine1.text"/>
+            <Property name="caretColor" type="java.awt.Color" resourceKey="txtAddLine1.caretColor"/>
+            <Property name="name" type="java.lang.String" value="txtAddLine1" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtAddLine1FocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtAddLine1FocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtAddLine1KeyPressed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="2" gridWidth="4" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="1.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtAddLine2">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="txtAddLine2.text"/>
+            <Property name="name" type="java.lang.String" value="txtAddLine2" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtAddLine2FocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtAddLine2FocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtAddLine2KeyPressed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="3" gridWidth="4" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="1.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel3">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="jLabel3.text"/>
+            <Property name="name" type="java.lang.String" value="jLabel3" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="5" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtCity">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="txtCity.text"/>
+            <Property name="name" type="java.lang.String" value="txtCity" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 20]"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtCityFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtCityFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCityKeyPressed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="4" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="0.4" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtProvince">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="txtProvince.text"/>
+            <Property name="name" type="java.lang.String" value="txtProvince" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 20]"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtProvinceFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtProvinceFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtProvinceKeyPressed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="5" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="0.4" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblContactPerson">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="lblName.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblContactPerson.text"/>
+            <Property name="name" type="java.lang.String" value="lblContactPerson" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="1" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtContactPerson">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="txtTelNo.font"/>
+            <Property name="text" type="java.lang.String" resourceKey="txtContactPerson.text"/>
+            <Property name="name" type="java.lang.String" value="txtContactPerson" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtContactPersonFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtContactPersonFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtContactPersonKeyPressed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="1" gridWidth="4" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="18" weightX="1.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cmbCountry">
+          <Properties>
+            <Property name="font" type="java.awt.Font" resourceKey="cmbCountry.font"/>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="243">
+                <StringItem index="0" value="Select"/>
+                <StringItem index="1" value="Abkhazia"/>
+                <StringItem index="2" value="Afghanistan"/>
+                <StringItem index="3" value="Akrotiri and Dhekelia"/>
+                <StringItem index="4" value="Aland"/>
+                <StringItem index="5" value="Albania"/>
+                <StringItem index="6" value="Algeria"/>
+                <StringItem index="7" value="American Samoa"/>
+                <StringItem index="8" value="Andorra"/>
+                <StringItem index="9" value="Angola"/>
+                <StringItem index="10" value="Anguilla"/>
+                <StringItem index="11" value="Antigua and Barbuda"/>
+                <StringItem index="12" value="Argentina"/>
+                <StringItem index="13" value="Armenia"/>
+                <StringItem index="14" value="Aruba"/>
+                <StringItem index="15" value="Ascension Island"/>
+                <StringItem index="16" value="Australia"/>
+                <StringItem index="17" value="Austria"/>
+                <StringItem index="18" value="Azerbaijan"/>
+                <StringItem index="19" value="Bahamas, The"/>
+                <StringItem index="20" value="Bahrain"/>
+                <StringItem index="21" value="Bangladesh"/>
+                <StringItem index="22" value="Barbados"/>
+                <StringItem index="23" value="Belarus"/>
+                <StringItem index="24" value="Belgium"/>
+                <StringItem index="25" value="Belize"/>
+                <StringItem index="26" value="Benin"/>
+                <StringItem index="27" value="Bermuda"/>
+                <StringItem index="28" value="Bhutan"/>
+                <StringItem index="29" value="Bolivia"/>
+                <StringItem index="30" value="Bosnia and Herzegovina"/>
+                <StringItem index="31" value="Botswana"/>
+                <StringItem index="32" value="Brazil"/>
+                <StringItem index="33" value="Brunei"/>
+                <StringItem index="34" value="Bulgaria"/>
+                <StringItem index="35" value="Burkina Faso"/>
+                <StringItem index="36" value="Burundi"/>
+                <StringItem index="37" value="Cambodia"/>
+                <StringItem index="38" value="Cameroon"/>
+                <StringItem index="39" value="Canada"/>
+                <StringItem index="40" value="Cape Verde"/>
+                <StringItem index="41" value="Cayman Islands"/>
+                <StringItem index="42" value="Central Africa Republic"/>
+                <StringItem index="43" value="Chad"/>
+                <StringItem index="44" value="Chile"/>
+                <StringItem index="45" value="China"/>
+                <StringItem index="46" value="Christmas Island"/>
+                <StringItem index="47" value="Cocos (Keeling) Islands"/>
+                <StringItem index="48" value="Colombia"/>
+                <StringItem index="49" value="Comoros"/>
+                <StringItem index="50" value="Congo"/>
+                <StringItem index="51" value="Cook Islands"/>
+                <StringItem index="52" value="Costa Rica"/>
+                <StringItem index="53" value="Cote d&apos;lvoire"/>
+                <StringItem index="54" value="Croatia"/>
+                <StringItem index="55" value="Cuba"/>
+                <StringItem index="56" value="Cyprus"/>
+                <StringItem index="57" value="Czech Republic"/>
+                <StringItem index="58" value="Denmark"/>
+                <StringItem index="59" value="Djibouti"/>
+                <StringItem index="60" value="Dominica"/>
+                <StringItem index="61" value="Dominican Republic"/>
+                <StringItem index="62" value="East Timor Ecuador"/>
+                <StringItem index="63" value="Egypt"/>
+                <StringItem index="64" value="El Salvador"/>
+                <StringItem index="65" value="Equatorial Guinea"/>
+                <StringItem index="66" value="Eritrea"/>
+                <StringItem index="67" value="Estonia"/>
+                <StringItem index="68" value="Ethiopia"/>
+                <StringItem index="69" value="Falkland Islands"/>
+                <StringItem index="70" value="Faroe Islands"/>
+                <StringItem index="71" value="Fiji"/>
+                <StringItem index="72" value="Finland"/>
+                <StringItem index="73" value="France"/>
+                <StringItem index="74" value="French Polynesia"/>
+                <StringItem index="75" value="Gabon"/>
+                <StringItem index="76" value="Cambia, The"/>
+                <StringItem index="77" value="Georgia"/>
+                <StringItem index="78" value="Germany"/>
+                <StringItem index="79" value="Ghana"/>
+                <StringItem index="80" value="Gibraltar"/>
+                <StringItem index="81" value="Greece"/>
+                <StringItem index="82" value="Greenland"/>
+                <StringItem index="83" value="Grenada"/>
+                <StringItem index="84" value="Guam"/>
+                <StringItem index="85" value="Guatemala"/>
+                <StringItem index="86" value="Guemsey"/>
+                <StringItem index="87" value="Guinea"/>
+                <StringItem index="88" value="Guinea-Bissau"/>
+                <StringItem index="89" value="Guyana"/>
+                <StringItem index="90" value="Haiti"/>
+                <StringItem index="91" value="Honduras"/>
+                <StringItem index="92" value="Hong Kong"/>
+                <StringItem index="93" value="Hungary"/>
+                <StringItem index="94" value="Iceland"/>
+                <StringItem index="95" value="India"/>
+                <StringItem index="96" value="Indonesia"/>
+                <StringItem index="97" value="Iran"/>
+                <StringItem index="98" value="Iraq"/>
+                <StringItem index="99" value="Ireland"/>
+                <StringItem index="100" value="Isle of Man"/>
+                <StringItem index="101" value="Israel"/>
+                <StringItem index="102" value="Italy"/>
+                <StringItem index="103" value="Jamaica"/>
+                <StringItem index="104" value="Japan"/>
+                <StringItem index="105" value="Jersey"/>
+                <StringItem index="106" value="Jordan"/>
+                <StringItem index="107" value="Kazakhstan"/>
+                <StringItem index="108" value="Kenya"/>
+                <StringItem index="109" value="Kiribati"/>
+                <StringItem index="110" value="Korea, N"/>
+                <StringItem index="111" value="Korea, S"/>
+                <StringItem index="112" value="Kosovo"/>
+                <StringItem index="113" value="Kuwait"/>
+                <StringItem index="114" value="Kyrgyzstan"/>
+                <StringItem index="115" value="Laos"/>
+                <StringItem index="116" value="Latvia"/>
+                <StringItem index="117" value="Lebanon"/>
+                <StringItem index="118" value="Lesotho"/>
+                <StringItem index="119" value="Liberia"/>
+                <StringItem index="120" value="Libya"/>
+                <StringItem index="121" value="Liechtenstein"/>
+                <StringItem index="122" value="Lithuania"/>
+                <StringItem index="123" value="Luxembourg"/>
+                <StringItem index="124" value="Macao"/>
+                <StringItem index="125" value="Macedonia"/>
+                <StringItem index="126" value="Madagascar"/>
+                <StringItem index="127" value="Malawi"/>
+                <StringItem index="128" value="Malaysia"/>
+                <StringItem index="129" value="Maldives"/>
+                <StringItem index="130" value="Mali"/>
+                <StringItem index="131" value="Malta"/>
+                <StringItem index="132" value="Marshall Islands"/>
+                <StringItem index="133" value="Mauritania"/>
+                <StringItem index="134" value="Mauritius"/>
+                <StringItem index="135" value="Mayotte"/>
+                <StringItem index="136" value="Mexico"/>
+                <StringItem index="137" value="Micronesia"/>
+                <StringItem index="138" value="Moldova"/>
+                <StringItem index="139" value="Monaco"/>
+                <StringItem index="140" value="Mongolia"/>
+                <StringItem index="141" value="Montenegro"/>
+                <StringItem index="142" value="Montserrat"/>
+                <StringItem index="143" value="Morocco"/>
+                <StringItem index="144" value="Mozambique"/>
+                <StringItem index="145" value="Myanmar"/>
+                <StringItem index="146" value="Nagorno-Karabakh"/>
+                <StringItem index="147" value="Namibia"/>
+                <StringItem index="148" value="Nauru"/>
+                <StringItem index="149" value="Nepal"/>
+                <StringItem index="150" value="Netherlands"/>
+                <StringItem index="151" value="Netherlands Antilles"/>
+                <StringItem index="152" value="New Caledonia"/>
+                <StringItem index="153" value="New Zealand"/>
+                <StringItem index="154" value="Nicaragua"/>
+                <StringItem index="155" value="Niger"/>
+                <StringItem index="156" value="Nigeria"/>
+                <StringItem index="157" value="Niue"/>
+                <StringItem index="158" value="Norfolk Island"/>
+                <StringItem index="159" value="Northern Cyprus"/>
+                <StringItem index="160" value="Northern Mariana Islands"/>
+                <StringItem index="161" value="Norway"/>
+                <StringItem index="162" value="Oman"/>
+                <StringItem index="163" value="Pakistan"/>
+                <StringItem index="164" value="Palau"/>
+                <StringItem index="165" value="Palestine"/>
+                <StringItem index="166" value="Panama"/>
+                <StringItem index="167" value="Papua New Guinea"/>
+                <StringItem index="168" value="Paraguay"/>
+                <StringItem index="169" value="Peru"/>
+                <StringItem index="170" value="Philippines"/>
+                <StringItem index="171" value="Pitcaim Islands"/>
+                <StringItem index="172" value="Poland"/>
+                <StringItem index="173" value="Portugal"/>
+                <StringItem index="174" value="Puerto Rico"/>
+                <StringItem index="175" value="Qatar"/>
+                <StringItem index="176" value="Romania"/>
+                <StringItem index="177" value="Russia"/>
+                <StringItem index="178" value="Rwanda"/>
+                <StringItem index="179" value="Sahrawi Arab Democratic Republic"/>
+                <StringItem index="180" value="Saint-Barthelemy"/>
+                <StringItem index="181" value="Saint Helena"/>
+                <StringItem index="182" value="Saint Kitts and Nevis"/>
+                <StringItem index="183" value="Saint Lucia"/>
+                <StringItem index="184" value="Saint Martin"/>
+                <StringItem index="185" value="Saint Pierre and Miquelon"/>
+                <StringItem index="186" value="Saint Vincent and Grenadines"/>
+                <StringItem index="187" value="Samos"/>
+                <StringItem index="188" value="San Marino"/>
+                <StringItem index="189" value="Sao Tome and Principe"/>
+                <StringItem index="190" value="Saudi Arabia"/>
+                <StringItem index="191" value="Senegal"/>
+                <StringItem index="192" value="Serbia"/>
+                <StringItem index="193" value="Seychelles"/>
+                <StringItem index="194" value="Sierra Leone"/>
+                <StringItem index="195" value="Singapore"/>
+                <StringItem index="196" value="Slovakia"/>
+                <StringItem index="197" value="Slovenia"/>
+                <StringItem index="198" value="Solomon Islands"/>
+                <StringItem index="199" value="Somalia"/>
+                <StringItem index="200" value="Somaliland"/>
+                <StringItem index="201" value="South Africa"/>
+                <StringItem index="202" value="South Ossetia"/>
+                <StringItem index="203" value="Spain"/>
+                <StringItem index="204" value="Sri Lanka"/>
+                <StringItem index="205" value="Sudan"/>
+                <StringItem index="206" value="Suriname"/>
+                <StringItem index="207" value="Svalbard"/>
+                <StringItem index="208" value="Swaziland"/>
+                <StringItem index="209" value="Sweden"/>
+                <StringItem index="210" value="Switzerland"/>
+                <StringItem index="211" value="Syria"/>
+                <StringItem index="212" value="Tajikistan"/>
+                <StringItem index="213" value="Tanzania"/>
+                <StringItem index="214" value="Thailand"/>
+                <StringItem index="215" value="Togo"/>
+                <StringItem index="216" value="Tokelau"/>
+                <StringItem index="217" value="Tonga"/>
+                <StringItem index="218" value="Transnistria"/>
+                <StringItem index="219" value="Trinidad and Tobago"/>
+                <StringItem index="220" value="Tristan da Cunha"/>
+                <StringItem index="221" value="Tunisia"/>
+                <StringItem index="222" value="Turkey"/>
+                <StringItem index="223" value="Turkmenistan"/>
+                <StringItem index="224" value="Turks and Caicos Islands"/>
+                <StringItem index="225" value="Tuvalu"/>
+                <StringItem index="226" value="Uganda"/>
+                <StringItem index="227" value="Ukraine"/>
+                <StringItem index="228" value="United Arab Emirates"/>
+                <StringItem index="229" value="United Kingdom"/>
+                <StringItem index="230" value="United States"/>
+                <StringItem index="231" value="Uruguay"/>
+                <StringItem index="232" value="Uzbekistan"/>
+                <StringItem index="233" value="Vanuatu"/>
+                <StringItem index="234" value="Vatican City"/>
+                <StringItem index="235" value="Venezuela"/>
+                <StringItem index="236" value="Vietnam"/>
+                <StringItem index="237" value="Virgin Islands, British"/>
+                <StringItem index="238" value="Virgin Islands, U.S."/>
+                <StringItem index="239" value="Wallis and Futuna"/>
+                <StringItem index="240" value="Yemen"/>
+                <StringItem index="241" value="Zambia"/>
+                <StringItem index="242" value="Zimbabwe"/>
+              </StringArray>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cmbCountry" noResource="true"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="1" gridY="7" gridWidth="4" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="2" insetsBottom="2" insetsRight="2" anchor="10" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="javax.swing.JButton" name="btnSave">
+      <Properties>
+        <Property name="font" type="java.awt.Font" resourceKey="btnSave.font"/>
+        <Property name="icon" type="javax.swing.Icon" resourceKey="btnSave.icon"/>
+        <Property name="text" type="java.lang.String" resourceKey="btnSave.text"/>
+        <Property name="focusable" type="boolean" value="false"/>
+        <Property name="horizontalTextPosition" type="int" value="4"/>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[40, 39]"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="btnSave" noResource="true"/>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[40, 39]"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnClose">
+      <Properties>
+        <Property name="font" type="java.awt.Font" resourceKey="btnSave.font"/>
+        <Property name="icon" type="javax.swing.Icon" resourceKey="btnClose.icon"/>
+        <Property name="text" type="java.lang.String" resourceKey="btnClose.text"/>
+        <Property name="focusable" type="boolean" value="false"/>
+        <Property name="name" type="java.lang.String" value="btnClose" noResource="true"/>
+        <Property name="verticalTextPosition" type="int" value="3"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCloseActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel4">
+      <Properties>
+        <Property name="font" type="java.awt.Font" resourceKey="jLabel4.font"/>
+        <Property name="foreground" type="java.awt.Color" resourceKey="jLabel4.foreground"/>
+        <Property name="text" type="java.lang.String" resourceKey="jLabel4.text"/>
+        <Property name="name" type="java.lang.String" value="jLabel4" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblInfo">
+      <Properties>
+        <Property name="foreground" type="java.awt.Color" resourceKey="lblInfo.foreground"/>
+        <Property name="text" type="java.lang.String" resourceKey="lblInfo.text"/>
+        <Property name="name" type="java.lang.String" value="lblInfo" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSeparator" name="jSeparator1">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="jSeparator1" noResource="true"/>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>

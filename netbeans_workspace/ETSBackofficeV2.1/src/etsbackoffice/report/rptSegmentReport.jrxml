@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptTicketingIssue" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="816" leftMargin="13" rightMargin="13" topMargin="13" bottomMargin="13">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="SSummery">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="docIssuedate" class="java.util.Date">
+			<fieldDescription><![CDATA[docIssuedate]]></fieldDescription>
+		</field>
+		<field name="fullTicketNo" class="java.lang.String">
+			<fieldDescription><![CDATA[fullTicketNo]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="SegmentDataset">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="airLineID" class="java.lang.String">
+			<fieldDescription><![CDATA[airLineID]]></fieldDescription>
+		</field>
+		<field name="arvDate" class="java.lang.String">
+			<fieldDescription><![CDATA[arvDate]]></fieldDescription>
+		</field>
+		<field name="arvTime" class="java.lang.String">
+			<fieldDescription><![CDATA[arvTime]]></fieldDescription>
+		</field>
+		<field name="baggage" class="java.lang.String">
+			<fieldDescription><![CDATA[baggage]]></fieldDescription>
+		</field>
+		<field name="checkInTerminal" class="java.lang.String">
+			<fieldDescription><![CDATA[checkInTerminal]]></fieldDescription>
+		</field>
+		<field name="checkInTime" class="java.lang.String">
+			<fieldDescription><![CDATA[checkInTime]]></fieldDescription>
+		</field>
+		<field name="class" class="java.lang.Class">
+			<fieldDescription><![CDATA[class]]></fieldDescription>
+		</field>
+		<field name="deptDate" class="java.lang.String">
+			<fieldDescription><![CDATA[deptDate]]></fieldDescription>
+		</field>
+		<field name="deptFrom" class="java.lang.String">
+			<fieldDescription><![CDATA[deptFrom]]></fieldDescription>
+		</field>
+		<field name="deptTime" class="java.lang.String">
+			<fieldDescription><![CDATA[deptTime]]></fieldDescription>
+		</field>
+		<field name="deptTo" class="java.lang.String">
+			<fieldDescription><![CDATA[deptTo]]></fieldDescription>
+		</field>
+		<field name="flightDuration" class="java.lang.String">
+			<fieldDescription><![CDATA[flightDuration]]></fieldDescription>
+		</field>
+		<field name="flightNo" class="java.lang.String">
+			<fieldDescription><![CDATA[flightNo]]></fieldDescription>
+		</field>
+		<field name="itineraryId" class="java.lang.Long">
+			<fieldDescription><![CDATA[itineraryId]]></fieldDescription>
+		</field>
+		<field name="mealCode" class="java.lang.String">
+			<fieldDescription><![CDATA[mealCode]]></fieldDescription>
+		</field>
+		<field name="mileage" class="java.lang.Integer">
+			<fieldDescription><![CDATA[mileage]]></fieldDescription>
+		</field>
+		<field name="pnr" class="etsbackoffice.domain.PNR">
+			<fieldDescription><![CDATA[pnr]]></fieldDescription>
+		</field>
+		<field name="segmentNo" class="java.lang.String">
+			<fieldDescription><![CDATA[segmentNo]]></fieldDescription>
+		</field>
+		<field name="stopOver" class="java.lang.Boolean">
+			<fieldDescription><![CDATA[stopOver]]></fieldDescription>
+		</field>
+		<field name="ticketClass" class="java.lang.String">
+			<fieldDescription><![CDATA[ticketClass]]></fieldDescription>
+		</field>
+		<field name="tickets" class="java.util.Set">
+			<fieldDescription><![CDATA[tickets]]></fieldDescription>
+		</field>
+		<field name="tktStatus" class="java.lang.String">
+			<fieldDescription><![CDATA[tktStatus]]></fieldDescription>
+		</field>
+		<field name="firstTicket" class="etsbackoffice.domain.Ticket">
+			<fieldDescription><![CDATA[firstTicket]]></fieldDescription>
+		</field>
+		<field name="segmentCount" class="java.lang.Integer">
+			<fieldDescription><![CDATA[segmentCount]]></fieldDescription>
+		</field>
+	</subDataset>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="docIssuedate" class="java.util.Date">
+		<fieldDescription><![CDATA[docIssuedate]]></fieldDescription>
+	</field>
+	<field name="pnr" class="etsbackoffice.domain.PNR">
+		<fieldDescription><![CDATA[pnr]]></fieldDescription>
+	</field>
+	<field name="segment" class="etsbackoffice.domain.Itinerary">
+		<fieldDescription><![CDATA[segment]]></fieldDescription>
+	</field>
+	<field name="segments" class="java.util.List">
+		<fieldDescription><![CDATA[segments]]></fieldDescription>
+	</field>
+	<field name="ticket" class="etsbackoffice.domain.Ticket">
+		<fieldDescription><![CDATA[ticket]]></fieldDescription>
+	</field>
+	<field name="totalIssuedSegment" class="java.lang.Integer">
+		<fieldDescription><![CDATA[totalIssuedSegment]]></fieldDescription>
+	</field>
+	<field name="totalOpenSegment" class="java.lang.Integer">
+		<fieldDescription><![CDATA[totalOpenSegment]]></fieldDescription>
+	</field>
+	<field name="totalRefundedSegment" class="java.lang.Integer">
+		<fieldDescription><![CDATA[totalRefundedSegment]]></fieldDescription>
+	</field>
+	<field name="totalReissuedSegment" class="java.lang.Integer">
+		<fieldDescription><![CDATA[totalReissuedSegment]]></fieldDescription>
+	</field>
+	<field name="totalVoidSegment" class="java.lang.Integer">
+		<fieldDescription><![CDATA[totalVoidSegment]]></fieldDescription>
+	</field>
+	<field name="mAgent" class="etsbackoffice.domain.MasterAgent">
+		<fieldDescription><![CDATA[mAgent]]></fieldDescription>
+	</field>
+	<field name="oid" class="java.lang.String">
+		<fieldDescription><![CDATA[oid]]></fieldDescription>
+	</field>
+	<field name="gds" class="java.lang.String">
+		<fieldDescription><![CDATA[gds]]></fieldDescription>
+	</field>
+	<field name="from" class="java.util.Date">
+		<fieldDescription><![CDATA[from]]></fieldDescription>
+	</field>
+	<field name="airLineID" class="java.lang.String">
+		<fieldDescription><![CDATA[airLineID]]></fieldDescription>
+	</field>
+	<field name="status" class="java.lang.String">
+		<fieldDescription><![CDATA[status]]></fieldDescription>
+	</field>
+	<field name="to" class="java.util.Date">
+		<fieldDescription><![CDATA[to]]></fieldDescription>
+	</field>
+	<field name="segmentBalance" class="java.lang.Integer">
+		<fieldDescription><![CDATA[segmentBalance]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="119" splitType="Stretch">
+			<rectangle>
+				<reportElement x="487" y="42" width="327" height="74"/>
+			</rectangle>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="602" y="2" width="213" height="14" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{mAgent}.getName()]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+				<reportElement x="0" y="0" width="49" height="43"/>
+				<imageExpression class="java.io.InputStream"><![CDATA[getClass().getResourceAsStream("/etsbackoffice/report/resources/logo_main.jpg")]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="80" width="70" height="10"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Career Code]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="70" y="80" width="100" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{airLineID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="69" width="70" height="10"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GDS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="47" width="70" height="10"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Office ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="91" width="70" height="10"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date From]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="70" y="47" width="100" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{oid}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd.MM.yyyy" isBlankWhenNull="true">
+				<reportElement x="70" y="102" width="100" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{to}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="102" width="70" height="10"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date To]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="70" y="69" width="100" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{gds}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="70" y="58" width="100" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{status}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="58" width="70" height="10"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+			<textField pattern="dd.MM.yyyy" isBlankWhenNull="true">
+				<reportElement x="70" y="91" width="100" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{from}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="494" y="74" width="98" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Segment Cancelled]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="592" y="101" width="222" height="10"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{segmentBalance}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="494" y="47" width="98" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Segment Issued]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="494" y="61" width="98" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Segment Re-Issued]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="664" y="61" width="80" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Segment Void]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="592" y="61" width="70" height="10"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{totalReissuedSegment}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="718" y="18" width="97" height="20"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Segment Report]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="744" y="61" width="70" height="10"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{totalVoidSegment}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="494" y="101" width="91" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Final SegmentBalance]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="592" y="74" width="70" height="10"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{totalRefundedSegment}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="592" y="47" width="70" height="10"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{totalIssuedSegment}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="664" y="48" width="80" height="10"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Segment Open]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="744" y="48" width="70" height="10"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{totalOpenSegment}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="487" y="93" width="327" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="179" y="47" width="57" height="10"/>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Report Date]]></text>
+			</staticText>
+			<textField pattern="dd.MM.yyyy HH.mm.ss" isBlankWhenNull="true">
+				<reportElement x="241" y="47" width="91" height="10" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="3" splitType="Stretch"/>
+	</pageHeader>
+	<detail>
+		<band height="81" splitType="Stretch">
+			<componentElement>
+				<reportElement key="table 1" stretchType="RelativeToTallestObject" x="0" y="0" width="816" height="80"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="SegmentDataset">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{segments})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="62">
+						<jr:columnHeader style="table 1_CH" height="16" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="62" height="16"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Ticketing Date]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="62" height="14"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression class="java.util.Date"><![CDATA[$F{firstTicket}.getDocIssuedate()]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="57">
+						<jr:columnHeader style="table 1_CH" height="16" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="57" height="16"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[PNR]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="57" height="14"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{pnr}.getGdsPNR()]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="55">
+						<jr:columnHeader style="table 1_CH" height="16" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="55" height="16"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Booking OID]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="55" height="14"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{pnr}.getBookingAgtOID()]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="63">
+						<jr:columnHeader height="16" rowSpan="1">
+							<staticText>
+								<reportElement style="table 1_CH" x="0" y="0" width="62" height="16"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Effecting OID]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="63" height="14"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{pnr}.getTicketingAgtOID()]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="88">
+						<jr:columnHeader height="16" rowSpan="1">
+							<staticText>
+								<reportElement style="table 1_CH" x="0" y="0" width="88" height="16"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Tkt No]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="88" height="14"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{firstTicket}.getFullTicketNo()]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="30">
+						<jr:columnHeader height="16" rowSpan="1">
+							<staticText>
+								<reportElement style="table 1_CH" x="0" y="0" width="30" height="16"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Class]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="30" height="14"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{ticketClass}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="62">
+						<jr:columnHeader height="16" rowSpan="1">
+							<staticText>
+								<reportElement style="table 1_CH" x="0" y="0" width="61" height="16"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Fl No]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="62" height="14"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{flightNo}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="70">
+						<jr:columnHeader style="table 1_CH" height="16" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="16"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Career]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="70" height="14"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{airLineID}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="62">
+						<jr:columnHeader style="table 1_CH" height="16" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="62" height="16"/>
+								<box leftPadding="2" rightPadding="2"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Status]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="62" height="14"/>
+								<box leftPadding="2" rightPadding="2"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{firstTicket}.getTktStatusString()]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="71">
+						<jr:columnHeader style="table 1_CH" height="16" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="71" height="16"/>
+								<box leftPadding="2" rightPadding="2"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Trvl Date]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="71" height="14"/>
+								<box leftPadding="2" rightPadding="0"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{deptDate}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="69">
+						<jr:columnHeader style="table 1_CH" height="16" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="69" height="16"/>
+								<box leftPadding="2" rightPadding="2"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Out City]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="69" height="14"/>
+								<box leftPadding="2" rightPadding="2"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{deptFrom}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="67">
+						<jr:columnHeader style="table 1_CH" height="16" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="67" height="16"/>
+								<box leftPadding="2" rightPadding="2"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[In City]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="67" height="14"/>
+								<box leftPadding="2" rightPadding="2"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{deptTo}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="59">
+						<jr:columnHeader style="table 1_CH" height="16" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="55" height="16"/>
+								<box rightPadding="2"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Segment]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="55" height="14"/>
+								<box rightPadding="2"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression class="java.lang.Integer"><![CDATA[$F{segmentCount}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="35" splitType="Stretch">
+			<textField>
+				<reportElement x="738" y="15" width="44" height="15"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="786" y="15" width="16" height="15"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="115" y="17" width="549" height="14" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Arial" size="7" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{mAgent}.getFullAddress()]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" hAlign="Center">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="6" width="30" height="28" isRemoveLineWhenBlank="true"/>
+				<imageExpression class="java.io.InputStream"><![CDATA[getClass().getResourceAsStream("/etsbackoffice/report/resources/logo_atol.jpg")]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement stretchType="RelativeToTallestObject" x="33" y="6" width="74" height="28" isRemoveLineWhenBlank="true"/>
+				<imageExpression class="java.io.InputStream"><![CDATA[getClass().getResourceAsStream("/etsbackoffice/report/resources/logo_iata.jpg")]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="0" y="3" width="816" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

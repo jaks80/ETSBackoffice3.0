@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptOtherOutstandingAcDoc" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="814" leftMargin="14" rightMargin="14" topMargin="14" bottomMargin="14" uuid="c24c3570-c784-4ad8-9d63-4bab63426990">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="283"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="AccountingDocuments" uuid="2caefba2-b23b-45c4-a948-6e55c3dc3504">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="OChgRevenue" class="java.math.BigDecimal">
+			<fieldDescription><![CDATA[OChgRevenue]]></fieldDescription>
+		</field>
+		<field name="SRevenue" class="java.math.BigDecimal">
+			<fieldDescription><![CDATA[SRevenue]]></fieldDescription>
+		</field>
+		<field name="acDocFor" class="java.lang.String">
+			<fieldDescription><![CDATA[acDocFor]]></fieldDescription>
+		</field>
+		<field name="acDocIssuedBy" class="etsbackoffice.domain.User">
+			<fieldDescription><![CDATA[acDocIssuedBy]]></fieldDescription>
+		</field>
+		<field name="acDocModifiedBy" class="etsbackoffice.domain.User">
+			<fieldDescription><![CDATA[acDocModifiedBy]]></fieldDescription>
+		</field>
+		<field name="acDocRef" class="java.lang.Integer">
+			<fieldDescription><![CDATA[acDocRef]]></fieldDescription>
+		</field>
+		<field name="acDocRefString" class="java.lang.String">
+			<fieldDescription><![CDATA[acDocRefString]]></fieldDescription>
+		</field>
+		<field name="acDocTypeString" class="java.lang.String">
+			<fieldDescription><![CDATA[acDocTypeString]]></fieldDescription>
+		</field>
+		<field name="acDoctype" class="java.lang.Integer">
+			<fieldDescription><![CDATA[acDoctype]]></fieldDescription>
+		</field>
+		<field name="acTransactions" class="java.util.Set">
+			<fieldDescription><![CDATA[acTransactions]]></fieldDescription>
+		</field>
+		<field name="accounts" class="java.util.Set">
+			<fieldDescription><![CDATA[accounts]]></fieldDescription>
+		</field>
+		<field name="active" class="java.lang.Boolean">
+			<fieldDescription><![CDATA[active]]></fieldDescription>
+		</field>
+		<field name="additionalService" class="java.util.Set">
+			<fieldDescription><![CDATA[additionalService]]></fieldDescription>
+		</field>
+		<field name="additionalServiceSubTotal" class="java.math.BigDecimal">
+			<fieldDescription><![CDATA[additionalServiceSubTotal]]></fieldDescription>
+		</field>
+		<field name="class" class="java.lang.Class">
+			<fieldDescription><![CDATA[class]]></fieldDescription>
+		</field>
+		<field name="issueDate" class="java.util.Date">
+			<fieldDescription><![CDATA[issueDate]]></fieldDescription>
+		</field>
+		<field name="normalService" class="java.util.Set">
+			<fieldDescription><![CDATA[normalService]]></fieldDescription>
+		</field>
+		<field name="normalServiceSubTotal" class="java.math.BigDecimal">
+			<fieldDescription><![CDATA[normalServiceSubTotal]]></fieldDescription>
+		</field>
+		<field name="oAcDocId" class="java.lang.Long">
+			<fieldDescription><![CDATA[oAcDocId]]></fieldDescription>
+		</field>
+		<field name="oAccountingDocument" class="etsbackoffice.domain.OAccountingDocument">
+			<fieldDescription><![CDATA[oAccountingDocument]]></fieldDescription>
+		</field>
+		<field name="oAccountingDocumentLines" class="java.util.Set">
+			<fieldDescription><![CDATA[oAccountingDocumentLines]]></fieldDescription>
+		</field>
+		<field name="outstandingAmount" class="java.math.BigDecimal">
+			<fieldDescription><![CDATA[outstandingAmount]]></fieldDescription>
+		</field>
+		<field name="relatedDocuments" class="java.util.Set">
+			<fieldDescription><![CDATA[relatedDocuments]]></fieldDescription>
+		</field>
+		<field name="remark" class="java.lang.String">
+			<fieldDescription><![CDATA[remark]]></fieldDescription>
+		</field>
+		<field name="terms" class="java.lang.String">
+			<fieldDescription><![CDATA[terms]]></fieldDescription>
+		</field>
+		<field name="totalDocumentedAmount" class="java.math.BigDecimal">
+			<fieldDescription><![CDATA[totalDocumentedAmount]]></fieldDescription>
+		</field>
+		<field name="totalTransactionAmount" class="java.math.BigDecimal">
+			<fieldDescription><![CDATA[totalTransactionAmount]]></fieldDescription>
+		</field>
+		<field name="vatTotal" class="java.math.BigDecimal">
+			<fieldDescription><![CDATA[vatTotal]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="Table Dataset 1" uuid="b5a58cb8-b221-4fe3-b5ea-037a9b149d7a"/>
+	<subDataset name="Table Dataset 2" uuid="9fd5ef5c-0d49-42d2-9169-389e53341da7"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="acDocType" class="java.lang.String">
+		<fieldDescription><![CDATA[acDocType]]></fieldDescription>
+	</field>
+	<field name="acDocsRpt" class="java.util.List">
+		<fieldDescription><![CDATA[acDocsRpt]]></fieldDescription>
+	</field>
+	<field name="agent" class="etsbackoffice.domain.Agent">
+		<fieldDescription><![CDATA[agent]]></fieldDescription>
+	</field>
+	<field name="customer" class="etsbackoffice.domain.Customer">
+		<fieldDescription><![CDATA[customer]]></fieldDescription>
+	</field>
+	<field name="from" class="java.util.Date">
+		<fieldDescription><![CDATA[from]]></fieldDescription>
+	</field>
+	<field name="mAgent" class="etsbackoffice.domain.MasterAgent">
+		<fieldDescription><![CDATA[mAgent]]></fieldDescription>
+	</field>
+	<field name="noOfInvoice" class="java.lang.Integer">
+		<fieldDescription><![CDATA[noOfInvoice]]></fieldDescription>
+	</field>
+	<field name="oAcDoc" class="etsbackoffice.domain.OAccountingDocument">
+		<fieldDescription><![CDATA[oAcDoc]]></fieldDescription>
+	</field>
+	<field name="officeCopy" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[officeCopy]]></fieldDescription>
+	</field>
+	<field name="to" class="java.util.Date">
+		<fieldDescription><![CDATA[to]]></fieldDescription>
+	</field>
+	<field name="totalCredit" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[totalCredit]]></fieldDescription>
+	</field>
+	<field name="totalInvAmount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[totalInvAmount]]></fieldDescription>
+	</field>
+	<field name="totalOutstanding" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[totalOutstanding]]></fieldDescription>
+	</field>
+	<field name="totalReceived" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[totalReceived]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="22">
+			<textField>
+				<reportElement uuid="c3fa4303-e24e-4779-94eb-ebe9e567d605" x="592" y="0" width="220" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{acDocType}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="96" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="e0beffab-c77e-43e4-869b-e6768c8ad7e9" isPrintRepeatedValues="false" x="47" y="14" width="213" height="14" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Arial" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mAgent}.getAddLine1()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ca442be0-ce8e-4c18-b7ac-6043a7dcbce9" isPrintRepeatedValues="false" x="47" y="26" width="213" height="14" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Arial" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mAgent}.getAddLine2()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="62a374cf-2caa-497c-b762-aa4589abe9ec" isPrintRepeatedValues="false" x="47" y="40" width="213" height="14" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Arial" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mAgent}.getCity()+" , "+$F{mAgent}.getPostCode()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="f7fcd295-fc02-487b-8ea8-bf4e7b8223dc" x="47" y="52" width="213" height="14" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Arial" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Tel: "+$F{mAgent}.getTelNo()+" "+"Fax: "+$F{mAgent}.getFax()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c913c533-aff8-4570-b995-be5f1829c78e" isPrintRepeatedValues="false" x="47" y="65" width="213" height="14" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="Arial" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Email: "+$F{mAgent}.getEmail()]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+				<reportElement uuid="7436131b-f9f5-4078-ac08-d30a9d640d4a" x="0" y="0" width="43" height="38"/>
+				<imageExpression><![CDATA[getClass().getResourceAsStream("/etsbackoffice/report/resources/logo_main.jpg")]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement uuid="05666518-7809-4dfd-a7e7-1cf5ebf6065e" isPrintRepeatedValues="false" x="47" y="0" width="213" height="14" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mAgent}.getName()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="3c304cc5-7827-4cc1-8b68-5eca691c3a38" style="table 2_TH" x="592" y="3" width="100" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Invoice ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="69d252e8-fcc3-441d-b6bd-032929f7679d" style="table 2_TH" x="592" y="17" width="100" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Inv Amount ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3ac8c93e-89ff-453e-9587-af6d9ac27e2c" style="table 2_TH" x="592" y="34" width="100" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Received ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a5bb9a3b-5e7f-4cb6-a1e2-7de122b1186b" style="table 2_TH" x="592" y="51" width="100" height="14"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Outstanding This Period ]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement uuid="5ea968e6-5c9b-49ad-8c3c-26b24c0d8d93" style="table 1_TD" x="692" y="3" width="120" height="15"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{noOfInvoice}]]></textFieldExpression>
+			</textField>
+			<textField pattern="£ #,##0.00">
+				<reportElement uuid="8f7fbf95-a7f5-47a7-9d23-9447ca8fc93b" style="table 1_TD" x="692" y="17" width="120" height="15"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalInvAmount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="£ #,##0.00">
+				<reportElement uuid="7cc80c28-6008-4d79-9763-0e8c410bbb67" style="table 1_TD" x="692" y="34" width="120" height="15"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalReceived}]]></textFieldExpression>
+			</textField>
+			<textField pattern="£ #,##0.00">
+				<reportElement uuid="db02888e-417b-471f-8116-bbcc9a699eca" style="table 1_TD" x="692" y="51" width="120" height="14"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalOutstanding}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="ce8697ef-8411-4b8e-b6b1-9696a1c4c780" style="table 1_TD" x="505" y="20" width="80" height="15"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{from}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="49fdee15-b678-425b-ae6c-976eb799efde" style="table 1_TD" x="505" y="36" width="80" height="15"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{to}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="bba5b835-5844-4211-a5f4-9f25ea7cb341" style="table 1_TD" x="505" y="36" width="80" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{to}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="639ef690-39a8-4c0b-b8e3-154d26e0eef1" style="table 2_TH" x="418" y="36" width="87" height="15"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice date to]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH.mm.ss">
+				<reportElement uuid="861215b9-282a-422f-b753-ee36d70ff39c" style="table 1_TD" x="505" y="4" width="80" height="15"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="22c57b0a-15f3-41e5-82ca-4b92036ddefa" style="table 2_TH" x="418" y="4" width="87" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Report Date ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8a83d638-d13c-44f8-9577-049024c34612" style="table 2_TH" x="418" y="20" width="87" height="15"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice Date From]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="127" splitType="Stretch">
+			<componentElement>
+				<reportElement uuid="35ef127e-0427-4d37-93df-e4487382e531" key="table 2" style="table 1_TD" x="0" y="0" width="814" height="125" isRemoveLineWhenBlank="true"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="AccountingDocuments" uuid="bf504c97-f5e8-446c-abed-1536926c0dd9">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{acDocsRpt})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column uuid="8bc6a017-9e85-40cd-94e9-b09fc701ee7c" width="80">
+						<jr:columnHeader style="table 2_CH" height="17" rowSpan="1">
+							<staticText>
+								<reportElement uuid="667797ff-093a-4981-b885-3bdc98881a55" x="2" y="0" width="78" height="15"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Invoice Ref]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 2_TD" height="15" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement uuid="f2ee1652-94d3-446d-ab53-94c98e900e1e" x="2" y="0" width="78" height="14" isRemoveLineWhenBlank="true"/>
+								<textElement>
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{acDocRefString}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column uuid="4c09892a-8501-4e04-a03b-ff73a1970446" width="80">
+						<jr:tableFooter height="0" rowSpan="1"/>
+						<jr:columnHeader style="table 2_CH" height="17" rowSpan="1">
+							<staticText>
+								<reportElement uuid="f2814f81-b3ec-4f29-b9da-1ab0428fef68" x="1" y="0" width="78" height="15"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Issue Date]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 2_TD" height="15" rowSpan="1">
+							<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+								<reportElement uuid="24d2bbf8-141b-428d-b692-1c9a2ae7fee7" x="1" y="0" width="78" height="14" isRemoveLineWhenBlank="true"/>
+								<textElement>
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{issueDate}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column uuid="64c7370c-2511-410f-8f82-f8d2ec43a491" width="80">
+						<jr:tableFooter height="0" rowSpan="1"/>
+						<jr:columnHeader style="table 2_CH" height="17" rowSpan="1">
+							<staticText>
+								<reportElement uuid="d92f94d8-e2fc-424f-8697-7be382c76ef2" x="2" y="0" width="78" height="15"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Terms]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 2_TD" height="15" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement uuid="c812fdd9-e4b2-4aa4-81a2-c46f527f90e8" x="2" y="0" width="78" height="14" isRemoveLineWhenBlank="true"/>
+								<textElement>
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{terms}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column uuid="2f6f6ca2-3a15-4234-9560-eeea973e2a4b" width="200">
+						<jr:tableFooter height="0" rowSpan="1"/>
+						<jr:columnHeader style="table 2_CH" height="17" rowSpan="1">
+							<staticText>
+								<reportElement uuid="385d83d8-78bf-4347-a442-7c880184cfa5" x="2" y="0" width="198" height="15"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Client Name]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 2_TD" height="15" rowSpan="1">
+							<textField>
+								<reportElement uuid="a16ffb87-320b-49fa-9cf1-d42e71f81669" x="0" y="0" width="198" height="15"/>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{acDocFor}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column uuid="67b24d47-136c-406d-bd88-482ea35d3ec4" width="120">
+						<jr:tableFooter height="0" rowSpan="1"/>
+						<jr:columnHeader style="table 2_CH" height="17" rowSpan="1">
+							<staticText>
+								<reportElement uuid="4c2f3868-6c7b-48a5-a97d-23da0481b006" x="1" y="0" width="118" height="15"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Issued By]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 2_TD" height="15" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement uuid="04505f15-b505-4f82-b1ca-ed0f836124ac" x="1" y="0" width="118" height="14" isRemoveLineWhenBlank="true"/>
+								<textElement>
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{acDocIssuedBy}.getSurName()]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column uuid="5f7d3ea5-1e86-41fa-9fe1-aa7631568a3d" width="80">
+						<jr:columnHeader style="table 2_CH" height="17" rowSpan="1">
+							<staticText>
+								<reportElement uuid="a9a5ba13-f6ae-4365-8445-7dce3e9e9cf4" x="2" y="0" width="78" height="15"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Inv Amount]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 2_TD" height="15" rowSpan="1">
+							<textField pattern="£ #,##0.00" isBlankWhenNull="true">
+								<reportElement uuid="2759f44a-5496-4fe6-85a3-c3af274be6e0" x="2" y="0" width="78" height="14" isRemoveLineWhenBlank="true"/>
+								<box rightPadding="2"/>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{totalDocumentedAmount}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column uuid="a0a1f38d-2164-4af8-a89d-7cb86d7b0e2a" width="80">
+						<jr:columnHeader style="table 2_CH" height="17" rowSpan="1">
+							<staticText>
+								<reportElement uuid="ec5e8cad-ce30-44b4-a35d-94e03525def4" x="2" y="0" width="78" height="15"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Received]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 2_TD" height="15" rowSpan="1">
+							<textField pattern="£ #,##0.00" isBlankWhenNull="true">
+								<reportElement uuid="dff9d080-420d-4c9c-935b-0076d68eb15a" x="2" y="0" width="78" height="14" isRemoveLineWhenBlank="true"/>
+								<box rightPadding="2"/>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="7"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{totalTransactionAmount}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column uuid="ad326df5-1686-433c-8def-409ee6b6d0e6" width="80">
+						<jr:tableFooter height="0" rowSpan="1"/>
+						<jr:columnHeader style="table 2_CH" height="17" rowSpan="1">
+							<staticText>
+								<reportElement uuid="3bf607b5-23b9-4ff3-8cae-50a20a06137f" x="2" y="0" width="78" height="15"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Outstanding]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 2_TD" height="15" rowSpan="1">
+							<textField pattern="£ #,##0.00">
+								<reportElement uuid="83fac0df-2175-4bce-acba-c24b203df43c" x="2" y="0" width="78" height="14"/>
+								<box rightPadding="2"/>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="7" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{outstandingAmount}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="31">
+			<textField>
+				<reportElement uuid="a6fd39fb-9020-4dde-9671-f08d0bfc7a14" x="745" y="1" width="44" height="15"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="8dd3cbf6-4f21-4996-ae4a-5661ff472f1a" x="0" y="0" width="814" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField evaluationTime="Report">
+				<reportElement uuid="1b70527b-5df7-4508-85f7-1408aaef453a" x="796" y="1" width="16" height="15"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement uuid="bf1667cd-f302-4b94-9356-6f6fe96cf5be" stretchType="RelativeToTallestObject" x="36" y="2" width="74" height="28" isRemoveLineWhenBlank="true"/>
+				<imageExpression><![CDATA[getClass().getResourceAsStream("/etsbackoffice/report/resources/logo_iata.jpg")]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame">
+				<reportElement uuid="b06ee561-9d3f-44be-9f20-8e067f86a3bb" stretchType="RelativeToTallestObject" x="115" y="2" width="74" height="28" isRemoveLineWhenBlank="true"/>
+				<imageExpression><![CDATA[getClass().getResourceAsStream("/etsbackoffice/report/resources/logo_biman.jpg")]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame" hAlign="Center">
+				<reportElement uuid="80f996bd-d6c5-4578-af42-38118dcc12bd" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="2" width="30" height="28" isRemoveLineWhenBlank="true"/>
+				<imageExpression><![CDATA[getClass().getResourceAsStream("/etsbackoffice/report/resources/logo_atol.jpg")]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
+</jasperReport>
