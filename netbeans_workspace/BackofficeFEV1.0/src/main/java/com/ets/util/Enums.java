@@ -1,4 +1,4 @@
-package com.amadeus.util;
+package com.ets.util;
 
 /**
  *

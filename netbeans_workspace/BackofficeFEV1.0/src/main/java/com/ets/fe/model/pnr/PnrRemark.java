@@ -1,4 +1,4 @@
-package com.ets.model.pnr;
+package com.ets.fe.model.pnr;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

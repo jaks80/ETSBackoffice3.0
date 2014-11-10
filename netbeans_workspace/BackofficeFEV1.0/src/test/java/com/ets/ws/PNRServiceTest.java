@@ -1,14 +1,12 @@
 package com.ets.ws;
 
-import com.ets.model.pnr.Pnr;
-import com.ets.model.pnr.Ticket;
-import com.amadeus.util.DateUtil;
+import com.ets.fe.model.pnr.Pnr;
+import com.ets.fe.model.pnr.Ticket;
+import com.ets.util.DateUtil;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -18,7 +16,6 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.junit.Before;
-import org.junit.Test;
 
 /**
  *
@@ -49,7 +46,7 @@ public class PNRServiceTest {
         System.out.println("EEE");
     }
     
-    @Test
+    //@Test
     public void testPost() throws ParseException {
     
         Pnr pnr = new Pnr();

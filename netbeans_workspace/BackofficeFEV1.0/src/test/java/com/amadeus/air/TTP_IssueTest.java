@@ -1,9 +1,9 @@
 package com.amadeus.air;
 
-import com.ets.model.pnr.Itinerary;
-import com.ets.model.pnr.Pnr;
-import com.ets.model.pnr.Ticket;
-import com.amadeus.util.DateUtil;
+import com.ets.fe.model.pnr.Itinerary;
+import com.ets.fe.model.pnr.Pnr;
+import com.ets.fe.model.pnr.Ticket;
+import com.ets.util.DateUtil;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;

@@ -1,6 +1,7 @@
 package com.amadeus.reader;
 
 import com.amadeus.air.AIR;
+import com.amadeus.air.AirUtil;
 import com.amadeus.air.FileToAIRConverter;
 import java.io.File;
 import java.io.IOException;
@@ -18,16 +19,29 @@ import java.util.logging.Logger;
 public class ResponseHandler implements Observer {
 
     List<AIR> airs = new ArrayList<>();
-    
+
     @Override
     public void update(Observable o, Object arg) {
 
         try {
             File[] airFiles = checkAirDirectory();
-            Thread.sleep(4000);//Wait to get all files ready
-            for (int i = 0; i < airFiles.length; i++) {
-                FileToAIRConverter air = new FileToAIRConverter();                
-                airs.add(air.convert(airFiles[i]));
+            Thread.sleep(3000);//Wait to get all files ready
+            for (File airFile : airFiles) {
+                int noOfTry = 0;
+                if (AirUtil.isValidFile(airFile)) {
+                    FileToAIRConverter airConverter = new FileToAIRConverter();
+                    AIR air = airConverter.convert(airFile);
+                    Thread t = new Thread(new ReaderThread(air));                    
+                    t.start();
+                    t.join();
+                } else {
+                    System.out.println("File is not valid: noOfTry = " + noOfTry);
+                    noOfTry++;
+                    Thread.sleep(3000);
+                    if (noOfTry == 2) {
+                        AirUtil.sendAirToErrorDirectory(airFile);
+                    }
+                }
             }
             System.out.println("Done");
         } catch (InterruptedException ex) {

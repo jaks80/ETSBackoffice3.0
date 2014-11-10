@@ -19,7 +19,7 @@ public class FileToAIRConverter {
     public AIR convert(File file) throws FileNotFoundException, IOException {
 
         AIR air = new AIR();
-
+        air.setFile(file);
         BufferedReader bf = new BufferedReader(new FileReader(file));
         String line = null;
         while ((line = bf.readLine()) != null) {

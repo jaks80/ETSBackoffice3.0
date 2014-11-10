@@ -1,5 +1,6 @@
-package com.ets.model.pnr;
+package com.ets.fe.model.pnr;
 
+import com.ets.fe.model.PersistentObject;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.ArrayList;
@@ -15,12 +16,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "pnr")
-public class Pnr implements Serializable {
+public class Pnr extends PersistentObject implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
-    @XmlElement
-    private String id;
+        
     @XmlElement
     private String gdsPNR;
     @XmlElement
@@ -137,13 +136,5 @@ public class Pnr implements Serializable {
 
     public void setBookingAgtOid(String bookingAgtOid) {
         this.bookingAgtOid = bookingAgtOid;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }

@@ -1,9 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.ets.gui;
+package com.ets.fe.gui;
+
+import com.ets.util.APIConfig;
+import com.amadeus.reader.EventSource;
+import com.amadeus.reader.ResponseHandler;
 
 /**
  *
@@ -11,13 +10,21 @@ package com.ets.gui;
  */
 public class Main extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Main
-     */
     public Main() {
         initComponents();
+        APIConfig api = new APIConfig();
+        startFileReading();
     }
 
+    public void startFileReading() {
+        ResponseHandler respHandler = new ResponseHandler();
+        EventSource evSrc = new EventSource();
+        evSrc.addObserver(respHandler);
+        Thread thread = new Thread(evSrc);
+        thread.start();
+        System.out.println("Observer started...");
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

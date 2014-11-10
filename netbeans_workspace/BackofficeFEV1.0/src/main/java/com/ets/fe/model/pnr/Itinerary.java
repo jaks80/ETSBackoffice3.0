@@ -1,5 +1,7 @@
-package com.ets.model.pnr;
+package com.ets.fe.model.pnr;
 
+import com.ets.fe.model.PersistentObject;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,12 +15,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
-public class Itinerary {
+public class Itinerary  extends PersistentObject implements Serializable{
     
      private static final long serialVersionUID = 1L;
-     
-    @XmlElement
-    private long itineraryId;
+
     @XmlElement
     private String segmentNo;
     @XmlElement
@@ -208,14 +208,6 @@ public class Itinerary {
 
     public void setMileage(String mileage) {
         this.mileage = mileage;
-    }
-
-    public long getItineraryId() {
-        return itineraryId;
-    }
-
-    public void setItineraryId(long itineraryId) {
-        this.itineraryId = itineraryId;
     }
 
     public String getStopOver() {

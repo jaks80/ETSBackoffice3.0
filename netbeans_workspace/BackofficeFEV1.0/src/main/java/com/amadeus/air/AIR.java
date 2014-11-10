@@ -1,5 +1,6 @@
 package com.amadeus.air;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class AIR {
     private String creationDate;
     private String version;
     private String page;
+    private File file;
     
     private List<String> lines = new ArrayList<>();
 
@@ -63,5 +65,13 @@ public class AIR {
 
     public void addLine(String line){
      this.lines.add(line);
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 }

@@ -1,9 +1,9 @@
 package com.amadeus.air;
 
-import com.ets.model.pnr.Itinerary;
-import com.ets.model.pnr.Pnr;
-import com.ets.model.pnr.Ticket;
-import com.amadeus.util.DateUtil;
+import com.ets.fe.model.pnr.Itinerary;
+import com.ets.fe.model.pnr.Pnr;
+import com.ets.fe.model.pnr.Ticket;
+import com.ets.util.DateUtil;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class AIRToPNRConverter {
         this.air = air;
     }
 
-    public Pnr airToPNR() throws ParseException {
+    public Pnr airToPNR() {
         Pnr pnr = new Pnr();
 
         for (String s : air.getLines()) {
@@ -70,7 +70,7 @@ public class AIRToPNRConverter {
         return segments;
     }
 
-    public List<Ticket> airToTicket() throws ParseException {
+    public List<Ticket> airToTicket() {
         List<Ticket> tickets = new ArrayList<>();
 
         String localCurrencyCode = null;
@@ -148,7 +148,7 @@ public class AIRToPNRConverter {
         return tickets;
     }
 
-    public List<Ticket> airToRefundedTicket() throws ParseException {
+    public List<Ticket> airToRefundedTicket(){
         List<Ticket> tickets = new ArrayList<>();
 
         BigDecimal baseFare = new BigDecimal("0.00");
@@ -212,7 +212,7 @@ public class AIRToPNRConverter {
         return ticket;
     }
 
-    public List<Ticket> airToVoidTicket() throws ParseException {
+    public List<Ticket> airToVoidTicket(){
         List<Ticket> tickets = new ArrayList<>();
         Ticket ticket = null;
 

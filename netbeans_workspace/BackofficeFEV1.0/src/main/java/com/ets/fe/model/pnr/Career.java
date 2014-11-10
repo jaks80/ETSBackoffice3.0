@@ -1,4 +1,4 @@
-package com.ets.model.pnr;
+package com.ets.fe.model.pnr;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

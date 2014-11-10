@@ -1,5 +1,7 @@
-package com.ets.model.pnr;
+package com.ets.fe.model.pnr;
 
+import com.ets.fe.model.PersistentObject;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.ArrayList;
@@ -15,12 +17,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
-public class Ticket {
+public class Ticket extends PersistentObject implements Serializable{
     
      private static final long serialVersionUID = 1L;
 
-    @XmlElement
-    private long ticketId;
     @XmlElement
     private String passengerNo;
     @XmlElement
@@ -58,14 +58,6 @@ public class Ticket {
 
     public Ticket() {
 
-    }
-
-    public long getTicketId() {
-        return ticketId;
-    }
-
-    public void setTicketId(long ticketId) {
-        this.ticketId = ticketId;
     }
 
     public String getPassengerNo() {
