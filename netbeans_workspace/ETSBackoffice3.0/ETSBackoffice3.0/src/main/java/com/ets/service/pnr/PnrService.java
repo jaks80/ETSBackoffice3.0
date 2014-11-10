@@ -28,7 +28,7 @@ public class PnrService implements GenericDAO<Pnr, Long>{
         pnr.setAirCreationDate(DateUtil.yyMMddToDate("090316"));
         pnr.setBookingAgtOid("BONU123IK");
         pnr.setTktingAgtOid("LONU123IT");
-        pnr.setGdsPNR("5HH342");
+        pnr.setGdsPnr("5HH342");
         pnr.setNoOfPax(2);
         pnr.setPnrCreationDate(DateUtil.yyMMddToDate("090313"));
         pnr.setVendorPNR("AI HJ3HV");

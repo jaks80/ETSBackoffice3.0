@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -18,9 +19,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @XmlRootElement
+//@XmlAccessorType(XmlAccessType.NONE)
 public class Pnr extends PersistentObject implements Serializable {
     
-    private String gdsPNR;
+    private String gdsPnr;
     private Integer noOfPax;
     private String bookingAgtOid;
     private String tktingAgtOid;
@@ -29,19 +31,20 @@ public class Pnr extends PersistentObject implements Serializable {
     private String vendorPNR;
 
     private Career servicingCareer;
-    private Set<Ticket> tickets = new LinkedHashSet<>();
-    private Set<Itinerary> segments = new LinkedHashSet<>();
-    private Set<String> remarks = new LinkedHashSet<>();
+        
+    private Set<Ticket> tickets = new LinkedHashSet<>();    
+    private Set<Itinerary> segments = new LinkedHashSet<>();    
+    private Set<PnrRemark> remarks = new LinkedHashSet<>();
 
     public Pnr() {
     }
 
-    public String getGdsPNR() {
-        return gdsPNR;
+    public String getGdsPnr() {
+        return gdsPnr;
     }
 
-    public void setGdsPNR(String gdsPNR) {
-        this.gdsPNR = gdsPNR;
+    public void setGdsPnr(String gdsPnr) {
+        this.gdsPnr = gdsPnr;
     }
 
     public Integer getNoOfPax() {
@@ -60,6 +63,7 @@ public class Pnr extends PersistentObject implements Serializable {
         this.tktingAgtOid = tktingAgtOid;
     }
 
+    @Temporal(javax.persistence.TemporalType.DATE)
     public Date getPnrCreationDate() {
         return pnrCreationDate;
     }
@@ -68,6 +72,7 @@ public class Pnr extends PersistentObject implements Serializable {
         this.pnrCreationDate = pnrCreationDate;
     }
 
+    @Temporal(javax.persistence.TemporalType.DATE)
     public Date getAirCreationDate() {
         return airCreationDate;
     }
@@ -115,11 +120,11 @@ public class Pnr extends PersistentObject implements Serializable {
 
     @OneToMany(targetEntity = PnrRemark.class, mappedBy = "pnr",
             cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    public Set<String> getRemarks() {
+    public Set<PnrRemark> getRemarks() {
         return remarks;
     }
 
-    public void setRemarks(Set<String> remarks) {
+    public void setRemarks(Set<PnrRemark> remarks) {
         this.remarks = remarks;
     }
 

@@ -1,21 +1,17 @@
 package com.ets.ws.air;
 
+import com.ets.collection.Tickets;
 import com.ets.domain.pnr.Pnr;
+import com.ets.domain.pnr.Ticket;
 import com.ets.service.air.AirService;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-import java.util.Date;
+import java.util.Set;
+import javax.annotation.Resource;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -24,40 +20,45 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 @Path("/air")
+@Consumes("application/xml")
+@Produces("application/xml")
 public class AirWS {
 
-    @Autowired
+    @Resource(name = "airService")
     AirService service;
 
     @POST
-    @Path("")
-    @Consumes("application/xml")
-    @Produces("application/xml")
-    public Pnr create(Pnr pnr) throws ParseException {
-        service.create();
+    @Path("/book")
+    public Pnr createBooking(Pnr pnr){
+        service.createBooking(pnr);
         return pnr;
     }
 
-    @PUT
-    @Path("/pnrs/{id}")
-    @Consumes("application/xml")
-    @Produces("application/xml")
-    public Pnr update(@PathParam("id") long id, Pnr pnr) throws URISyntaxException {
-        System.out.println("PNR" + pnr.getGdsPNR());
+    @POST
+    @Path("/issue")
+    public Pnr createIssue(Pnr pnr){
+        service.createIssue(pnr);
         return pnr;
     }
 
-    @DELETE
-    @Path("/pnrs/{id}")
-    public Response delete(@PathParam("id") long id)
-            throws URISyntaxException {
+    @POST
+    @Path("/re-issue")
+    public Pnr createReIssue(Pnr pnr){
+        service.createReIssue(pnr);
+        return pnr;
+    }
+
+    @POST
+    @Path("/refund")
+    public Response refundTicket(Tickets tickets) {
+        service.refundTicket(tickets);
         return Response.status(200).build();
     }
 
-    @GET
-    @Produces("application/xml")
-    @Path("/pnrs/searchbypnr{gdsPnr}/{pnrCreationDate}")
-    public Pnr getGdsPnr(@QueryParam("gdsPnr") String gdsPnr, @QueryParam("pnrCreationDate") Date pnrCreationDate) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @PUT
+    @Path("/void")
+    public Response voidTicket(Tickets tickets) {
+        service.voidTicket(tickets);
+        return Response.status(200).build();
     }
 }

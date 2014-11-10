@@ -2,8 +2,6 @@ package com.ets.ws.pnr;
 
 import com.ets.domain.pnr.Pnr;
 import com.ets.service.pnr.PnrService;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -43,44 +41,39 @@ public class PnrWS {
     @Path("/pnrs/{id}")
     @Consumes("application/xml")
     @Produces("application/xml")
-    public Pnr update(@PathParam("id") long id, Pnr pnr) throws URISyntaxException {
-        System.out.println("PNR" + pnr.getGdsPNR());
+    public Pnr update(@PathParam("id") long id, Pnr pnr){
+        System.out.println("PNR" + pnr.getGdsPnr());
         return pnr;
     }
 
     @DELETE
     @Path("/pnrs/{id}")
-    public Response delete(@PathParam("id") long id)
-            throws URISyntaxException {
+    public Response delete(@PathParam("id") long id){
         return Response.status(200).build();
     }
 
     @GET
     @Produces("application/xml")
     @Path("/pnrs/getbydate/{start}/{end}")
-    public Pnr getByDate(@QueryParam("start") Date start, @QueryParam("end") Date end) throws ParseException {
-        return service.getByGDSPnr("sss");
+    public Pnr getByDate(@QueryParam("start") Date start, @QueryParam("end") Date end){
+        Pnr pnr = new Pnr();
+        return pnr;
     }
 
     @GET
     @Produces("application/xml")
     @Path("/pnrs/getbyid/{id}")
-    public Pnr getById(@PathParam("id") long id) throws ParseException {
-        return service.getByGDSPnr("sss");
+    public Pnr getById(@PathParam("id") long id){
+        Pnr pnr = new Pnr();
+        return pnr;
     }
 
     @GET
     @Produces("application/xml")
     @Path("/pnrs/withchildren/{id}")
-    public Pnr getByIdWithChildren(@PathParam("id") long id) throws ParseException {
-        return service.getByGDSPnr("sss");
-    }
-
-    @GET
-    @Produces("application/xml")
-    @Path("/pnrs/searchbypnr{gdsPnr}/{pnrCreationDate}")
-    public Pnr getGdsPnr(@QueryParam("gdsPnr") String gdsPnr, @QueryParam("pnrCreationDate") Date pnrCreationDate) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Pnr getByIdWithChildren(@PathParam("id") long id){
+         Pnr pnr = new Pnr();
+        return pnr;
     }
 
     @GET
