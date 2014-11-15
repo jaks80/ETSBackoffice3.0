@@ -4,8 +4,6 @@ import com.ets.fe.model.pnr.Pnr;
 import com.ets.collection.Tickets;
 import com.ets.fe.ws.RestClientUtil;
 import com.ets.util.APIConfig;
-import java.util.Date;
-import javax.ws.rs.core.Response;
 
 /**
  *

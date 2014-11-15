@@ -18,24 +18,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "pnr")
 public class Pnr extends PersistentObject implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static long serialVersionUID = 1L;
         
     @XmlElement
-    private String gdsPNR;
+    private String gdsPnr;
     @XmlElement
     private Integer noOfPax;
     @XmlElement
     private String bookingAgtOid;    
     @XmlElement
-    private String tktingAgtOid;
+    private String ticketingAgtOid;
     @XmlElement
     private Date pnrCreationDate;    
     @XmlElement
     private Date airCreationDate;
     @XmlElement
     private String vendorPNR;
-    
-    private Career servicingCareer;
+    @XmlElement
+    private String servicingCareerCode;
     @XmlElement
     private List<Ticket> tickets = new ArrayList<>();
     @XmlElement
@@ -47,29 +47,13 @@ public class Pnr extends PersistentObject implements Serializable {
     public Pnr() {
     }
 
-    public String getGdsPNR() {
-        return gdsPNR;
-    }
-
-    public void setGdsPNR(String gdsPNR) {
-        this.gdsPNR = gdsPNR;
-    }
-
     public Integer getNoOfPax() {
         return noOfPax;
     }
 
     public void setNoOfPax(Integer noOfPax) {
         this.noOfPax = noOfPax;
-    }
-   
-    public String getTktingAgtOid() {
-        return tktingAgtOid;
-    }
-
-    public void setTktingAgtOid(String tktingAgtOid) {
-        this.tktingAgtOid = tktingAgtOid;
-    }
+    }   
 
     public Date getPnrCreationDate() {
         return pnrCreationDate;
@@ -94,15 +78,6 @@ public class Pnr extends PersistentObject implements Serializable {
     public void setVendorPNR(String vendorPNR) {
         this.vendorPNR = vendorPNR;
     }
-
-    public Career getServicingCareer() {
-        return servicingCareer;
-    }
-
-    public void setServicingCareer(Career servicingCareer) {
-        this.servicingCareer = servicingCareer;
-    }
-
     
     public List<Ticket> getTickets() {
         return tickets;
@@ -136,5 +111,29 @@ public class Pnr extends PersistentObject implements Serializable {
 
     public void setBookingAgtOid(String bookingAgtOid) {
         this.bookingAgtOid = bookingAgtOid;
+    }
+
+    public String getServicingCareerCode() {
+        return servicingCareerCode;
+    }
+
+    public void setServicingCareerCode(String servicingCareerCode) {
+        this.servicingCareerCode = servicingCareerCode;
+    }
+
+    public String getTicketingAgtOid() {
+        return ticketingAgtOid;
+    }
+
+    public void setTicketingAgtOid(String ticketingAgtOid) {
+        this.ticketingAgtOid = ticketingAgtOid;
+    }
+
+    public String getGdsPnr() {
+        return gdsPnr;
+    }
+
+    public void setGdsPnr(String gdsPnr) {
+        this.gdsPnr = gdsPnr;
     }
 }

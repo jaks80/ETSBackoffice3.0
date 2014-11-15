@@ -59,9 +59,6 @@ public class Itinerary  extends PersistentObject implements Serializable{
     @XmlElement
     private Pnr pnr;
     
-    @XmlElement
-    private List<Ticket> tickets = new ArrayList<>();
-    
     public Itinerary(){
     
     }
@@ -220,13 +217,5 @@ public class Itinerary  extends PersistentObject implements Serializable{
 
     public void setPnr(Pnr pnr) {
         this.pnr = pnr;
-    }
-
-    public List<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(List<Ticket> tickets) {
-        this.tickets = tickets;
     }
 }

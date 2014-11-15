@@ -1,11 +1,10 @@
 package com.ets.collection;
 
-import com.ets.fe.model.pnr.Pnr;
+import com.ets.fe.model.pnr.Career;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -14,16 +13,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
-public class Pnrs {
+public class Careers {
+    
+    private List<Career> list = new ArrayList<>();
 
-    @XmlElement
-    private List<Pnr> list = new ArrayList<>();
-
-    public List<Pnr> getList() {
+    public List<Career> getList() {
         return list;
     }
 
-    public void setList(List<Pnr> list) {
+    public void setList(List<Career> list) {
         this.list = list;
-    }
+    }        
 }

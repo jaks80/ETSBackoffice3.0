@@ -1,5 +1,6 @@
 package com.ets.util;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -18,6 +19,12 @@ public class DateUtil {
     private static final SimpleDateFormat dfInput1 = new SimpleDateFormat("ddMMMyy");
     private static Calendar cal = Calendar.getInstance();
 
+    /**
+     * For AIR
+     *
+     * @param yyMMdd
+     * @return
+     */
     public static Date yyMMddToDate(String yyMMdd) {
 
         Date date = null;
@@ -30,6 +37,12 @@ public class DateUtil {
         return date;
     }
 
+    /**
+     * For AIR
+     *
+     * @param ddmm
+     * @return
+     */
     public static Date ddmmToDate(String ddmm) {
         String year = String.valueOf(cal.get(Calendar.YEAR));
         String tempDate = ddmm.concat(year);
@@ -46,6 +59,12 @@ public class DateUtil {
         return date;
     }
 
+    /**
+     * For AIR TRFP
+     *
+     * @param dateString
+     * @return
+     */
     public static Date refundDate(String dateString) {
         Date date = null;
         try {
@@ -56,6 +75,32 @@ public class DateUtil {
             Logger.getLogger(DateUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        return date;
+    }
+
+    public static Date getBeginingOfMonth() {
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+        return cal.getTime();
+    }
+
+    public static Date getEndOfMonth() {
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        return cal.getTime();
+    }
+
+    public static String dateToString(Date date, String format) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(date);
+    }
+
+    public static Date stringToDate(String dateString, String dateStringFormat) {
+        DateFormat dateFormat = new SimpleDateFormat(dateStringFormat);
+        Date date = null;
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException ex) {
+            Logger.getLogger(DateUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return date;
     }
 }

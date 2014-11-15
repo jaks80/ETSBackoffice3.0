@@ -42,8 +42,7 @@ public class Ticket extends PersistentObject implements Serializable{
     
     @XmlElement
     private Pnr pnr;
-    @XmlElement
-    private List<Itinerary> segments = new ArrayList<>();
+
     @XmlElement
     private BigDecimal baseFare = new BigDecimal("0.00");
     @XmlElement
@@ -178,13 +177,5 @@ public class Ticket extends PersistentObject implements Serializable{
 
     public void setPnr(Pnr pnr) {
         this.pnr = pnr;
-    }
-
-    public List<Itinerary> getSegments() {
-        return segments;
-    }
-
-    public void setSegments(List<Itinerary> segments) {
-        this.segments = segments;
     }
 }

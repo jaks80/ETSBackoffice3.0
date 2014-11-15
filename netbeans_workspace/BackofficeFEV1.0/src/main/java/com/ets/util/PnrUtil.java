@@ -13,12 +13,12 @@ import java.util.List;
  */
 public class PnrUtil {
 
-    public static void intiItineraryInTickets(List<Itinerary> segments, List<Ticket> tickets) {
-
-        for (Ticket ticket : tickets) {
-            ticket.setSegments(segments);
-        }
-    }
+//    public static void intiItineraryInTickets(List<Itinerary> segments, List<Ticket> tickets) {
+//
+//        for (Ticket ticket : tickets) {
+//            ticket.setSegments(segments);
+//        }
+//    }
 
     public static List<PnrRemark> initPnrInRemark(Pnr pnr, List<PnrRemark> remarks) {
 

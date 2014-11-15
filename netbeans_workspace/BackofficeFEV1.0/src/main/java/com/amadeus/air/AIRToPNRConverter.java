@@ -1,11 +1,11 @@
 package com.amadeus.air;
 
+import com.ets.fe.model.pnr.Career;
 import com.ets.fe.model.pnr.Itinerary;
 import com.ets.fe.model.pnr.Pnr;
 import com.ets.fe.model.pnr.Ticket;
 import com.ets.util.DateUtil;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,10 +28,10 @@ public class AIRToPNRConverter {
         for (String s : air.getLines()) {
             if (s.startsWith("MUC")) {
                 String[] vals = AIRLineParser.parseMUCLine(s);
-                pnr.setGdsPNR(vals[0].substring(0, 6));
+                pnr.setGdsPnr(vals[0].substring(0, 6));
                 pnr.setNoOfPax(Integer.valueOf(vals[1].substring(0, 2)));
                 pnr.setBookingAgtOid(vals[2]);
-                pnr.setTktingAgtOid(vals[8]);
+                pnr.setTicketingAgtOid(vals[8]);
                 pnr.setVendorPNR(vals[vals.length - 1]);
                 break;
             }
@@ -46,7 +46,24 @@ public class AIRToPNRConverter {
             }
         }
 
+        Career career = airToCareer();
+        pnr.setServicingCareerCode(career.getCode());
         return pnr;
+    }
+    
+    public Career airToCareer() {
+
+        Career career = null;
+        for (String s : air.getLines()) {
+            if (s.startsWith("A-")) {
+                career = new Career();
+                String[] vals = AIRLineParser.parseALine(s);                                
+                career.setName(vals[0]);
+                career.setCode(vals[1].substring(0, 3).trim());
+                break;
+            }
+        }
+        return career;
     }
 
     public List<Itinerary> airToItinerary() {

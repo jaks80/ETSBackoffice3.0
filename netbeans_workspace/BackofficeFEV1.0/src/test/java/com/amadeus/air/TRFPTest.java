@@ -1,6 +1,5 @@
 package com.amadeus.air;
 
-import com.ets.fe.model.pnr.Pnr;
 import com.ets.fe.model.pnr.Ticket;
 import com.ets.util.DateUtil;
 import java.io.File;
@@ -34,10 +33,9 @@ public class TRFPTest {
         FileToAIRConverter converter = new FileToAIRConverter();
         this.air = converter.convert(file);
     }
-
-
+    
     @Test
-    public void testAirToTicket() throws ParseException {
+    public void testAirToTicket() {
         System.out.println("Test TRFP");
         AIRToPNRConverter instance = new AIRToPNRConverter(this.air);
         List<Ticket> expResult = new ArrayList<>();
@@ -45,10 +43,10 @@ public class TRFPTest {
         Ticket t1 = new Ticket();
         t1.setBaseFare(new BigDecimal("306.00").negate());
         t1.setTax(new BigDecimal("164.60").negate());
+        t1.setFee(new BigDecimal("80.00"));
         t1.setTotalFare(new BigDecimal("390.60").negate());
         //t1.setCurrencyCode("GBP");
-        t1.setDocIssuedate(DateUtil.refundDate("02JUL09"));
-        t1.setFee(new BigDecimal("80.00"));
+        t1.setDocIssuedate(DateUtil.refundDate("02JUL09"));        
         t1.setNumericAirLineCode("098");
         t1.setTicketNo("3943767500");
         t1.setOrginalTicketNo(null);
