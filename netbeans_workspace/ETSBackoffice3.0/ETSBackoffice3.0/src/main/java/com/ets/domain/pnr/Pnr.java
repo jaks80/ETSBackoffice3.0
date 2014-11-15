@@ -11,6 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -18,22 +21,33 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Yusuf
  */
 @Entity
-@XmlRootElement
-//@XmlAccessorType(XmlAccessType.NONE)
+@XmlRootElement(name = "pnr")
+@XmlAccessorType(XmlAccessType.NONE)
 public class Pnr extends PersistentObject implements Serializable {
     
+    private static final long serialVersionUID = 1L;
+    
+    @XmlElement
     private String gdsPnr;
+    @XmlElement
     private Integer noOfPax;
+    @XmlElement
     private String bookingAgtOid;
-    private String tktingAgtOid;
+    @XmlElement
+    private String ticketingAgtOid;
+    @XmlElement
     private Date pnrCreationDate;
+    @XmlElement
     private Date airCreationDate;
+    @XmlElement
     private String vendorPNR;
-
-    private Career servicingCareer;
-        
-    private Set<Ticket> tickets = new LinkedHashSet<>();    
+    @XmlElement
+    private String servicingCareerCode;
+    @XmlElement
+    private Set<Ticket> tickets = new LinkedHashSet<>();   
+    @XmlElement
     private Set<Itinerary> segments = new LinkedHashSet<>();    
+    @XmlElement
     private Set<PnrRemark> remarks = new LinkedHashSet<>();
 
     public Pnr() {
@@ -53,14 +67,6 @@ public class Pnr extends PersistentObject implements Serializable {
 
     public void setNoOfPax(Integer noOfPax) {
         this.noOfPax = noOfPax;
-    }
-
-    public String getTktingAgtOid() {
-        return tktingAgtOid;
-    }
-
-    public void setTktingAgtOid(String tktingAgtOid) {
-        this.tktingAgtOid = tktingAgtOid;
     }
 
     @Temporal(javax.persistence.TemporalType.DATE)
@@ -89,17 +95,9 @@ public class Pnr extends PersistentObject implements Serializable {
         this.vendorPNR = vendorPNR;
     }
 
-    public Career getServicingCareer() {
-        return servicingCareer;
-    }
-
-    public void setServicingCareer(Career servicingCareer) {
-        this.servicingCareer = servicingCareer;
-    }
-
     @OneToMany(targetEntity = Ticket.class, mappedBy = "pnr",
             cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @OrderBy(value = "ticketId")
+    @OrderBy(value = "id")
     public Set<Ticket> getTickets() {
         return tickets;
     }
@@ -134,5 +132,21 @@ public class Pnr extends PersistentObject implements Serializable {
 
     public void setBookingAgtOid(String bookingAgtOid) {
         this.bookingAgtOid = bookingAgtOid;
+    }
+
+    public String getServicingCareerCode() {
+        return servicingCareerCode;
+    }
+
+    public void setServicingCareerCode(String servicingCareerCode) {
+        this.servicingCareerCode = servicingCareerCode;
+    }
+
+    public String getTicketingAgtOid() {
+        return ticketingAgtOid;
+    }
+
+    public void setTicketingAgtOid(String ticketingAgtOid) {
+        this.ticketingAgtOid = ticketingAgtOid;
     }
 }

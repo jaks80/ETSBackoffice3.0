@@ -1,11 +1,12 @@
 package com.ets.ws.pnr;
 
+import com.ets.collection.Pnrs;
 import com.ets.domain.pnr.Pnr;
 import com.ets.service.pnr.PnrService;
-import java.util.Date;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -29,7 +30,7 @@ public class PnrWS {
     PnrService service;
 
     @POST
-    @Path("/pnrs")
+    @Path("/new")
     @Consumes("application/xml")
     @Produces("application/xml")
     public Pnr create(Pnr pnr){
@@ -38,7 +39,7 @@ public class PnrWS {
     }
 
     @PUT
-    @Path("/pnrs/{id}")
+    @Path("/update/{id}")
     @Consumes("application/xml")
     @Produces("application/xml")
     public Pnr update(@PathParam("id") long id, Pnr pnr){
@@ -47,22 +48,25 @@ public class PnrWS {
     }
 
     @DELETE
-    @Path("/pnrs/{id}")
+    @Path("/delete/{id}")
     public Response delete(@PathParam("id") long id){
         return Response.status(200).build();
     }
 
     @GET
     @Produces("application/xml")
-    @Path("/pnrs/getbydate/{start}/{end}")
-    public Pnr getByDate(@QueryParam("start") Date start, @QueryParam("end") Date end){
-        Pnr pnr = new Pnr();
-        return pnr;
+    @Path("/history")
+    public Pnrs getHistory(@QueryParam("bookingAgtOid") String bookingAgtOid,
+                           @QueryParam("ticketingAgtOid") String ticketingAgtOid, 
+                           @QueryParam("dateStart") String dateStart, 
+                           @QueryParam("dateEnd") String dateEnd){
+        Pnrs pnrs = service.pnrHistory(dateStart, dateEnd, ticketingAgtOid, bookingAgtOid);
+        return pnrs;
     }
 
     @GET
     @Produces("application/xml")
-    @Path("/pnrs/getbyid/{id}")
+    @Path("/byid/{id}")
     public Pnr getById(@PathParam("id") long id){
         Pnr pnr = new Pnr();
         return pnr;
@@ -70,7 +74,7 @@ public class PnrWS {
 
     @GET
     @Produces("application/xml")
-    @Path("/pnrs/withchildren/{id}")
+    @Path("/withchildren/{id}")
     public Pnr getByIdWithChildren(@PathParam("id") long id){
          Pnr pnr = new Pnr();
         return pnr;
@@ -78,14 +82,14 @@ public class PnrWS {
 
     @GET
     @Produces("application/xml")
-    @Path("/pnrs/getbytkt/{tktNo}/{surName}")
+    @Path("/bytkt/{tktNo}/{surName}")
     public List<Pnr> getPnrByTktNo(@QueryParam("tktNo") String tktNo, @QueryParam("surName") String surName) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @GET
     @Produces("application/xml")
-    @Path("/pnrs/getbyname/{tktNo}/{surName}")
+    @Path("/bypaxname/{tktNo}/{surName}")
     public List<Pnr> getPnrByName(@QueryParam("surName") String surName, @QueryParam("foreName") String foreName) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

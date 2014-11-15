@@ -13,6 +13,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderBy;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -21,25 +24,42 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class Ticket extends PersistentObject implements Serializable{
 
+    private static final long serialVersionUID = 1L;
+    
+    @XmlElement
     private String passengerNo;
+    @XmlElement
     private String paxSurName;
+    @XmlElement
     private String paxForeName;
+    @XmlElement
     private String numericAirLineCode;
+    @XmlElement
     private String ticketNo;
+    @XmlElement
     private String orginalTicketNo;
+    @XmlElement
     private String currencyCode;
+    @XmlElement
     private String restrictions;
+    @XmlElement
     private Date docIssuedate;
-    private Pnr pnr;
-    private Set<Itinerary> segments = new LinkedHashSet<>();
+    @XmlElement
+    private Pnr pnr;    
 
+    @XmlElement
     private BigDecimal baseFare = new BigDecimal("0.00");
+    @XmlElement
     private BigDecimal tax = new BigDecimal("0.00");
+    @XmlElement
     private BigDecimal fee = new BigDecimal("0.00");
+    @XmlElement
     private BigDecimal totalFare = new BigDecimal("0.00");
 
+    @XmlElement
     private int tktStatus;//1.Booked, 2. Issued,3. ReIssued, 4.Refund,5.VOID
 
     public Ticket() {
@@ -159,27 +179,12 @@ public class Ticket extends PersistentObject implements Serializable{
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PNRID_FK")
+    @JoinColumn(name = "pnrid_fk")
     public Pnr getPnr() {
         return pnr;
     }
 
     public void setPnr(Pnr pnr) {
         this.pnr = pnr;
-    }
-
-    @ManyToMany
-    @JoinTable(name = "join_ticket_itinerary",
-            joinColumns = {
-                @JoinColumn(name = "ticketId")},
-            inverseJoinColumns = {
-                @JoinColumn(name = "itineraryId")})
-    @OrderBy(value = "itineraryId")
-    public Set<Itinerary> getSegments() {
-        return segments;
-    }
-
-    public void setSegments(Set<Itinerary> segments) {
-        this.segments = segments;
     }
 }

@@ -4,10 +4,13 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Resource;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,14 +43,18 @@ public abstract class GenericDAOImpl<T, Long extends Serializable> implements Ge
     }
 
     public void save(T entity) {
-        try {
-            Session hibernateSession = this.sessionFactory.getCurrentSession();
-            hibernateSession.saveOrUpdate(entity);
-        } catch (Exception e) {
-            System.out.println(stack2string(e));
-        }
+                 
+       getSession().saveOrUpdate(entity);
+      
     }
 
+    public void saveBulk(List<T> entityList){
+    
+        for(T entity: entityList){
+         save(entity);
+        }
+    }
+    
     public void merge(T entity) {
         Session hibernateSession = this.getSession();
         hibernateSession.merge(entity);
@@ -58,6 +65,14 @@ public abstract class GenericDAOImpl<T, Long extends Serializable> implements Ge
         hibernateSession.delete(entity);
     }
 
+    public void deleteBulk(Set<T> entitySet) {
+        Session hibernateSession = this.getSession();
+        
+        for(T t: entitySet){
+        hibernateSession.delete(t);
+        }
+    }
+        
     public List<T> findMany(Query query) {
         List<T> t;
         t = (List<T>) query.list();
@@ -77,14 +92,19 @@ public abstract class GenericDAOImpl<T, Long extends Serializable> implements Ge
         return t;
     }
 
-    public List findAll(Class clazz) {
-        Session hibernateSession = this.getSession();
-        List T = null;
-        Query query = hibernateSession.createQuery("from " + clazz.getName());
-        T = query.list();
-        return T;
+    public List<T> findAll(Class clazz) {
+        return findByCriteria(clazz);        
+    }        
+       
+    protected List<T> findByCriteria(Class clazz, Criterion... criterion) {
+        Criteria crit = getSession().createCriteria(clazz);
+        
+        for (Criterion c : criterion) {
+            crit.add(c);
+        }
+        return crit.list();
     }
-
+    
     public SessionFactory getSessionFactory() {
         return sessionFactory;
     }

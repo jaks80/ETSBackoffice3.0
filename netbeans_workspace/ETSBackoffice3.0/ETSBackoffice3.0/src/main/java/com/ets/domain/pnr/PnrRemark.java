@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -18,8 +19,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class PnrRemark extends PersistentObject implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
+    @XmlElement
     private Timestamp dateTime;
+    @XmlElement
     private String text;
+    @XmlElement
     private Pnr pnr;
 
     public PnrRemark() {

@@ -9,35 +9,61 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Yusuf
  */
 @Entity
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class Itinerary extends PersistentObject implements Serializable{
 
+    private static final long serialVersionUID = 1L;
+    
+    @XmlElement
     private String segmentNo;
+    @XmlElement
     private String stopOver;
+    @XmlElement
     private String deptFrom;
+    @XmlElement
     private String deptTo;
+    @XmlElement
     private String deptDate;
+    @XmlElement
     private String deptTime;
+    @XmlElement
     private String arvDate;
+    @XmlElement
     private String arvTime;
+    @XmlElement
     private String airLineID;
+    @XmlElement
     private String flightNo;
+    @XmlElement
     private String ticketClass;
+    @XmlElement
     private String tktStatus;
+    @XmlElement
     private String baggage;
+    @XmlElement
     private String mealCode;
+    @XmlElement
     private String checkInTerminal;
+    @XmlElement
     private String checkInTime;
+    @XmlElement
     private String flightDuration;
+    @XmlElement
     private String mileage;
 
+    @XmlElement
     private Pnr pnr;
-    private Set<Ticket> tickets = new LinkedHashSet<Ticket>();
 
     public Itinerary() {
 
@@ -187,22 +213,8 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.mileage = mileage;
     }
 
-    @ManyToMany
-    @JoinTable(name = "join_ticket_itinerary",
-            joinColumns = {
-                @JoinColumn(name = "itineraryId")},
-            inverseJoinColumns = {
-                @JoinColumn(name = "ticketId")})
-    public Set<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(Set<Ticket> tickets) {
-        this.tickets = tickets;
-    }
-
     @ManyToOne
-    @JoinColumn(name = "PNRID_FK")
+    @JoinColumn(name = "pnrid_fk")
     public Pnr getPnr() {
         return pnr;
     }

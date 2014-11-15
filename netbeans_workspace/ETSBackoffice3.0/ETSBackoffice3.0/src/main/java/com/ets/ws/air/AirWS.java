@@ -2,9 +2,7 @@ package com.ets.ws.air;
 
 import com.ets.collection.Tickets;
 import com.ets.domain.pnr.Pnr;
-import com.ets.domain.pnr.Ticket;
 import com.ets.service.air.AirService;
-import java.util.Set;
 import javax.annotation.Resource;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

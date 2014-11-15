@@ -3,6 +3,7 @@ package com.ets.domain.pnr;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,7 +14,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Career implements Serializable {
     
+    private static final long serialVersionUID = 1L;
+    
+    @XmlElement
     private String code;
+    @XmlElement
     private String name;
     
     public Career(){
