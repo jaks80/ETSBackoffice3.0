@@ -29,13 +29,17 @@ public class Pnr extends PersistentObject implements Serializable {
     @XmlElement
     private String ticketingAgtOid;
     @XmlElement
+    private String PnrCreatorAgentSine;
+    @XmlElement
+    private String ticketingAgentSine;    
+    @XmlElement
     private Date pnrCreationDate;    
     @XmlElement
     private Date airCreationDate;
     @XmlElement
     private String vendorPNR;
     @XmlElement
-    private String servicingCareerCode;
+    private String airLineCode;
     @XmlElement
     private List<Ticket> tickets = new ArrayList<>();
     @XmlElement
@@ -104,14 +108,6 @@ public class Pnr extends PersistentObject implements Serializable {
         this.bookingAgtOid = bookingAgtOid;
     }
 
-    public String getServicingCareerCode() {
-        return servicingCareerCode;
-    }
-
-    public void setServicingCareerCode(String servicingCareerCode) {
-        this.servicingCareerCode = servicingCareerCode;
-    }
-
     public String getTicketingAgtOid() {
         return ticketingAgtOid;
     }
@@ -134,5 +130,29 @@ public class Pnr extends PersistentObject implements Serializable {
 
     public void setRemarks(List<PnrRemark> remarks) {
         this.remarks = remarks;
+    }
+
+    public String getPnrCreatorAgentSine() {
+        return PnrCreatorAgentSine;
+    }
+
+    public void setPnrCreatorAgentSine(String PnrCreatorAgentSine) {
+        this.PnrCreatorAgentSine = PnrCreatorAgentSine;
+    }
+
+    public String getTicketingAgentSine() {
+        return ticketingAgentSine;
+    }
+
+    public void setTicketingAgentSine(String ticketingAgentSine) {
+        this.ticketingAgentSine = ticketingAgentSine;
+    }
+
+    public String getAirLineCode() {
+        return airLineCode;
+    }
+
+    public void setAirLineCode(String airLineCode) {
+        this.airLineCode = airLineCode;
     }
 }

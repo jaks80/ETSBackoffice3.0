@@ -11,14 +11,14 @@ import java.util.Date;
  */
 public class TicketWSClient {
 
-    public TicketSaleReport saleReport(String ticketStatus, String careerCode,
+    public TicketSaleReport saleReport(String ticketStatus, String airLineCode,
             Date issueDateFrom, Date issueDateTo, String ticketingAgtOid) {
 
         String dateFrom = DateUtil.dateToString(issueDateFrom, "ddMMMyyyy");
         String dateTo = DateUtil.dateToString(issueDateTo, "ddMMMyyyy");
 
         String url = APIConfig.get("ws.ticket.gds-salereport")
-                + "?ticketStatus=" + ticketStatus + "&careerCode=" + careerCode
+                + "?ticketStatus=" + ticketStatus + "&airLineCode=" + airLineCode
                 + "&dateStart=" + dateFrom + "&dateEnd=" + dateTo + "&ticketingAgtOid=" + ticketingAgtOid;
 
         TicketSaleReport report = new TicketSaleReport();

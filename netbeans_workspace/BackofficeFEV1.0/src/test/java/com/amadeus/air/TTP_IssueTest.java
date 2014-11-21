@@ -1,6 +1,6 @@
 package com.amadeus.air;
 
-import com.ets.fe.model.pnr.Career;
+import com.ets.fe.model.pnr.Airline;
 import com.ets.fe.model.pnr.Itinerary;
 import com.ets.fe.model.pnr.Pnr;
 import com.ets.fe.model.pnr.Ticket;
@@ -44,7 +44,7 @@ public class TTP_IssueTest {
         //System.out.println("Test career...");
         AIRToPNRConverter instance = new AIRToPNRConverter(this.air);
 
-        Career result = instance.airToCareer();
+        Airline result = instance.airToCareer();
 
         assertEquals("NACIL AIR INDIA", result.getName());
         assertEquals("AI", result.getCode());
@@ -58,6 +58,7 @@ public class TTP_IssueTest {
         expResult.setAirCreationDate(DateUtil.yyMMddToDate("090316"));
         expResult.setBookingAgtOid("BONU123IK");
         expResult.setTicketingAgtOid("LONU123IT");
+        expResult.setAirLineCode("AI");
         expResult.setGdsPnr("5HH342");
         expResult.setNoOfPax(2);
         expResult.setPnrCreationDate(DateUtil.yyMMddToDate("090313"));
@@ -67,6 +68,7 @@ public class TTP_IssueTest {
         assertEquals(expResult.getAirCreationDate(), result.getAirCreationDate());
         assertEquals(expResult.getBookingAgtOid(), result.getBookingAgtOid());
         assertEquals(expResult.getGdsPnr(), result.getGdsPnr());
+        assertEquals(expResult.getAirLineCode(), result.getAirLineCode());
         assertEquals(expResult.getNoOfPax(), result.getNoOfPax());
         assertEquals(expResult.getPnrCreationDate(), result.getPnrCreationDate());
         assertEquals(expResult.getTicketingAgtOid(), result.getTicketingAgtOid());

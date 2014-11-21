@@ -78,6 +78,16 @@ public class AIRLineParserTest {
     }
 
     @Test
+    public void testParseCLine() {
+        System.out.println("parseBLine");
+        String line = "C-7906/ 2008ITSU-2731IMGS-B-N--";
+        String[] expResult = {"2008ITSU","2731IMGS"};
+        String[] result = AIRLineParser.parseCLine(line);
+        assertArrayEquals(expResult, result);
+        
+    }
+    
+    @Test
     public void testParseDLine() {
         System.out.println("parseDLine");
         String line = "D-080625;080703;080703";

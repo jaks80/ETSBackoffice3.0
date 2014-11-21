@@ -58,7 +58,7 @@ public class PnrHistoryFrame extends JInternalFrame implements PropertyChangeLis
             int i = 0;
             for (Pnr p : this.list) {
                 model.insertRow(i, new Object[]{p.getGdsPnr(), p.getBookingAgtOid(), p.getTicketingAgtOid(),
-                    DateUtil.dateToString(p.getPnrCreationDate()), DateUtil.dateToString(p.getAirCreationDate()), p.getServicingCareerCode(), p.getNoOfPax()});
+                    DateUtil.dateToString(p.getPnrCreationDate()), DateUtil.dateToString(p.getAirCreationDate()), p.getAirLineCode(), p.getNoOfPax()});
                 i++;
             }
         }

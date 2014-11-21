@@ -1,6 +1,6 @@
 package com.amadeus.air;
 
-import com.ets.fe.model.pnr.Career;
+import com.ets.fe.model.pnr.Airline;
 import com.ets.fe.model.pnr.Itinerary;
 import com.ets.fe.model.pnr.Pnr;
 import com.ets.fe.model.pnr.PnrRemark;
@@ -8,7 +8,6 @@ import com.ets.fe.model.pnr.Ticket;
 import com.ets.util.DateUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,20 +46,32 @@ public class AIRToPNRConverter {
             }
         }
 
+        for (String s : air.getLines()) {
+            if (s.startsWith("C-")) {
+                String[] vals = AIRLineParser.parseCLine(s);
+                pnr.setPnrCreatorAgentSine(vals[0]);
+                pnr.setTicketingAgentSine(vals[1]);
+                pnr.setAirCreationDate(DateUtil.yyMMddToDate(vals[2]));
+                break;
+            }
+        }
+        
         if ("INV".equals(air.getType())) {
             for (String s : air.getLines()) {
                 if (s.startsWith("TK")) {
                     String[] data = AIRLineParser.parseTKLine(s);
                     String ticketingAgt = data[1];
                     pnr.setTicketingAgtOid(ticketingAgt);
+                    break;
                 }
             }
         }
         
-        Career career = airToCareer();
-        if(career != null){
-         pnr.setServicingCareerCode(career.getCode());
+        Airline airLine = airToCareer();
+        if(airLine != null){
+         pnr.setAirLineCode(airLine.getCode());
         }
+        
         return pnr;
     }
     
@@ -79,18 +90,24 @@ public class AIRToPNRConverter {
         return remarks;
     }
     
-    public Career airToCareer() {
+    public Airline airToCareer() {
 
-        Career career = null;
-        for (String s : air.getLines()) {
-            if (s.startsWith("A-") && s.length() > 4) {
-                career = new Career();
-                String[] vals = AIRLineParser.parseALine(s);                                
-                career.setName(vals[0]);
-                career.setCode(vals[1].substring(0, 3).trim());
-                break;
-            }
+        Airline career = null;
+
+        String aLine = air.getALine();
+        if (aLine.length() > 4) {
+            career = new Airline();
+            String[] vals = AIRLineParser.parseALine(aLine);
+            career.setName(vals[0]);
+            career.setCode(vals[1].substring(0, 3).trim());
+        } else {
+            String mucLine = air.getMUCLine();
+            String[] vals = AIRLineParser.parseMUCLine(mucLine);
+            String vendorPnr = vals[vals.length - 1];
+            career = new Airline();
+            career.setCode(vendorPnr.substring(0, 2));
         }
+
         return career;
     }
 
@@ -129,6 +146,26 @@ public class AIRToPNRConverter {
 
             if (s.startsWith("K-") && s.length() > 4) {
                 String[] data = AIRLineParser.parseKLine(s);
+
+                localCurrencyCode = data[12].replaceAll("[^A-Z]", "");
+                bfCurrencyCode = data[0].replaceAll("[^A-Z]", "").substring(1);
+
+                totalFare = new BigDecimal(data[12].replaceAll("[a-zA-Z]", "").trim());
+                if (totalFare.compareTo(BigDecimal.ONE) > 0) {
+                    baseFare = new BigDecimal((data[0].replaceAll("[a-zA-Z]", "").trim()));
+                }
+
+                tax = totalFare.subtract(baseFare);
+
+                if (tax.compareTo(BigDecimal.ONE) < 0) {
+                    tax = new BigDecimal("0.00");
+                }
+            }else if (s.startsWith("KS-") && s.length() > 4 && "INV".equals(air.getType())) {
+                if(totalFare.compareTo(new BigDecimal("0.00")) == 1){
+                 continue;
+                }
+                //This block is only for thirdparty ticketing
+                String[] data = AIRLineParser.parseKSLine(s);
 
                 localCurrencyCode = data[12].replaceAll("[^A-Z]", "");
                 bfCurrencyCode = data[0].replaceAll("[^A-Z]", "").substring(1);

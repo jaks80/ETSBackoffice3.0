@@ -12,14 +12,14 @@ import java.util.Date;
  */
 public class ItineraryWSClient {
 
-    public SegmentReport segmentReport(String ticketStatus, String careerCode,
+    public SegmentReport segmentReport(String ticketStatus, String airLineCode,
             Date issueDateFrom, Date issueDateTo, String officeId) {
 
         String dateStart = DateUtil.dateToString(issueDateFrom, "ddMMMyyyy");
         String dateEnd = DateUtil.dateToString(issueDateTo, "ddMMMyyyy");
 
         String url = APIConfig.get("ws.itinerary.segment-history")
-                + "?ticketStatus=" + ticketStatus + "&careerCode=" + careerCode
+                + "?ticketStatus=" + ticketStatus + "&airLineCode=" + airLineCode
                 + "&dateStart=" + dateStart + "&dateEnd=" + dateEnd + "&officeId=" + officeId;
 
         SegmentReport report = new SegmentReport();

@@ -13,15 +13,15 @@ public class SegmentReportTask extends SwingWorker<Void, Integer> {
 
     private SegmentReport report;
     private String ticketStatus;
-    private String careerCode;
+    private String airLineCode;
     private Date issueDateFrom;
     private Date issueDateTo;
     private String ticketingAgtOid;
 
-    public SegmentReportTask(String ticketStatus, String careerCode,
+    public SegmentReportTask(String ticketStatus, String airLineCode,
             Date issueDateFrom, Date issueDateTo, String ticketingAgtOid) {
         this.ticketStatus = ticketStatus;
-        this.careerCode = careerCode;
+        this.airLineCode = airLineCode;
         this.issueDateFrom = issueDateFrom;
         this.issueDateTo = issueDateTo;
         this.ticketingAgtOid = ticketingAgtOid;
@@ -31,7 +31,7 @@ public class SegmentReportTask extends SwingWorker<Void, Integer> {
     protected Void doInBackground() {
 
         ItineraryWSClient client = new ItineraryWSClient();
-        report = client.segmentReport(ticketStatus, careerCode, issueDateFrom, issueDateTo, ticketingAgtOid);
+        report = client.segmentReport(ticketStatus, airLineCode, issueDateFrom, issueDateTo, ticketingAgtOid);
 
         setProgress(50);
         return null;

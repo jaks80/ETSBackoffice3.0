@@ -37,7 +37,7 @@ public class TktSaleReportFrame extends JInternalFrame implements PropertyChange
 
         String issueType = (String) cmbIssueType.getSelectedItem();
         String ticketStatus = (String) cmbTicketStatus.getSelectedItem();
-        String careerCode = txtCareerCode.getText();
+        String airLineCode = txtCareerCode.getText();
         String ticketingAgtOid = txtOfficeId.getText();
 
         Date from = dtFrom.getDate();
@@ -48,21 +48,21 @@ public class TktSaleReportFrame extends JInternalFrame implements PropertyChange
         }
         
         
-        if (careerCode.isEmpty()) {
-            careerCode = null;
+        if (airLineCode.isEmpty()) {
+            airLineCode = null;
         }
 
-        if (careerCode == null || ticketingAgtOid.isEmpty()) {
+        if (airLineCode == null || ticketingAgtOid.isEmpty()) {
             ticketingAgtOid = null;
         }
 
-        if (careerCode == null || careerCode.isEmpty()) {
-            careerCode = null;
+        if (airLineCode == null || airLineCode.isEmpty()) {
+            airLineCode = null;
         }
 
         progressBar.setValue(0);
 
-        task = new TktSalesReportTask(ticketStatus, careerCode, from, to, ticketingAgtOid);
+        task = new TktSalesReportTask(ticketStatus, airLineCode, from, to, ticketingAgtOid);
         task.addPropertyChangeListener(this);
         task.execute();
     }
@@ -77,7 +77,7 @@ public class TktSaleReportFrame extends JInternalFrame implements PropertyChange
         for(Ticket t: list){
          salesModel.insertRow(row, new Object[]{t.getTktDateString(), t.getTktStatusString(),
                         t.getPnr().getGdsPnr(), t.getPnr().getBookingAgtOid(), t.getPnr().getTicketingAgtOid(),
-                        t.getPnr().getServicingCareerCode(), t.getFullPaxNameWithPaxNo(),
+                        t.getPnr().getAirLineCode(), t.getFullPaxNameWithPaxNo(),
                         t.getNumericAirLineCode() + "-" + t.getTicketNo(), t.getBaseFare(), t.getTax(),
                         t.getTotalFare(), t.getCommission(),t.getTotalFare()});
             row++;

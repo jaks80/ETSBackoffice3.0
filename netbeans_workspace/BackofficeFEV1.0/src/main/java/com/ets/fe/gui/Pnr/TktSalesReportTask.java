@@ -14,15 +14,15 @@ public class TktSalesReportTask extends SwingWorker<Void, Integer> {
     //private List<Ticket> list = new ArrayList<>();
     private TicketSaleReport report;
     private String ticketStatus;
-    private String careerCode;
+    private String airLineCode;
     private Date issueDateFrom;
     private Date issueDateTo;
     private String ticketingAgtOid;
 
-    public TktSalesReportTask(String ticketStatus, String careerCode,
+    public TktSalesReportTask(String ticketStatus, String airLineCode,
             Date issueDateFrom, Date issueDateTo, String ticketingAgtOid) {
         this.ticketStatus = ticketStatus;
-        this.careerCode = careerCode;
+        this.airLineCode = airLineCode;
         this.issueDateFrom = issueDateFrom;
         this.issueDateTo = issueDateTo;
         this.ticketingAgtOid = ticketingAgtOid;
@@ -32,7 +32,7 @@ public class TktSalesReportTask extends SwingWorker<Void, Integer> {
     protected Void doInBackground() {
 
         TicketWSClient client = new TicketWSClient();
-        report = client.saleReport(ticketStatus, careerCode, issueDateFrom, issueDateTo, ticketingAgtOid);
+        report = client.saleReport(ticketStatus, airLineCode, issueDateFrom, issueDateTo, ticketingAgtOid);
         //list = report.getList();
         setProgress(50);
         return null;

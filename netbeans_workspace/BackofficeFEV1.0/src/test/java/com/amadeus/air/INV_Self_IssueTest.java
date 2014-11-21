@@ -1,5 +1,10 @@
 package com.amadeus.air;
 
+
+
+import com.amadeus.air.AIR;
+import com.amadeus.air.AIRToPNRConverter;
+import com.amadeus.air.FileToAIRConverter;
 import com.ets.fe.model.pnr.Pnr;
 import com.ets.fe.model.pnr.Ticket;
 import com.ets.util.DateUtil;
@@ -11,22 +16,22 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Yusuf
  */
-public class INV_Self_Issue {
+public class INV_Self_IssueTest {
     
     private AIR air;
 
-    public INV_Self_Issue() {
-
+    
+    public INV_Self_IssueTest() {
     }
-
+    
     @Before
     public void setUp() throws URISyntaxException, IOException {
         System.out.println("Test INV self issue...");
@@ -37,7 +42,7 @@ public class INV_Self_Issue {
     }
     
     @Test
-    public void testAirToPNR() throws Exception {        
+    public void testAirToPNR1() throws Exception {        
         AIRToPNRConverter instance = new AIRToPNRConverter(this.air);
         Pnr expResult = new Pnr();
         expResult.setAirCreationDate(DateUtil.yyMMddToDate("101016"));
@@ -59,7 +64,7 @@ public class INV_Self_Issue {
     }
 
     @Test
-    public void testAirToTicket() throws ParseException {
+    public void testAirToTicket1() throws ParseException {
         System.out.println("airToTicket");
         AIRToPNRConverter instance = new AIRToPNRConverter(this.air);
         List<Ticket> expResult = new ArrayList<>();

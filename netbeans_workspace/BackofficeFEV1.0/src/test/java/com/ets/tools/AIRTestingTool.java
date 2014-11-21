@@ -7,11 +7,8 @@ import com.ets.util.DateUtil;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +31,7 @@ public class AIRTestingTool {
         System.out.println("Files found: " + airFiles.length);        
     }
 
-    //@Test
+    @Test
     public void runIssueDateTestingTool() {
         for (File airFile : airFiles) {
             FileToAIRConverter converter = new FileToAIRConverter();
@@ -64,13 +61,14 @@ public class AIRTestingTool {
                 airCreationDate = DateUtil.yyMMddToDate(vals[2]);
             }
 
-            if (s.startsWith("TKOK")) {
+            if (s.startsWith("TKXL")) {
                 String[] data = AIRLineParser.parseTKLine(s);
                 Date tkOKDate = DateUtil.ddMMMToDate(data[0].substring(2));
                 tkOKdates.add(tkOKDate);
             }
         }
 
+        if(!tkOKdates.isEmpty()){
         StringBuilder sb = new StringBuilder();
         sb.append(air.getFile().getName());
         sb.append(" TKOKD QTY: "+tkOKdates.size());
@@ -80,6 +78,7 @@ public class AIRTestingTool {
         sb.append("ACD: "+airCreationDate.toString());
         
         System.out.println(sb);
+        }
     }
 
     private File[] checkAirDirectory() {

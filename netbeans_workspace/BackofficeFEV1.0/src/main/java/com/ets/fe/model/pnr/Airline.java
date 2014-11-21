@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
-public class Career {
+public class Airline {
     
     private static final long serialVersionUID = 1L;
      
@@ -20,7 +20,7 @@ public class Career {
     @XmlElement
     private String name;
     
-    public Career(){
+    public Airline(){
     
     }
 

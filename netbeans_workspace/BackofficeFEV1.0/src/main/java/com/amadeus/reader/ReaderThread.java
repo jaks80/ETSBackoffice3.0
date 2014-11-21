@@ -57,22 +57,21 @@ public class ReaderThread implements Runnable {
             pnr.setTickets(tickets);
             pnr.setSegments(segments);
             pnr.setRemarks(remarks);
-            
-            boolean issued= false;
+
+            boolean issued = false;
             for (Ticket t : tickets) {
-                if ("ISSUED".equals(t.getTktStatusString())) {
+                if ("ISSUE".equals(t.getTktStatusString())) {
                     issued = true;
                     break;
                 }
             }
-            
-            if(issued){
-             ws.issue(pnr);
-            }else{
-             pnr.setTicketingAgtOid(null);
-             ws.book(pnr);
+
+            if (issued) {
+                ws.issue(pnr);
+            } else {
+                pnr.setTicketingAgtOid(null);
+                ws.book(pnr);
             }
-            
         }
 
         AirUtil.backupAir(air.getFile());

@@ -1,5 +1,8 @@
 package com.amadeus.air;
 
+import com.amadeus.air.AIR;
+import com.amadeus.air.AIRToPNRConverter;
+import com.amadeus.air.FileToAIRConverter;
 import com.ets.fe.model.pnr.Pnr;
 import com.ets.fe.model.pnr.Ticket;
 import com.ets.util.DateUtil;
@@ -19,11 +22,11 @@ import org.junit.Test;
  *
  * @author Yusuf
  */
-public class INV_ThirdPartyIssue {
+public class INV_ThirdPartyIssueTest {
     
     private AIR air;
 
-    public INV_ThirdPartyIssue() {
+    public INV_ThirdPartyIssueTest() {
 
     }
 
@@ -71,7 +74,7 @@ public class INV_ThirdPartyIssue {
         t1.setFee(new BigDecimal("0.00"));
         t1.setTotalFare(new BigDecimal("541.13"));
         t1.setCurrencyCode("GBP");
-        t1.setDocIssuedate(DateUtil.ddMMMToDate("01JUN"));        
+        t1.setDocIssuedate(DateUtil.yyMMddToDate("110601"));        
         t1.setNumericAirLineCode("607");
         t1.setOrginalTicketNo(null);
         t1.setPassengerNo("01");
@@ -87,7 +90,7 @@ public class INV_ThirdPartyIssue {
         t2.setFee(new BigDecimal("0.00"));
         t2.setTotalFare(new BigDecimal("541.13"));
         t2.setCurrencyCode("GBP");
-        t2.setDocIssuedate(DateUtil.ddMMMToDate("01JUN"));        
+        t2.setDocIssuedate(DateUtil.yyMMddToDate("110601"));        
         t2.setNumericAirLineCode("607");
         t2.setOrginalTicketNo(null);
         t2.setPassengerNo("02");
@@ -103,10 +106,10 @@ public class INV_ThirdPartyIssue {
         t3.setFee(new BigDecimal("0.00"));
         t3.setTotalFare(new BigDecimal("541.13"));
         t3.setCurrencyCode("GBP");
-        t3.setDocIssuedate(DateUtil.ddMMMToDate("01JUN"));        
+        t3.setDocIssuedate(DateUtil.yyMMddToDate("110601"));        
         t3.setNumericAirLineCode("607");
         t3.setOrginalTicketNo(null);
-        t3.setPassengerNo("02");
+        t3.setPassengerNo("03");
         t3.setPaxForeName("FATIMA MRS");
         t3.setPaxSurName("KHATUN");
         t3.setRestrictions("VLD EY ONLY/NON ENDO/CHG-RFND-REF TKT OFF/RSTR APPLY/X-30M");

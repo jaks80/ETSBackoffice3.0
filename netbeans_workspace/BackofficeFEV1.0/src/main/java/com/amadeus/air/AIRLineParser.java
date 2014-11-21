@@ -47,6 +47,19 @@ public class AIRLineParser {
         return splitter(line);
     }
 
+    /**
+     * C-7906/ 2008ITSU-2731IMGS-B-N--
+     * @param line
+     * @return 
+     */
+    public static String[] parseCLine(String line) {
+        line = line.replace("C-", "").trim();
+        String[] temp = line.split("-");
+        String ticketingAgent = temp[1];
+        String bookingAgent = temp[0].substring(5).trim();
+        String[] agentSines = {bookingAgent,ticketingAgent};
+        return agentSines;
+    }
     /*     
       D-080625;080703;080703
      */
