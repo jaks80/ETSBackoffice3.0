@@ -10,9 +10,10 @@ import static org.junit.Assert.*;
 public class AIRLineParserTest {
     
     public AIRLineParserTest() {
+        System.out.println("Line parser test...");
     }
 
-    //@Test
+    @Test
     public void testParseAIRLine() {
         System.out.println("parseAIRLine");
         String line = "";
@@ -22,7 +23,7 @@ public class AIRLineParserTest {
         
     }
 
-    //@Test
+    @Test
     public void testParseAMDLine() {
         System.out.println("parseAMDLine");
         String line = "AMD 2800030221;1/1;    29OCT;ITSU";
@@ -34,7 +35,7 @@ public class AIRLineParserTest {
         assertEquals(expResult[3], result[3]);        
     }
 
-    //@Test
+    @Test
     public void testParseMUCLine() {
         System.out.println("parseMUCLine");
         String line = "MUC1A 3LIZMK015;0101;LONU123IT;91279053;LONU123IK;91279054;LONU123IJ;91279055;LONU123IK;91279056;;;;;;;;;;;;;;;;;;;;;;IY CSBGQF";
@@ -76,7 +77,7 @@ public class AIRLineParserTest {
         
     }
 
-    //@Test
+    @Test
     public void testParseDLine() {
         System.out.println("parseDLine");
         String line = "D-080625;080703;080703";

@@ -15,9 +15,9 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Yusuf
  */
-public class FramePnrHistory extends JInternalFrame implements PropertyChangeListener {
+public class PnrHistoryFrame extends JInternalFrame implements PropertyChangeListener {
 
-    public FramePnrHistory() {
+    public PnrHistoryFrame() {
         initComponents();
         
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
@@ -25,7 +25,7 @@ public class FramePnrHistory extends JInternalFrame implements PropertyChangeLis
     }
 
     private List<Pnr> list = new ArrayList<>();
-    private SearchTask task;
+    private PnrHistoryTask task;
 
     private void buttonSearchActionPerformed(ActionEvent event) {
 
@@ -44,7 +44,7 @@ public class FramePnrHistory extends JInternalFrame implements PropertyChangeLis
         
         progressBar.setValue(0);
 
-        task = new SearchTask(bookingAgt, ticketingAgt, from, to);
+        task = new PnrHistoryTask(bookingAgt, ticketingAgt, from, to);
         task.addPropertyChangeListener(this);
         task.execute();
     }
@@ -58,7 +58,7 @@ public class FramePnrHistory extends JInternalFrame implements PropertyChangeLis
             int i = 0;
             for (Pnr p : this.list) {
                 model.insertRow(i, new Object[]{p.getGdsPnr(), p.getBookingAgtOid(), p.getTicketingAgtOid(),
-                    p.getPnrCreationDate(), p.getAirCreationDate(), p.getServicingCareerCode(), p.getNoOfPax()});
+                    DateUtil.dateToString(p.getPnrCreationDate()), DateUtil.dateToString(p.getAirCreationDate()), p.getServicingCareerCode(), p.getNoOfPax()});
                 i++;
             }
         }
@@ -109,8 +109,6 @@ public class FramePnrHistory extends JInternalFrame implements PropertyChangeLis
         });
 
         jLabel3.setText("Issue Date From");
-
-        dtFrom.setFormats("dd-MM-yyyy");
 
         jLabel4.setText("Issue Date To");
 
@@ -175,13 +173,14 @@ public class FramePnrHistory extends JInternalFrame implements PropertyChangeLis
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, true, true, true
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        tblPnr.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblPnr);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -192,9 +191,7 @@ public class FramePnrHistory extends JInternalFrame implements PropertyChangeLis
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
         );
 
         progressBar.setStringPainted(true);

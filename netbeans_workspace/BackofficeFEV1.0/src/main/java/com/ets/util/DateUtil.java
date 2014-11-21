@@ -43,9 +43,9 @@ public class DateUtil {
      * @param ddmm
      * @return
      */
-    public static Date ddmmToDate(String ddmm) {
+    public static Date ddMMMToDate(String ddMMM) {
         String year = String.valueOf(cal.get(Calendar.YEAR));
-        String tempDate = ddmm.concat(year);
+        String tempDate = ddMMM.concat(year);
         SimpleDateFormat dfIn = new SimpleDateFormat("ddMMMyyyy");
         SimpleDateFormat dfOut = new SimpleDateFormat("yyyy-MM-dd");
         String finalDate = null;
@@ -88,6 +88,15 @@ public class DateUtil {
         return cal.getTime();
     }
 
+    public static String dateToString(Date date){
+     return dateToString(date,AppSettings.get("dateformat"));
+    }
+    
+    public static Date stringToDate(String dateString){
+     return stringToDate(dateString,AppSettings.get("dateformat"));
+    }
+    
+    
     public static String dateToString(Date date, String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(date);
@@ -102,5 +111,5 @@ public class DateUtil {
             Logger.getLogger(DateUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
         return date;
-    }
+    }    
 }

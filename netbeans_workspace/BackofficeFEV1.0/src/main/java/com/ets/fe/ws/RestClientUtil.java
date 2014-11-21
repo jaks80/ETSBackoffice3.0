@@ -39,10 +39,11 @@ public class RestClientUtil {
 
         Response response = getWebTarget(destUrl).request().post(Entity.entity(entity, "application/xml"));
         T persistentEntity = response.readEntity(type);
+        System.out.println("HTTP Status:"+response.getStatus());
         response.close();
         return persistentEntity;
     }
-
+        
     public synchronized static <T> T putEntity(final Class<T> type, String path, T entity) {
 
         Response response = getWebTarget(path).request().put(Entity.entity(entity, "application/xml"));
@@ -50,10 +51,4 @@ public class RestClientUtil {
         response.close();
         return persistentEntity;
     }
-
-//    public synchronized static <T> List<T> getList(final Class<T> type, String path, String... params) {
-//    //GenericType<List<T>> type = 
-//    Response response = getWebTarget(path).request().get();
-//    return entity.readEntity(type);
-//}
 }

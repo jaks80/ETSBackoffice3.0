@@ -1,15 +1,14 @@
 package com.ets.fe.gui.Pnr;
 
 import com.ets.fe.model.pnr.Pnr;
-import com.ets.fe.ws.pnr.PnrWSClient;
+import com.ets.fe.ws.PnrWSClient;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
-public class SearchTask extends SwingWorker<Void, Integer> {
+public class PnrHistoryTask extends SwingWorker<Void, Integer> {
 
     private List<Pnr> list = new ArrayList<>();
     private String bookingAgt;
@@ -17,16 +16,14 @@ public class SearchTask extends SwingWorker<Void, Integer> {
     private Date from;
     private Date to;
 
-    public SearchTask(String bookingAgt, String ticketingAgt, Date from, Date to) {
+    public PnrHistoryTask(String bookingAgt, String ticketingAgt, Date from, Date to) {
         this.bookingAgt = bookingAgt;
         this.ticketingAgt = ticketingAgt;
         this.from = from;
         this.to = to;
     }
 
-    /**
-     * Executed in background thread
-     */
+
     @Override
     protected Void doInBackground() {
 
@@ -37,9 +34,6 @@ public class SearchTask extends SwingWorker<Void, Integer> {
         return null;
     }
 
-    /**
-     * Executed in Swing's event dispatching thread
-     */
     @Override
     protected void done() {
         setProgress(100);

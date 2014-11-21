@@ -3,6 +3,7 @@ package com.amadeus.air;
 import com.ets.fe.model.pnr.Career;
 import com.ets.fe.model.pnr.Itinerary;
 import com.ets.fe.model.pnr.Pnr;
+import com.ets.fe.model.pnr.PnrRemark;
 import com.ets.fe.model.pnr.Ticket;
 import com.ets.util.DateUtil;
 import java.math.BigDecimal;
@@ -46,16 +47,43 @@ public class AIRToPNRConverter {
             }
         }
 
+        if ("INV".equals(air.getType())) {
+            for (String s : air.getLines()) {
+                if (s.startsWith("TK")) {
+                    String[] data = AIRLineParser.parseTKLine(s);
+                    String ticketingAgt = data[1];
+                    pnr.setTicketingAgtOid(ticketingAgt);
+                }
+            }
+        }
+        
         Career career = airToCareer();
-        pnr.setServicingCareerCode(career.getCode());
+        if(career != null){
+         pnr.setServicingCareerCode(career.getCode());
+        }
         return pnr;
+    }
+    
+    public List<PnrRemark> airToPNRRemarks() {
+
+        List<PnrRemark> remarks = new ArrayList<>();
+
+        for (String s : air.getLines()) {
+            if (s.startsWith("RM") && !s.contains("ROBOT")) {
+                String[] vals = AIRLineParser.parseRMLine(s);
+                PnrRemark rm = new PnrRemark();
+                rm.setText(vals[0]);
+                remarks.add(rm);
+            }
+        }
+        return remarks;
     }
     
     public Career airToCareer() {
 
         Career career = null;
         for (String s : air.getLines()) {
-            if (s.startsWith("A-")) {
+            if (s.startsWith("A-") && s.length() > 4) {
                 career = new Career();
                 String[] vals = AIRLineParser.parseALine(s);                                
                 career.setName(vals[0]);
@@ -120,6 +148,7 @@ public class AIRToPNRConverter {
                 String[] name = data[1].substring(2).trim().split("/");
 
                 ticket = new Ticket();
+                ticket.setDocIssuedate(DateUtil.yyMMddToDate(air.getCreationDate()));
                 ticket = getNameFormStringArray(data, ticket);
                 ticket.setBaseFare(baseFare);
                 ticket.setTax(tax);
@@ -131,7 +160,13 @@ public class AIRToPNRConverter {
                 if (data[0] != null && data[0].length() > 3) {
                     ticket.setNumericAirLineCode(data[0].substring(1, 4).trim());
                 }
-                ticket.setTicketNo(data[1]);
+                
+                if(data.length == 3){
+                 ticket.setTicketNo(data[1]+"-"+data[2]);
+                }else{
+                 ticket.setTicketNo(data[1]);
+                }
+                
                 ticket.setTktStatus(2);
             } else if (s.startsWith("FE")) {
                 String restrictions = s.substring(2);
@@ -148,10 +183,13 @@ public class AIRToPNRConverter {
                     ticket.setTktStatus(3);
                 }
 
-            } else if (s.startsWith("TK")) {
+            } 
+            /*
+            else if (s.startsWith("TK")) {
+                
                 String[] data = AIRLineParser.parseTKLine(s);
 
-                Date tkOKDate = DateUtil.ddmmToDate(data[0].substring(2));
+                Date tkOKDate = DateUtil.ddMMMToDate(data[0].substring(2));
                 if (ticket.getTktStatus() == 2 || ticket.getTktStatus() == 3) {
                     if ("INV".equals(air.getType())) {
                         ticket.setDocIssuedate(tkOKDate);
@@ -159,7 +197,7 @@ public class AIRToPNRConverter {
                         ticket.setDocIssuedate(DateUtil.yyMMddToDate(air.getCreationDate()));
                     }
                 }
-            }
+            }*/
         }
 
         return tickets;

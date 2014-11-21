@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Yusuf
  */
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlRootElement(name = "pnr")
+@XmlRootElement
 public class Pnr extends PersistentObject implements Serializable {
 
     private static long serialVersionUID = 1L;
@@ -41,7 +41,7 @@ public class Pnr extends PersistentObject implements Serializable {
     @XmlElement
     private List<Itinerary> segments = new ArrayList<>();
     @XmlElement
-    private List<String> remarks = new ArrayList<>();
+    private List<PnrRemark> remarks = new ArrayList<>();
     
     
     public Pnr() {
@@ -96,15 +96,6 @@ public class Pnr extends PersistentObject implements Serializable {
         this.segments = segments;
     }
 
-   
-    public List<String> getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(List<String> remarks) {
-        this.remarks = remarks;
-    }
-
     public String getBookingAgtOid() {
         return bookingAgtOid;
     }
@@ -135,5 +126,13 @@ public class Pnr extends PersistentObject implements Serializable {
 
     public void setGdsPnr(String gdsPnr) {
         this.gdsPnr = gdsPnr;
+    }
+
+    public List<PnrRemark> getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(List<PnrRemark> remarks) {
+        this.remarks = remarks;
     }
 }

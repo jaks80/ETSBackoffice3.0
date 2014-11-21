@@ -1,4 +1,4 @@
-package com.ets.fe.ws.pnr;
+package com.ets.fe.ws;
 
 import com.ets.collection.Pnrs;
 import com.ets.fe.model.pnr.Pnr;
@@ -54,8 +54,8 @@ public class PnrWSClient {
 
     public List<Pnr> searchPnrHistory(String bookingAgt, String ticketingAgt, Date from, Date to) {
         
-        String dateFrom = DateUtil.dateToString(from, "dd-MM-yyyy");
-        String dateTo = DateUtil.dateToString(to, "dd-MM-yyyy");
+        String dateFrom = DateUtil.dateToString(from, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(to, "ddMMMyyyy");
         
         String url = APIConfig.get("ws.pnr.history")+"?bookingAgtOid="+bookingAgt+"&ticketingAgtOid="+ticketingAgt+"&dateStart="+dateFrom+"&dateEnd="+dateTo;
         

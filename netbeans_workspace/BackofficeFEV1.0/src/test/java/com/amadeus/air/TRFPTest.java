@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.*;
@@ -28,7 +27,8 @@ public class TRFPTest {
 
     @Before
     public void setUp() throws URISyntaxException, IOException {
-        URL url = this.getClass().getResource("/TRFP.txt");
+        System.out.println("Test TRFP");
+        URL url = this.getClass().getResource("/AIR/TRFP.txt");
         File file = new File(url.toURI());
         FileToAIRConverter converter = new FileToAIRConverter();
         this.air = converter.convert(file);
@@ -36,7 +36,7 @@ public class TRFPTest {
     
     @Test
     public void testAirToTicket() {
-        System.out.println("Test TRFP");
+        
         AIRToPNRConverter instance = new AIRToPNRConverter(this.air);
         List<Ticket> expResult = new ArrayList<>();
 

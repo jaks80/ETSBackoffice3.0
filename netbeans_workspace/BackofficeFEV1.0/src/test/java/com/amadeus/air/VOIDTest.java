@@ -1,10 +1,8 @@
 package com.amadeus.air;
 
 import com.ets.fe.model.pnr.Ticket;
-import com.ets.util.DateUtil;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
@@ -28,7 +26,8 @@ public class VOIDTest {
 
     @Before
     public void setUp() throws URISyntaxException, IOException {
-        URL url = this.getClass().getResource("/Void.txt");
+        System.out.println("Test VOID Ticket");
+        URL url = this.getClass().getResource("/AIR/Void.txt");
         File file = new File(url.toURI());
         FileToAIRConverter converter = new FileToAIRConverter();
         this.air = converter.convert(file);
@@ -36,7 +35,7 @@ public class VOIDTest {
 
     @Test
     public void testAirToVOIDTicket() throws ParseException {
-        System.out.println("Test Air To VOID Ticket");
+        
         AIRToPNRConverter instance = new AIRToPNRConverter(this.air);
         List<Ticket> expResult = new ArrayList<>();
         

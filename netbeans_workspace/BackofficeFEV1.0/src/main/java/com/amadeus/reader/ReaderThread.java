@@ -7,7 +7,8 @@ import com.ets.fe.model.pnr.Itinerary;
 import com.ets.fe.model.pnr.Pnr;
 import com.ets.fe.model.pnr.Ticket;
 import com.ets.collection.Tickets;
-import com.ets.fe.ws.air.AirWSClient;
+import com.ets.fe.model.pnr.PnrRemark;
+import com.ets.fe.ws.AirWSClient;
 import java.util.List;
 
 /**
@@ -27,12 +28,14 @@ public class ReaderThread implements Runnable {
         AIRToPNRConverter converter = new AIRToPNRConverter(this.air);
         AirWSClient ws = new AirWSClient();
 
-        if ("INV".equals(air.getType()) || "TTP".equals(air.getType())) {
+        if ("TTP".equals(air.getType())) {
             Pnr pnr = converter.airToPNR();
             List<Ticket> tickets = converter.airToTicket();
             List<Itinerary> segments = converter.airToItinerary();
+            List<PnrRemark> remarks = converter.airToPNRRemarks();
             pnr.setTickets(tickets);
             pnr.setSegments(segments);
+            pnr.setRemarks(remarks);
             ws.issue(pnr);
 
         } else if ("TRFP".equals(air.getType())) {
@@ -46,6 +49,30 @@ public class ReaderThread implements Runnable {
             Tickets tickets = new Tickets();
             tickets.setList(list);
             ws.voidTicket(tickets);
+        }else if ("INV".equals(air.getType()) || "BT".equals(air.getType())) {
+            Pnr pnr = converter.airToPNR();
+            List<Ticket> tickets = converter.airToTicket();
+            List<Itinerary> segments = converter.airToItinerary();
+            List<PnrRemark> remarks = converter.airToPNRRemarks();
+            pnr.setTickets(tickets);
+            pnr.setSegments(segments);
+            pnr.setRemarks(remarks);
+            
+            boolean issued= false;
+            for (Ticket t : tickets) {
+                if ("ISSUED".equals(t.getTktStatusString())) {
+                    issued = true;
+                    break;
+                }
+            }
+            
+            if(issued){
+             ws.issue(pnr);
+            }else{
+             pnr.setTicketingAgtOid(null);
+             ws.book(pnr);
+            }
+            
         }
 
         AirUtil.backupAir(air.getFile());

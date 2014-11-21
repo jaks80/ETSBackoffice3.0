@@ -4,7 +4,6 @@ import com.amadeus.air.AIR;
 import com.amadeus.air.AirUtil;
 import com.amadeus.air.FileToAIRConverter;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -46,10 +45,7 @@ public class ResponseHandler implements Observer {
             System.out.println("Done");
         } catch (InterruptedException ex) {
             Logger.getLogger(ResponseHandler.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ResponseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     private File[] checkAirDirectory() {

@@ -1,11 +1,11 @@
 package com.ets.fe.model.pnr;
 
 import com.ets.fe.model.PersistentObject;
+import com.ets.util.DateUtil;
+import com.ets.util.Enums;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -15,18 +15,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Yusuf
  */
-@XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
-public class Ticket extends PersistentObject implements Serializable{
-    
-     private static final long serialVersionUID = 1L;
+@XmlAccessorType(XmlAccessType.NONE)
+public class Ticket extends PersistentObject implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @XmlElement
     private String passengerNo;
     @XmlElement
     private String paxSurName;
     @XmlElement
-    private String paxForeName;    
+    private String paxForeName;
     @XmlElement
     private String numericAirLineCode;
     @XmlElement
@@ -39,18 +39,20 @@ public class Ticket extends PersistentObject implements Serializable{
     private String restrictions;
     @XmlElement
     private Date docIssuedate;
-    
+
     @XmlElement
     private Pnr pnr;
 
     @XmlElement
     private BigDecimal baseFare = new BigDecimal("0.00");
     @XmlElement
-    private BigDecimal tax = new BigDecimal("0.00");    
+    private BigDecimal tax = new BigDecimal("0.00");
     @XmlElement
-    private BigDecimal fee = new BigDecimal("0.00");    
+    private BigDecimal fee = new BigDecimal("0.00");
     @XmlElement
-    private BigDecimal totalFare = new BigDecimal("0.00");    
+    private BigDecimal commission = new BigDecimal("0.00");
+    @XmlElement
+    private BigDecimal totalFare = new BigDecimal("0.00");
 
     @XmlElement
     private int tktStatus;//1.Booked, 2. Issued,3. ReIssued, 4.Refund,5.VOID
@@ -177,5 +179,37 @@ public class Ticket extends PersistentObject implements Serializable{
 
     public void setPnr(Pnr pnr) {
         this.pnr = pnr;
+    }
+
+    public BigDecimal getCommission() {
+        return commission;
+    }
+
+    public void setCommission(BigDecimal commission) {
+        this.commission = commission;
+    }
+
+    public String getFullTicketNo() {
+        if (this.numericAirLineCode != null && this.ticketNo != null) {
+            return this.numericAirLineCode + "-" + this.ticketNo;
+        } else {
+            return null;
+        }
+    }
+    
+    public String getTktDateString(){
+        return DateUtil.dateToString(docIssuedate);
+    }
+    
+    public String getTktStatusString() {
+        return Enums.TicketStatus.valueOf(this.getTktStatus());
+    }
+
+    public String getFullPaxNameWithPaxNo() {
+
+        String paxFullName = "";
+        paxFullName = getPassengerNo() + ". " + getPaxSurName() + " / " + getPaxForeName();
+
+        return paxFullName;
     }
 }

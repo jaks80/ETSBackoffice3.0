@@ -1,4 +1,4 @@
-package com.ets.fe.ws.career;
+package com.ets.fe.ws;
 
 import com.ets.collection.Careers;
 import com.ets.fe.model.pnr.Career;
