@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @XmlRootElement
-public class Career implements Serializable {
+public class Airline implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
@@ -21,7 +21,7 @@ public class Career implements Serializable {
     @XmlElement
     private String name;
     
-    public Career(){
+    public Airline(){
     
     }
 

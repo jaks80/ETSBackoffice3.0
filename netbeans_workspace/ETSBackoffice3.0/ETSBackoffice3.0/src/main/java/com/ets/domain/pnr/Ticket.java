@@ -1,18 +1,18 @@
 package com.ets.domain.pnr;
 
 import com.ets.domain.PersistentObject;
+import com.ets.util.DateUtil;
+import com.ets.util.Enums;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OrderBy;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -56,6 +56,8 @@ public class Ticket extends PersistentObject implements Serializable{
     private BigDecimal tax = new BigDecimal("0.00");
     @XmlElement
     private BigDecimal fee = new BigDecimal("0.00");
+    @XmlElement
+    private BigDecimal commission = new BigDecimal("0.00");
     @XmlElement
     private BigDecimal totalFare = new BigDecimal("0.00");
 
@@ -162,6 +164,7 @@ public class Ticket extends PersistentObject implements Serializable{
         this.restrictions = restrictions;
     }
 
+    @Temporal(TemporalType.DATE)
     public Date getDocIssuedate() {
         return docIssuedate;
     }
@@ -186,5 +189,41 @@ public class Ticket extends PersistentObject implements Serializable{
 
     public void setPnr(Pnr pnr) {
         this.pnr = pnr;
+    }
+
+    public BigDecimal getCommission() {
+        return commission;
+    }
+
+    public void setCommission(BigDecimal commission) {
+        this.commission = commission;
+    }
+    
+    @Transient
+    public String getFullTicketNo() {
+        if (this.numericAirLineCode != null && this.ticketNo != null) {
+            return this.numericAirLineCode + "-" + this.ticketNo;
+        } else {
+            return null;
+        }
+    }
+    
+    @Transient
+    public String getTktDateString(){
+        return DateUtil.dateToString(docIssuedate);
+    }
+    
+    @Transient
+    public String getTktStatusString() {
+        return Enums.TicketStatus.valueOf(this.getTktStatus());
+    }
+
+    @Transient
+    public String getFullPaxNameWithPaxNo() {
+
+        String paxFullName = "";
+        paxFullName = getPassengerNo() + ". " + getPaxSurName() + " / " + getPaxForeName();
+
+        return paxFullName;
     }
 }

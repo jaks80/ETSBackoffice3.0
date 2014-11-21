@@ -1,7 +1,7 @@
 package com.ets.dao.career;
 
 import com.ets.dao.generic.GenericDAOImpl;
-import com.ets.domain.pnr.Career;
+import com.ets.domain.pnr.Airline;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("careerDAO")
 @Transactional
-public class CareerDAOImpl extends GenericDAOImpl<Career, Long> implements CareerDAO{
+public class CareerDAOImpl extends GenericDAOImpl<Airline, Long> implements CareerDAO{
     
 }

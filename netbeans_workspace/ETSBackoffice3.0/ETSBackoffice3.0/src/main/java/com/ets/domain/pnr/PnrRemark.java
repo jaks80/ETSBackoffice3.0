@@ -49,7 +49,7 @@ public class PnrRemark extends PersistentObject implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PNRID_FK")
+    @JoinColumn(name = "pnrid_fk")
     public Pnr getPnr() {
         return pnr;
     }

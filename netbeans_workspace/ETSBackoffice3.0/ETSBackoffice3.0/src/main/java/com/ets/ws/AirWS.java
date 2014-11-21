@@ -1,4 +1,4 @@
-package com.ets.ws.air;
+package com.ets.ws;
 
 import com.ets.collection.Tickets;
 import com.ets.domain.pnr.Pnr;
@@ -48,9 +48,9 @@ public class AirWS {
 
     @POST
     @Path("/refund")
-    public Response refundTicket(Tickets tickets) {
+    public Tickets refundTicket(Tickets tickets) {
         service.refundTicket(tickets);
-        return Response.status(200).build();
+        return tickets;
     }
 
     @PUT

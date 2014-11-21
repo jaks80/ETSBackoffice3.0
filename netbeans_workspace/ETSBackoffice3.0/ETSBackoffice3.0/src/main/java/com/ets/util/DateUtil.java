@@ -77,4 +77,12 @@ public class DateUtil {
         }
         return date;
     }
+    
+    public static String dateToString(Date date){
+     return dateToString(date,AppSettings.get("dateformat"));
+    }
+    
+    public static Date stringToDate(String dateString){
+     return stringToDate(dateString,AppSettings.get("dateformat"));
+    }
 }

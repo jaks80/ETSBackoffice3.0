@@ -41,8 +41,8 @@ public class PnrService{
             bookingAgtOid = null;
         }
         
-        Date dateFrom = DateUtil.stringToDate(issueDateFrom, "dd-MM-yyyy");
-        Date dateTo = DateUtil.stringToDate(issueDateTo, "dd-MM-yyyy");
+        Date dateFrom = DateUtil.stringToDate(issueDateFrom, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(issueDateTo, "ddMMMyyyy");
         
         List<Pnr> pnrList = dao.find(dateFrom, dateTo, ticketingAgtOid, bookingAgtOid);
         for(Pnr p: pnrList){

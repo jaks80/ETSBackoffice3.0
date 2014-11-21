@@ -1,7 +1,7 @@
-package com.ets.ws.career;
+package com.ets.ws;
 
 import com.ets.collection.Careers;
-import com.ets.domain.pnr.Career;
+import com.ets.domain.pnr.Airline;
 import com.ets.service.career.CareerService;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -26,7 +26,7 @@ public class CareerWS {
     @GET
     @Path("/careers/{code}")
     @Produces("application/xml")
-    public Career find(@PathParam("code") String code) {
+    public Airline find(@PathParam("code") String code) {
 
         return service.find(code);
     }
@@ -43,7 +43,7 @@ public class CareerWS {
     @POST
     @Path("/careers/save")
     @Produces("application/xml")
-    public void save(Career career) {
+    public void save(Airline career) {
         
         service.save(career);
     }

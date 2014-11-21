@@ -2,7 +2,7 @@ package com.ets.service.career;
 
 import com.ets.collection.Careers;
 import com.ets.dao.career.CareerDAO;
-import com.ets.domain.pnr.Career;
+import com.ets.domain.pnr.Airline;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,9 @@ public class CareerService {
     @Resource(name = "careerDAO")
     private CareerDAO dao;
     
-    public Career find(String code){
+    public Airline find(String code){
     
-        return new Career();
+        return new Airline();
     }
     
     public Careers match(String name){
@@ -26,7 +26,7 @@ public class CareerService {
         return new Careers();        
     }
     
-    public void save(Career career){
+    public void save(Airline career){
     
     }
     

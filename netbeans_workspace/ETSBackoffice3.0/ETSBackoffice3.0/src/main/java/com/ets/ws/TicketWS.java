@@ -1,9 +1,7 @@
-package com.ets.ws.pnr;
+package com.ets.ws;
 
-import com.ets.collection.Tickets;
-import com.ets.domain.pnr.Ticket;
+import com.ets.model.report.TicketSaleReport;
 import com.ets.service.pnr.TicketService;
-import com.ets.util.PnrUtil;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -25,20 +23,13 @@ public class TicketWS {
     @GET
     @Produces("application/xml")
     @Path("/gds-salereport")
-    public Tickets saleReport(@QueryParam("ticketStatus") Integer ticketStatus, 
-                              @QueryParam("careerCode") String careerCode, 
+    public TicketSaleReport saleReport(@QueryParam("ticketStatus") String ticketStatus, 
+                              @QueryParam("airLineCode") String airLineCode, 
                               @QueryParam("dateStart") String dateStart, 
                               @QueryParam("dateEnd") String dateEnd,
                               @QueryParam("ticketingAgtOid") String ticketingAgtOid){
     
-        Tickets tickets = new Tickets();
-        tickets.setList(service.saleReport(ticketStatus, careerCode, dateStart, dateEnd, ticketingAgtOid));
-        
-        for(Ticket t: tickets.getList()){
-            PnrUtil.undefineChildrenInPnr(t.getPnr());
-        }
-        
-        
-        return tickets;
+        TicketSaleReport report = service.saleReport(ticketStatus, airLineCode, dateStart, dateEnd, ticketingAgtOid);
+        return report;
     }
 }

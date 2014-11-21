@@ -2,6 +2,7 @@ package com.ets.dao.air;
 
 import com.ets.dao.generic.GenericDAOImpl;
 import com.ets.domain.pnr.Pnr;
+import com.ets.domain.pnr.Ticket;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
@@ -24,8 +25,7 @@ public class AirDAOImpl extends GenericDAOImpl<Pnr, Long> implements AirDAO {
 
         String hql = "select distinct p from Pnr p "
                 + "left join fetch p.tickets as t "
-                + "left join fetch p.segments "
-                //+ "left join fetch p.servicingCareer "
+                + "left join fetch p.segments "                
                 + "where p.gdsPnr = :gdsPnr and p.pnrCreationDate = :pnrCreationDate";
 
         Query query = getSession().createQuery(hql);
@@ -41,18 +41,23 @@ public class AirDAOImpl extends GenericDAOImpl<Pnr, Long> implements AirDAO {
         return pnr;
     }
 
-    public List<Object> findPnr(String tktNo, String surName) {           /*This method returns object because */
-        /*left join fetch initialize segments under ticket*/
+    public Pnr findPnr(String ticketNo, String surName) {
 
-        String hql = "from Ticket as t " /*updating refund removes assosiation with old ticket*/
-                + "left join t.pnr as p " /*This way we get independant segments which does not effect*/
-                //+ "left join fetch p.servicingCareer "
-                + "le..ft join t.segments as s " /*on oldticket and segment relation*/
-                + "left join fetch p.ticketingAgt "
-                + "left join fetch t.purchaseAccountingDocumentLine as pacdocline "
-                + "left join pacdocline.purchaseAccountingDocument as pacdoc "
-                + "where t.ticketNo = ? and t.paxSurName = ? ";
-        List results = null;
-        return results;
+        String hql = "from Ticket as t "
+                + "left join fetch t.pnr as p "
+                + "left join fetch p.tickets as t "
+                + "where t.ticketNo = :ticketNo and t.paxSurName = :surName ";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameter("ticketNo", ticketNo);
+        query.setParameter("surName", surName);
+      
+        Ticket ticket = null;
+        List l = query.list();
+        if(l.size() > 0){
+         ticket = (Ticket) l.get(0);
+        }
+
+        return ticket.getPnr();
     }
 }

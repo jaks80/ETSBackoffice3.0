@@ -1,4 +1,4 @@
-package com.ets.ws.pnr;
+package com.ets.ws;
 
 import com.ets.collection.Pnrs;
 import com.ets.domain.pnr.Pnr;

@@ -2,12 +2,8 @@ package com.ets.domain.pnr;
 
 import com.ets.domain.PersistentObject;
 import java.io.Serializable;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

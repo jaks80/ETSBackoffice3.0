@@ -4,7 +4,10 @@ import com.ets.domain.pnr.Itinerary;
 import com.ets.domain.pnr.Pnr;
 import com.ets.domain.pnr.PnrRemark;
 import com.ets.domain.pnr.Ticket;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -62,15 +65,34 @@ public class PnrUtil {
         return remarks;
     }
 
-    public static Set<Ticket> initPnrInTickets(Pnr pnr, Set<Ticket> tickets) {
+    public static Collection initPnrInTickets(Pnr pnr, Collection tickets) {
         Set<Ticket> tempTickets = new LinkedHashSet<>();
-        for (Ticket ticket : tickets) {
+        for (Object object : tickets) {
+            Ticket ticket = (Ticket) object;
             ticket.setPnr(pnr);
             tempTickets.add(ticket);
         }
         return tempTickets;
     }
-
+    
+//    public static Set<Ticket> initPnrInTickets(Pnr pnr, Set<Ticket> tickets) {
+//        Set<Ticket> tempTickets = new LinkedHashSet<>();
+//        for (Ticket ticket : tickets) {
+//            ticket.setPnr(pnr);
+//            tempTickets.add(ticket);
+//        }
+//        return tempTickets;
+//    }
+//
+//    public static List<Ticket> initPnrInTickets(Pnr pnr, List<Ticket> tickets) {
+//        List<Ticket> tempTickets = new ArrayList<>();
+//        for (Ticket ticket : tickets) {
+//            ticket.setPnr(pnr);
+//            tempTickets.add(ticket);
+//        }
+//        return tempTickets;
+//    }
+        
     public static Set<Ticket> undefinePnrInTickets(Pnr pnr, Set<Ticket> tickets) {
         Set<Ticket> tempTickets = new LinkedHashSet<>();
         for (Ticket ticket : tickets) {
@@ -80,6 +102,15 @@ public class PnrUtil {
         return tempTickets;
     }
 
+        public static List<Ticket> undefinePnrInTickets(Pnr pnr, List<Ticket> tickets) {
+        List<Ticket> tempTickets = new ArrayList<>();
+        for (Ticket ticket : tickets) {
+            ticket.setPnr(null);
+            tempTickets.add(ticket);
+        }
+        return tempTickets;
+    }
+        
     public static Set<Itinerary> initPnrInSegments(Pnr pnr, Set<Itinerary> segments) {
         for (Itinerary segment : segments) {
             segment.setPnr(pnr);
@@ -100,13 +131,28 @@ public class PnrUtil {
         oldPnr.setTicketingAgtOid(newPnr.getTicketingAgtOid());
         oldPnr.setPnrCreationDate(newPnr.getPnrCreationDate());
         oldPnr.setVendorPNR(newPnr.getVendorPNR());
-        oldPnr.setServicingCareerCode(newPnr.getServicingCareerCode());
+        oldPnr.setAirLineCode(newPnr.getAirLineCode());
         oldPnr.setRemarks(initPnrInRemark(oldPnr, newPnr.getRemarks()));
         return oldPnr;
     }
 
-    public static Set<Ticket> updateTickets(Set<Ticket> oldTickets, Set<Ticket> newTickets) {
+    public static Set<Ticket> updateTickets(Collection oldCollection, Collection newCollection) {
 
+        Set<Ticket> oldTickets = new LinkedHashSet<>();
+        Set<Ticket> newTickets = new LinkedHashSet<>();
+        
+        if (oldCollection instanceof ArrayList){
+         oldTickets = new LinkedHashSet<>(oldCollection);
+        }else{
+         oldTickets = (Set<Ticket>) oldCollection;
+        }
+        
+        if (newCollection instanceof ArrayList){
+         newTickets = new LinkedHashSet<>(oldCollection);
+        }else{
+         newTickets = (Set<Ticket>) newCollection;
+        }
+        
         for (Ticket newTkt : newTickets) {
             boolean exist = false;
 
@@ -125,9 +171,6 @@ public class PnrUtil {
                     t.setTicketNo(newTkt.getTicketNo());
                     t.setBaseFare(newTkt.getBaseFare());
                     t.setTax(newTkt.getTax());
-                    //t.setBspCom(newTkt.getBspCom());
-
-                    //t.setSegments(newTkt.getSegments());
                     t.setDocIssuedate(newTkt.getDocIssuedate());
                     exist = true;
                 }

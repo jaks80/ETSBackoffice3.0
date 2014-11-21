@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Yusuf
  */
 @Entity
-@XmlRootElement(name = "pnr")
+@XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 public class Pnr extends PersistentObject implements Serializable {
     
@@ -40,9 +40,13 @@ public class Pnr extends PersistentObject implements Serializable {
     @XmlElement
     private Date airCreationDate;
     @XmlElement
+    private String PnrCreatorAgentSine;
+    @XmlElement
+    private String ticketingAgentSine;  
+    @XmlElement
     private String vendorPNR;
     @XmlElement
-    private String servicingCareerCode;
+    private String airLineCode;
     @XmlElement
     private Set<Ticket> tickets = new LinkedHashSet<>();   
     @XmlElement
@@ -134,19 +138,35 @@ public class Pnr extends PersistentObject implements Serializable {
         this.bookingAgtOid = bookingAgtOid;
     }
 
-    public String getServicingCareerCode() {
-        return servicingCareerCode;
-    }
-
-    public void setServicingCareerCode(String servicingCareerCode) {
-        this.servicingCareerCode = servicingCareerCode;
-    }
-
     public String getTicketingAgtOid() {
         return ticketingAgtOid;
     }
 
     public void setTicketingAgtOid(String ticketingAgtOid) {
         this.ticketingAgtOid = ticketingAgtOid;
+    }
+
+    public String getPnrCreatorAgentSine() {
+        return PnrCreatorAgentSine;
+    }
+
+    public void setPnrCreatorAgentSine(String PnrCreatorAgentSine) {
+        this.PnrCreatorAgentSine = PnrCreatorAgentSine;
+    }
+
+    public String getTicketingAgentSine() {
+        return ticketingAgentSine;
+    }
+
+    public void setTicketingAgentSine(String ticketingAgentSine) {
+        this.ticketingAgentSine = ticketingAgentSine;
+    }
+
+    public String getAirLineCode() {
+        return airLineCode;
+    }
+
+    public void setAirLineCode(String airLineCode) {
+        this.airLineCode = airLineCode;
     }
 }
