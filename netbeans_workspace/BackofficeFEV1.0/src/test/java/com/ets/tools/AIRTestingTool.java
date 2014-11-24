@@ -3,7 +3,7 @@ package com.ets.tools;
 import com.amadeus.air.AIR;
 import com.amadeus.air.AIRLineParser;
 import com.amadeus.air.FileToAIRConverter;
-import com.ets.util.DateUtil;
+import com.ets.fe.util.DateUtil;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -31,7 +31,37 @@ public class AIRTestingTool {
         System.out.println("Files found: " + airFiles.length);        
     }
 
-    @Test
+    //@Test
+    public void findMultiPageNonIssueFileTest(){
+    for (File airFile : airFiles) {
+            FileToAIRConverter converter = new FileToAIRConverter();
+            AIR air = converter.convert(airFile);
+            if(!air.getType().equals("TTP")){
+             //System.out.println("Not a TTP file");
+             continue;
+            }
+            findMultiPageNonIssueFile(air);
+        }
+        System.out.println("Done...");
+    }
+    
+    private void findMultiPageNonIssueFile(AIR air){
+    
+        String pagingString="";
+                
+        for (String s : air.getLines()) { 
+         if (s.startsWith("AMD")) {
+                String[] vals = AIRLineParser.parseAMDLine(s);
+                pagingString = vals[1];
+                break;
+            }
+        }
+        if(!"1/1".equals(pagingString)){
+            System.out.println(air.getAirFile().getName()+" "+pagingString);
+        }
+        
+    }
+    //@Test
     public void runIssueDateTestingTool() {
         for (File airFile : airFiles) {
             FileToAIRConverter converter = new FileToAIRConverter();
@@ -70,7 +100,7 @@ public class AIRTestingTool {
 
         if(!tkOKdates.isEmpty()){
         StringBuilder sb = new StringBuilder();
-        sb.append(air.getFile().getName());
+        
         sb.append(" TKOKD QTY: "+tkOKdates.size());
         if(tkOKdates.iterator().hasNext()){
          sb.append("TKOKD: "+tkOKdates.iterator().next());

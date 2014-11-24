@@ -1,9 +1,9 @@
-package com.ets.util;
+package com.ets.fe.util;
 
-import com.ets.fe.model.pnr.Itinerary;
-import com.ets.fe.model.pnr.Pnr;
-import com.ets.fe.model.pnr.PnrRemark;
-import com.ets.fe.model.pnr.Ticket;
+import com.ets.fe.pnr.model.Itinerary;
+import com.ets.fe.pnr.model.Pnr;
+import com.ets.fe.pnr.model.PnrRemark;
+import com.ets.fe.pnr.model.Ticket;
 import java.util.ArrayList;
 import java.util.List;
 

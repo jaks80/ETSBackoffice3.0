@@ -20,11 +20,11 @@ public class FileToAIRConverter {
 
     public AIR convert(File file) {
 
-        AIR air = new AIR();
+        AIR air = new AIR();    
+        air.setAirFile(file);
         BufferedReader bf = null;
         try {
-            
-            air.setFile(file);
+                       
             bf = new BufferedReader(new FileReader(file));
             String line = null;
             while ((line = bf.readLine()) != null) {
@@ -34,21 +34,28 @@ public class FileToAIRConverter {
                     String[] vals = AIRLineParser.parseAIRLine(line);
                     air.setVersion(vals[0]);
                 } else if (line.startsWith("AMD")) {
-                    String[] vals = AIRLineParser.parseAMDLine(line);
-                    air.setPage(vals[1]);
+                    String[] vals = AIRLineParser.parseAMDLine(line); 
+                    air.setAirSequenceNumber(Long.valueOf(vals[0].trim()));
+                    String[] pages = vals[1].split("/");
+                    air.setCurrentPage(Integer.valueOf(pages[0]));
+                    air.setTotalPages(Integer.valueOf(pages[1]));
                     if(vals.length > 2 && vals[2].contains("VOID")){
                         air.setType("VOID");
                     }
-                } else if (line.startsWith("B")) {
+                } else if (line.startsWith("B-")) {
                     
                     if (line.contains("BT")) {
                         air.setType("BT");
+                    }else if (line.contains("ET")) {
+                        air.setType("ET");
                     } else if (line.contains("TTP")) {
                         air.setType("TTP");
                     } else if (line.contains("INV")) {
                         air.setType("INV");
                     } else if (line.contains("TRFP")) {
                         air.setType("TRFP");
+                    }else{
+                     return null;//System can not take risk or unknown type of file. So break here.
                     }
                 } else if (line.startsWith("D")) {
                     String[] vals = AIRLineParser.parseDLine(line);

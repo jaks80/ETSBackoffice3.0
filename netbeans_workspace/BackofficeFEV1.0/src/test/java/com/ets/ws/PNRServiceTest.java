@@ -1,8 +1,8 @@
 package com.ets.ws;
 
-import com.ets.fe.model.pnr.Pnr;
-import com.ets.fe.model.pnr.Ticket;
-import com.ets.util.DateUtil;
+import com.ets.fe.pnr.model.Pnr;
+import com.ets.fe.pnr.model.Ticket;
+import com.ets.fe.util.DateUtil;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;

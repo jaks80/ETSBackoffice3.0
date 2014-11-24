@@ -1,31 +1,52 @@
 package com.amadeus.air;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
 /**
  *
  * @author Yusuf
  */
-public class AIR {
+@XmlAccessorType(XmlAccessType.NONE)
+@XmlRootElement
+public class AIR implements Serializable{
 
-    private String type;
-    private String creationDate;
-    private String bookingAgtOid;        
-    private String ticketingAgtOid;
-    private String totalPages;
-    private String version;
-    private String page;
-    private File file;
+    private static long serialVersionUID = 1L;
     
+    @XmlElement
+    private String type;
+    @XmlElement
+    private String creationDate;
+    @XmlElement
+    private String bookingAgtOid;        
+    @XmlElement
+    private String ticketingAgtOid;
+    @XmlElement
+    private Integer totalPages;
+    @XmlElement
+    private String version;
+    @XmlElement
+    private Integer currentPage; 
+    @XmlElement
+    private Long airSequenceNumber;
+    
+    @XmlElement
     private List<String> lines = new ArrayList<>();
-
+    @XmlElement
+    private List<AIR> morePages = new ArrayList<>();
+    
+    private File airFile;
+    
     public AIR() {
 
     }
-
     
     public String getALine() {
 
@@ -45,6 +66,18 @@ public class AIR {
             }
         }        
         return null;
+    }
+    
+    public boolean hasMorePages() {
+        if (this.getTotalPages() > this.getCurrentPage()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void addPage(AIR air) {
+            this.morePages.add(air);
     }
     
     public String getType() {
@@ -71,14 +104,6 @@ public class AIR {
         this.version = version;
     }
 
-    public String getPage() {
-        return page;
-    }
-
-    public void setPage(String page) {
-        this.page = page;
-    }
-
     public List<String> getLines() {
         return lines;
     }
@@ -91,19 +116,11 @@ public class AIR {
      this.lines.add(line);
     }
 
-    public File getFile() {
-        return file;
-    }
-
-    public void setFile(File file) {
-        this.file = file;
-    }
-
-    public String getTotalPages() {
+    public Integer getTotalPages() {
         return totalPages;
     }
 
-    public void setTotalPages(String totalPages) {
+    public void setTotalPages(Integer totalPages) {
         this.totalPages = totalPages;
     }
 
@@ -121,5 +138,37 @@ public class AIR {
 
     public void setTicketingAgtOid(String ticketingAgtOid) {
         this.ticketingAgtOid = ticketingAgtOid;
+    }
+
+    public Integer getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    public Long getAirSequenceNumber() {
+        return airSequenceNumber;
+    }
+
+    public void setAirSequenceNumber(Long airSequenceNumber) {
+        this.airSequenceNumber = airSequenceNumber;
+    }
+    
+    public List<AIR> getMorePages() {
+        return morePages;
+    }
+
+    public void setMorePages(List<AIR> morePages) {
+        this.morePages = morePages;
+    }
+
+    public File getAirFile() {
+        return airFile;
+    }
+
+    public void setAirFile(File airFile) {
+        this.airFile = airFile;
     }
 }
