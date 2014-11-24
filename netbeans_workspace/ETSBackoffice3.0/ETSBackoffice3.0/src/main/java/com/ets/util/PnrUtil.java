@@ -1,9 +1,9 @@
 package com.ets.util;
 
-import com.ets.domain.pnr.Itinerary;
-import com.ets.domain.pnr.Pnr;
-import com.ets.domain.pnr.PnrRemark;
-import com.ets.domain.pnr.Ticket;
+import com.ets.pnr.domain.Itinerary;
+import com.ets.pnr.domain.Pnr;
+import com.ets.pnr.domain.PnrRemark;
+import com.ets.pnr.domain.Ticket;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -161,7 +161,7 @@ public class PnrUtil {
                         && newTkt.getTktStatus() == t.getTktStatus()
                         && t.getPaxSurName().equals(newTkt.getPaxSurName())) {
                     exist = true;
-
+                    break;
                 } else if ((t.getTktStatus() == 1 || t.getTktStatus() == 5)
                         && t.getPaxSurName().equals(newTkt.getPaxSurName())) {
 
@@ -173,6 +173,7 @@ public class PnrUtil {
                     t.setTax(newTkt.getTax());
                     t.setDocIssuedate(newTkt.getDocIssuedate());
                     exist = true;
+                    break;
                 }
             }
             if (!exist) {

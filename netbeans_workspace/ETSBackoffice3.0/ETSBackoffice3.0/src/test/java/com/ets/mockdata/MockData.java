@@ -1,8 +1,8 @@
 package com.ets.mockdata;
 
-import com.ets.domain.pnr.Itinerary;
-import com.ets.domain.pnr.Pnr;
-import com.ets.domain.pnr.Ticket;
+import com.ets.pnr.domain.Itinerary;
+import com.ets.pnr.domain.Pnr;
+import com.ets.pnr.domain.Ticket;
 import com.ets.util.DateUtil;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;

@@ -1,10 +1,11 @@
 package com.ets.service.pnr;
 
-import com.ets.domain.pnr.Itinerary;
-import com.ets.domain.pnr.Pnr;
-import com.ets.domain.pnr.Ticket;
+import com.ets.pnr.service.PnrService;
+import com.ets.pnr.domain.Itinerary;
+import com.ets.pnr.domain.Pnr;
+import com.ets.pnr.domain.Ticket;
 import com.ets.mockdata.MockData;
-import com.ets.service.air.AirService;
+import com.ets.air.service.AirService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -67,7 +68,7 @@ public class PnrServiceTest {
         bookedPnr.setTickets(bookedTickets);
         bookedPnr.setSegments(bookedSegments);
 
-        airService.createBooking(bookedPnr);        
+        airService.savePnr(bookedPnr);        
 
         Pnr persistedPnr = airService.findPnr(bookedPnr.getGdsPnr(), bookedPnr.getPnrCreationDate());
         assertNotNull(persistedPnr);
@@ -99,7 +100,7 @@ public class PnrServiceTest {
         issuedPnr.setTickets(issuedTickets);
         issuedPnr.setSegments(issuedSegments);
 
-        airService.createIssue(issuedPnr);        
+        airService.savePnr(issuedPnr);        
         assertEquals("LONU123IT", issuedPnr.getTicketingAgtOid());
         assertNotNull(issuedPnr);
        

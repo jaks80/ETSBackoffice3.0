@@ -1,0 +1,1 @@
+1. Write a tool in order to find, multipage inv,trfp,void file
