@@ -31,6 +31,31 @@ public class AIRTestingTool {
         System.out.println("Files found: " + airFiles.length);        
     }
 
+    @Test
+    public void findCancelledSegmentTest(){
+     for (File airFile : airFiles) {
+            FileToAIRConverter converter = new FileToAIRConverter();
+            AIR air = converter.convert(airFile);
+            if(air.getType().equals("TRFP")){
+             //System.out.println("Not a TTP file");
+             continue;
+            }
+            findCancelledSegment(air);
+        }
+        System.out.println("Done...");
+    }
+    
+    private void findCancelledSegment(AIR air) {
+        for (String s : air.getLines()) {
+            if (s.startsWith("U-") || s.startsWith("H-")) {
+                String[] vals = AIRLineParser.parseULine(s);
+                if(vals[0].contains("X")){
+                    System.out.println(air.getAirSequenceNumber()+" "+air.getAirFile().getName()+" "+s);
+                }
+            }
+        }
+    }
+    
     //@Test
     public void findMultiPageNonIssueFileTest(){
     for (File airFile : airFiles) {

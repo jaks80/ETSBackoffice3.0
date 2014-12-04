@@ -111,6 +111,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtBookingAgt">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" value="Booking Agent office Id, Separated by comma, Example: ABC123AB,CDE123CD"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
@@ -118,6 +121,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtTktingAgt">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" value="Ticketing agent office Id, Separated by comma, Example: ABC123AB,CDE123CD"/>
+          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtTktingAgtActionPerformed"/>
           </Events>

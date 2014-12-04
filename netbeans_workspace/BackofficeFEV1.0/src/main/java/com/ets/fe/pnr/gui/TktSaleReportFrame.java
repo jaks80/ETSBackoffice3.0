@@ -65,12 +65,12 @@ public class TktSaleReportFrame extends JInternalFrame implements PropertyChange
     private void populateTblTicket() {
         TicketSaleReport report = task.getReport();
         list = report.getList();
-        DefaultTableModel salesModel = (DefaultTableModel) tblTicket.getModel();
-        salesModel.getDataVector().removeAllElements();
+        DefaultTableModel tableModel = (DefaultTableModel) tblTicket.getModel();
+        tableModel.getDataVector().removeAllElements();
         tblTicket.repaint();
         int row =0;
         for(Ticket t: list){
-         salesModel.insertRow(row, new Object[]{t.getTktDateString(), t.getTktStatusString(),
+         tableModel.insertRow(row, new Object[]{t.getTktDateString(), t.getTktStatusString(),
                         t.getPnr().getGdsPnr(), t.getPnr().getBookingAgtOid(), t.getPnr().getTicketingAgtOid(),
                         t.getPnr().getAirLineCode(), t.getFullPaxNameWithPaxNo(),t.getFullTicketNo(), 
                         t.getBaseFare(), t.getTax(), t.getCommission(),t.getFee(),t.getTotalFare()});

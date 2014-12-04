@@ -17,9 +17,10 @@ public class RestClientUtil {
     private static final String domain = APIConfig.get("ws.domain");
 
     public synchronized static ResteasyWebTarget getWebTarget(String destUrl) {
+        String url = domain + destUrl;
         ResteasyClient client = new ResteasyClientBuilder().build();
-        ResteasyWebTarget target = client.target(domain + destUrl);
-
+        ResteasyWebTarget target = client.target(url);
+        System.out.println("URL: "+url);  
         return target;
     }
 
@@ -39,6 +40,13 @@ public class RestClientUtil {
     public synchronized static Integer postAIR(String destUrl, AIR air) {
 
         Response response = getWebTarget(destUrl).request().post(Entity.entity(air, "application/xml"));               
+        response.close();
+        return response.getStatus();
+    }
+       
+    public synchronized static Integer deleteById(String destUrl) {
+
+        Response response = getWebTarget(destUrl).request().delete();
         response.close();
         return response.getStatus();
     }

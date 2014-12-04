@@ -2,13 +2,21 @@ package com.ets.fe;
 
 import com.amadeus.reader.EventSource;
 import com.amadeus.reader.ResponseHandler;
+import com.ets.fe.client.gui.AgentFrame;
+import com.ets.fe.client.gui.CustomerDlg;
+import com.ets.fe.client.gui.CustomerFrame;
+import com.ets.fe.client.gui.CustomerTask;
+import com.ets.fe.client.model.Customer;
+import com.ets.fe.os.gui.OtherServiceFrame;
 import com.ets.fe.pnr.gui.PnrHistoryFrame;
 import com.ets.fe.pnr.gui.SegmentReportFrame;
 import com.ets.fe.pnr.gui.TktSaleReportFrame;
-import com.ets.fe.pnr.gui.TktSalesReportTask;
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JInternalFrame;
 
 /**
  *
@@ -16,13 +24,34 @@ import java.util.logging.Logger;
  */
 public class Main extends javax.swing.JFrame {
 
+    private List<JInternalFrame> internalFrames = new ArrayList<>();
+            
     public Main() {
         initComponents();
         APIConfig api = new APIConfig();
         AppSettings settings = new AppSettings();
+        
+        callDashBoard();
+        
         startFileReading();
     }
 
+    private void callDashBoard(){
+     DashBoardFrame frame = new DashBoardFrame(desktopPane);
+        desktopPane.add(frame);
+        try {
+            frame.setSelected(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {                        
+            frame.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       frame.setVisible(true);
+    }
+    
     public void startFileReading() {
         ResponseHandler respHandler = new ResponseHandler();
         EventSource evSrc = new EventSource();
@@ -42,37 +71,46 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         jToolBar1 = new javax.swing.JToolBar();
-        jButton1 = new javax.swing.JButton();
-        jDesktopPane1 = new javax.swing.JDesktopPane();
+        btnNewCustomer = new javax.swing.JButton();
+        desktopPane = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        jMenu5 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         menuPnrHistory = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem6 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        jButton1.setText("jButton1");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton1);
+        btnNewCustomer.setText("New Customer");
+        btnNewCustomer.setFocusable(false);
+        btnNewCustomer.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnNewCustomer.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnNewCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewCustomerActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btnNewCustomer);
 
-        javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
-        jDesktopPane1.setLayout(jDesktopPane1Layout);
-        jDesktopPane1Layout.setHorizontalGroup(
-            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout desktopPaneLayout = new javax.swing.GroupLayout(desktopPane);
+        desktopPane.setLayout(desktopPaneLayout);
+        desktopPaneLayout.setHorizontalGroup(
+            desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
-        jDesktopPane1Layout.setVerticalGroup(
-            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        desktopPaneLayout.setVerticalGroup(
+            desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 297, Short.MAX_VALUE)
         );
 
@@ -91,8 +129,25 @@ public class Main extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu4);
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        jMenu5.setText("Client");
+
+        jMenuItem1.setText("Customer Management");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem1);
+
+        jMenuItem5.setText("Agent Management");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem5);
+
+        jMenuBar1.add(jMenu5);
 
         jMenu3.setText("Pnr");
 
@@ -122,6 +177,18 @@ public class Main extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu3);
 
+        jMenu2.setText("Other Service");
+
+        jMenuItem6.setText("Service Manager");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem6);
+
+        jMenuBar1.add(jMenu2);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -129,14 +196,14 @@ public class Main extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
-            .addComponent(jDesktopPane1)
+            .addComponent(desktopPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jDesktopPane1))
+                .addComponent(desktopPane))
         );
 
         pack();
@@ -144,7 +211,7 @@ public class Main extends javax.swing.JFrame {
 
     private void menuPnrHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPnrHistoryActionPerformed
        PnrHistoryFrame history = new PnrHistoryFrame();
-       jDesktopPane1.add(history);
+       desktopPane.add(history);
         try {
             history.setSelected(true);
         } catch (PropertyVetoException ex) {
@@ -159,7 +226,7 @@ public class Main extends javax.swing.JFrame {
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         TktSaleReportFrame frame = new TktSaleReportFrame();
-        jDesktopPane1.add(frame);
+        desktopPane.add(frame);
         try {
             frame.setSelected(true);
         } catch (PropertyVetoException ex) {
@@ -170,7 +237,7 @@ public class Main extends javax.swing.JFrame {
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         SegmentReportFrame frame = new SegmentReportFrame();
-        jDesktopPane1.add(frame);
+        desktopPane.add(frame);
         try {
             frame.setSelected(true);
         } catch (PropertyVetoException ex) {
@@ -178,6 +245,49 @@ public class Main extends javax.swing.JFrame {
         }
        frame.setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void btnNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewCustomerActionPerformed
+        CustomerDlg customerDlg = new CustomerDlg(this);
+        customerDlg.setTitle("New Customer");
+        Customer newCustomer = new Customer();
+        if (customerDlg.showCustomerDialog(newCustomer)) {
+            CustomerTask task = new CustomerTask(newCustomer);
+            task.execute();            
+        }
+    }//GEN-LAST:event_btnNewCustomerActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        CustomerFrame frame = new CustomerFrame(desktopPane);
+        desktopPane.add(frame);
+        try {
+            frame.setSelected(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       frame.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        AgentFrame frame = new AgentFrame(desktopPane);
+        desktopPane.add(frame);
+        try {
+            frame.setSelected(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       frame.setVisible(true);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+       OtherServiceFrame frame = new OtherServiceFrame(desktopPane);
+        desktopPane.add(frame);
+        try {
+            frame.setSelected(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       frame.setVisible(true);
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -215,16 +325,20 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JDesktopPane jDesktopPane1;
+    private javax.swing.JButton btnNewCustomer;
+    private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenuItem menuPnrHistory;
     // End of variables declaration//GEN-END:variables

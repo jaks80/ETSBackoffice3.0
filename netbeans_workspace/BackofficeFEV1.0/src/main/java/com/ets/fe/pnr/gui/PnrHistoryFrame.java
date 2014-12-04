@@ -101,8 +101,11 @@ public class PnrHistoryFrame extends JInternalFrame implements PropertyChangeLis
 
         jLabel1.setText("Booking Agent OID");
 
+        txtBookingAgt.setToolTipText("Booking Agent office Id, Separated by comma, Example: ABC123AB,CDE123CD");
+
         jLabel2.setText("Issue Agent OID");
 
+        txtTktingAgt.setToolTipText("Ticketing agent office Id, Separated by comma, Example: ABC123AB,CDE123CD");
         txtTktingAgt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTktingAgtActionPerformed(evt);

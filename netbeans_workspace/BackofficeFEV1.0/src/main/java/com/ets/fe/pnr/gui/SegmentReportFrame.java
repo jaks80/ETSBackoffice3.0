@@ -67,12 +67,12 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
         SegmentReport report = task.getReport();
        
         List<Segment> list = report.getList();
-        DefaultTableModel salesModel = (DefaultTableModel) tblSegment.getModel();
-        salesModel.getDataVector().removeAllElements();
+        DefaultTableModel tableModel = (DefaultTableModel) tblSegment.getModel();
+        tableModel.getDataVector().removeAllElements();
         tblSegment.repaint();
         int row =0;
         for(Segment s: list){
-         salesModel.insertRow(row, new Object[]{s.getTravelDate(),s.getOutCity(),s.getInCity(),s.getFlightNo(),
+         tableModel.insertRow(row, new Object[]{s.getTravelDate(),s.getOutCity(),s.getInCity(),s.getFlightNo(),
              s.getAirLine(),s.getTicketClass(),s.getBookingOid(),s.getTicketingOid(),s.getPnr(),
              s.getTicketNo(),s.getTktStatus(),s.getCount()});
             row++;

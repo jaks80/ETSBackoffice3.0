@@ -3,7 +3,6 @@ package com.ets.fe.pnr.ws;
 import com.ets.fe.pnr.collection.Careers;
 import com.ets.fe.pnr.model.Airline;
 import com.ets.fe.util.RestClientUtil;
-import com.ets.fe.util.RestClientUtil;
 import com.ets.fe.APIConfig;
 
 /**
