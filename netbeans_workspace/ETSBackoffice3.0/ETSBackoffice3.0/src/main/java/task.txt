@@ -1,1 +1,3 @@
-1. Write a tool in order to find, multipage inv,trfp,void file
+1. U-003X;007MIS 1A OK04;HK04 25JUN;LON;LONDON;TO KEEP PNR ALIVE;
+2. Wrtie a line test to get cancelled segments
+This u line is cozing problem.

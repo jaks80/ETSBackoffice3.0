@@ -59,6 +59,9 @@ public class Itinerary extends PersistentObject implements Serializable{
     private String mileage;
 
     @XmlElement
+    
+    @ManyToOne
+    @JoinColumn(name = "pnr_fk")
     private Pnr pnr;
 
     public Itinerary() {
@@ -208,9 +211,7 @@ public class Itinerary extends PersistentObject implements Serializable{
     public void setMileage(String mileage) {
         this.mileage = mileage;
     }
-
-    @ManyToOne
-    @JoinColumn(name = "pnrid_fk")
+    
     public Pnr getPnr() {
         return pnr;
     }

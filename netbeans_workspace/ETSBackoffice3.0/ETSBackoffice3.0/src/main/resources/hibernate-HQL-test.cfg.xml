@@ -8,10 +8,20 @@
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">ets215</property>
     
-    <mapping class="com.ets.domain.pnr.Pnr" package="com.ets.domain.pnr"/>
-    <mapping class="com.ets.domain.pnr.Ticket" package="com.ets.domain.pnr"/>
-    <mapping class="com.ets.domain.pnr.Itinerary" package="com.ets.domain.pnr"/>
-    <mapping class="com.ets.domain.pnr.PnrRemark" package="com.ets.domain.pnr"/>
-    <mapping class="com.ets.domain.pnr.Career" package="com.ets.domain.pnr"/>        
+    <mapping class="com.ets.pnr.domain.Pnr" package="com.ets.pnr.domain"/>
+    <mapping class="com.ets.pnr.domain.Ticket" package="com.ets.pnr.domain"/>
+    <mapping class="com.ets.pnr.domain.Itinerary" package="com.ets.pnr.domain"/>
+    <mapping class="com.ets.pnr.domain.PnrRemark" package="com.ets.pnr.domain"/>
+    <mapping class="com.ets.pnr.domain.Career" package="com.ets.pnr.domain"/>
+    
+    <mapping class="com.ets.otherservice.domain.OtherService" package="com.ets.otherservice.domain"/>
+    <mapping class="com.ets.otherservice.domain.AdditionalCharge" package="com.ets.otherservice.domain"/>
+    
+    <mapping class="com.ets.client.domain.Customer" package="com.ets.client.domain"/>
+    <mapping class="com.ets.client.domain.Agent" package="com.ets.client.domain"/>        
+    <mapping class="com.ets.client.domain.Contactable" package="com.ets.client.domain"/>        
+    
+    <mapping class="com.ets.accountingdoc.domain.AccountingDocument" package="com.ets.accountingdoc.domain"/>        
+    <mapping class="com.ets.accountingdoc.domain.TicketingAcDocument" package="com.ets.accountingdoc.domain"/>        
   </session-factory>
 </hibernate-configuration>

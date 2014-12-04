@@ -79,6 +79,12 @@ public abstract class GenericDAOImpl<T, Long extends Serializable> implements Ge
         return t;
     }
 
+    public List<T> findMany(String hql) {
+        Query query = getSession().createQuery(hql);
+        
+        return findMany(query);
+    }
+    
     public T findOne(Query query) {
         T t;
         t = (T) query.uniqueResult();
@@ -115,5 +121,21 @@ public abstract class GenericDAOImpl<T, Long extends Serializable> implements Ge
 
     public Session getSession() {
         return sessionFactory.getCurrentSession();
+    }        
+    
+         public String nullStringToNullValue(String string){
+     
+        if(string == null || "null".equals(string)){
+         string = null;
+        }        
+        return string;
+    }
+     
+     public String nullToEmptyValue(String string){
+     
+        if("null".equals(string) || string == null){
+         string = "";
+        }        
+        return string;
     }
 }

@@ -24,7 +24,7 @@ public class AirWS {
     AIRReader reader;
     
     @POST
-    @Path("/new-air")
+    @Path("/new")
     public Response newAir(AIR air){
         reader.setAir(air);
         reader.startReading();

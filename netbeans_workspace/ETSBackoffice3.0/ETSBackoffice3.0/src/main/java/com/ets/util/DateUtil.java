@@ -86,4 +86,11 @@ public class DateUtil {
     public static Date stringToDate(String dateString){
      return stringToDate(dateString,AppSettings.get("dateformat"));
     }
+    
+    public static Integer getYY() {
+        SimpleDateFormat dfYear = new SimpleDateFormat("yy");        
+        String year = dfYear.format(cal.getTime());
+        Integer currentYear = Integer.valueOf(year);
+        return currentYear;
+    }
 }

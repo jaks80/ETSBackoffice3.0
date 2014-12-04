@@ -30,10 +30,17 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(com.ets.air.ws.AirWS.class);
+        resources.add(com.ets.client.ws.AgentWS.class);
+        resources.add(com.ets.client.ws.CustomerWS.class);
+        resources.add(com.ets.otherservice.ws.AdditionalChargeWS.class);
+        resources.add(com.ets.otherservice.ws.CategoryWS.class);
+        resources.add(com.ets.otherservice.ws.OtherServiceWS.class);
         resources.add(com.ets.pnr.ws.AirlineWS.class);
         resources.add(com.ets.pnr.ws.ItineraryWS.class);
         resources.add(com.ets.pnr.ws.PnrWS.class);
         resources.add(com.ets.pnr.ws.TicketWS.class);
+        resources.add(com.ets.settings.ws.AppSettingsWS.class);
+        resources.add(com.ets.settings.ws.UserWS.class);
     }
     
 }

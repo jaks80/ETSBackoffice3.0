@@ -26,6 +26,8 @@ public class PnrRemark extends PersistentObject implements Serializable {
     @XmlElement
     private String text;
     @XmlElement
+        @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pnrid_fk")
     private Pnr pnr;
 
     public PnrRemark() {
@@ -48,8 +50,6 @@ public class PnrRemark extends PersistentObject implements Serializable {
         this.text = text;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pnrid_fk")
     public Pnr getPnr() {
         return pnr;
     }

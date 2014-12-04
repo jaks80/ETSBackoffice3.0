@@ -2,9 +2,36 @@ package com.ets.util;
 
 /**
  *
- * @author OMAR
+ * @author Yusuf
  */
 public class Enums {
+
+    public enum UserType {
+
+        MANAGER(1), SUPERVISOR(2), GENERALSALES(3);
+        private int id;
+
+        UserType(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static String valueOf(int id) {
+            switch (id) {
+                case 1:
+                    return MANAGER.toString();
+                case 2:
+                    return SUPERVISOR.toString();
+                case 3:
+                    return GENERALSALES.toString();
+                default:
+                    return null;
+            }
+        }
+    }
 
     public enum GDS {
 

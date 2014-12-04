@@ -1,18 +1,20 @@
 package com.ets.pnr.domain;
 
 import com.ets.PersistentObject;
+import com.ets.accountingdoc.domain.TicketingAcDocument;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -25,10 +27,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class Ticket extends PersistentObject implements Serializable{
+@Access(AccessType.FIELD)
+public class Ticket extends PersistentObject implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    
+    private static long serialVersionUID = 1L;
+
     @XmlElement
     private String passengerNo;
     @XmlElement
@@ -46,10 +49,16 @@ public class Ticket extends PersistentObject implements Serializable{
     @XmlElement
     private String restrictions;
     @XmlElement
+    @Temporal(TemporalType.DATE)
     private Date docIssuedate;
     @XmlElement
-    private Pnr pnr;    
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pnr_fk")
+    private Pnr pnr;
+    @XmlElement
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tacdoc_fk")
+    private TicketingAcDocument ticketingAcDocument;
     @XmlElement
     private BigDecimal baseFare = new BigDecimal("0.00");
     @XmlElement
@@ -164,7 +173,6 @@ public class Ticket extends PersistentObject implements Serializable{
         this.restrictions = restrictions;
     }
 
-    @Temporal(TemporalType.DATE)
     public Date getDocIssuedate() {
         return docIssuedate;
     }
@@ -181,8 +189,6 @@ public class Ticket extends PersistentObject implements Serializable{
         this.totalFare = totalFare;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pnrid_fk")
     public Pnr getPnr() {
         return pnr;
     }
@@ -198,32 +204,40 @@ public class Ticket extends PersistentObject implements Serializable{
     public void setCommission(BigDecimal commission) {
         this.commission = commission;
     }
-    
-    @Transient
+
+    //@Transient
     public String getFullTicketNo() {
-        if (this.numericAirLineCode != null && this.ticketNo != null) {
-            return this.numericAirLineCode + "-" + this.ticketNo;
+        if (this.getNumericAirLineCode() != null && this.getTicketNo() != null) {
+            return this.getNumericAirLineCode() + "-" + this.getTicketNo();
         } else {
             return null;
         }
     }
-    
-    @Transient
-    public String getTktDateString(){
-        return DateUtil.dateToString(docIssuedate);
+
+    //@Transient
+    public String getTktDateString() {
+        return DateUtil.dateToString(getDocIssuedate());
     }
-    
-    @Transient
+
+    //@Transient
     public String getTktStatusString() {
         return Enums.TicketStatus.valueOf(this.getTktStatus());
     }
 
-    @Transient
+    //@Transient
     public String getFullPaxNameWithPaxNo() {
 
         String paxFullName = "";
         paxFullName = getPassengerNo() + ". " + getPaxSurName() + " / " + getPaxForeName();
 
         return paxFullName;
+    }
+
+    public TicketingAcDocument getTicketingAcDocument() {
+        return ticketingAcDocument;
+    }
+
+    public void setTicketingAcDocument(TicketingAcDocument ticketingAcDocument) {
+        this.ticketingAcDocument = ticketingAcDocument;
     }
 }

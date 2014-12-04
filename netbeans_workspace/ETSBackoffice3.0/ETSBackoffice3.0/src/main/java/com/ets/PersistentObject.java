@@ -3,6 +3,8 @@ package com.ets;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,16 +22,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @MappedSuperclass
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
+@Access(AccessType.FIELD)
 public abstract class PersistentObject implements Serializable {
 
     @XmlElement
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
     @XmlElement
     private Timestamp createdOn;
     @XmlElement
     private Timestamp lastModified;
-    //private User createdBy;
-    //private User lastModifiedBy;
 
     public PersistentObject() {
 
@@ -86,9 +90,6 @@ public abstract class PersistentObject implements Serializable {
         this.lastModified = lastModified;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
     public Long getId() {
         return id;
     }

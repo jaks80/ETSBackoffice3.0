@@ -17,6 +17,7 @@ public class Airline implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @XmlElement
+        @Id  
     private String code;
     @XmlElement
     private String name;
@@ -24,8 +25,7 @@ public class Airline implements Serializable {
     public Airline(){
     
     }
-
-    @Id    
+  
     public String getCode() {
         return code;
     }
