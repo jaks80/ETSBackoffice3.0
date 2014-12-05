@@ -23,23 +23,22 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Yusuf
  */
-//@MappedSuperclass
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 @Access(AccessType.FIELD)
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-public abstract class TicketingAcDocument extends AccountingDocument implements Serializable {
+public abstract class TicketingAcDoc extends AccountingDocument implements Serializable {
 
     @XmlElement
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pnr_fk")
     private Pnr pnr;
     @XmlElement
-    @OneToMany(mappedBy = "ticketingAcDocument")
+    @OneToMany
     private Set<Ticket> tickets = new LinkedHashSet<>();
 
-    public TicketingAcDocument() {
+    public TicketingAcDoc() {
 
     }
 

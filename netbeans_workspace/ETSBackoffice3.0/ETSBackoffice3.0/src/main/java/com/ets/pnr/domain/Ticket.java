@@ -1,7 +1,8 @@
 package com.ets.pnr.domain;
 
 import com.ets.PersistentObject;
-import com.ets.accountingdoc.domain.TicketingAcDocument;
+import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
+import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.io.Serializable;
@@ -55,10 +56,16 @@ public class Ticket extends PersistentObject implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pnr_fk")
     private Pnr pnr;
+    
     @XmlElement
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tacdoc_fk")
-    private TicketingAcDocument ticketingAcDocument;
+    @JoinColumn(name = "tsacdoc_fk")
+    private TicketingSalesAcDoc ticketingSalesAcDoc;
+    @XmlElement
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tpacdoc_fk")
+    private TicketingPurchaseAcDoc ticketingPurchaseAcDoc;
+    
     @XmlElement
     private BigDecimal baseFare = new BigDecimal("0.00");
     @XmlElement
@@ -233,11 +240,19 @@ public class Ticket extends PersistentObject implements Serializable {
         return paxFullName;
     }
 
-    public TicketingAcDocument getTicketingAcDocument() {
-        return ticketingAcDocument;
+    public TicketingSalesAcDoc getTicketingSalesAcDoc() {
+        return ticketingSalesAcDoc;
     }
 
-    public void setTicketingAcDocument(TicketingAcDocument ticketingAcDocument) {
-        this.ticketingAcDocument = ticketingAcDocument;
+    public void setTicketingSalesAcDoc(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        this.ticketingSalesAcDoc = ticketingSalesAcDoc;
+    }
+
+    public TicketingPurchaseAcDoc getTicketingPurchaseAcDoc() {
+        return ticketingPurchaseAcDoc;
+    }
+
+    public void setTicketingPurchaseAcDoc(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
+        this.ticketingPurchaseAcDoc = ticketingPurchaseAcDoc;
     }
 }

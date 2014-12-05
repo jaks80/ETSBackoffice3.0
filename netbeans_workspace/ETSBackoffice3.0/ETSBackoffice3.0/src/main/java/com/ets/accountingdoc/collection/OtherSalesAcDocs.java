@@ -1,6 +1,6 @@
-package com.ets.client.collection;
+package com.ets.accountingdoc.collection;
 
-import com.ets.client.domain.Agent;
+import com.ets.accountingdoc.domain.OtherSalesAcDoc;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,24 +14,24 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
-public class Agents {
+public class OtherSalesAcDocs {
+  
+@XmlElement
+    private List<OtherSalesAcDoc> list = new ArrayList<>();
     
-    @XmlElement
-    private List<Agent> list = new ArrayList<>();
-    
-    public Agents(){
+    public OtherSalesAcDocs(){
     
     }
     
-    public Agents(List<Agent> list){
+    public OtherSalesAcDocs(List<OtherSalesAcDoc> list){
      this.list = list;               
     }
 
-    public List<Agent> getList() {
+    public List<OtherSalesAcDoc> getList() {
         return list;
     }
 
-    public void setList(List<Agent> list) {
+    public void setList(List<OtherSalesAcDoc> list) {
         this.list = list;
     }
 }
