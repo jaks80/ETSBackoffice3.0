@@ -5,6 +5,8 @@ import com.ets.air.AIR;
 import com.ets.air.FileToAIRToFileConverter;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.DateUtil;
+import com.ets.util.Enums;
+import com.ets.util.Enums.TicketStatus;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -57,7 +59,7 @@ public class TTP_ReIssueTest {
         t1.setPaxForeName("NABIL MSTR(CHD)(ID05MAR03)");
         t1.setPaxSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");        
-        t1.setTktStatus(3);
+        t1.setTktStatus(TicketStatus.REISSUE);
                 
         expResult.add(t1);        
         

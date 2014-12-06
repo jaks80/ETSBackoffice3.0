@@ -41,6 +41,22 @@ public class TicketingPurchaseAcDocWS {
         ticketingPurchaseAcDocs.setList(list);
         return ticketingPurchaseAcDocs;
     }
+    
+    @GET
+    @Path("/byid/{id}")
+    public TicketingPurchaseAcDoc getbyId(@PathParam("id") long id) {
+        TicketingPurchaseAcDoc doc = service.getById(id);
+        return doc;
+    }
+
+    @GET
+    @Path("/byref/{refference}")
+    public TicketingPurchaseAcDocs getByRefNo(@PathParam("refference") Integer refference) {
+        List<TicketingPurchaseAcDoc> list = service.getByReffference(refference);
+        TicketingPurchaseAcDocs docs = new TicketingPurchaseAcDocs();
+        docs.setList(list);
+        return docs;
+    }
 
     @POST
     @Path("/new")

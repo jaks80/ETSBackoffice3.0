@@ -4,6 +4,7 @@ import com.ets.pnr.domain.Itinerary;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.PnrRemark;
 import com.ets.pnr.domain.Ticket;
+import com.ets.util.Enums.TicketStatus;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -162,7 +163,7 @@ public class PnrUtil {
                         && t.getPaxSurName().equals(newTkt.getPaxSurName())) {
                     exist = true;
                     break;
-                } else if ((t.getTktStatus() == 1 || t.getTktStatus() == 5)
+                } else if ((t.getTktStatus() == TicketStatus.BOOK || t.getTktStatus() == TicketStatus.VOID)
                         && t.getPaxSurName().equals(newTkt.getPaxSurName())) {
 
                     t.setPaxForeName(newTkt.getPaxForeName());

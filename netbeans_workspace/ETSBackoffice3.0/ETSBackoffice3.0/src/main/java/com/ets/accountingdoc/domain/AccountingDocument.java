@@ -1,6 +1,7 @@
 package com.ets.accountingdoc.domain;
 
 import com.ets.PersistentObject;
+import com.ets.util.Enums.AcDocType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
@@ -29,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public abstract class AccountingDocument extends PersistentObject implements Serializable {
 
     @XmlElement
-    private int acDoctype;//1: Invoice, 2:TktRefundCreditNote,3: CreditNote ,4: Debit note
+    private AcDocType acDoctype;//1: Invoice, 2:TktRefundCreditNote,3: CreditNote ,4: Debit note
     @XmlElement
     private String terms;
     @XmlElement
@@ -37,7 +38,7 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
     @XmlElement
     private Integer version;
     @XmlElement
-    private boolean isArchived;
+    private int isArchived;//0-No 1-Yes
     @XmlElement
     private BigDecimal documentedAmount;
    
@@ -47,11 +48,11 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
         
     //public abstract BigDecimal getAdditionalChargesSubTotal();
 
-    public int getAcDoctype() {
+    public AcDocType getAcDoctype() {
         return acDoctype;
     }
 
-    public void setAcDoctype(int acDoctype) {
+    public void setAcDoctype(AcDocType acDoctype) {
         this.acDoctype = acDoctype;
     }
 
@@ -79,11 +80,11 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
         this.version = version;
     }
 
-    public boolean isIsArchived() {
+    public int isIsArchived() {
         return isArchived;
     }
 
-    public void setIsArchived(boolean isArchived) {
+    public void setIsArchived(int isArchived) {
         this.isArchived = isArchived;
     }
 

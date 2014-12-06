@@ -4,6 +4,8 @@ import com.ets.pnr.domain.Itinerary;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.DateUtil;
+import com.ets.util.Enums;
+import com.ets.util.Enums.TicketStatus;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -82,7 +84,7 @@ public class MockData {
         t1.setPaxForeName("NABIL MSTR(CHD)(ID05MAR03)");
         t1.setPaxSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
-        t1.setTktStatus(1);
+        t1.setTktStatus(TicketStatus.BOOK);
 
         Ticket t2 = new Ticket();
         t2.setBaseFare(new BigDecimal("90.00"));
@@ -94,7 +96,7 @@ public class MockData {
         t2.setPaxForeName("KABIL MSTR");
         t2.setPaxSurName("MIAH");
         t2.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
-        t2.setTktStatus(1);
+        t2.setTktStatus(TicketStatus.BOOK);
 
         Ticket t3 = new Ticket();
         t3.setBaseFare(new BigDecimal("90.00"));
@@ -106,7 +108,7 @@ public class MockData {
         t3.setPaxForeName("JOSEPH MSTR");
         t3.setPaxSurName("AKANDA");
         t3.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
-        t3.setTktStatus(1);
+        t3.setTktStatus(TicketStatus.BOOK);
 
         tickets.add(t1);
         tickets.add(t2);
@@ -132,7 +134,7 @@ public class MockData {
         t1.setPaxForeName("NABIL MSTR(CHD)(ID05MAR03)");
         t1.setPaxSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
-        t1.setTktStatus(2);
+        t1.setTktStatus(TicketStatus.ISSUE);
 
         Ticket t2 = new Ticket();
         t2.setBaseFare(new BigDecimal("90.00"));
@@ -147,7 +149,7 @@ public class MockData {
         t2.setPaxForeName("KABIL MSTR");
         t2.setPaxSurName("MIAH");
         t2.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
-        t2.setTktStatus(2);
+        t2.setTktStatus(TicketStatus.ISSUE);
 
 //        Ticket t3 = new Ticket();
 //        t3.setBaseFare(new BigDecimal("90.00"));
@@ -188,7 +190,7 @@ public class MockData {
         t1.setPaxForeName("NABIL MSTR         (CHD)");
         t1.setPaxSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
-        t1.setTktStatus(2);
+        t1.setTktStatus(TicketStatus.ISSUE);
 
         tickets.add(t1);
 
@@ -213,7 +215,7 @@ public class MockData {
         t1.setPaxForeName("NABIL MSTR(CHD)(ID05MAR03)");
         t1.setPaxSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
-        t1.setTktStatus(2);
+        t1.setTktStatus(TicketStatus.ISSUE);
 
         tickets.add(t1);
 

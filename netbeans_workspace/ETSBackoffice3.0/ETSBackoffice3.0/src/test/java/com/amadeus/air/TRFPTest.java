@@ -5,6 +5,7 @@ import com.ets.air.AIR;
 import com.ets.air.FileToAIRToFileConverter;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.DateUtil;
+import com.ets.util.Enums.TicketStatus;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -57,7 +58,7 @@ public class TRFPTest {
         t1.setPaxForeName("NABIL MSTR         (CHD)");
         t1.setPaxSurName("MIAH");
         t1.setRestrictions(null);
-        t1.setTktStatus(4);
+        t1.setTktStatus(TicketStatus.REFUND);
 
         expResult.add(t1);
 

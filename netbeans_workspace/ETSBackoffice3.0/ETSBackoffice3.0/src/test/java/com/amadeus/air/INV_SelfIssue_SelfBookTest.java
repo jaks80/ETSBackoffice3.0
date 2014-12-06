@@ -6,6 +6,8 @@ import com.ets.air.FileToAIRToFileConverter;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.DateUtil;
+import com.ets.util.Enums;
+import com.ets.util.Enums.TicketStatus;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -81,7 +83,7 @@ public class INV_SelfIssue_SelfBookTest {
         t1.setPaxSurName("BASHIR");
         t1.setRestrictions(null);
         t1.setTicketNo("1632104224");
-        t1.setTktStatus(2);
+        t1.setTktStatus(TicketStatus.ISSUE);
         
         expResult.add(t1);
         

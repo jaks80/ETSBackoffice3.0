@@ -33,35 +33,6 @@ public class Enums {
         }
     }
 
-    public enum GDS {
-
-        AMADEUS(1), GALILEO(2), WORLDSPAN(3), SABRE(4);
-        private int id;
-
-        GDS(int id) {
-            this.id = id;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public static String valueOf(int id) {
-            switch (id) {
-                case 1:
-                    return AMADEUS.toString();
-                case 2:
-                    return GALILEO.toString();
-                case 3:
-                    return WORLDSPAN.toString();
-                case 4:
-                    return SABRE.toString();
-                default:
-                    return null;
-            }
-        }
-    }
-
     public enum AIRType {
 
         BT(1), TTP(2), INV(3), TRFP(4);
@@ -118,4 +89,34 @@ public class Enums {
         }
     }
 
+    public enum AcDocType {
+
+        INVOICE(1), PAYMENT(2), CREDITMEMO(3), DEBITMEMO(4), REFUND(5);
+        private int id;
+
+        AcDocType(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static String valueOf(int id) {
+            switch (id) {
+                case 1:
+                    return INVOICE.toString();
+                case 2:
+                    return PAYMENT.toString();
+                case 3:
+                    return CREDITMEMO.toString();
+                case 4:
+                    return DEBITMEMO.toString();
+                case 5:
+                    return REFUND.toString();
+                default:
+                    return null;
+            }
+        }
+    }
 }

@@ -7,6 +7,8 @@ import com.ets.pnr.domain.Airline;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.DateUtil;
+import com.ets.util.Enums;
+import com.ets.util.Enums.TicketStatus;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -97,7 +99,7 @@ public class TTP_IssueTest {
         t1.setPaxSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
         t1.setTicketNo("3535898495");
-        t1.setTktStatus(2);
+        t1.setTktStatus(TicketStatus.ISSUE);
 
         Ticket t2 = new Ticket();
         t2.setBaseFare(new BigDecimal("90.00"));
@@ -113,7 +115,7 @@ public class TTP_IssueTest {
         t2.setPaxSurName("MIAH");
         t2.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
         t2.setTicketNo("3535898496");
-        t2.setTktStatus(2);
+        t2.setTktStatus(TicketStatus.ISSUE);
 
         expResult.add(t1);
         expResult.add(t2);

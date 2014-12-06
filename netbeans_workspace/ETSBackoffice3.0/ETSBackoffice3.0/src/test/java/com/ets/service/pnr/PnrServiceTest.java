@@ -6,6 +6,8 @@ import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.mockdata.MockData;
 import com.ets.air.service.AirService;
+import com.ets.util.Enums;
+import com.ets.util.Enums.TicketStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -105,7 +107,7 @@ public class PnrServiceTest {
         assertNotNull(issuedPnr);
        
         for (Ticket t : issuedPnr.getTickets()) {
-            assertEquals(2, t.getTktStatus());
+            assertEquals(TicketStatus.ISSUE, t.getTktStatus());
             assertNotNull(t.getId());
             assertNotNull(t.getTicketNo());                        
         }

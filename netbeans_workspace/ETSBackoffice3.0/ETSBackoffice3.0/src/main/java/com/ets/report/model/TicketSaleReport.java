@@ -1,6 +1,8 @@
 package com.ets.report.model;
 
 import com.ets.pnr.domain.Ticket;
+import com.ets.util.Enums;
+import com.ets.util.Enums.TicketStatus;
 import com.ets.util.PnrUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -72,12 +74,12 @@ public class TicketSaleReport {
     public void generate() {
 
         for (Ticket t : list) {
-            if (t.getTktStatus() == 2 || t.getTktStatus() == 3) {
+            if (t.getTktStatus() == TicketStatus.ISSUE || t.getTktStatus() == TicketStatus.REFUND) {
                 totalIssuedFare = totalIssuedFare.add(t.getBaseFare());
                 totalTax = totalTax.add(t.getTax());
                 totalBSPCom = totalBSPCom.add(t.getCommission());
                 ++totalIssue;
-            } else if (t.getTktStatus() == 4) {
+            } else if (t.getTktStatus() == TicketStatus.REFUND) {
                 totalRefundFare = totalRefundFare.add(t.getBaseFare()).add(t.getFee());
                 totalTaxRefund = totalTaxRefund.add(t.getTax());
                 totalBSPComRefund = totalBSPComRefund.add(t.getCommission());

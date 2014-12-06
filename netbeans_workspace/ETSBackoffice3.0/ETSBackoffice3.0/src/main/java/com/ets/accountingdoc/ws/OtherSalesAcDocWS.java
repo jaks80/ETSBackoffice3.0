@@ -42,6 +42,22 @@ public class OtherSalesAcDocWS {
         return otherSalesAcDocs;
     }
 
+        @GET
+    @Path("/byid/{id}")
+    public OtherSalesAcDoc getbyId(@PathParam("id") long id) {
+        OtherSalesAcDoc doc = service.getById(id);
+        return doc;
+    }
+
+    @GET
+    @Path("/byref/{refference}")
+    public OtherSalesAcDocs getByRefNo(@PathParam("refference") Integer refference) {
+        List<OtherSalesAcDoc> list = service.getByReffference(refference);
+        OtherSalesAcDocs docs = new OtherSalesAcDocs();
+        docs.setList(list);
+        return docs;
+    }
+
     @POST
     @Path("/new")
     public OtherSalesAcDoc create(OtherSalesAcDoc otherSalesAcDoc) {

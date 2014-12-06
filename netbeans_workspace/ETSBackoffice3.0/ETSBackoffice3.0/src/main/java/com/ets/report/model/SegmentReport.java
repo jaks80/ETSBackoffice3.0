@@ -3,6 +3,8 @@ package com.ets.report.model;
 import com.ets.pnr.domain.Itinerary;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
+import com.ets.util.Enums;
+import com.ets.util.Enums.TicketStatus;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -133,13 +135,13 @@ public class SegmentReport {
             this.inCity = itinerary.getDeptFrom();
             this.outCity = itinerary.getDeptTo();
 
-            if (ticket.getTktStatus() == 2) {
+            if (ticket.getTktStatus() == TicketStatus.ISSUE) {
                 count = 1;
-            } else if (ticket.getTktStatus() == 3) {
+            } else if (ticket.getTktStatus() == TicketStatus.REISSUE) {
                 count = 0;
-            } else if (ticket.getTktStatus() == 4) {
+            } else if (ticket.getTktStatus() == TicketStatus.REFUND) {
                 count = -1;
-            } else if (ticket.getTktStatus() == 5) {
+            } else if (ticket.getTktStatus() == TicketStatus.VOID) {
                 count = 0;
             }
         }

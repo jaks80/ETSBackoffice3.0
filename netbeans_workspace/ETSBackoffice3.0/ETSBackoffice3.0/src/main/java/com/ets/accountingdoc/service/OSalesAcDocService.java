@@ -20,6 +20,14 @@ public class OSalesAcDocService {
         return dao.findAll(OtherSalesAcDoc.class);
     }                                                 
     
+    public OtherSalesAcDoc getById(long id) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public List<OtherSalesAcDoc> getByReffference(int refNo) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
     public OtherSalesAcDoc saveorUpdate(OtherSalesAcDoc otherSalesAcDoc){
      dao.save(otherSalesAcDoc);
      return otherSalesAcDoc;

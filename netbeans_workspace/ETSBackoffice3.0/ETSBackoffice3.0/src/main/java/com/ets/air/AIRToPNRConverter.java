@@ -6,6 +6,8 @@ import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.PnrRemark;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.DateUtil;
+import com.ets.util.Enums;
+import com.ets.util.Enums.TicketStatus;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -184,7 +186,7 @@ public class AIRToPNRConverter {
                 String[] name = data[1].substring(2).trim().split("/");
 
                 ticket = new Ticket();
-                ticket.setTktStatus(1);//Setting default status; This will be overwridden after
+                ticket.setTktStatus(TicketStatus.BOOK);//Setting default status; This will be overwridden after
                 ticket.setDocIssuedate(DateUtil.yyMMddToDate(air.getCreationDate()));
                 ticket = getNameFormStringArray(data, ticket);
                 ticket.setBaseFare(baseFare);
@@ -204,7 +206,7 @@ public class AIRToPNRConverter {
                  ticket.setTicketNo(data[1]);
                 }
 
-                ticket.setTktStatus(2);
+                ticket.setTktStatus(TicketStatus.ISSUE);
             } else if (s.startsWith("FE")) {
                 String restrictions = s.substring(2);
                 ticket.setRestrictions(restrictions);
@@ -217,7 +219,7 @@ public class AIRToPNRConverter {
                     ticket.setOrginalTicketNo(s.substring(5, 15));
                 }
                 if (air.getType().equals("TTP")) {
-                    ticket.setTktStatus(3);
+                    ticket.setTktStatus(TicketStatus.REISSUE);
                 }
 
             }
@@ -284,7 +286,7 @@ public class AIRToPNRConverter {
                     ticket.setNumericAirLineCode(data[0].substring(1, 4).trim());
                 }
                 ticket.setTicketNo(data[1]);
-                ticket.setTktStatus(4);
+                ticket.setTktStatus(TicketStatus.REFUND);
             } else if (s.startsWith("R-")) {
                 String[] data = AIRLineParser.parseRLine(s);
                 ticket.setDocIssuedate(DateUtil.refundDate(data[1]));
@@ -320,7 +322,7 @@ public class AIRToPNRConverter {
                     ticket.setNumericAirLineCode(data[0].substring(1, 4).trim());
                 }
                 ticket.setTicketNo(data[1]);
-                ticket.setTktStatus(5);
+                ticket.setTktStatus(TicketStatus.VOID);
             }
         }
         return tickets;

@@ -68,16 +68,14 @@ public class PnrWS {
     @Produces("application/xml")
     @Path("/byid/{id}")
     public Pnr getById(@PathParam("id") long id){
-        Pnr pnr = new Pnr();
-        return pnr;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @GET
     @Produces("application/xml")
     @Path("/withchildren/{id}")
     public Pnr getByIdWithChildren(@PathParam("id") long id){
-         Pnr pnr = new Pnr();
-        return pnr;
+         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @GET

@@ -4,6 +4,8 @@ import com.ets.air.AIRToPNRConverter;
 import com.ets.air.AIR;
 import com.ets.air.FileToAIRToFileConverter;
 import com.ets.pnr.domain.Ticket;
+import com.ets.util.Enums;
+import com.ets.util.Enums.TicketStatus;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -49,7 +51,7 @@ public class VOIDTest {
         t1.setPassengerNo("01");
         t1.setPaxForeName("RAHENA MRS");
         t1.setPaxSurName("BEGUM CHOWDHURY");        
-        t1.setTktStatus(5);                
+        t1.setTktStatus(TicketStatus.VOID);                
         expResult.add(t1);        
         
         List<Ticket> result = instance.airToVoidTicket();

@@ -20,6 +20,14 @@ public class TPurchaseAcDocService {
         return dao.findAll(TicketingPurchaseAcDoc.class);
     }                                                 
     
+    public TicketingPurchaseAcDoc getById(long id) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public List<TicketingPurchaseAcDoc> getByReffference(int refNo) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
     public TicketingPurchaseAcDoc saveorUpdate(TicketingPurchaseAcDoc ticketingPurchaseAcDoc){
      dao.save(ticketingPurchaseAcDoc);
      return ticketingPurchaseAcDoc;

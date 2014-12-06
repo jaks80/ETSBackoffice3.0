@@ -6,6 +6,7 @@ import com.ets.air.FileToAIRToFileConverter;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.DateUtil;
+import com.ets.util.Enums.TicketStatus;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -82,7 +83,7 @@ public class INV_ThirdPartyIssueTest {
         t1.setPaxSurName("AHMED");
         t1.setRestrictions("VLD EY ONLY/NON ENDO/CHG-RFND-REF TKT OFF/RSTR APPLY/X-30M");
         t1.setTicketNo("2798289186-87");
-        t1.setTktStatus(2);
+        t1.setTktStatus(TicketStatus.ISSUE);
 
         Ticket t2 = new Ticket();
         t2.setBaseFare(new BigDecimal("250.00"));
@@ -98,7 +99,7 @@ public class INV_ThirdPartyIssueTest {
         t2.setPaxSurName("KHAIR");
         t2.setRestrictions("VLD EY ONLY/NON ENDO/CHG-RFND-REF TKT OFF/RSTR APPLY/X-30M");
         t2.setTicketNo("2798289188-89");
-        t2.setTktStatus(2);
+        t2.setTktStatus(TicketStatus.ISSUE);
 
         Ticket t3 = new Ticket();
         t3.setBaseFare(new BigDecimal("250.00"));
@@ -114,7 +115,7 @@ public class INV_ThirdPartyIssueTest {
         t3.setPaxSurName("KHATUN");
         t3.setRestrictions("VLD EY ONLY/NON ENDO/CHG-RFND-REF TKT OFF/RSTR APPLY/X-30M");
         t3.setTicketNo("2798289190-91");
-        t3.setTktStatus(2);
+        t3.setTktStatus(TicketStatus.ISSUE);
         
         expResult.add(t1);
         expResult.add(t2);

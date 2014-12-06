@@ -5,6 +5,7 @@ import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
+import com.ets.util.Enums.TicketStatus;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -78,7 +79,7 @@ public class Ticket extends PersistentObject implements Serializable {
     private BigDecimal totalFare = new BigDecimal("0.00");
 
     @XmlElement
-    private int tktStatus;//1.Booked, 2. Issued,3. ReIssued, 4.Refund,5.VOID
+    private TicketStatus tktStatus;//1.Booked, 2. Issued,3. ReIssued, 4.Refund,5.VOID
 
     public Ticket() {
 
@@ -164,11 +165,11 @@ public class Ticket extends PersistentObject implements Serializable {
         this.tax = tax;
     }
 
-    public int getTktStatus() {
+    public TicketStatus getTktStatus() {
         return tktStatus;
     }
 
-    public void setTktStatus(int tktStatus) {
+    public void setTktStatus(TicketStatus tktStatus) {
         this.tktStatus = tktStatus;
     }
 
@@ -228,7 +229,7 @@ public class Ticket extends PersistentObject implements Serializable {
 
     //@Transient
     public String getTktStatusString() {
-        return Enums.TicketStatus.valueOf(this.getTktStatus());
+        return this.tktStatus.toString();
     }
 
     //@Transient

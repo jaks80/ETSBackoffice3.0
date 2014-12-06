@@ -9,4 +9,5 @@ import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
  */
 public interface TSalesAcDocDAO extends GenericDAO<TicketingSalesAcDoc, Long>{
     
+    public Integer getMaxAcDocRef();
 }
