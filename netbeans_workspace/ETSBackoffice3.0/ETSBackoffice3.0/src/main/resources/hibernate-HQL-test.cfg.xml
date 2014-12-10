@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
 <hibernate-configuration>
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
@@ -8,11 +11,17 @@
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">ets215</property>
     
+    <mapping class="com.ets.PersistentObject" package="com.ets"/>   
     <mapping class="com.ets.pnr.domain.Pnr" package="com.ets.pnr.domain"/>
     <mapping class="com.ets.pnr.domain.Ticket" package="com.ets.pnr.domain"/>
     <mapping class="com.ets.pnr.domain.Itinerary" package="com.ets.pnr.domain"/>
-    <mapping class="com.ets.pnr.domain.PnrRemark" package="com.ets.pnr.domain"/>
-    <mapping class="com.ets.pnr.domain.Career" package="com.ets.pnr.domain"/>
+    <mapping class="com.ets.pnr.domain.Remark" package="com.ets.pnr.domain"/>  
+    <mapping class="com.ets.pnr.domain.Airline" package="com.ets.pnr.domain"/>        
+    <mapping class="com.ets.pnr.domain.Parent" package="com.ets.pnr.domain"/>        
+    <mapping class="com.ets.pnr.domain.Children" package="com.ets.pnr.domain"/>        
+    
+    <mapping class="com.ets.otherservice.domain.Category" package="com.ets.otherservice.domain"/>        
+    <mapping class="com.ets.otherservice.domain.OtherService" package="com.ets.otherservice.domain"/>        
     
     <mapping class="com.ets.otherservice.domain.OtherService" package="com.ets.otherservice.domain"/>
     <mapping class="com.ets.otherservice.domain.AdditionalCharge" package="com.ets.otherservice.domain"/>
@@ -23,5 +32,10 @@
     
     <mapping class="com.ets.accountingdoc.domain.AccountingDocument" package="com.ets.accountingdoc.domain"/>        
     <mapping class="com.ets.accountingdoc.domain.TicketingAcDocument" package="com.ets.accountingdoc.domain"/>        
+    <mapping class="com.ets.accountingdoc.domain.TicketingPurchaseAcDoc" package="com.ets.accountingdoc.domain"/>        
+    <mapping class="com.ets.accountingdoc.domain.TicketingSalesAcDoc" package="com.ets.accountingdoc.domain"/>        
+    <mapping class="com.ets.accountingdoc.domain.AccountingDocumentLine" package="com.ets.accountingdoc.domain"/> 
+    <mapping class="com.ets.accountingdoc.domain.Payment" package="com.ets.accountingdoc.domain"/>        
+        
   </session-factory>
 </hibernate-configuration>

@@ -8,10 +8,14 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -21,33 +25,54 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Yusuf
  */
-
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@Access(AccessType.FIELD)
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+@Access(AccessType.PROPERTY)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class AccountingDocument extends PersistentObject implements Serializable {
 
     @XmlElement
-    private AcDocType acDoctype;//1: Invoice, 2:TktRefundCreditNote,3: CreditNote ,4: Debit note
+    private AcDocType acDoctype;
     @XmlElement
     private String terms;
     @XmlElement
-    private Integer acDocRef;
+    private Long acDocRef;
     @XmlElement
     private Integer version;
-    @XmlElement
-    private int isArchived;//0-No 1-Yes
+    @XmlElement    
+    private int isArchived=0;//0-No 1-Yes
     @XmlElement
     private BigDecimal documentedAmount;
-   
-    @OneToMany
-    @XmlElement      
-    private Set<AccountingDocumentLine> accountingDocumentLines = new LinkedHashSet<>();    
-        
-    //public abstract BigDecimal getAdditionalChargesSubTotal();
 
+    @XmlElement
+    private Set<AccountingDocumentLine> accountingDocumentLines = new LinkedHashSet<>();
+
+    public BigDecimal calculateOtherServiceSubTotal() {
+        BigDecimal subtotal = new BigDecimal("0.00");
+        for (AccountingDocumentLine l : accountingDocumentLines) {
+            if (l.getOtherService() != null) {
+                subtotal = subtotal.add(l.calculateOsNetSellingTotal());
+            }
+        }
+        return subtotal;
+    }
+
+    public BigDecimal calculateAddChargesSubTotal() {
+        BigDecimal subtotal = new BigDecimal("0.00");
+        for (AccountingDocumentLine l : accountingDocumentLines) {
+            if (l.getAdditionalCharge() != null) {
+                subtotal = subtotal.add(l.calculateAcNetSellingTotal());
+            }
+        }
+        return subtotal;
+    }
+
+    public void addLine(AccountingDocumentLine line) {
+        this.accountingDocumentLines.add(line);
+    }
+
+    @Column(nullable = false)
     public AcDocType getAcDoctype() {
         return acDoctype;
     }
@@ -64,14 +89,16 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
         this.terms = terms;
     }
 
-    public Integer getAcDocRef() {
+    @Column(nullable = false)
+    public Long getAcDocRef() {
         return acDocRef;
     }
 
-    public void setAcDocRef(Integer acDocRef) {
+    public void setAcDocRef(Long acDocRef) {
         this.acDocRef = acDocRef;
     }
 
+    @Version
     public Integer getVersion() {
         return version;
     }
@@ -80,14 +107,7 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
         this.version = version;
     }
 
-    public int isIsArchived() {
-        return isArchived;
-    }
-
-    public void setIsArchived(int isArchived) {
-        this.isArchived = isArchived;
-    }
-
+    @Column(nullable = false)
     public BigDecimal getDocumentedAmount() {
         return documentedAmount;
     }
@@ -96,11 +116,21 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
         this.documentedAmount = documentedAmount;
     }
 
+    @OneToMany(mappedBy = "accountingDocument", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public Set<AccountingDocumentLine> getAccountingDocumentLines() {
         return accountingDocumentLines;
     }
 
     public void setAccountingDocumentLines(Set<AccountingDocumentLine> accountingDocumentLines) {
         this.accountingDocumentLines = accountingDocumentLines;
+    }
+
+    @Column(nullable = false)
+    public int getIsArchived() {
+        return isArchived;
+    }
+
+    public void setIsArchived(int isArchived) {
+        this.isArchived = isArchived;
     }
 }

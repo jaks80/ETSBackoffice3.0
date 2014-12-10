@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@Access(AccessType.FIELD)
+@Access(AccessType.PROPERTY)
 public class AppSettings  extends PersistentObject implements Serializable{
 
     @XmlElement

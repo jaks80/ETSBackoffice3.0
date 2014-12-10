@@ -2,7 +2,7 @@ package com.ets.air;
 
 import com.ets.pnr.domain.Itinerary;
 import com.ets.pnr.domain.Pnr;
-import com.ets.pnr.domain.PnrRemark;
+import com.ets.pnr.domain.Remark;
 import com.ets.pnr.domain.Ticket;
 import com.ets.air.service.AirService;
 import java.util.LinkedHashSet;
@@ -34,7 +34,7 @@ public class AIRReader {
             Pnr pnr = converter.airToPNR();
             List<Ticket> tickets = converter.airToTicket();
             List<Itinerary> segments = converter.airToItinerary();
-            List<PnrRemark> remarks = converter.airToPNRRemarks();
+            List<Remark> remarks = converter.airToPNRRemarks();
 
             for (AIR a : air.getMorePages()) {
                 converter = new AIRToPNRConverter(a);
@@ -69,7 +69,7 @@ public class AIRReader {
             Pnr pnr = converter.airToPNR();
             List<Ticket> tickets = converter.airToTicket();
             List<Itinerary> segments = converter.airToItinerary();
-            List<PnrRemark> remarks = converter.airToPNRRemarks();
+            List<Remark> remarks = converter.airToPNRRemarks();
 
             for (AIR a : air.getMorePages()) {
                 converter = new AIRToPNRConverter(a);

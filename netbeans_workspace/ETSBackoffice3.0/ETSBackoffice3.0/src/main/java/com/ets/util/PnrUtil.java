@@ -2,7 +2,7 @@ package com.ets.util;
 
 import com.ets.pnr.domain.Itinerary;
 import com.ets.pnr.domain.Pnr;
-import com.ets.pnr.domain.PnrRemark;
+import com.ets.pnr.domain.Remark;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums.TicketStatus;
 import java.util.ArrayList;
@@ -52,16 +52,16 @@ public class PnrUtil {
 //        }
 //    }
 
-    public static Set<PnrRemark> initPnrInRemark(Pnr pnr, Set<PnrRemark> remarks) {
-        for (PnrRemark rm : remarks) {
-            rm.setPnr(pnr);
+    public static Set<Remark> initPnrInRemark(Pnr pnr, Set<Remark> remarks) {
+        for (Remark rm : remarks) {
+            //rm.setPnr(pnr);
         }
         return remarks;
     }
 
-    public static Set<PnrRemark> undefinePnrInRemark(Pnr pnr, Set<PnrRemark> remarks) {
-        for (PnrRemark rm : remarks) {
-            rm.setPnr(null);
+    public static Set<Remark> undefinePnrInRemark(Pnr pnr, Set<Remark> remarks) {
+        for (Remark rm : remarks) {
+            //rm.setPnr(null);
         }
         return remarks;
     }

@@ -48,7 +48,7 @@ public class TRFPTest {
         t1.setBaseFare(new BigDecimal("306.00").negate());
         t1.setTax(new BigDecimal("164.60").negate());
         t1.setFee(new BigDecimal("80.00"));
-        t1.setTotalFare(new BigDecimal("390.60").negate());
+        t1.setNetPurchaseFare(new BigDecimal("390.60").negate());
         //t1.setCurrencyCode("GBP");
         t1.setDocIssuedate(DateUtil.refundDate("02JUL09"));        
         t1.setNumericAirLineCode("098");
@@ -69,7 +69,7 @@ public class TRFPTest {
         assertEquals(expResult.get(0).getCurrencyCode(), result.get(0).getCurrencyCode());
         assertEquals(expResult.get(0).getDocIssuedate(), result.get(0).getDocIssuedate());
         assertEquals(expResult.get(0).getFee(), result.get(0).getFee());
-        assertEquals(expResult.get(0).getTotalFare(), result.get(0).getTotalFare());
+        assertEquals(expResult.get(0).getNetPurchaseFare(), result.get(0).getNetPurchaseFare());
         assertEquals(expResult.get(0).getBaseFare().add(expResult.get(0).getTax()).add(expResult.get(0).getFee()),
                 result.get(0).getBaseFare().add(result.get(0).getTax()).add(result.get(0).getFee()));
         

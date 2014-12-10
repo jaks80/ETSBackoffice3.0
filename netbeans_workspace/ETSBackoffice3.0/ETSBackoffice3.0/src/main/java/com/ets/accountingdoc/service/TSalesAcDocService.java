@@ -53,16 +53,26 @@ public class TSalesAcDocService {
      * @param ticketingSalesAcDoc
      * @return 
      */
-    public synchronized TicketingSalesAcDoc saveorUpdate(TicketingSalesAcDoc doc) {
+    public synchronized TicketingSalesAcDoc newDocument(TicketingSalesAcDoc doc) {
         if(doc.getId() == null && 
                 doc.getAcDoctype().equals(Enums.AcDocType.INVOICE)){
-         doc.setAcDocRef(AcDocUtil.generateAcDocRef(dao.getMaxAcDocRef()));
+         doc.setAcDocRef(AcDocUtil.generateAcDocRef(dao.getNewAcDocRef()));
         }
         
         dao.save(doc);
         return doc;
     }
 
+    public synchronized TicketingSalesAcDoc update(TicketingSalesAcDoc doc) {
+        if (doc.getId() == null
+                && doc.getAcDoctype().equals(Enums.AcDocType.INVOICE)) {
+            doc.setAcDocRef(AcDocUtil.generateAcDocRef(dao.getNewAcDocRef()));
+        }
+
+        dao.save(doc);
+        return doc;
+    }
+        
     public void delete(TicketingSalesAcDoc ticketingSalesAcDoc) {
         dao.delete(ticketingSalesAcDoc);
     }

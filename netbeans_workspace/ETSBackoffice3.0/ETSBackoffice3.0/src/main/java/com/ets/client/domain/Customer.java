@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@Access(AccessType.FIELD)
+@Access(AccessType.PROPERTY)
 public class Customer extends Contactable implements Serializable{
     
     private static final long serialVersionUID = 1L;

@@ -18,9 +18,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Table(name = "bo_user")
-@Access(AccessType.FIELD)
+@Access(AccessType.PROPERTY)
 public class User extends Contactable implements Serializable{
     
     private static final long serialVersionUID = 1L;

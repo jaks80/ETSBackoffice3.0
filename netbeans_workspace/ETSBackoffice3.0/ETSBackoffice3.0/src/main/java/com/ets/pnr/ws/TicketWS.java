@@ -2,6 +2,7 @@ package com.ets.pnr.ws;
 
 import com.ets.report.model.TicketSaleReport;
 import com.ets.pnr.service.TicketService;
+import com.ets.util.Enums;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;

@@ -20,33 +20,29 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@Access(AccessType.FIELD)
+@Access(AccessType.PROPERTY)
 public class OtherService extends PersistentObject implements Serializable {
 
     @XmlElement
-    @Column(nullable = false, length = 60)
     private String title;
     @XmlElement
     private String description;
     @XmlElement
     private BigDecimal purchaseCost = new BigDecimal("0.00");
     @XmlElement
-    @Column(nullable = false)
     private BigDecimal sellingPrice = new BigDecimal("0.00");
     @XmlElement
-    @Column(nullable = false)
     private int vatable;//0-no, 1-yes
     @XmlElement
-    @Column(nullable = false)
     private int isActive;//0-yes, 1-no
     @XmlElement
-    @ManyToOne
     private Category category;
 
     public OtherService() {
 
     }
 
+    @Column(nullable = false, length = 60)
     public String getTitle() {
         return title;
     }
@@ -71,6 +67,7 @@ public class OtherService extends PersistentObject implements Serializable {
         this.purchaseCost = purchaseCost;
     }
 
+    @Column(nullable = false)
     public BigDecimal getSellingPrice() {
         return sellingPrice;
     }
@@ -87,10 +84,12 @@ public class OtherService extends PersistentObject implements Serializable {
         this.vatable = vatable;
     }
 
+    @Column(nullable = false)
     public int getVatable() {
         return vatable;
     }
 
+    @Column(nullable = false)
     public int getIsActive() {
         return isActive;
     }
@@ -99,6 +98,7 @@ public class OtherService extends PersistentObject implements Serializable {
         this.isActive = isActive;
     }
 
+    @ManyToOne
     public Category getCategory() {
         return category;
     }

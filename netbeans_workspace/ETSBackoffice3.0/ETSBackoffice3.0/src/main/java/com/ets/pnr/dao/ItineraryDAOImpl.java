@@ -33,8 +33,7 @@ public class ItineraryDAOImpl extends GenericDAOImpl<Itinerary, Long> implements
                 + "left join fetch t.pnr as p "
                 + "where i.pnr.id = t.pnr.id and "
                 + airLineCodeQuery + ticketingAgtOidQuery
-                + "(:from is null or t.docIssuedate >= :from) and "
-                + "(:to is null or t.docIssuedate <= :to) and"
+                + "t.docIssuedate >= :from and t.docIssuedate <= :to and "
                 + "(:tktStatus is null or t.tktStatus = :tktStatus)";
                
 

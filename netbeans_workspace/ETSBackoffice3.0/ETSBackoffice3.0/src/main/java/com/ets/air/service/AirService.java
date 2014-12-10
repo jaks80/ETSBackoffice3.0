@@ -75,7 +75,7 @@ public class AirService {
             for (Ticket to : persistedPnr.getTickets()) {
                 if (tn.getTicketNo().equals(to.getTicketNo())
                         && tn.getPaxSurName().equals(tn.getPaxSurName())
-                        && tn.getTktStatus() == to.getTktStatus()) {
+                        && tn.getTktStatusString().equals(to.getTktStatusString())) {
                     exist = true;
                 }
             }

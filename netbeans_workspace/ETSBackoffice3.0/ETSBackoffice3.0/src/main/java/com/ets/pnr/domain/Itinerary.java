@@ -2,6 +2,8 @@ package com.ets.pnr.domain;
 
 import com.ets.PersistentObject;
 import java.io.Serializable;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,10 +19,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
+@Access(AccessType.PROPERTY)
 public class Itinerary extends PersistentObject implements Serializable{
 
     private static final long serialVersionUID = 1L;
-    
+
     @XmlElement
     private String segmentNo;
     @XmlElement
@@ -58,10 +61,7 @@ public class Itinerary extends PersistentObject implements Serializable{
     @XmlElement
     private String mileage;
 
-    @XmlElement
-    
-    @ManyToOne
-    @JoinColumn(name = "pnr_fk")
+    @XmlElement    
     private Pnr pnr;
 
     public Itinerary() {
@@ -77,7 +77,7 @@ public class Itinerary extends PersistentObject implements Serializable{
     }
 
     public String isStopOver() {
-        return stopOver;
+        return getStopOver();
     }
 
     public void setStopOver(String stopOver) {
@@ -212,11 +212,17 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.mileage = mileage;
     }
     
+@ManyToOne
+    @JoinColumn(name = "pnr_fk")
     public Pnr getPnr() {
         return pnr;
     }
 
     public void setPnr(Pnr pnr) {
         this.pnr = pnr;
+    }
+
+    public String getStopOver() {
+        return stopOver;
     }
 }

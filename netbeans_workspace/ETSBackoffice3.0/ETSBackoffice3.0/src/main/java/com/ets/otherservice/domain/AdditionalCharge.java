@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@Access(AccessType.FIELD)
+@Access(AccessType.PROPERTY)
 public class AdditionalCharge extends PersistentObject implements Serializable{
 
     @XmlElement
@@ -30,12 +30,10 @@ public class AdditionalCharge extends PersistentObject implements Serializable{
     @XmlElement
     private BigDecimal charge = new BigDecimal("0.00");
     @XmlElement
-    private int calculationType = 0; //1-Manual 2-Fixed Rate 3-Percentage
+    private int calculationType = 0; //0-Fixed Rate 1-Percentage
     @XmlElement
     private boolean isArchived;
     @XmlElement
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "acdoc_fk")
     private AccountingDocument accountingDocument;
 
     public AdditionalCharge(){
@@ -74,6 +72,8 @@ public class AdditionalCharge extends PersistentObject implements Serializable{
         this.isArchived = isArchived;
     }
 
+@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "acdoc_fk")
     public AccountingDocument getAccountingDocument() {
         return accountingDocument;
     }

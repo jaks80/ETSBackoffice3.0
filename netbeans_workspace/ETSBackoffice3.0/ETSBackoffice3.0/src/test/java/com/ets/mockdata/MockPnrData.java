@@ -14,7 +14,7 @@ import java.util.Set;
  *
  * @author Yusuf
  */
-public class MockData {
+public class MockPnrData {
 
     private final Pnr mockPnr;
     private final Set<Ticket> mockBookedTickets;
@@ -23,7 +23,7 @@ public class MockData {
     private final Set<Ticket> mockRefundTickets;
     private final Set<Itinerary> mockSegments;
 
-    public MockData() {
+    public MockPnrData() {
         this.mockPnr = createMockPnr();
         this.mockBookedTickets = createMockBookedTickets();
         this.mockSegments = createMockSegments();
@@ -77,9 +77,15 @@ public class MockData {
         Ticket t1 = new Ticket();
         t1.setBaseFare(new BigDecimal("90.00"));
         t1.setTax(new BigDecimal("296.10"));
-        t1.setTotalFare(new BigDecimal("386.10"));
+        t1.setNetPurchaseFare(new BigDecimal("386.10"));
         t1.setCurrencyCode("GBP");
         t1.setFee(new BigDecimal("0.00"));
+        
+        t1.setGrossFare(new BigDecimal("396.10"));
+        t1.setDiscount(new BigDecimal("5.00").negate());
+        t1.setAtolChg(new BigDecimal("1.00"));
+        t1.setNetSellingFare(new BigDecimal("392.10"));
+        
         t1.setPassengerNo("01");
         t1.setPaxForeName("NABIL MSTR(CHD)(ID05MAR03)");
         t1.setPaxSurName("MIAH");
@@ -89,7 +95,11 @@ public class MockData {
         Ticket t2 = new Ticket();
         t2.setBaseFare(new BigDecimal("90.00"));
         t2.setTax(new BigDecimal("296.10"));
-        t2.setTotalFare(new BigDecimal("386.10"));
+        t2.setNetPurchaseFare(new BigDecimal("386.10"));
+        t2.setGrossFare(new BigDecimal("396.10"));
+        t2.setDiscount(new BigDecimal("5.00").negate());
+        t2.setAtolChg(new BigDecimal("1.00"));
+        t2.setNetSellingFare(new BigDecimal("392.10"));
         t2.setCurrencyCode("GBP");
         t2.setFee(new BigDecimal("0.00"));
         t2.setPassengerNo("02");
@@ -101,7 +111,7 @@ public class MockData {
         Ticket t3 = new Ticket();
         t3.setBaseFare(new BigDecimal("90.00"));
         t3.setTax(new BigDecimal("296.10"));
-        t3.setTotalFare(new BigDecimal("386.10"));
+        t3.setNetPurchaseFare(new BigDecimal("386.10"));
         t3.setCurrencyCode("GBP");
         t3.setFee(new BigDecimal("0.00"));
         t3.setPassengerNo("03");
@@ -124,9 +134,16 @@ public class MockData {
         Ticket t1 = new Ticket();
         t1.setBaseFare(new BigDecimal("90.00"));
         t1.setTax(new BigDecimal("296.10"));
-        t1.setTotalFare(new BigDecimal("386.10"));
-        t1.setCurrencyCode("GBP");
+        t1.setCommission(new BigDecimal("5.00"));
+        t1.setNetPurchaseFare(new BigDecimal("386.10"));        
         t1.setFee(new BigDecimal("0.00"));
+        
+        t1.setGrossFare(new BigDecimal("396.10"));
+        t1.setDiscount(new BigDecimal("5.00").negate());
+        t1.setAtolChg(new BigDecimal("1.00"));
+        t1.setNetSellingFare(new BigDecimal("392.10"));
+        
+        t1.setCurrencyCode("GBP");
         t1.setDocIssuedate(DateUtil.yyMMddToDate("090316"));
         t1.setNumericAirLineCode("098");
         t1.setTicketNo("3535898495");
@@ -139,9 +156,14 @@ public class MockData {
         Ticket t2 = new Ticket();
         t2.setBaseFare(new BigDecimal("90.00"));
         t2.setTax(new BigDecimal("296.10"));
-        t2.setTotalFare(new BigDecimal("386.10"));
+        t2.setCommission(new BigDecimal("5.00"));
+        t2.setNetPurchaseFare(new BigDecimal("386.10"));
         t2.setCurrencyCode("GBP");
         t2.setFee(new BigDecimal("0.00"));
+        t2.setGrossFare(new BigDecimal("396.10"));
+        t2.setDiscount(new BigDecimal("5.00").negate());
+        t2.setAtolChg(new BigDecimal("1.00"));
+        t2.setNetSellingFare(new BigDecimal("392.10"));
         t2.setDocIssuedate(DateUtil.yyMMddToDate("090316"));
         t2.setNumericAirLineCode("098");
         t2.setTicketNo("3535898496");
@@ -179,8 +201,15 @@ public class MockData {
         Ticket t1 = new Ticket();
         t1.setBaseFare(new BigDecimal("90.00").negate());
         t1.setTax(new BigDecimal("296.10").negate());
+        t1.setCommission(new BigDecimal("5.00"));
         t1.setFee(new BigDecimal("90.00"));
-        t1.setTotalFare(new BigDecimal("296.10").negate());
+        t1.setNetPurchaseFare(new BigDecimal("296.10").negate());
+        
+        t1.setGrossFare(new BigDecimal("286.10").negate());
+        t1.setDiscount(new BigDecimal("0.00"));
+        t1.setAtolChg(new BigDecimal("1.00").negate());
+        t1.setNetSellingFare(new BigDecimal("287.10").negate());
+        
         t1.setCurrencyCode("GBP");
         t1.setFee(new BigDecimal("0.00"));
         t1.setDocIssuedate(DateUtil.refundDate("02JUL09"));
@@ -190,7 +219,7 @@ public class MockData {
         t1.setPaxForeName("NABIL MSTR         (CHD)");
         t1.setPaxSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
-        t1.setTktStatus(TicketStatus.ISSUE);
+        t1.setTktStatus(TicketStatus.REFUND);
 
         tickets.add(t1);
 
@@ -204,7 +233,7 @@ public class MockData {
         Ticket t1 = new Ticket();
         t1.setBaseFare(new BigDecimal("0.00"));
         t1.setTax(new BigDecimal("0.00"));
-        t1.setTotalFare(new BigDecimal("0.00"));
+        t1.setNetPurchaseFare(new BigDecimal("0.00"));
         t1.setCurrencyCode("GBP");
         t1.setFee(new BigDecimal("0.00"));
         t1.setDocIssuedate(DateUtil.yyMMddToDate("090530"));

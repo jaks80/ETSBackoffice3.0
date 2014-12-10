@@ -84,13 +84,13 @@ public class TicketingSalesAcDocWS {
     @POST
     @Path("/new")
     public TicketingSalesAcDoc create(TicketingSalesAcDoc ticketingSalesAcDoc) {
-        return service.saveorUpdate(ticketingSalesAcDoc);
+        return service.newDocument(ticketingSalesAcDoc);
     }
 
     @PUT
     @Path("/update")
     public TicketingSalesAcDoc update(TicketingSalesAcDoc ticketingSalesAcDoc) {
-        return service.saveorUpdate(ticketingSalesAcDoc);
+        return service.update(ticketingSalesAcDoc);
     }
 
     @DELETE

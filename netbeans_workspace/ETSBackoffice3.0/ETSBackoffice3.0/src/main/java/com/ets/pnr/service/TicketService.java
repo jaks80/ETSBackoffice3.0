@@ -27,8 +27,10 @@ public class TicketService {
         String[] tktedOIDs = null;
         String[] airLineCodes = null;
         
-        if(!"null".equals(tktStatus)){
-          status = Enums.TicketStatus.valueOf(tktStatus).getId();        
+        if("null".equals(tktStatus)){
+          status = null;     
+        }else{
+         status = Enums.TicketStatus.valueOf(tktStatus).getId();
         }
         
         if("null".equals(airLineCode)){

@@ -22,13 +22,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @MappedSuperclass
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@Access(AccessType.FIELD)
+@Access(AccessType.PROPERTY)
 public abstract class PersistentObject implements Serializable {
 
     @XmlElement
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
     @XmlElement
     private Timestamp createdOn;
@@ -90,6 +87,9 @@ public abstract class PersistentObject implements Serializable {
         this.lastModified = lastModified;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    @Column(name = "id", updatable = false, nullable = false)
     public Long getId() {
         return id;
     }

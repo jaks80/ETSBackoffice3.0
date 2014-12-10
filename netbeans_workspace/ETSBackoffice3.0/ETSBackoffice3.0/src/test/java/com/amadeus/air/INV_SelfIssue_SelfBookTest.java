@@ -73,7 +73,7 @@ public class INV_SelfIssue_SelfBookTest {
         t1.setBaseFare(new BigDecimal("439.00"));
         t1.setTax(new BigDecimal("131.90"));
         t1.setFee(new BigDecimal("0.00"));
-        t1.setTotalFare(new BigDecimal("570.90"));
+        t1.setNetPurchaseFare(new BigDecimal("570.90"));
         t1.setCurrencyCode("GBP");
         t1.setDocIssuedate(DateUtil.yyMMddToDate("101016"));        
         t1.setNumericAirLineCode("065");
@@ -94,7 +94,7 @@ public class INV_SelfIssue_SelfBookTest {
         assertEquals(expResult.get(0).getCurrencyCode(), result.get(0).getCurrencyCode());
         assertEquals(expResult.get(0).getDocIssuedate(), result.get(0).getDocIssuedate());
         assertEquals(expResult.get(0).getFee(), result.get(0).getFee());
-        assertEquals(expResult.get(0).getTotalFare(), result.get(0).getTotalFare());
+        assertEquals(expResult.get(0).getNetPurchaseFare(), result.get(0).getNetPurchaseFare());
         assertEquals(expResult.get(0).getNumericAirLineCode(), result.get(0).getNumericAirLineCode());
         assertEquals(expResult.get(0).getOrginalTicketNo(), result.get(0).getOrginalTicketNo());
         assertEquals(expResult.get(0).getPassengerNo(), result.get(0).getPassengerNo());

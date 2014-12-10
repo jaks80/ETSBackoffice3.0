@@ -88,7 +88,7 @@ public class TTP_IssueTest {
         Ticket t1 = new Ticket();
         t1.setBaseFare(new BigDecimal("90.00"));
         t1.setTax(new BigDecimal("296.10"));
-        t1.setTotalFare(new BigDecimal("386.10"));
+        t1.setNetPurchaseFare(new BigDecimal("386.10"));
         t1.setCurrencyCode("GBP");
         t1.setDocIssuedate(DateUtil.yyMMddToDate("090316"));
         t1.setFee(new BigDecimal("0.00"));
@@ -104,7 +104,7 @@ public class TTP_IssueTest {
         Ticket t2 = new Ticket();
         t2.setBaseFare(new BigDecimal("90.00"));
         t2.setTax(new BigDecimal("296.10"));
-        t2.setTotalFare(new BigDecimal("386.10"));
+        t2.setNetPurchaseFare(new BigDecimal("386.10"));
         t2.setCurrencyCode("GBP");
         t2.setDocIssuedate(DateUtil.yyMMddToDate("090316"));
         t2.setFee(new BigDecimal("0.00"));
@@ -126,7 +126,7 @@ public class TTP_IssueTest {
         assertEquals(expResult.get(0).getCurrencyCode(), result.get(0).getCurrencyCode());
         assertEquals(expResult.get(0).getDocIssuedate(), result.get(0).getDocIssuedate());
         assertEquals(expResult.get(0).getFee(), result.get(0).getFee());
-        assertEquals(expResult.get(0).getTotalFare(), result.get(0).getTotalFare());
+        assertEquals(expResult.get(0).getNetPurchaseFare(), result.get(0).getNetPurchaseFare());
         assertEquals(expResult.get(0).getNumericAirLineCode(), result.get(0).getNumericAirLineCode());
         assertEquals(expResult.get(0).getOrginalTicketNo(), result.get(0).getOrginalTicketNo());
         assertEquals(expResult.get(0).getPassengerNo(), result.get(0).getPassengerNo());
@@ -135,13 +135,14 @@ public class TTP_IssueTest {
         assertEquals(expResult.get(0).getRestrictions(), result.get(0).getRestrictions());
         assertEquals(expResult.get(0).getTicketNo(), result.get(0).getTicketNo());
         assertEquals(expResult.get(0).getTktStatus(), result.get(0).getTktStatus());
-
+        assertEquals(expResult.get(0).getTktStatusString(), result.get(0).getTktStatusString());
+        
         assertEquals(expResult.get(1).getBaseFare(), result.get(1).getBaseFare());
         assertEquals(expResult.get(1).getTax(), result.get(1).getTax());
         assertEquals(expResult.get(1).getCurrencyCode(), result.get(1).getCurrencyCode());
         assertEquals(expResult.get(1).getDocIssuedate(), result.get(1).getDocIssuedate());
         assertEquals(expResult.get(1).getFee(), result.get(1).getFee());
-        assertEquals(expResult.get(1).getTotalFare(), result.get(1).getTotalFare());
+        assertEquals(expResult.get(1).getNetPurchaseFare(), result.get(1).getNetPurchaseFare());
         assertEquals(expResult.get(1).getNumericAirLineCode(), result.get(1).getNumericAirLineCode());
         assertEquals(expResult.get(1).getOrginalTicketNo(), result.get(1).getOrginalTicketNo());
         assertEquals(expResult.get(1).getPassengerNo(), result.get(1).getPassengerNo());

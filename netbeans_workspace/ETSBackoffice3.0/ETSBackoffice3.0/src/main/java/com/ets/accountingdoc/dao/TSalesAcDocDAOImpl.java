@@ -17,11 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long> implements TSalesAcDocDAO{
 
     @Override
-    public Integer getMaxAcDocRef() {
+    public Long getNewAcDocRef() {
         String hql = "select max(acDoc.acDocRef) from TicketingSalesAcDoc acDoc";
         Query query = getSession().createQuery(hql);
         
         Object result = DataAccessUtils.uniqueResult(query.list());
-        return (result != null) ? Integer.valueOf(result.toString()) : 0;
+        return (result != null) ? Long.valueOf(result.toString()) : null;
+        //return Long.valueOf(result.toString());
     }
 }

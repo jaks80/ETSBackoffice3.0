@@ -3,10 +3,9 @@ package com.ets.air;
 import com.ets.pnr.domain.Airline;
 import com.ets.pnr.domain.Itinerary;
 import com.ets.pnr.domain.Pnr;
-import com.ets.pnr.domain.PnrRemark;
+import com.ets.pnr.domain.Remark;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.DateUtil;
-import com.ets.util.Enums;
 import com.ets.util.Enums.TicketStatus;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -76,14 +75,14 @@ public class AIRToPNRConverter {
         return pnr;
     }
 
-    public List<PnrRemark> airToPNRRemarks() {
+    public List<Remark> airToPNRRemarks() {
 
-        List<PnrRemark> remarks = new ArrayList<>();
+        List<Remark> remarks = new ArrayList<>();
 
         for (String s : air.getLines()) {
             if (s.startsWith("RM") && !s.contains("ROBOT")) {
                 String[] vals = AIRLineParser.parseRMLine(s);
-                PnrRemark rm = new PnrRemark();
+                Remark rm = new Remark();
                 rm.setText(vals[0]);
                 remarks.add(rm);
             }
@@ -191,7 +190,7 @@ public class AIRToPNRConverter {
                 ticket = getNameFormStringArray(data, ticket);
                 ticket.setBaseFare(baseFare);
                 ticket.setTax(tax);
-                ticket.setTotalFare(totalFare);
+                ticket.setNetPurchaseFare(totalFare);
                 ticket.setCurrencyCode(bfCurrencyCode);
                 tickets.add(ticket);
             } else if (s.startsWith("T-") && s.length() > 4) {
@@ -278,7 +277,7 @@ public class AIRToPNRConverter {
                 ticket.setBaseFare(baseFare);
                 ticket.setTax(tax);
                 ticket.setFee(fee);
-                ticket.setTotalFare(totalFare);
+                ticket.setNetPurchaseFare(totalFare);
                 tickets.add(ticket);
             } else if (s.startsWith("T-") && s.length() > 4) {
                 String[] data = AIRLineParser.parseTLine(s);

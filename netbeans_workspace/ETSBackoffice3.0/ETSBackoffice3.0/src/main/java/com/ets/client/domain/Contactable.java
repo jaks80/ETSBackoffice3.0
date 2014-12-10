@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @MappedSuperclass
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@Access(AccessType.FIELD)
+@Access(AccessType.PROPERTY)
 public abstract class Contactable extends PersistentObject implements Serializable{
     
     private static final long serialVersionUID = 1L;

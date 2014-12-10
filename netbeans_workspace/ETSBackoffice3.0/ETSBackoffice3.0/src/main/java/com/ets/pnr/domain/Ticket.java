@@ -12,11 +12,14 @@ import java.util.Date;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -29,11 +32,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@Access(AccessType.FIELD)
+@Access(AccessType.PROPERTY)
 public class Ticket extends PersistentObject implements Serializable {
 
     private static long serialVersionUID = 1L;
-
     @XmlElement
     private String passengerNo;
     @XmlElement
@@ -51,22 +53,15 @@ public class Ticket extends PersistentObject implements Serializable {
     @XmlElement
     private String restrictions;
     @XmlElement
-    @Temporal(TemporalType.DATE)
     private Date docIssuedate;
     @XmlElement
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pnr_fk")
     private Pnr pnr;
-    
+
     @XmlElement
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tsacdoc_fk")
     private TicketingSalesAcDoc ticketingSalesAcDoc;
     @XmlElement
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tpacdoc_fk")
     private TicketingPurchaseAcDoc ticketingPurchaseAcDoc;
-    
+
     @XmlElement
     private BigDecimal baseFare = new BigDecimal("0.00");
     @XmlElement
@@ -76,13 +71,57 @@ public class Ticket extends PersistentObject implements Serializable {
     @XmlElement
     private BigDecimal commission = new BigDecimal("0.00");
     @XmlElement
-    private BigDecimal totalFare = new BigDecimal("0.00");
+    private BigDecimal netPurchaseFare = new BigDecimal("0.00");
+    @XmlElement
+    private BigDecimal grossFare = new BigDecimal("0.00");
+    @XmlElement
+    private BigDecimal discount = new BigDecimal("0.00");
+    @XmlElement
+    private BigDecimal atolChg = new BigDecimal("0.00");
+    @XmlElement
+    private BigDecimal netSellingFare = new BigDecimal("0.00");
 
     @XmlElement
-    private TicketStatus tktStatus;//1.Booked, 2. Issued,3. ReIssued, 4.Refund,5.VOID
+    private TicketStatus tktStatus;//1.Booked, 2. Issued,3. ReIssued, 4.Refund,5.VOID    
 
     public Ticket() {
 
+    }
+
+    @Transient
+    public String getFullTicketNo() {
+        if (this.getNumericAirLineCode() != null && this.getTicketNo() != null) {
+            return this.getNumericAirLineCode() + "-" + this.getTicketNo();
+        } else {
+            return null;
+        }
+    }
+
+    @Transient
+    public String getTktDateString() {
+        return DateUtil.dateToString(getDocIssuedate());
+    }
+
+    @Transient
+    public String getTktStatusString() {
+        return this.tktStatus.name();
+    }
+
+    @Transient
+    public String getFullPaxNameWithPaxNo() {
+
+        String paxFullName = "";
+        paxFullName = getPassengerNo() + ". " + getPaxSurName() + " / " + getPaxForeName();
+
+        return paxFullName;
+    }
+
+    public BigDecimal calculateNetSellingFare() {
+        return this.grossFare.add(this.atolChg).add(this.discount);
+    }
+
+    public BigDecimal calculateNetPurchaseFare() {
+        return this.baseFare.add(this.tax).add(this.commission).add(this.fee);
     }
 
     public String getPassengerNo() {
@@ -165,6 +204,7 @@ public class Ticket extends PersistentObject implements Serializable {
         this.tax = tax;
     }
 
+    @Enumerated(EnumType.ORDINAL)
     public TicketStatus getTktStatus() {
         return tktStatus;
     }
@@ -181,6 +221,7 @@ public class Ticket extends PersistentObject implements Serializable {
         this.restrictions = restrictions;
     }
 
+    @Temporal(TemporalType.DATE)
     public Date getDocIssuedate() {
         return docIssuedate;
     }
@@ -189,14 +230,8 @@ public class Ticket extends PersistentObject implements Serializable {
         this.docIssuedate = docIssuedate;
     }
 
-    public BigDecimal getTotalFare() {
-        return totalFare;
-    }
-
-    public void setTotalFare(BigDecimal totalFare) {
-        this.totalFare = totalFare;
-    }
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pnr_fk")
     public Pnr getPnr() {
         return pnr;
     }
@@ -213,34 +248,8 @@ public class Ticket extends PersistentObject implements Serializable {
         this.commission = commission;
     }
 
-    //@Transient
-    public String getFullTicketNo() {
-        if (this.getNumericAirLineCode() != null && this.getTicketNo() != null) {
-            return this.getNumericAirLineCode() + "-" + this.getTicketNo();
-        } else {
-            return null;
-        }
-    }
-
-    //@Transient
-    public String getTktDateString() {
-        return DateUtil.dateToString(getDocIssuedate());
-    }
-
-    //@Transient
-    public String getTktStatusString() {
-        return this.tktStatus.toString();
-    }
-
-    //@Transient
-    public String getFullPaxNameWithPaxNo() {
-
-        String paxFullName = "";
-        paxFullName = getPassengerNo() + ". " + getPaxSurName() + " / " + getPaxForeName();
-
-        return paxFullName;
-    }
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tsacdoc_fk")
     public TicketingSalesAcDoc getTicketingSalesAcDoc() {
         return ticketingSalesAcDoc;
     }
@@ -249,11 +258,53 @@ public class Ticket extends PersistentObject implements Serializable {
         this.ticketingSalesAcDoc = ticketingSalesAcDoc;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tpacdoc_fk")
     public TicketingPurchaseAcDoc getTicketingPurchaseAcDoc() {
         return ticketingPurchaseAcDoc;
     }
 
     public void setTicketingPurchaseAcDoc(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
         this.ticketingPurchaseAcDoc = ticketingPurchaseAcDoc;
+    }
+
+    public BigDecimal getGrossFare() {
+        return grossFare;
+    }
+
+    public void setGrossFare(BigDecimal grossFare) {
+        this.grossFare = grossFare;
+    }
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
+    }
+
+    public BigDecimal getAtolChg() {
+        return atolChg;
+    }
+
+    public void setAtolChg(BigDecimal atolChg) {
+        this.atolChg = atolChg;
+    }
+
+    public void setNetSellingFare(BigDecimal netSellingFare) {
+        this.netSellingFare = netSellingFare;
+    }
+
+    public BigDecimal getNetSellingFare() {
+        return netSellingFare;
+    }
+
+    public BigDecimal getNetPurchaseFare() {
+        return netPurchaseFare;
+    }
+
+    public void setNetPurchaseFare(BigDecimal netPurchaseFare) {
+        this.netPurchaseFare = netPurchaseFare;
     }
 }

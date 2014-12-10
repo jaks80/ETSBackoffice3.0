@@ -1,26 +1,32 @@
 package com.ets.accountingdoc.service;
 
-import com.ets.util.DateUtil;
-import java.util.Objects;
-
 /**
  *
  * @author Yusuf
  */
 public class AcDocUtil {
 
-    public static Integer generateAcDocRef(Integer lastInvRef) {
-
-        Integer lastInvPrefix = 0, currentYear = DateUtil.getYY();
-        String finalAcDocRef = "";
-
-        lastInvPrefix = lastInvPrefix = lastInvRef / 1000000000;
-
-        if (lastInvRef == 0 || !Objects.equals(currentYear, lastInvPrefix)) {
-            finalAcDocRef = currentYear.toString() + "000000001";//Starting invref from YY000001
+    public static Long generateAcDocRef(Long lastInvRef) {
+        if (lastInvRef != null) {
+            return ++lastInvRef;
         } else {
-            finalAcDocRef = String.valueOf(++lastInvRef);
+            return Long.valueOf("1001");
         }
-        return Integer.valueOf(finalAcDocRef);
     }
+
+//    public static AccountingDocumentLine createNewLine(String title,
+//            String remark,
+//            BigDecimal discount, int qty,
+//            T entity) {
+//        AccountingDocumentLine newLine = AccountingDocumentLine();
+//        newLine.setRemark(remark);
+//        newLine.setQty(qty);
+//        newLine.setDiscount(discount);
+//
+//        if (entity instanceof OtherService) {
+//            newLine.setOtherService(entity);
+//        } else if (entity instanceof AdditionalCharge) {
+//            newLine.AdditionalCharge(entity);
+//        }
+//    }
 }

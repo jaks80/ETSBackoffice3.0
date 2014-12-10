@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,10 +24,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
+@Access(AccessType.PROPERTY)
 public class Pnr extends PersistentObject implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     @XmlElement
     private String gdsPnr;
     @XmlElement
@@ -34,10 +36,8 @@ public class Pnr extends PersistentObject implements Serializable {
     private String bookingAgtOid;
     @XmlElement
     private String ticketingAgtOid;
-    @Temporal(javax.persistence.TemporalType.DATE)
     @XmlElement
     private Date pnrCreationDate;
-    @Temporal(javax.persistence.TemporalType.DATE)
     @XmlElement
     private Date airCreationDate;
     @XmlElement
@@ -48,18 +48,13 @@ public class Pnr extends PersistentObject implements Serializable {
     private String vendorPNR;
     @XmlElement
     private String airLineCode;
-    @OneToMany(targetEntity = Ticket.class, mappedBy = "pnr",
-            cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
     @XmlElement
     private Set<Ticket> tickets = new LinkedHashSet<>();
-    @OneToMany(targetEntity = Itinerary.class, mappedBy = "pnr",
-            cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @XmlElement
     private Set<Itinerary> segments = new LinkedHashSet<>();
     @XmlElement
-    @OneToMany(targetEntity = PnrRemark.class, mappedBy = "pnr",
-            cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<PnrRemark> remarks = new LinkedHashSet<>();
+    private Set<Remark> remarks = new LinkedHashSet<>();
 
     public Pnr() {
     }
@@ -80,6 +75,7 @@ public class Pnr extends PersistentObject implements Serializable {
         this.noOfPax = noOfPax;
     }
 
+    @Temporal(javax.persistence.TemporalType.DATE)
     public Date getPnrCreationDate() {
         return pnrCreationDate;
     }
@@ -88,6 +84,7 @@ public class Pnr extends PersistentObject implements Serializable {
         this.pnrCreationDate = pnrCreationDate;
     }
 
+    @Temporal(javax.persistence.TemporalType.DATE)
     public Date getAirCreationDate() {
         return airCreationDate;
     }
@@ -104,7 +101,7 @@ public class Pnr extends PersistentObject implements Serializable {
         this.vendorPNR = vendorPNR;
     }
 
-    //   @OrderBy(value = "id")
+    @OneToMany(mappedBy = "pnr", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public Set<Ticket> getTickets() {
         return tickets;
     }
@@ -113,20 +110,13 @@ public class Pnr extends PersistentObject implements Serializable {
         this.tickets = tickets;
     }
 
+    @OneToMany(mappedBy = "pnr", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public Set<Itinerary> getSegments() {
         return segments;
     }
 
     public void setSegments(Set<Itinerary> segments) {
         this.segments = segments;
-    }
-
-    public Set<PnrRemark> getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(Set<PnrRemark> remarks) {
-        this.remarks = remarks;
     }
 
     public String getBookingAgtOid() {
@@ -167,5 +157,14 @@ public class Pnr extends PersistentObject implements Serializable {
 
     public void setAirLineCode(String airLineCode) {
         this.airLineCode = airLineCode;
+    }
+
+    @OneToMany(mappedBy = "pnr", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    public Set<Remark> getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(Set<Remark> remarks) {
+        this.remarks = remarks;
     }
 }

@@ -41,6 +41,7 @@ public class AirDAOImpl extends GenericDAOImpl<Pnr, Long> implements AirDAO {
         return pnr;
     }
 
+    @Override
     public Pnr findPnr(String ticketNo, String surName) {
 
         String hql = "from Ticket as t "
@@ -51,13 +52,16 @@ public class AirDAOImpl extends GenericDAOImpl<Pnr, Long> implements AirDAO {
         Query query = getSession().createQuery(hql);
         query.setParameter("ticketNo", ticketNo);
         query.setParameter("surName", surName);
-      
+
         Ticket ticket = null;
         List l = query.list();
-        if(l.size() > 0){
-         ticket = (Ticket) l.get(0);
+        if (l.size() > 0) {
+            ticket = (Ticket) l.get(0);
         }
-
-        return ticket.getPnr();
+        if (ticket != null) {
+            return ticket.getPnr();
+        } else {
+            return null;
+        }
     }
 }

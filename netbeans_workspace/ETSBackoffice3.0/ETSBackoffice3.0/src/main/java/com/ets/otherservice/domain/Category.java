@@ -4,7 +4,6 @@ import com.ets.PersistentObject;
 import java.io.Serializable;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -18,11 +17,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@Access(AccessType.FIELD)
+@Access(AccessType.PROPERTY)
 public class Category extends PersistentObject implements Serializable {
  
     @XmlElement
-    @Column(unique=true, nullable=false, length=40)
+    //@Column(unique=true, nullable=false, length=40)
     private String title;
     
     public Category(){

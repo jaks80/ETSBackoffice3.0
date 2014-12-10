@@ -4,7 +4,7 @@ import com.ets.pnr.service.PnrService;
 import com.ets.pnr.domain.Itinerary;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
-import com.ets.mockdata.MockData;
+import com.ets.mockdata.MockPnrData;
 import com.ets.air.service.AirService;
 import com.ets.util.Enums;
 import com.ets.util.Enums.TicketStatus;
@@ -60,7 +60,7 @@ public class PnrServiceTest {
     public void testBooking() {
         System.out.println("New booking test...");
 
-        MockData mockData = new MockData();
+        MockPnrData mockData = new MockPnrData();
 
         Pnr bookedPnr = mockData.getMockPnr();
         bookedPnr.setTicketingAgtOid(null);
@@ -95,7 +95,7 @@ public class PnrServiceTest {
     public void testIssue() {
         
         System.out.println("Issue test...");
-        MockData mockData = new MockData();
+        MockPnrData mockData = new MockPnrData();
         Pnr issuedPnr = mockData.getMockPnr();
         Set<Ticket> issuedTickets = mockData.getMockTTPIssuedTickets();
         Set<Itinerary> issuedSegments = mockData.getMockSegments();
