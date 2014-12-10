@@ -19,7 +19,7 @@ public class PnrHistoryFrame extends JInternalFrame implements PropertyChangeLis
 
     public PnrHistoryFrame() {
         initComponents();
-        
+
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
         dtTo.setDate(DateUtil.getEndOfMonth());
     }
@@ -32,16 +32,16 @@ public class PnrHistoryFrame extends JInternalFrame implements PropertyChangeLis
         String bookingAgt = txtBookingAgt.getText();
         String ticketingAgt = txtTktingAgt.getText();
         Date from = dtFrom.getDate();
-        Date to = dtTo.getDate();        
-        
-        if(bookingAgt.isEmpty()){
-         bookingAgt = null;
+        Date to = dtTo.getDate();
+
+        if (bookingAgt.isEmpty()) {
+            bookingAgt = null;
         }
-        
-        if(ticketingAgt.isEmpty()){
-         ticketingAgt = null;
+
+        if (ticketingAgt.isEmpty()) {
+            ticketingAgt = null;
         }
-        
+
         progressBar.setValue(0);
 
         task = new PnrHistoryTask(bookingAgt, ticketingAgt, from, to);
@@ -50,17 +50,21 @@ public class PnrHistoryFrame extends JInternalFrame implements PropertyChangeLis
     }
 
     private void populateTblPnr() {
-        DefaultTableModel model = (DefaultTableModel) tblPnr.getModel();
-        model.getDataVector().removeAllElements();
+        DefaultTableModel tableModel = (DefaultTableModel) tblPnr.getModel();
+        tableModel.getDataVector().removeAllElements();
         tblPnr.repaint();
         this.list = task.getList();
         if (list.size() > 0) {
             int i = 0;
-            for (Pnr p : this.list) {
-                model.insertRow(i, new Object[]{p.getGdsPnr(), p.getBookingAgtOid(), p.getTicketingAgtOid(),
-                    p.getPnrCreatorAgentSine(),p.getTicketingAgentSine(),
-                    DateUtil.dateToString(p.getPnrCreationDate()), DateUtil.dateToString(p.getAirCreationDate()), p.getAirLineCode(), p.getNoOfPax()});
-                i++;
+            if (list.size() > 0) {
+                for (Pnr p : this.list) {
+                    tableModel.insertRow(i, new Object[]{p.getGdsPnr(), p.getBookingAgtOid(), p.getTicketingAgtOid(),
+                        p.getPnrCreatorAgentSine(), p.getTicketingAgentSine(),
+                        DateUtil.dateToString(p.getPnrCreationDate()), DateUtil.dateToString(p.getAirCreationDate()), p.getAirLineCode(), p.getNoOfPax()});
+                    i++;
+                }
+            } else {
+                tableModel.insertRow(0, new Object[]{});
             }
         }
     }

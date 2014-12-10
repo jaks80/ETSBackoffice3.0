@@ -3,6 +3,7 @@ package com.ets.ws;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.util.DateUtil;
+import com.ets.fe.util.Enums;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class PNRServiceTest {
         t1.setPaxSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
         t1.setTicketNo("3535898495");
-        t1.setTktStatus(2);
+        t1.setTktStatus("ISSUE");
 
         Ticket t2 = new Ticket();
         t2.setBaseFare(new BigDecimal("90.00"));
@@ -91,7 +92,7 @@ public class PNRServiceTest {
         t2.setPaxSurName("MIAH");
         t2.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
         t2.setTicketNo("3535898496");
-        t2.setTktStatus(2);
+        t2.setTktStatus("ISSUE");
 
         tickets.add(t1);
         tickets.add(t2);

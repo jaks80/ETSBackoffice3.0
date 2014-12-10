@@ -24,7 +24,7 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
 
     SegmentReportTask task;
     List<Segment> list = new ArrayList<>();
-    
+
     public SegmentReportFrame() {
         initComponents();
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
@@ -65,19 +65,22 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
 
     private void populateTblSegment() {
         SegmentReport report = task.getReport();
-       
+
         List<Segment> list = report.getList();
         DefaultTableModel tableModel = (DefaultTableModel) tblSegment.getModel();
         tableModel.getDataVector().removeAllElements();
         tblSegment.repaint();
-        int row =0;
-        for(Segment s: list){
-         tableModel.insertRow(row, new Object[]{s.getTravelDate(),s.getOutCity(),s.getInCity(),s.getFlightNo(),
-             s.getAirLine(),s.getTicketClass(),s.getBookingOid(),s.getTicketingOid(),s.getPnr(),
-             s.getTicketNo(),s.getTktStatus(),s.getCount()});
-            row++;
+        int row = 0;
+        if (list.size() > 0) {
+            for (Segment s : list) {
+                tableModel.insertRow(row, new Object[]{s.getTravelDate(), s.getOutCity(), s.getInCity(), s.getFlightNo(),
+                    s.getAirLine(), s.getTicketClass(), s.getBookingOid(), s.getTicketingOid(), s.getPnr(),
+                    s.getTicketNo(), s.getTktStatus(), s.getCount()});
+                row++;
+            }
+        } else {
+            tableModel.insertRow(0, new Object[]{});
         }
-        
         lblIssue.setText(report.getTotalIssuedSegment().toString());
         lblCancell.setText(report.getTotalRefundedSegment().toString());
         lblOpen.setText(report.getTotalOpenSegment().toString());
@@ -86,7 +89,7 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
         lblBalance.setText(report.getSegBalance().toString());
         btnSearch.setEnabled(true);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

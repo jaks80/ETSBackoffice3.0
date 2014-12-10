@@ -55,7 +55,7 @@ public class Ticket extends PersistentObject implements Serializable {
     private BigDecimal totalFare = new BigDecimal("0.00");
 
     @XmlElement
-    private int tktStatus;//1.Booked, 2. Issued,3. ReIssued, 4.Refund,5.VOID
+    private String tktStatus;
 
     public Ticket() {
 
@@ -141,11 +141,11 @@ public class Ticket extends PersistentObject implements Serializable {
         this.tax = tax;
     }
 
-    public int getTktStatus() {
+    public String getTktStatus() {
         return tktStatus;
     }
 
-    public void setTktStatus(int tktStatus) {
+    public void setTktStatus(String tktStatus) {
         this.tktStatus = tktStatus;
     }
 
@@ -199,10 +199,6 @@ public class Ticket extends PersistentObject implements Serializable {
     
     public String getTktDateString(){
         return DateUtil.dateToString(docIssuedate);
-    }
-    
-    public String getTktStatusString() {
-        return Enums.TicketStatus.valueOf(this.getTktStatus());
     }
 
     public String getFullPaxNameWithPaxNo() {

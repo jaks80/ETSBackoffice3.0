@@ -43,8 +43,8 @@ public class TktSaleReportFrame extends JInternalFrame implements PropertyChange
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
 
-        if("All".equals(ticketStatus)){
-         ticketStatus = null;
+        if ("All".equals(ticketStatus)) {
+            ticketStatus = null;
         }
 
         if (ticketingAgtOid == null || ticketingAgtOid.isEmpty()) {
@@ -68,24 +68,30 @@ public class TktSaleReportFrame extends JInternalFrame implements PropertyChange
         DefaultTableModel tableModel = (DefaultTableModel) tblTicket.getModel();
         tableModel.getDataVector().removeAllElements();
         tblTicket.repaint();
-        int row =0;
-        for(Ticket t: list){
-         tableModel.insertRow(row, new Object[]{t.getTktDateString(), t.getTktStatusString(),
-                        t.getPnr().getGdsPnr(), t.getPnr().getBookingAgtOid(), t.getPnr().getTicketingAgtOid(),
-                        t.getPnr().getAirLineCode(), t.getFullPaxNameWithPaxNo(),t.getFullTicketNo(), 
-                        t.getBaseFare(), t.getTax(), t.getCommission(),t.getFee(),t.getTotalFare()});
-            row++;
+        int row = 0;
+
+        if (list.size() > 0) {
+            for (Ticket t : list) {
+                tableModel.insertRow(row, new Object[]{t.getTktDateString(), t.getTktStatus(),
+                    t.getPnr().getGdsPnr(), t.getPnr().getBookingAgtOid(), t.getPnr().getTicketingAgtOid(),
+                    t.getPnr().getAirLineCode(), t.getFullPaxNameWithPaxNo(), t.getFullTicketNo(),
+                    t.getBaseFare(), t.getTax(), t.getCommission(), t.getFee(), t.getTotalFare()});
+                row++;
+            }
+        } else {
+            tableModel.insertRow(0, new Object[]{});
         }
-        
-         HTMLEditorKit kit = new HTMLEditorKit();        
+
+        HTMLEditorKit kit = new HTMLEditorKit();
         StyleSheet s = kit.getStyleSheet();
-        
+
         s.addRule("body {font-family: Tahoma; font-size: 10 px;font-weight: bold;color : white;}");
 
         txtSaleSummery.setEditorKit(kit);
         txtSaleSummery.setText(report.getSummery());
         btnSearch.setEnabled(true);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

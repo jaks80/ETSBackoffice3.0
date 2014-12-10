@@ -31,36 +31,36 @@ public class Enums {
         }
     }
 
-    public enum TicketStatus {
-
-        BOOK(1), ISSUE(2), REISSUE(3), REFUND(4), VOID(5);
-        private int id;
-
-        TicketStatus(int id) {
-            this.id = id;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public static String valueOf(int id) {
-            switch (id) {
-                case 1:
-                    return BOOK.toString();
-                case 2:
-                    return ISSUE.toString();
-                case 3:
-                    return REISSUE.toString();
-                case 4:
-                    return REFUND.toString();
-                case 5:
-                    return VOID.toString();
-                default:
-                    return null;
-            }
-        }
-    }
+//    public enum TicketStatus {
+//
+//        BOOK(1), ISSUE(2), REISSUE(3), REFUND(4), VOID(5);
+//        private int id;
+//
+//        TicketStatus(int id) {
+//            this.id = id;
+//        }
+//
+//        public int getId() {
+//            return id;
+//        }
+//
+//        public static String valueOf(int id) {
+//            switch (id) {
+//                case 1:
+//                    return BOOK.toString();
+//                case 2:
+//                    return ISSUE.toString();
+//                case 3:
+//                    return REISSUE.toString();
+//                case 4:
+//                    return REFUND.toString();
+//                case 5:
+//                    return VOID.toString();
+//                default:
+//                    return null;
+//            }
+//        }
+//    }
 
     public enum AcDocType {
 
