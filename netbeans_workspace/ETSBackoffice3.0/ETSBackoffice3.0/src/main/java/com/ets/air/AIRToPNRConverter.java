@@ -298,8 +298,10 @@ public class AIRToPNRConverter {
 
     private Ticket getNameFormStringArray(String[] data, Ticket ticket) {
         String[] name = data[1].substring(2).trim().split("/");
-
-        ticket.setPassengerNo(data[1].substring(0, 2));
+        String paxNumber = data[1].substring(0, 2);
+        if(paxNumber!=null){
+         ticket.setPassengerNo(Integer.valueOf(paxNumber));
+        }
         ticket.setPaxSurName(name[0].trim());
         ticket.setPaxForeName(name[1].trim());
         return ticket;

@@ -1,6 +1,8 @@
 package com.ets.pnr.domain;
 
 import com.ets.PersistentObject;
+import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
+import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -55,7 +57,7 @@ public class Pnr extends PersistentObject implements Serializable {
     private Set<Itinerary> segments = new LinkedHashSet<>();
     @XmlElement
     private Set<Remark> remarks = new LinkedHashSet<>();
-
+    
     public Pnr() {
     }
 
@@ -166,5 +168,9 @@ public class Pnr extends PersistentObject implements Serializable {
 
     public void setRemarks(Set<Remark> remarks) {
         this.remarks = remarks;
+    }
+
+    public void addTicket(Ticket ticket) {
+        this.tickets.add(ticket);
     }
 }

@@ -86,7 +86,7 @@ public class MockPnrData {
         t1.setAtolChg(new BigDecimal("1.00"));
         t1.setNetSellingFare(new BigDecimal("392.10"));
         
-        t1.setPassengerNo("01");
+        t1.setPassengerNo(1);
         t1.setPaxForeName("NABIL MSTR(CHD)(ID05MAR03)");
         t1.setPaxSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
@@ -102,7 +102,7 @@ public class MockPnrData {
         t2.setNetSellingFare(new BigDecimal("392.10"));
         t2.setCurrencyCode("GBP");
         t2.setFee(new BigDecimal("0.00"));
-        t2.setPassengerNo("02");
+        t2.setPassengerNo(2);
         t2.setPaxForeName("KABIL MSTR");
         t2.setPaxSurName("MIAH");
         t2.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
@@ -114,7 +114,7 @@ public class MockPnrData {
         t3.setNetPurchaseFare(new BigDecimal("386.10"));
         t3.setCurrencyCode("GBP");
         t3.setFee(new BigDecimal("0.00"));
-        t3.setPassengerNo("03");
+        t3.setPassengerNo(3);
         t3.setPaxForeName("JOSEPH MSTR");
         t3.setPaxSurName("AKANDA");
         t3.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
@@ -147,7 +147,7 @@ public class MockPnrData {
         t1.setDocIssuedate(DateUtil.yyMMddToDate("090316"));
         t1.setNumericAirLineCode("098");
         t1.setTicketNo("3535898495");
-        t1.setPassengerNo("01");
+        t1.setPassengerNo(1);
         t1.setPaxForeName("NABIL MSTR(CHD)(ID05MAR03)");
         t1.setPaxSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
@@ -167,7 +167,7 @@ public class MockPnrData {
         t2.setDocIssuedate(DateUtil.yyMMddToDate("090316"));
         t2.setNumericAirLineCode("098");
         t2.setTicketNo("3535898496");
-        t2.setPassengerNo("02");
+        t2.setPassengerNo(2);
         t2.setPaxForeName("KABIL MSTR");
         t2.setPaxSurName("MIAH");
         t2.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
@@ -215,7 +215,7 @@ public class MockPnrData {
         t1.setDocIssuedate(DateUtil.refundDate("02JUL09"));
         t1.setNumericAirLineCode("098");
         t1.setTicketNo("3943767500");
-        t1.setPassengerNo("01");
+        t1.setPassengerNo(1);
         t1.setPaxForeName("NABIL MSTR         (CHD)");
         t1.setPaxSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
@@ -240,7 +240,7 @@ public class MockPnrData {
         t1.setNumericAirLineCode("098");
         t1.setOrginalTicketNo("3535898495");
         t1.setTicketNo("3943767500");
-        t1.setPassengerNo("01");
+        t1.setPassengerNo(1);
         t1.setPaxForeName("NABIL MSTR(CHD)(ID05MAR03)");
         t1.setPaxSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");

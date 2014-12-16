@@ -4,7 +4,6 @@ import com.ets.PersistentObject;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.util.DateUtil;
-import com.ets.util.Enums;
 import com.ets.util.Enums.TicketStatus;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -37,7 +36,7 @@ public class Ticket extends PersistentObject implements Serializable {
 
     private static long serialVersionUID = 1L;
     @XmlElement
-    private String passengerNo;
+    private Integer passengerNo;
     @XmlElement
     private String paxSurName;
     @XmlElement
@@ -124,11 +123,11 @@ public class Ticket extends PersistentObject implements Serializable {
         return this.baseFare.add(this.tax).add(this.commission).add(this.fee);
     }
 
-    public String getPassengerNo() {
+    public Integer getPassengerNo() {
         return passengerNo;
     }
 
-    public void setPassengerNo(String passengerNo) {
+    public void setPassengerNo(Integer passengerNo) {
         this.passengerNo = passengerNo;
     }
 

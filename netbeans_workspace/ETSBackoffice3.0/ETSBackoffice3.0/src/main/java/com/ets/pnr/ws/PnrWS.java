@@ -68,7 +68,7 @@ public class PnrWS {
     @Produces("application/xml")
     @Path("/byid/{id}")
     public Pnr getById(@PathParam("id") long id){
-        throw new UnsupportedOperationException("Not supported yet.");
+        return service.getByIdWithChildren(id);
     }
 
     @GET
@@ -81,14 +81,38 @@ public class PnrWS {
     @GET
     @Produces("application/xml")
     @Path("/bytkt/{tktNo}/{surName}")
-    public List<Pnr> getPnrByTktNo(@QueryParam("tktNo") String tktNo, @QueryParam("surName") String surName) {
+    public Pnrs getPnrByTktNo(@QueryParam("tktNo") String tktNo, @QueryParam("surName") String surName) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @GET
     @Produces("application/xml")
     @Path("/bypaxname/{tktNo}/{surName}")
-    public List<Pnr> getPnrByName(@QueryParam("surName") String surName, @QueryParam("foreName") String foreName) {
+    public Pnrs getPnrByName(@QueryParam("surName") String surName, @QueryParam("foreName") String foreName) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    @GET
+    @Produces("application/xml")
+    @Path("/uninvoicedpnr")
+    public Pnrs getUninvoicedPnr(){
+    
+        List<Pnr> list = service.searchUninvoicedPnr();
+        Pnrs pnrs = new Pnrs();
+        pnrs.setList(list);
+        
+        return pnrs;
+    }
+
+    @GET
+    @Produces("application/xml")
+    @Path("/pnrtoday")
+    public Pnrs getPnrsToday(@QueryParam("date") String date){
+    
+        List<Pnr> list = service.searchPnrsToday(date);
+        Pnrs pnrs = new Pnrs();
+        pnrs.setList(list);
+        
+        return pnrs;
     }
 }

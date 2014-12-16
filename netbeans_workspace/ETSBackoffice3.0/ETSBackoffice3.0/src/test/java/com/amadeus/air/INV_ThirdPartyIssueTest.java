@@ -78,7 +78,7 @@ public class INV_ThirdPartyIssueTest {
         t1.setDocIssuedate(DateUtil.yyMMddToDate("110601"));        
         t1.setNumericAirLineCode("607");
         t1.setOrginalTicketNo(null);
-        t1.setPassengerNo("01");
+        t1.setPassengerNo(1);
         t1.setPaxForeName("RAYHAN MR");
         t1.setPaxSurName("AHMED");
         t1.setRestrictions("VLD EY ONLY/NON ENDO/CHG-RFND-REF TKT OFF/RSTR APPLY/X-30M");
@@ -94,7 +94,7 @@ public class INV_ThirdPartyIssueTest {
         t2.setDocIssuedate(DateUtil.yyMMddToDate("110601"));        
         t2.setNumericAirLineCode("607");
         t2.setOrginalTicketNo(null);
-        t2.setPassengerNo("02");
+        t2.setPassengerNo(2);
         t2.setPaxForeName("ABUL MR");
         t2.setPaxSurName("KHAIR");
         t2.setRestrictions("VLD EY ONLY/NON ENDO/CHG-RFND-REF TKT OFF/RSTR APPLY/X-30M");
@@ -110,7 +110,7 @@ public class INV_ThirdPartyIssueTest {
         t3.setDocIssuedate(DateUtil.yyMMddToDate("110601"));        
         t3.setNumericAirLineCode("607");
         t3.setOrginalTicketNo(null);
-        t3.setPassengerNo("03");
+        t3.setPassengerNo(3);
         t3.setPaxForeName("FATIMA MRS");
         t3.setPaxSurName("KHATUN");
         t3.setRestrictions("VLD EY ONLY/NON ENDO/CHG-RFND-REF TKT OFF/RSTR APPLY/X-30M");

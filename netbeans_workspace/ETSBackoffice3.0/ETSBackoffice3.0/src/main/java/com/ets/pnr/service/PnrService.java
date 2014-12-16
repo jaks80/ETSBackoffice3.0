@@ -8,6 +8,7 @@ import com.ets.util.PnrUtil;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.ws.rs.PathParam;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
  * @author Yusuf
  */
 @Service("pnrService")
-public class PnrService{
+public class PnrService {
 
     @Resource(name = "pnrDAO")
     private PnrDAO dao;
@@ -26,13 +27,18 @@ public class PnrService{
 
     public Pnr getByGDSPnr(String gdsPnr) {
         Pnr pnr = new Pnr();
-        
 
         return pnr;
     }
 
-    public Pnrs pnrHistory(String issueDateFrom, String issueDateTo, String ticketingAgtOid, String bookingAgtOid){
-    
+    public Pnr getByIdWithChildren(long id){
+        Pnr pnr = dao.getByIdWithChildren(id);
+        PnrUtil.undefinePnrChildren(pnr);
+        return pnr;
+    }
+
+    public Pnrs pnrHistory(String issueDateFrom, String issueDateTo, String ticketingAgtOid, String bookingAgtOid) {
+
         if ("null".equals(ticketingAgtOid)) {
             ticketingAgtOid = null;
         }
@@ -40,33 +46,50 @@ public class PnrService{
         if ("null".equals(bookingAgtOid)) {
             bookingAgtOid = null;
         }
-        
+
         Date dateFrom = DateUtil.stringToDate(issueDateFrom, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(issueDateTo, "ddMMMyyyy");
-        
+
         String[] tktedOIDs = null;
         String[] bokingOIDs = null;
-        
-        if("null".equals(ticketingAgtOid)){
-         ticketingAgtOid = null;
-        }else if(ticketingAgtOid != null){
-         tktedOIDs = ticketingAgtOid.split(",");
-        } 
-        
-        if("null".equals(bookingAgtOid)){
-         bookingAgtOid = null;
-        }else if( bookingAgtOid != null){
-         bokingOIDs = bookingAgtOid.split(",");
+
+        if ("null".equals(ticketingAgtOid)) {
+            ticketingAgtOid = null;
+        } else if (ticketingAgtOid != null) {
+            tktedOIDs = ticketingAgtOid.split(",");
         }
-        
+
+        if ("null".equals(bookingAgtOid)) {
+            bookingAgtOid = null;
+        } else if (bookingAgtOid != null) {
+            bokingOIDs = bookingAgtOid.split(",");
+        }
+
         List<Pnr> pnrList = dao.find(dateFrom, dateTo, tktedOIDs, bokingOIDs);
-        for(Pnr p: pnrList){
-         PnrUtil.undefinePnrChildren(p);
+        for (Pnr p : pnrList) {
+            PnrUtil.undefinePnrChildren(p);
         }
-        
-        Pnrs pnrs =  new Pnrs();
+
+        Pnrs pnrs = new Pnrs();
         pnrs.setList(pnrList);
-        
+
         return pnrs;
+    }
+
+    public List<Pnr> searchUninvoicedPnr() {
+        List<Pnr> pnrList = dao.searchUninvoicedPnr();
+        for (Pnr p : pnrList) {
+            PnrUtil.undefinePnrInTickets(p,p.getTickets());
+        }
+        return pnrList;
+    }
+
+    public List<Pnr> searchPnrsToday(String dateString) {
+        Date date = DateUtil.stringToDate(dateString, "ddMMMyyyy");
+        List<Pnr> pnrList = dao.searchPnrsToday(date);
+        for (Pnr p : pnrList) {
+            PnrUtil.undefinePnrInTickets(p,p.getTickets());
+        }
+        return pnrList;
     }
 }

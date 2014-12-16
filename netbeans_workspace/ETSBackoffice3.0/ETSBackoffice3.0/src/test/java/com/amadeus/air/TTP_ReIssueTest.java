@@ -55,7 +55,7 @@ public class TTP_ReIssueTest {
         t1.setNumericAirLineCode("098");
         t1.setTicketNo("3943767500");
         t1.setOrginalTicketNo("3535898495");
-        t1.setPassengerNo("01");
+        t1.setPassengerNo(1);
         t1.setPaxForeName("NABIL MSTR(CHD)(ID05MAR03)");
         t1.setPaxSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");        

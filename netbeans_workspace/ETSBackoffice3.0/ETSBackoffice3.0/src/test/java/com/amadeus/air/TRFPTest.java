@@ -54,7 +54,7 @@ public class TRFPTest {
         t1.setNumericAirLineCode("098");
         t1.setTicketNo("3943767500");
         t1.setOrginalTicketNo(null);
-        t1.setPassengerNo("01");
+        t1.setPassengerNo(1);
         t1.setPaxForeName("NABIL MSTR         (CHD)");
         t1.setPaxSurName("MIAH");
         t1.setRestrictions(null);

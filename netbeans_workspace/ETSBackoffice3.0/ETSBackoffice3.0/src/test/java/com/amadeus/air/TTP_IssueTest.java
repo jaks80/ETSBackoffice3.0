@@ -94,7 +94,7 @@ public class TTP_IssueTest {
         t1.setFee(new BigDecimal("0.00"));
         t1.setNumericAirLineCode("098");
         t1.setOrginalTicketNo(null);
-        t1.setPassengerNo("01");
+        t1.setPassengerNo(1);
         t1.setPaxForeName("NABIL MSTR(CHD)(ID05MAR03)");
         t1.setPaxSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");
@@ -110,7 +110,7 @@ public class TTP_IssueTest {
         t2.setFee(new BigDecimal("0.00"));
         t2.setNumericAirLineCode("098");
         t2.setOrginalTicketNo(null);
-        t2.setPassengerNo("02");
+        t2.setPassengerNo(2);
         t2.setPaxForeName("KABIL MSTR");
         t2.setPaxSurName("MIAH");
         t2.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");

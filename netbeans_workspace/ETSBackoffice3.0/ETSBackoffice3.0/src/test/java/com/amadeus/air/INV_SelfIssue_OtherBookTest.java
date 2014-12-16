@@ -78,7 +78,7 @@ public class INV_SelfIssue_OtherBookTest {
         t1.setDocIssuedate(DateUtil.yyMMddToDate("101118"));        
         t1.setNumericAirLineCode("229");
         t1.setOrginalTicketNo(null);
-        t1.setPassengerNo("01");
+        t1.setPassengerNo(1);
         t1.setPaxForeName("RABEA MRS");
         t1.setPaxSurName("BEGUM");
         t1.setRestrictions("VALID KU ONLY,NON-END 625A");

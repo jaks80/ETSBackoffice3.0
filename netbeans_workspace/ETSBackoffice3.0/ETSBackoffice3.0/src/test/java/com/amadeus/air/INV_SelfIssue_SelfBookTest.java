@@ -78,7 +78,7 @@ public class INV_SelfIssue_SelfBookTest {
         t1.setDocIssuedate(DateUtil.yyMMddToDate("101016"));        
         t1.setNumericAirLineCode("065");
         t1.setOrginalTicketNo(null);
-        t1.setPassengerNo("01");
+        t1.setPassengerNo(1);
         t1.setPaxForeName("MD KAMRUL MR");
         t1.setPaxSurName("BASHIR");
         t1.setRestrictions(null);
