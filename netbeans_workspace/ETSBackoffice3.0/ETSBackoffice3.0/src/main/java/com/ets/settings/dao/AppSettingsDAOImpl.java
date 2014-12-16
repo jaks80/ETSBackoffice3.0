@@ -1,7 +1,7 @@
 package com.ets.settings.dao;
 
-import com.ets.AppSettings;
 import com.ets.GenericDAOImpl;
+import com.ets.settings.domain.AppSettings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

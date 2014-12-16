@@ -1,6 +1,5 @@
 package com.ets.settings.service;
 
-import com.ets.AppSettings;
 import com.ets.settings.dao.UserDAO;
 import com.ets.settings.domain.User;
 import java.util.List;

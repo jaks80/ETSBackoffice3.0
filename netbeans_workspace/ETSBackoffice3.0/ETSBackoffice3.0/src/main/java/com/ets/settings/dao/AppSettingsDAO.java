@@ -1,7 +1,7 @@
 package com.ets.settings.dao;
 
-import com.ets.AppSettings;
 import com.ets.GenericDAO;
+import com.ets.settings.domain.AppSettings;
 
 /**
  *

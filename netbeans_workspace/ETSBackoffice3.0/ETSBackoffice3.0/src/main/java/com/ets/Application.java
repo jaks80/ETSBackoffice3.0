@@ -10,17 +10,17 @@ import java.util.logging.Logger;
  *
  * @author Yusuf
  */
-public class AppSettings {
+public class Application {
     private static Properties prop;
     
-    public AppSettings(){
+    public Application(){
      try {
-            InputStream sdkis = AppSettings.class.getResourceAsStream("/settings.properties");
+            InputStream sdkis = Application.class.getResourceAsStream("/settings.properties");
             prop = new Properties();
             prop.load(sdkis);
             sdkis.close();
         } catch (IOException ex) {
-            Logger.getLogger(AppSettings.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
         }
     }       
     

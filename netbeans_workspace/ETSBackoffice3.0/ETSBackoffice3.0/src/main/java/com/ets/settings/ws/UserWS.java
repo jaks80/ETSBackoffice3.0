@@ -1,10 +1,7 @@
 package com.ets.settings.ws;
 
-import com.ets.AppSettings;
-import com.ets.report.model.SegmentReport;
 import com.ets.settings.domain.User;
 import com.ets.settings.domain.Users;
-import com.ets.settings.service.AppSettingsService;
 import com.ets.settings.service.UserService;
 import java.util.List;
 import javax.ws.rs.Consumes;

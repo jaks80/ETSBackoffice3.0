@@ -1,9 +1,9 @@
 package com.ets.settings.service;
 
-import com.ets.AppSettings;
 import com.ets.client.domain.MainAgent;
 import com.ets.client.service.AgentService;
 import com.ets.settings.dao.AppSettingsDAO;
+import com.ets.settings.domain.AppSettings;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
