@@ -204,7 +204,7 @@ public void search() {
             tblAgent.getColumnModel().getColumn(0).setMaxWidth(40);
         }
 
-        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Save.png"))); // NOI18N
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Save.png"))); // NOI18N
         btnEdit.setText("Edit");
         btnEdit.setPreferredSize(new java.awt.Dimension(60, 23));
         btnEdit.addActionListener(new java.awt.event.ActionListener() {

@@ -1,6 +1,6 @@
 package com.ets.fe.util;
 
-import com.ets.fe.AppSettings;
+import com.ets.fe.Application;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -90,11 +90,11 @@ public class DateUtil {
     }
 
     public static String dateToString(Date date){
-     return dateToString(date,AppSettings.get("dateformat"));
+     return dateToString(date,Application.get("dateformat"));
     }
     
     public static Date stringToDate(String dateString){
-     return stringToDate(dateString,AppSettings.get("dateformat"));
+     return stringToDate(dateString,Application.get("dateformat"));
     }
     
     

@@ -23,7 +23,7 @@ public class AgentWSClient {
        Agent persistedAgent = RestClientUtil.postEntity(Agent.class, url, agent);
        return persistedAgent;
     }
-
+    
     public Agent update(Agent agent) {
         String url = APIConfig.get("ws.agent.update");
         Agent persistedAgent = RestClientUtil.putEntity(Agent.class, url, agent);

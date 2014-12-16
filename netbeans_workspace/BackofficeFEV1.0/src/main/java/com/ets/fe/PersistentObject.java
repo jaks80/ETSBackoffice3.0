@@ -20,9 +20,9 @@ public abstract class PersistentObject implements Serializable {
     @XmlElement
     private Long id;
     @XmlElement
-    private Timestamp createdOn;
+    private Date createdOn;
     @XmlElement
-    private Timestamp lastModified;
+    private Date lastModified;
     //private User createdBy;
     //private User lastModifiedBy;
 
@@ -65,15 +65,15 @@ public abstract class PersistentObject implements Serializable {
         lastModified = new Timestamp(date.getTime());
     }
 
-    public Timestamp getCreatedOn() {
+    public Date getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(Timestamp createdOn) {
+    public void setCreatedOn(Date createdOn) {
         this.createdOn = createdOn;
     }
 
-    public Timestamp getLastModified() {
+    public Date getLastModified() {
         return lastModified;
     }
 

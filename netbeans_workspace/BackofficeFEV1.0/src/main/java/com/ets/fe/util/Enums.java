@@ -6,9 +6,36 @@ package com.ets.fe.util;
  */
 public class Enums {
 
+    public enum UserType {
+
+        MANAGER(0), SUPERVISOR(1), GENERALSALES(3);
+        private int id;
+
+        UserType(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static String valueOf(int id) {
+            switch (id) {
+                case 0:
+                    return MANAGER.toString();
+                case 1:
+                    return SUPERVISOR.toString();
+                case 2:
+                    return GENERALSALES.toString();
+                default:
+                    return null;
+            }
+        }
+    }
+
     public enum AIRType {
 
-        BT(1), TTP(2), INV(3), TRFP(4);
+        BT(0), TTP(1), INV(2), TRFP(3);
         private int id;
 
         AIRType(int id) {
@@ -17,13 +44,13 @@ public class Enums {
 
         public static String valueOf(int id) {
             switch (id) {
-                case 1:
+                case 0:
                     return BT.toString();
-                case 2:
+                case 1:
                     return TTP.toString();
-                case 3:
+                case 2:
                     return INV.toString();
-                case 4:
+                case 3:
                     return TRFP.toString();
                 default:
                     return null;
@@ -31,40 +58,40 @@ public class Enums {
         }
     }
 
-//    public enum TicketStatus {
-//
-//        BOOK(1), ISSUE(2), REISSUE(3), REFUND(4), VOID(5);
-//        private int id;
-//
-//        TicketStatus(int id) {
-//            this.id = id;
-//        }
-//
-//        public int getId() {
-//            return id;
-//        }
-//
-//        public static String valueOf(int id) {
-//            switch (id) {
-//                case 1:
-//                    return BOOK.toString();
-//                case 2:
-//                    return ISSUE.toString();
-//                case 3:
-//                    return REISSUE.toString();
-//                case 4:
-//                    return REFUND.toString();
-//                case 5:
-//                    return VOID.toString();
-//                default:
-//                    return null;
-//            }
-//        }
-//    }
+    public enum TicketStatus {
+
+        BOOK(0), ISSUE(1), REISSUE(2), REFUND(3), VOID(4);
+        private int id;
+
+        TicketStatus(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static String valueOf(int id) {
+            switch (id) {
+                case 0:
+                    return BOOK.toString();
+                case 1:
+                    return ISSUE.toString();
+                case 2:
+                    return REISSUE.toString();
+                case 3:
+                    return REFUND.toString();
+                case 4:
+                    return VOID.toString();
+                default:
+                    return null;
+            }
+        }
+    }
 
     public enum AcDocType {
 
-        INVOICE(1), PAYMENT(2), CREDITMEMO(3), DEBITMEMO(4), REFUND(5);
+        INVOICE(0), PAYMENT(1), CREDITMEMO(2), DEBITMEMO(3), REFUND(4);
         private int id;
 
         AcDocType(int id) {
@@ -77,16 +104,49 @@ public class Enums {
 
         public static String valueOf(int id) {
             switch (id) {
-                case 1:
+                case 0:
                     return INVOICE.toString();
-                case 2:
+                case 1:
                     return PAYMENT.toString();
-                case 3:
+                case 2:
                     return CREDITMEMO.toString();
-                case 4:
+                case 3:
                     return DEBITMEMO.toString();
-                case 5:
+                case 4:
                     return REFUND.toString();
+                default:
+                    return null;
+            }
+        }
+    }
+
+    public enum PaymentType {
+
+        CASH(0), CHEQUE(1), CREDIT_CARD(2), DEBIT_CARD(3), BANKT_RANSFER(4), OTHER(5);
+        private int id;
+
+        PaymentType(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static String valueOf(int id) {
+            switch (id) {
+                case 0:
+                    return CASH.toString();
+                case 1:
+                    return CHEQUE.toString();
+                case 2:
+                    return CREDIT_CARD.toString();
+                case 3:
+                    return DEBIT_CARD.toString();
+                case 4:
+                    return BANKT_RANSFER.toString();
+                case 5:
+                    return OTHER.toString();
                 default:
                     return null;
             }

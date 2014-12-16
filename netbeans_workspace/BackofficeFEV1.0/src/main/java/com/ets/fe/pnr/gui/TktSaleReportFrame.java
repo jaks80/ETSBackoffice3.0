@@ -1,16 +1,22 @@
 package com.ets.fe.pnr.gui;
 
+import com.ets.fe.Main;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.report.model.TicketSaleReport;
 import com.ets.fe.util.DateUtil;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JInternalFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -31,6 +37,11 @@ public class TktSaleReportFrame extends JInternalFrame implements PropertyChange
         initComponents();
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
         dtTo.setDate(DateUtil.getEndOfMonth());
+
+        int inset = 0;
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds(inset, inset, screenSize.width / 2, screenSize.height / 2);
+
     }
 
     private void buttonSearchActionPerformed(ActionEvent event) {
@@ -75,7 +86,7 @@ public class TktSaleReportFrame extends JInternalFrame implements PropertyChange
                 tableModel.insertRow(row, new Object[]{t.getTktDateString(), t.getTktStatus(),
                     t.getPnr().getGdsPnr(), t.getPnr().getBookingAgtOid(), t.getPnr().getTicketingAgtOid(),
                     t.getPnr().getAirLineCode(), t.getFullPaxNameWithPaxNo(), t.getFullTicketNo(),
-                    t.getBaseFare(), t.getTax(), t.getCommission(), t.getFee(), t.getTotalFare()});
+                    t.getBaseFare(), t.getTax(), t.getCommission(), t.getFee(), t.getNetPurchaseFare()});
                 row++;
             }
         } else {
@@ -217,7 +228,8 @@ public class TktSaleReportFrame extends JInternalFrame implements PropertyChange
     jPanel1.add(dtTo, gridBagConstraints);
 
     txtOfficeId.setToolTipText("Ticketing agent office Id, Separated by comma, Example: ABC123AB,CDE123CD");
-    txtOfficeId.setPreferredSize(new java.awt.Dimension(110, 20));
+    txtOfficeId.setMinimumSize(new java.awt.Dimension(110, 22));
+    txtOfficeId.setPreferredSize(new java.awt.Dimension(110, 22));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 5;
     gridBagConstraints.gridy = 1;
@@ -241,8 +253,8 @@ public class TktSaleReportFrame extends JInternalFrame implements PropertyChange
     jPanel1.add(jLabel7, gridBagConstraints);
 
     txtCareerCode.setToolTipText("Separated by comma, Example: SV,EK,BA");
-    txtCareerCode.setMinimumSize(new java.awt.Dimension(25, 20));
-    txtCareerCode.setPreferredSize(new java.awt.Dimension(110, 20));
+    txtCareerCode.setMinimumSize(new java.awt.Dimension(110, 22));
+    txtCareerCode.setPreferredSize(new java.awt.Dimension(110, 22));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.weightx = 0.3;
@@ -278,7 +290,7 @@ public class TktSaleReportFrame extends JInternalFrame implements PropertyChange
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
         jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
     );
     jPanel2Layout.setVerticalGroup(
         jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -297,17 +309,21 @@ public class TktSaleReportFrame extends JInternalFrame implements PropertyChange
     getContentPane().add(jPanel2, gridBagConstraints);
 
     jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-    jPanel3.setMaximumSize(new java.awt.Dimension(32767, 30));
-    jPanel3.setPreferredSize(new java.awt.Dimension(980, 30));
+    jPanel3.setMaximumSize(new java.awt.Dimension(32767, 24));
+    jPanel3.setMinimumSize(new java.awt.Dimension(71, 24));
+    jPanel3.setPreferredSize(new java.awt.Dimension(980, 24));
     jPanel3.setLayout(new java.awt.GridBagLayout());
 
+    progressBar.setMaximumSize(new java.awt.Dimension(32767, 18));
+    progressBar.setMinimumSize(new java.awt.Dimension(10, 18));
+    progressBar.setPreferredSize(new java.awt.Dimension(146, 18));
     progressBar.setStringPainted(true);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 2;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(1, 2, 1, 1);
+    gridBagConstraints.insets = new java.awt.Insets(0, 1, 0, 1);
     jPanel3.add(progressBar, gridBagConstraints);
 
     jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);

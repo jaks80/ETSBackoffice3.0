@@ -2,56 +2,75 @@ package com.ets.fe;
 
 import com.amadeus.reader.EventSource;
 import com.amadeus.reader.ResponseHandler;
-import com.ets.fe.client.gui.AgentFrame;
-import com.ets.fe.client.gui.CustomerDlg;
-import com.ets.fe.client.gui.CustomerFrame;
-import com.ets.fe.client.gui.CustomerTask;
+import com.ets.fe.app.model.AppSettings;
+import com.ets.fe.client.gui.*;
 import com.ets.fe.client.model.Customer;
+import com.ets.fe.client.model.MainAgent;
 import com.ets.fe.os.gui.OtherServiceFrame;
-import com.ets.fe.pnr.gui.PnrHistoryFrame;
-import com.ets.fe.pnr.gui.SegmentReportFrame;
-import com.ets.fe.pnr.gui.TktSaleReportFrame;
+import com.ets.fe.pnr.gui.*;
+import com.ets.fe.settings.gui.MainAgentDlg;
+import com.ets.fe.settings.gui.MainAgentTask;
+import com.ets.fe.settings.gui.SettingsDlg;
+import com.ets.fe.settings.gui.SettingsTask;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.SwingUtilities;
 
 /**
  *
  * @author Yusuf
  */
-public class Main extends javax.swing.JFrame {
+public class Main extends JFrame {
 
     private List<JInternalFrame> internalFrames = new ArrayList<>();
-            
+    private Application appSettings;
+    private APIConfig aPIConfig;
+
     public Main() {
         initComponents();
-        APIConfig api = new APIConfig();
-        AppSettings settings = new AppSettings();
-        
+        aPIConfig = new APIConfig();
+        Application.loadSettings();
+        int inset = 50;
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds(inset, inset,
+                screenSize.width - inset * 2,
+                screenSize.height - inset * 2);
+
         callDashBoard();
-        
         startFileReading();
+
+        //Make dragging a little faster but perhaps uglier.
+        desktopPane.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
     }
 
-    private void callDashBoard(){
-     DashBoardFrame frame = new DashBoardFrame(desktopPane);
-        desktopPane.add(frame);
-        try {
-            frame.setSelected(true);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {                        
-            frame.setMaximum(true);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-       frame.setVisible(true);
+    private void callDashBoard() {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                DashBoardFrame frame = new DashBoardFrame(desktopPane);
+                frame.setVisible(true);
+                desktopPane.add(frame);
+                try {
+                    frame.setMaximum(true);
+                    frame.setSelected(true);
+                } catch (PropertyVetoException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                internalFrames.add(frame);
+            }
+        });
     }
-    
+
     public void startFileReading() {
         ResponseHandler respHandler = new ResponseHandler();
         EventSource evSrc = new EventSource();
@@ -60,7 +79,7 @@ public class Main extends javax.swing.JFrame {
         thread.start();
         System.out.println("Observer started...");
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -70,13 +89,15 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jToolBar1 = new javax.swing.JToolBar();
-        btnNewCustomer = new javax.swing.JButton();
         desktopPane = new javax.swing.JDesktopPane();
+        jPanel1 = new javax.swing.JPanel();
+        btnNewCustomer = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
+        menuAppSettings = new javax.swing.JMenuItem();
+        menuMainAgent = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
@@ -89,30 +110,31 @@ public class Main extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jToolBar1.setFloatable(false);
-        jToolBar1.setRollover(true);
+        javax.swing.GroupLayout desktopPaneLayout = new javax.swing.GroupLayout(desktopPane);
+        desktopPane.setLayout(desktopPaneLayout);
+        desktopPaneLayout.setHorizontalGroup(
+            desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 604, Short.MAX_VALUE)
+        );
+        desktopPaneLayout.setVerticalGroup(
+            desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 308, Short.MAX_VALUE)
+        );
 
-        btnNewCustomer.setText("New Customer");
+        jPanel1.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 2, 2));
+
+        btnNewCustomer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newClient24.png"))); // NOI18N
         btnNewCustomer.setFocusable(false);
         btnNewCustomer.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnNewCustomer.setPreferredSize(new java.awt.Dimension(50, 24));
         btnNewCustomer.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnNewCustomer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNewCustomerActionPerformed(evt);
             }
         });
-        jToolBar1.add(btnNewCustomer);
-
-        javax.swing.GroupLayout desktopPaneLayout = new javax.swing.GroupLayout(desktopPane);
-        desktopPane.setLayout(desktopPaneLayout);
-        desktopPaneLayout.setHorizontalGroup(
-            desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        desktopPaneLayout.setVerticalGroup(
-            desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 297, Short.MAX_VALUE)
-        );
+        jPanel1.add(btnNewCustomer);
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -126,6 +148,22 @@ public class Main extends javax.swing.JFrame {
             }
         });
         jMenu4.add(jMenuItem4);
+
+        menuAppSettings.setText("Application Settings");
+        menuAppSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAppSettingsActionPerformed(evt);
+            }
+        });
+        jMenu4.add(menuAppSettings);
+
+        menuMainAgent.setText("Company Profile");
+        menuMainAgent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuMainAgentActionPerformed(evt);
+            }
+        });
+        jMenu4.add(menuMainAgent);
 
         jMenuBar1.add(jMenu4);
 
@@ -195,13 +233,14 @@ public class Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
             .addComponent(desktopPane)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(desktopPane))
         );
@@ -210,14 +249,14 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menuPnrHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPnrHistoryActionPerformed
-       PnrHistoryFrame history = new PnrHistoryFrame();
-       desktopPane.add(history);
+        PnrHistoryFrame history = new PnrHistoryFrame();
+        desktopPane.add(history);
         try {
             history.setSelected(true);
         } catch (PropertyVetoException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-       history.setVisible(true);
+        history.setVisible(true);
     }//GEN-LAST:event_menuPnrHistoryActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
@@ -225,14 +264,22 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        TktSaleReportFrame frame = new TktSaleReportFrame();
-        desktopPane.add(frame);
-        try {
-            frame.setSelected(true);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-       frame.setVisible(true);
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                TktSaleReportFrame frame = new TktSaleReportFrame();
+                desktopPane.add(frame);
+                try {
+                    frame.setSelected(true);
+                } catch (PropertyVetoException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                frame.setVisible(true);
+                internalFrames.add(frame);
+            }
+        });
+
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -243,7 +290,7 @@ public class Main extends javax.swing.JFrame {
         } catch (PropertyVetoException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-       frame.setVisible(true);
+        frame.setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void btnNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewCustomerActionPerformed
@@ -252,7 +299,7 @@ public class Main extends javax.swing.JFrame {
         Customer newCustomer = new Customer();
         if (customerDlg.showCustomerDialog(newCustomer)) {
             CustomerTask task = new CustomerTask(newCustomer);
-            task.execute();            
+            task.execute();
         }
     }//GEN-LAST:event_btnNewCustomerActionPerformed
 
@@ -264,7 +311,7 @@ public class Main extends javax.swing.JFrame {
         } catch (PropertyVetoException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-       frame.setVisible(true);
+        frame.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
@@ -275,19 +322,43 @@ public class Main extends javax.swing.JFrame {
         } catch (PropertyVetoException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-       frame.setVisible(true);
+        frame.setVisible(true);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-       OtherServiceFrame frame = new OtherServiceFrame(desktopPane);
+        OtherServiceFrame frame = new OtherServiceFrame(desktopPane);
         desktopPane.add(frame);
         try {
             frame.setSelected(true);
         } catch (PropertyVetoException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-       frame.setVisible(true);
+        frame.setVisible(true);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void menuAppSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAppSettingsActionPerformed
+        SettingsDlg dlg = new SettingsDlg(this);
+        AppSettings settings = Application.getAppSettings();
+        if(settings==null){
+        settings = new AppSettings();
+        }
+        if (dlg.showDialog(settings)) {
+            SettingsTask task = new SettingsTask(settings);
+            task.execute();
+        }
+    }//GEN-LAST:event_menuAppSettingsActionPerformed
+
+    private void menuMainAgentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuMainAgentActionPerformed
+        MainAgentDlg dlg = new MainAgentDlg(this);
+        MainAgent agent = Application.getMainAgent();
+        if(agent == null){
+        agent = new MainAgent();
+        }
+        if (dlg.showDialog(agent)) {
+            MainAgentTask task = new MainAgentTask(agent);
+            task.execute();
+        }
+    }//GEN-LAST:event_menuMainAgentActionPerformed
 
     /**
      * @param args the command line arguments
@@ -296,24 +367,24 @@ public class Main extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
         //</editor-fold>
 
         /* Create and display the form */
@@ -339,7 +410,9 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JMenuItem menuAppSettings;
+    private javax.swing.JMenuItem menuMainAgent;
     private javax.swing.JMenuItem menuPnrHistory;
     // End of variables declaration//GEN-END:variables
 }

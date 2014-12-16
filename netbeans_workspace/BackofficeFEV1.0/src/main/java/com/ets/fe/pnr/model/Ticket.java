@@ -1,8 +1,10 @@
 package com.ets.fe.pnr.model;
 
 import com.ets.fe.PersistentObject;
+import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
+import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.util.DateUtil;
-import com.ets.fe.util.Enums;
+import com.ets.fe.util.Enums.TicketStatus;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -22,7 +24,7 @@ public class Ticket extends PersistentObject implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @XmlElement
-    private String passengerNo;
+    private Integer passengerNo;
     @XmlElement
     private String paxSurName;
     @XmlElement
@@ -39,9 +41,13 @@ public class Ticket extends PersistentObject implements Serializable {
     private String restrictions;
     @XmlElement
     private Date docIssuedate;
-
     @XmlElement
     private Pnr pnr;
+
+    @XmlElement
+    private TicketingSalesAcDoc ticketingSalesAcDoc;
+    @XmlElement
+    private TicketingPurchaseAcDoc ticketingPurchaseAcDoc;
 
     @XmlElement
     private BigDecimal baseFare = new BigDecimal("0.00");
@@ -52,21 +58,29 @@ public class Ticket extends PersistentObject implements Serializable {
     @XmlElement
     private BigDecimal commission = new BigDecimal("0.00");
     @XmlElement
-    private BigDecimal totalFare = new BigDecimal("0.00");
+    private BigDecimal netPurchaseFare = new BigDecimal("0.00");
+    @XmlElement
+    private BigDecimal grossFare = new BigDecimal("0.00");
+    @XmlElement
+    private BigDecimal discount = new BigDecimal("0.00");
+    @XmlElement
+    private BigDecimal atolChg = new BigDecimal("0.00");
+    @XmlElement
+    private BigDecimal netSellingFare = new BigDecimal("0.00");
 
     @XmlElement
-    private String tktStatus;
+    private TicketStatus tktStatus;
 
     public Ticket() {
 
     }
 
-    public String getPassengerNo() {
+    public int getPassengerNo() {
         return passengerNo;
     }
 
-    public void setPassengerNo(String passengerNo) {
-        this.passengerNo = passengerNo;
+    public void setPassengerNo(int passengerNo) {
+        this.setPassengerNo((Integer) passengerNo);
     }
 
     public String getPaxSurName() {
@@ -141,14 +155,6 @@ public class Ticket extends PersistentObject implements Serializable {
         this.tax = tax;
     }
 
-    public String getTktStatus() {
-        return tktStatus;
-    }
-
-    public void setTktStatus(String tktStatus) {
-        this.tktStatus = tktStatus;
-    }
-
     public String getRestrictions() {
         return restrictions;
     }
@@ -163,14 +169,6 @@ public class Ticket extends PersistentObject implements Serializable {
 
     public void setDocIssuedate(Date docIssuedate) {
         this.docIssuedate = docIssuedate;
-    }
-
-    public BigDecimal getTotalFare() {
-        return totalFare;
-    }
-
-    public void setTotalFare(BigDecimal totalFare) {
-        this.totalFare = totalFare;
     }
 
     public Pnr getPnr() {
@@ -189,16 +187,84 @@ public class Ticket extends PersistentObject implements Serializable {
         this.commission = commission;
     }
 
+    public void setPassengerNo(Integer passengerNo) {
+        this.passengerNo = passengerNo;
+    }
+
+    public TicketingSalesAcDoc getTicketingSalesAcDoc() {
+        return ticketingSalesAcDoc;
+    }
+
+    public void setTicketingSalesAcDoc(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        this.ticketingSalesAcDoc = ticketingSalesAcDoc;
+    }
+
+    public TicketingPurchaseAcDoc getTicketingPurchaseAcDoc() {
+        return ticketingPurchaseAcDoc;
+    }
+
+    public void setTicketingPurchaseAcDoc(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
+        this.ticketingPurchaseAcDoc = ticketingPurchaseAcDoc;
+    }
+
+    public BigDecimal getNetPurchaseFare() {
+        return netPurchaseFare;
+    }
+
+    public void setNetPurchaseFare(BigDecimal netPurchaseFare) {
+        this.netPurchaseFare = netPurchaseFare;
+    }
+
+    public BigDecimal getGrossFare() {
+        return grossFare;
+    }
+
+    public void setGrossFare(BigDecimal grossFare) {
+        this.grossFare = grossFare;
+    }
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
+    }
+
+    public BigDecimal getAtolChg() {
+        return atolChg;
+    }
+
+    public void setAtolChg(BigDecimal atolChg) {
+        this.atolChg = atolChg;
+    }
+
+    public BigDecimal getNetSellingFare() {
+        return netSellingFare;
+    }
+
+    public void setNetSellingFare(BigDecimal netSellingFare) {
+        this.netSellingFare = netSellingFare;
+    }
+
+    public TicketStatus getTktStatus() {
+        return tktStatus;
+    }
+
+    public void setTktStatus(TicketStatus tktStatus) {
+        this.tktStatus = tktStatus;
+    }
+
     public String getFullTicketNo() {
-        if (this.numericAirLineCode != null && this.ticketNo != null) {
-            return this.numericAirLineCode + "-" + this.ticketNo;
+        if (this.getNumericAirLineCode() != null && this.getTicketNo() != null) {
+            return this.getNumericAirLineCode() + "-" + this.getTicketNo();
         } else {
             return "";
         }
     }
-    
-    public String getTktDateString(){
-        return DateUtil.dateToString(docIssuedate);
+
+    public String getTktDateString() {
+        return DateUtil.dateToString(getDocIssuedate());
     }
 
     public String getFullPaxNameWithPaxNo() {
@@ -207,5 +273,17 @@ public class Ticket extends PersistentObject implements Serializable {
         paxFullName = getPassengerNo() + ". " + getPaxSurName() + " / " + getPaxForeName();
 
         return paxFullName;
+    }
+
+    public BigDecimal calculateNetSellingFare() {
+        return this.grossFare.add(this.atolChg).add(this.discount);
+    }
+
+    public BigDecimal calculateNetPurchaseFare() {
+        return this.baseFare.add(this.tax).add(this.commission).add(this.fee);
+    }
+    
+    public BigDecimal calculateRevenue() {
+        return this.calculateNetSellingFare().subtract(this.calculateNetSellingFare());
     }
 }

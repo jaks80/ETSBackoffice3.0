@@ -34,13 +34,10 @@ public class PnrWSClient {
         return pnr;
     }
 
-    public Pnr getById(long id) {
+    public Pnr getByIdWithChildren(long id) {        
+        String url = APIConfig.get("ws.pnr.byid")+id;
         Pnr pnr = new Pnr();
-        return pnr;
-    }
-
-    public Pnr getByIdWithChildren(long id) {
-        Pnr pnr = new Pnr();
+        pnr = RestClientUtil.getEntity(Pnr.class, url, pnr);
         return pnr;
     }
 
@@ -58,6 +55,26 @@ public class PnrWSClient {
         String dateTo = DateUtil.dateToString(to, "ddMMMyyyy");
         
         String url = APIConfig.get("ws.pnr.history")+"?bookingAgtOid="+bookingAgt+"&ticketingAgtOid="+ticketingAgt+"&dateStart="+dateFrom+"&dateEnd="+dateTo;
+        
+        Pnrs pnrs = new Pnrs();
+        pnrs = RestClientUtil.getEntity(Pnrs.class, url, pnrs);
+        return pnrs.getList();
+    }
+    
+    public List<Pnr> getPnrsToday() {
+        
+        String today = DateUtil.dateToString(new java.util.Date(), "ddMMMyyyy");        
+        
+        String url = APIConfig.get("ws.pnr.pnrtoday")+"?date="+today;
+        
+        Pnrs pnrs = new Pnrs();
+        pnrs = RestClientUtil.getEntity(Pnrs.class, url, pnrs);
+        return pnrs.getList();
+    }
+    
+        public List<Pnr> getUninvoicedPnr() {              
+        
+        String url = APIConfig.get("ws.pnr.uninvoicedpnr");
         
         Pnrs pnrs = new Pnrs();
         pnrs = RestClientUtil.getEntity(Pnrs.class, url, pnrs);

@@ -153,13 +153,14 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
     jPanel3 = new javax.swing.JPanel();
     progressBar = new javax.swing.JProgressBar();
     jSeparator1 = new javax.swing.JSeparator();
-    jLabel18 = new javax.swing.JLabel();
+    jLabel9 = new javax.swing.JLabel();
 
     setClosable(true);
     setIconifiable(true);
     setMaximizable(true);
     setResizable(true);
     setTitle("Segment Report");
+    getContentPane().setLayout(new java.awt.GridBagLayout());
 
     jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Search", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
     jPanel1.setLayout(new java.awt.GridBagLayout());
@@ -194,8 +195,9 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
     gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel1.add(cmbTicketStatus, gridBagConstraints);
 
+    txtCareerCode.setColumns(20);
     txtCareerCode.setToolTipText("Separated by comma, Example: SV,EK,BA");
-    txtCareerCode.setPreferredSize(new java.awt.Dimension(140, 20));
+    txtCareerCode.setMinimumSize(new java.awt.Dimension(200, 20));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 0;
@@ -203,8 +205,9 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
     gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel1.add(txtCareerCode, gridBagConstraints);
 
+    txtOfficeId.setColumns(20);
     txtOfficeId.setToolTipText("Ticketing agent office Id, Separated by comma, Example: ABC123AB,CDE123CD");
-    txtOfficeId.setPreferredSize(new java.awt.Dimension(140, 20));
+    txtOfficeId.setMinimumSize(new java.awt.Dimension(200, 20));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 1;
@@ -248,6 +251,15 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
     gridBagConstraints.gridy = 0;
     gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel1.add(jLabel5, gridBagConstraints);
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(0, 0, 1, 0);
+    getContentPane().add(jPanel1, gridBagConstraints);
 
     jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Summery", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
@@ -329,6 +341,14 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
                 .addComponent(lblBalance, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
     );
 
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.weightx = 0.5;
+    gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 0);
+    getContentPane().add(jPanel2, gridBagConstraints);
+
     tblSegment.setBackground(new java.awt.Color(0, 0, 0));
     tblSegment.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
@@ -374,18 +394,32 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
         tblSegment.getColumnModel().getColumn(11).setPreferredWidth(20);
     }
 
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridwidth = 3;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
+    getContentPane().add(jScrollPane1, gridBagConstraints);
+
     jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-    jPanel3.setMaximumSize(new java.awt.Dimension(32767, 30));
-    jPanel3.setPreferredSize(new java.awt.Dimension(980, 30));
+    jPanel3.setMaximumSize(new java.awt.Dimension(32767, 24));
+    jPanel3.setPreferredSize(new java.awt.Dimension(980, 24));
     jPanel3.setLayout(new java.awt.GridBagLayout());
 
+    progressBar.setMaximumSize(new java.awt.Dimension(32767, 18));
+    progressBar.setMinimumSize(new java.awt.Dimension(10, 18));
+    progressBar.setPreferredSize(new java.awt.Dimension(146, 18));
     progressBar.setStringPainted(true);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 2;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(1, 2, 1, 1);
+    gridBagConstraints.insets = new java.awt.Insets(0, 1, 0, 1);
     jPanel3.add(progressBar, gridBagConstraints);
 
     jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
@@ -397,8 +431,8 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
     gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
     jPanel3.add(jSeparator1, gridBagConstraints);
 
-    jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    jLabel18.setText("Message:");
+    jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+    jLabel9.setText("Message:");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
@@ -406,31 +440,16 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
     gridBagConstraints.weightx = 1.0;
     gridBagConstraints.insets = new java.awt.Insets(1, 2, 1, 2);
-    jPanel3.add(jLabel18, gridBagConstraints);
+    jPanel3.add(jLabel9, gridBagConstraints);
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-    getContentPane().setLayout(layout);
-    layout.setHorizontalGroup(
-        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(layout.createSequentialGroup()
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(0, 0, Short.MAX_VALUE))
-        .addComponent(jScrollPane1)
-        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-    );
-    layout.setVerticalGroup(
-        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-    );
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.gridwidth = 3;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.weightx = 1.0;
+    getContentPane().add(jPanel3, gridBagConstraints);
 
     pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -449,7 +468,6 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -457,6 +475,7 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
