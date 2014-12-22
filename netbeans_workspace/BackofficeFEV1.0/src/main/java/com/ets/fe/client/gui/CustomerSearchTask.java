@@ -2,13 +2,12 @@ package com.ets.fe.client.gui;
 
 import com.ets.fe.client.collection.Customers;
 import com.ets.fe.client.ws.CustomerWSClient;
-import javax.swing.SwingWorker;
 
 /**
  *
  * @author Yusuf
  */
-public class CustomerSearchTask extends SwingWorker<Customers, Integer> {
+public class CustomerSearchTask extends ContactableSearchTask {
 
     private String name = "";
     private String postCode = "";
@@ -28,10 +27,10 @@ public class CustomerSearchTask extends SwingWorker<Customers, Integer> {
 
         if (name != null && name.contains("/")) {
             nameElement = name.split("/");
-            surName = nameElement[0];
-            foreName = nameElement[1];
-        } else {
-            surName = name;
+            surName = nameElement[0].trim();
+            foreName = nameElement[1].trim();
+        } else if(name !=null){
+            surName = name.trim();
         }
         setProgress(30);
         CustomerWSClient client = new CustomerWSClient();

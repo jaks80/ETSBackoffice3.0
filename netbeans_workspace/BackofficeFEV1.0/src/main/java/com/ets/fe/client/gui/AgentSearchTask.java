@@ -5,23 +5,28 @@ import com.ets.fe.client.ws.AgentWSClient;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JProgressBar;
-import javax.swing.SwingWorker;
 
 /**
  *
  * @author Yusuf
  */
-public class AgentSearchTask extends SwingWorker<Agents, Integer> {
+public class AgentSearchTask extends ContactableSearchTask {
 
     private String name = "";
     private String officeID = "";
     private String postCode = "";
     private JProgressBar progressBar;
+    private String keyword = null;
 
-    public AgentSearchTask(String name,String postCode,String officeID,JProgressBar progressBar) {
+    public AgentSearchTask(String name, String postCode, String officeID, JProgressBar progressBar) {
         this.name = name;
         this.officeID = officeID;
         this.postCode = postCode;
+        this.progressBar = progressBar;
+    }
+
+    public AgentSearchTask(String keyword) {
+        this.keyword = keyword;
         this.progressBar = progressBar;
     }
 
@@ -31,32 +36,36 @@ public class AgentSearchTask extends SwingWorker<Agents, Integer> {
         setProgress(10);
         AgentWSClient client = new AgentWSClient();
 
-        Progress p = new Progress();
-        Thread t = new Thread(p);
-        t.start();
+        Agents agents = null;
+        if (keyword != null) {
+            agents = client.find(keyword);
+        } else {
+            Progress p = new Progress();
+            Thread t = new Thread(p);
+            t.start();
+            agents = client.find(name, postCode, officeID);
+            p.cancel();
+        }
 
-        Agents agents = client.find(name, postCode, officeID);
-        p.cancel();
         return agents;
     }
 
     @Override
     protected void done() {
-        progressBar.setIndeterminate(false);
-        setProgress(100);
-        if (!isCancelled()) {
-
+        if (progressBar != null) {
+            progressBar.setIndeterminate(false);           
         }
+         setProgress(100);
     }
 
-    private class Progress implements Runnable{
+    private class Progress implements Runnable {
 
         private volatile boolean stop = false;
 
         @Override
         public void run() {
-            int i =10;
-            do{
+            int i = 10;
+            do {
                 if (!stop) {
                     setProgress(i);
                     i++;
@@ -66,16 +75,16 @@ public class AgentSearchTask extends SwingWorker<Agents, Integer> {
                         Logger.getLogger(AgentSearchTask.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
-                    if(i==99){
-                    progressBar.setIndeterminate(true);
-                    break;
+                    if (i == 99) {
+                        progressBar.setIndeterminate(true);
+                        break;
                     }
                 }
-            }while(!stop);
+            } while (!stop);
         }
 
-        public void cancel(){
-         stop = true;
+        public void cancel() {
+            stop = true;
         }
     }
 }

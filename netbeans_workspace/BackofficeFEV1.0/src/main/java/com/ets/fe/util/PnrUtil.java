@@ -5,6 +5,7 @@ import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.PnrRemark;
 import com.ets.fe.pnr.model.Ticket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,12 +14,21 @@ import java.util.List;
  */
 public class PnrUtil {
 
-//    public static void intiItineraryInTickets(List<Itinerary> segments, List<Ticket> tickets) {
-//
-//        for (Ticket ticket : tickets) {
-//            ticket.setSegments(segments);
-//        }
-//    }
+    public static String[] splitName(String name) {
+        String[] nameElement = null;
+        String surName = null;
+        String foreName = null;
+
+        if (name != null && name.contains("/")) {
+            nameElement = name.split("/");
+            surName = nameElement[0].trim();
+            foreName = nameElement[1].trim();
+        } else if (name != null) {
+            surName = name.trim();
+        }
+        String[] names = {surName,foreName};
+        return names;
+    }
 
     public static List<PnrRemark> initPnrInRemark(Pnr pnr, List<PnrRemark> remarks) {
 
@@ -42,5 +52,20 @@ public class PnrUtil {
             segment.setPnr(pnr);
         }
         return segments;
+    }
+
+    public static boolean validateOfficeIdFormat(String officeIdString) {
+        return false;
+    }
+
+    public static List<String> splitOfficeId(String officeIdString) {
+        List<String> list = new ArrayList<>();
+        if (officeIdString.contains(",")) {
+            list = Arrays.asList(officeIdString.split(","));
+        } else {
+            list.add(officeIdString);
+        }
+
+        return list;
     }
 }

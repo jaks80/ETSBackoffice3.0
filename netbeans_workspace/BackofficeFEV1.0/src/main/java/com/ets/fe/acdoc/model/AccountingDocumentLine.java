@@ -14,36 +14,29 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Yusuf
  */
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class AccountingDocumentLine  extends PersistentObject implements Serializable {
-    
-    @XmlElement
-    private String title;
+public class AccountingDocumentLine extends PersistentObject implements Serializable {
+
     @XmlElement
     private String remark;
     @XmlElement
-    private BigDecimal amount = new BigDecimal("0.00");
-    @XmlElement
     private BigDecimal discount = new BigDecimal("0.00");
     @XmlElement
-    private int qty;
-
+    private int qty = 1;
     @XmlElement
     private OtherService otherService;
-    @XmlElement      
+    @XmlElement
     private AdditionalCharge additionalCharge;
-    
     @XmlElement
     private AccountingDocument accountingDocument;
 
-    public String getTitle() {
-        return title;
+    public BigDecimal calculateOsNetSellingTotal() {
+        return this.otherService.getSellingPrice().add(this.discount).multiply(new BigDecimal(qty));
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public BigDecimal calculateAcNetSellingTotal() {
+        return this.additionalCharge.getCharge().add(this.discount);
     }
 
     public String getRemark() {
@@ -52,14 +45,6 @@ public class AccountingDocumentLine  extends PersistentObject implements Seriali
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
     }
 
     public BigDecimal getDiscount() {
@@ -84,7 +69,7 @@ public class AccountingDocumentLine  extends PersistentObject implements Seriali
 
     public void setOtherService(OtherService otherService) {
         this.otherService = otherService;
-    }   
+    }
 
     public AdditionalCharge getAdditionalCharge() {
         return additionalCharge;

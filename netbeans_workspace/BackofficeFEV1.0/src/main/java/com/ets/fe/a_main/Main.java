@@ -1,7 +1,9 @@
-package com.ets.fe;
+package com.ets.fe.a_main;
 
 import com.amadeus.reader.EventSource;
 import com.amadeus.reader.ResponseHandler;
+import com.ets.fe.APIConfig;
+import com.ets.fe.Application;
 import com.ets.fe.app.model.AppSettings;
 import com.ets.fe.client.gui.*;
 import com.ets.fe.client.model.Customer;
@@ -56,7 +58,7 @@ public class Main extends JFrame {
 
             @Override
             public void run() {
-                DashBoardFrame frame = new DashBoardFrame(desktopPane);
+                DashBoardFrame frame = new DashBoardFrame();
                 frame.setVisible(true);
                 desktopPane.add(frame);
                 try {

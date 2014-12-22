@@ -7,7 +7,6 @@ import com.ets.fe.APIConfig;
 import com.ets.fe.util.DateUtil;
 import java.util.Date;
 import java.util.List;
-import javax.ws.rs.core.Response;
 
 /**
  *
@@ -21,12 +20,15 @@ public class PnrWSClient {
     }
 
     public Pnr update(Pnr pnr) {
-
+        String url = APIConfig.get("ws.pnr.update");
+        pnr = RestClientUtil.putEntity(Pnr.class, url, pnr);
         return pnr;
     }
 
-    public Response delete(long id) {
-        return Response.status(200).build();
+    public Integer delete(long id) {
+        String url = APIConfig.get("ws.pnr.delete")+id;
+        Integer status = RestClientUtil.deleteById(url);
+        return status;
     }
 
     public Pnr getByDate(Date start, Date end) {
@@ -41,12 +43,24 @@ public class PnrWSClient {
         return pnr;
     }
 
-    public List<Pnr> searchPnrByTktNo(String tktNo, String surName) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Pnr> searchPnrByName(String surName, String foreName) {
+        String url = APIConfig.get("ws.pnr.bypaxname")+"?surName="+surName;
+        
+        if(foreName!=null && foreName.isEmpty()){
+         url = url+"&foreName="+foreName;
+        }
+        
+        Pnrs pnrs = new Pnrs();
+        pnrs = RestClientUtil.getEntity(Pnrs.class, url, pnrs);
+        return pnrs.getList();
     }
 
-    public List<Pnr> searchPnrByName(String surName, String foreName) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Pnr> searchPnrByGdsPnr(String gdsPnr) {
+        String url = APIConfig.get("ws.pnr.bygdsPnr")+"?gdsPnr="+gdsPnr;
+        
+        Pnrs pnrs = new Pnrs();
+        pnrs = RestClientUtil.getEntity(Pnrs.class, url, pnrs);
+        return pnrs.getList();
     }
 
     public List<Pnr> searchPnrHistory(String bookingAgt, String ticketingAgt, Date from, Date to) {

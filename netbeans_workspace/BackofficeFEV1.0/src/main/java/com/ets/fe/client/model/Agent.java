@@ -2,6 +2,7 @@ package com.ets.fe.client.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -112,5 +113,5 @@ public class Agent extends Contactable implements Serializable{
 
     public void setAbta(String abta) {
         this.abta = abta;
-    }
+    }   
 }

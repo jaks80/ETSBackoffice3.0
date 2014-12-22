@@ -1,10 +1,14 @@
 package com.ets.fe.acdoc.model;
 
 import com.ets.fe.PersistentObject;
+import com.ets.fe.pnr.model.Pnr;
+import com.ets.fe.pnr.model.Ticket;
+import com.ets.fe.util.Enums.AcDocType;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -15,33 +19,62 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Yusuf
  */
-
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 public abstract class AccountingDocument extends PersistentObject implements Serializable {
 
     @XmlElement
-    private int acDoctype;//1: Invoice, 2:TktRefundCreditNote,3: CreditNote ,4: Debit note
+    private AcDocType acDoctype;
     @XmlElement
     private String terms;
     @XmlElement
-    private Integer acDocRef;
+    private Long acDocRef;
     @XmlElement
     private Integer version;
-    @XmlElement
-    private int isArchived;
+    @XmlElement    
+    private int isArchived=0;//0-No 1-Yes
     @XmlElement
     private BigDecimal documentedAmount;
+    @XmlElement
+    private Date docIssueDate;
+    
+    @XmlElement
+    private List<AccountingDocumentLine> accountingDocumentLines = new ArrayList<>();
 
-    @XmlElement      
-    private Set<AccountingDocumentLine> accountingDocumentLines = new LinkedHashSet<>();    
+    public abstract List<Ticket> getTickets();
+    public abstract void setTickets(List<Ticket> tickets);
+    public abstract Pnr getPnr();
+    public abstract void setPnr(Pnr pnr);
+    
+    public BigDecimal calculateOtherServiceSubTotal() {
+        BigDecimal subtotal = new BigDecimal("0.00");
+        for (AccountingDocumentLine l : accountingDocumentLines) {
+            if (l.getOtherService() != null) {
+                subtotal = subtotal.add(l.calculateOsNetSellingTotal());
+            }
+        }
+        return subtotal;
+    }
 
-    public int getAcDoctype() {
+    public BigDecimal calculateAddChargesSubTotal() {
+        BigDecimal subtotal = new BigDecimal("0.00");
+        for (AccountingDocumentLine l : accountingDocumentLines) {
+            if (l.getAdditionalCharge() != null) {
+                subtotal = subtotal.add(l.calculateAcNetSellingTotal());
+            }
+        }
+        return subtotal;
+    }
+
+    public void addLine(AccountingDocumentLine line) {
+        this.accountingDocumentLines.add(line);
+    }
+
+    public AcDocType getAcDoctype() {
         return acDoctype;
     }
 
-    public void setAcDoctype(int acDoctype) {
+    public void setAcDoctype(AcDocType acDoctype) {
         this.acDoctype = acDoctype;
     }
 
@@ -52,29 +85,21 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
     public void setTerms(String terms) {
         this.terms = terms;
     }
-
-    public Integer getAcDocRef() {
+   
+    public Long getAcDocRef() {
         return acDocRef;
     }
 
-    public void setAcDocRef(Integer acDocRef) {
+    public void setAcDocRef(Long acDocRef) {
         this.acDocRef = acDocRef;
     }
-
+    
     public Integer getVersion() {
         return version;
     }
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public int isIsArchived() {
-        return isArchived;
-    }
-
-    public void setIsArchived(int isArchived) {
-        this.isArchived = isArchived;
     }
 
     public BigDecimal getDocumentedAmount() {
@@ -85,11 +110,27 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
         this.documentedAmount = documentedAmount;
     }
 
-    public Set<AccountingDocumentLine> getAccountingDocumentLines() {
+    public List<AccountingDocumentLine> getAccountingDocumentLines() {
         return accountingDocumentLines;
     }
 
-    public void setAccountingDocumentLines(Set<AccountingDocumentLine> accountingDocumentLines) {
+    public void setAccountingDocumentLines(List<AccountingDocumentLine> accountingDocumentLines) {
         this.accountingDocumentLines = accountingDocumentLines;
+    }
+
+    public int getIsArchived() {
+        return isArchived;
+    }
+
+    public void setIsArchived(int isArchived) {
+        this.isArchived = isArchived;
+    }
+
+    public Date getDocIssueDate() {
+        return docIssueDate;
+    }
+
+    public void setDocIssueDate(Date docIssueDate) {
+        this.docIssueDate = docIssueDate;
     }
 }

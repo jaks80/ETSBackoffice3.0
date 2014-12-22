@@ -26,9 +26,9 @@ public class Ticket extends PersistentObject implements Serializable {
     @XmlElement
     private Integer passengerNo;
     @XmlElement
-    private String paxSurName;
+    private String surName;
     @XmlElement
-    private String paxForeName;
+    private String foreName;
     @XmlElement
     private String numericAirLineCode;
     @XmlElement
@@ -57,22 +57,36 @@ public class Ticket extends PersistentObject implements Serializable {
     private BigDecimal fee = new BigDecimal("0.00");
     @XmlElement
     private BigDecimal commission = new BigDecimal("0.00");
-    @XmlElement
-    private BigDecimal netPurchaseFare = new BigDecimal("0.00");
+    
     @XmlElement
     private BigDecimal grossFare = new BigDecimal("0.00");
     @XmlElement
     private BigDecimal discount = new BigDecimal("0.00");
     @XmlElement
     private BigDecimal atolChg = new BigDecimal("0.00");
-    @XmlElement
-    private BigDecimal netSellingFare = new BigDecimal("0.00");
+
 
     @XmlElement
     private TicketStatus tktStatus;
 
     public Ticket() {
 
+    }
+
+    public boolean isInfant() {
+        if (this.getForeName().contains("INF")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isChild() {
+        if (this.getForeName().contains("CHD")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public int getPassengerNo() {
@@ -83,20 +97,20 @@ public class Ticket extends PersistentObject implements Serializable {
         this.setPassengerNo((Integer) passengerNo);
     }
 
-    public String getPaxSurName() {
-        return paxSurName;
+    public String getSurName() {
+        return surName;
     }
 
-    public void setPaxSurName(String paxSurName) {
-        this.paxSurName = paxSurName;
+    public void setSurName(String surName) {
+        this.surName = surName;
     }
 
-    public String getPaxForeName() {
-        return paxForeName;
+    public String getForeName() {
+        return foreName;
     }
 
-    public void setPaxForeName(String paxForeName) {
-        this.paxForeName = paxForeName;
+    public void setForeName(String foreName) {
+        this.foreName = foreName;
     }
 
     public String getNumericAirLineCode() {
@@ -207,14 +221,6 @@ public class Ticket extends PersistentObject implements Serializable {
         this.ticketingPurchaseAcDoc = ticketingPurchaseAcDoc;
     }
 
-    public BigDecimal getNetPurchaseFare() {
-        return netPurchaseFare;
-    }
-
-    public void setNetPurchaseFare(BigDecimal netPurchaseFare) {
-        this.netPurchaseFare = netPurchaseFare;
-    }
-
     public BigDecimal getGrossFare() {
         return grossFare;
     }
@@ -237,14 +243,6 @@ public class Ticket extends PersistentObject implements Serializable {
 
     public void setAtolChg(BigDecimal atolChg) {
         this.atolChg = atolChg;
-    }
-
-    public BigDecimal getNetSellingFare() {
-        return netSellingFare;
-    }
-
-    public void setNetSellingFare(BigDecimal netSellingFare) {
-        this.netSellingFare = netSellingFare;
     }
 
     public TicketStatus getTktStatus() {
@@ -270,7 +268,15 @@ public class Ticket extends PersistentObject implements Serializable {
     public String getFullPaxNameWithPaxNo() {
 
         String paxFullName = "";
-        paxFullName = getPassengerNo() + ". " + getPaxSurName() + " / " + getPaxForeName();
+        paxFullName = getPassengerNo() + "." + getSurName() + " / " + getForeName();
+
+        return paxFullName;
+    }
+
+    public String getFullPaxName() {
+
+        String paxFullName = "";
+        paxFullName = getSurName() + " / " + getForeName();
 
         return paxFullName;
     }
@@ -282,8 +288,8 @@ public class Ticket extends PersistentObject implements Serializable {
     public BigDecimal calculateNetPurchaseFare() {
         return this.baseFare.add(this.tax).add(this.commission).add(this.fee);
     }
-    
+
     public BigDecimal calculateRevenue() {
-        return this.calculateNetSellingFare().subtract(this.calculateNetSellingFare());
+        return this.grossFare.add(this.discount).subtract(this.calculateNetPurchaseFare());
     }
 }

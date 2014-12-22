@@ -11,8 +11,32 @@ import com.ets.fe.util.RestClientUtil;
  */
 public class TicketingSAcDocWSClient {
 
-    public TicketingSalesAcDoc create(TicketingSalesAcDoc ticketingSalesAcDoc) {
-        String url = APIConfig.get("ws.tsacdoc.new");
+    public TicketingSalesAcDoc createNewDraftInvoice(Long pnrId) {
+        String url = APIConfig.get("ws.tsacdoc.newinv")+"?id="+pnrId;
+        TicketingSalesAcDoc persistedDoc = RestClientUtil.postEntity(TicketingSalesAcDoc.class, url, new TicketingSalesAcDoc());
+        return persistedDoc;
+    }
+
+    public TicketingSalesAcDoc createNewInvoice(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        String url = APIConfig.get("ws.tsacdoc.newinv");
+        TicketingSalesAcDoc persistedDoc = RestClientUtil.postEntity(TicketingSalesAcDoc.class, url, ticketingSalesAcDoc);
+        return persistedDoc;
+    }
+        
+    public TicketingSalesAcDoc createNewTCreditMemo(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        String url = APIConfig.get("ws.tsacdoc.newtcrm");
+        TicketingSalesAcDoc persistedDoc = RestClientUtil.postEntity(TicketingSalesAcDoc.class, url, ticketingSalesAcDoc);
+        return persistedDoc;
+    }
+
+    public TicketingSalesAcDoc createNewCreditMemo(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        String url = APIConfig.get("ws.tsacdoc.newcrm");
+        TicketingSalesAcDoc persistedDoc = RestClientUtil.postEntity(TicketingSalesAcDoc.class, url, ticketingSalesAcDoc);
+        return persistedDoc;
+    }
+
+    public TicketingSalesAcDoc createNewDebitMemo(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        String url = APIConfig.get("ws.tsacdoc.newdm");
         TicketingSalesAcDoc persistedDoc = RestClientUtil.postEntity(TicketingSalesAcDoc.class, url, ticketingSalesAcDoc);
         return persistedDoc;
     }
@@ -36,11 +60,18 @@ public class TicketingSAcDocWSClient {
     }
 
     public TicketingSalesAcDoc getbyId(long id) {
-        String url = APIConfig.get("ws.tsacdoc.byid" + id);
+        String url = APIConfig.get("ws.tsacdoc.byid")+ id;
         TicketingSalesAcDoc doc = RestClientUtil.getEntity(TicketingSalesAcDoc.class, url, new TicketingSalesAcDoc());
         return doc;
     }
 
+    
+    public TicketingSalesAcDocs getByPnrId(Long pnrId) {    
+        String url = APIConfig.get("ws.tsacdoc.bypnrid")+"?pnrId="+ pnrId;
+        TicketingSalesAcDocs docs = RestClientUtil.getEntity(TicketingSalesAcDocs.class, url, new TicketingSalesAcDocs());       
+        return docs;
+    }
+    
     public TicketingSalesAcDocs getByRefNo(Integer refference) {
         String url = APIConfig.get("ws.tsacdoc.byref" + refference);
         TicketingSalesAcDocs docs = RestClientUtil.getEntity(TicketingSalesAcDocs.class, url, new TicketingSalesAcDocs());

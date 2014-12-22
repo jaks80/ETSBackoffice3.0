@@ -1,6 +1,8 @@
 package com.ets.fe.pnr.model;
 
 import com.ets.fe.PersistentObject;
+import com.ets.fe.client.model.Agent;
+import com.ets.fe.client.model.Customer;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.ArrayList;
@@ -19,21 +21,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Pnr extends PersistentObject implements Serializable {
 
     private static long serialVersionUID = 1L;
-        
+
     @XmlElement
     private String gdsPnr;
     @XmlElement
     private Integer noOfPax;
     @XmlElement
-    private String bookingAgtOid;    
+    private String bookingAgtOid;
     @XmlElement
     private String ticketingAgtOid;
     @XmlElement
     private String PnrCreatorAgentSine;
     @XmlElement
-    private String ticketingAgentSine;    
+    private String ticketingAgentSine;
     @XmlElement
-    private Date pnrCreationDate;    
+    private Date pnrCreationDate;
     @XmlElement
     private Date airCreationDate;
     @XmlElement
@@ -46,31 +48,41 @@ public class Pnr extends PersistentObject implements Serializable {
     private List<Itinerary> segments = new ArrayList<>();
     @XmlElement
     private List<PnrRemark> remarks = new ArrayList<>();
-    
-    
+
+    @XmlElement
+    private Agent agent;
+    @XmlElement
+    private Customer customer;
+    @XmlElement
+    private Agent ticketing_agent;
+
     public Pnr() {
     }
 
-    public String getLeadPaxName() {
-        String name = "";
-        int paxNo = 9;
+    public String calculateLeadPaxName() {
+        Ticket leadPax = null;
+        int paxNo = 99;
 
         for (Ticket t : this.tickets) {
-            if (t.getPassengerNo() < paxNo) {
-                name = t.getFullPaxNameWithPaxNo();
+            if (t.getPassengerNo() <= paxNo && (!t.isChild() && !t.isInfant())) {
+                leadPax = t;
                 paxNo = t.getPassengerNo();
             }
         }
-        return name;
+        if (leadPax != null) {
+            return leadPax.getFullPaxName();
+        } else {
+            return tickets.get(0).getFullPaxName();
+        }
     }
-    
+
     public Integer getNoOfPax() {
         return noOfPax;
     }
 
     public void setNoOfPax(Integer noOfPax) {
         this.noOfPax = noOfPax;
-    }   
+    }
 
     public Date getPnrCreationDate() {
         return pnrCreationDate;
@@ -79,7 +91,7 @@ public class Pnr extends PersistentObject implements Serializable {
     public void setPnrCreationDate(Date pnrCreationDate) {
         this.pnrCreationDate = pnrCreationDate;
     }
-    
+
     public Date getAirCreationDate() {
         return airCreationDate;
     }
@@ -95,7 +107,7 @@ public class Pnr extends PersistentObject implements Serializable {
     public void setVendorPNR(String vendorPNR) {
         this.vendorPNR = vendorPNR;
     }
-    
+
     public List<Ticket> getTickets() {
         return tickets;
     }
@@ -104,7 +116,6 @@ public class Pnr extends PersistentObject implements Serializable {
         this.tickets = tickets;
     }
 
-   
     public List<Itinerary> getSegments() {
         return segments;
     }
@@ -167,5 +178,29 @@ public class Pnr extends PersistentObject implements Serializable {
 
     public void setAirLineCode(String airLineCode) {
         this.airLineCode = airLineCode;
+    }
+
+    public Agent getAgent() {
+        return agent;
+    }
+
+    public void setAgent(Agent agent) {
+        this.agent = agent;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Agent getTicketing_agent() {
+        return ticketing_agent;
+    }
+
+    public void setTicketing_agent(Agent ticketing_agent) {
+        this.ticketing_agent = ticketing_agent;
     }
 }

@@ -1,4 +1,4 @@
-package com.ets.fe.components;
+package com.ets.fe.acdoc.gui;
 
 import com.ets.fe.acdoc.model.AccountingDocument;
 import javax.swing.JPanel;
@@ -8,30 +8,35 @@ import javax.swing.JPanel;
  * @author Yusuf
  */
 public class AcDocHeaderComponent extends JPanel {
-    
+        
     private AccountingDocument doc;
 
     public AcDocHeaderComponent() {
         initComponents();
     }
 
-    public void display(AccountingDocument doc, boolean editable) {
+    
+    public void display(AccountingDocument doc) {
         this.doc = doc;        
-        if (!editable) {
-            dtDate.setEnabled(false);
+        if (doc.getAcDocRef()!=null) {            
             cmbTerms.setEnabled(false);
+        }else{
+         cmbTerms.setEnabled(true);
         }
-        dtDate.setDate(doc.getCreatedOn());
-        txtInvRef.setText(doc.getAcDocRef().toString());
+        
+        dtIssueDate.setDate(doc.getDocIssueDate());
+        if(doc.getAcDocRef()!=null){
+         txtInvRef.setText(doc.getAcDocRef().toString());
+        }
         cmbTerms.setSelectedItem(doc.getTerms());
     }
 
     public AccountingDocument getDocument() {
-        doc.setCreatedOn(dtDate.getDate());
+        doc.setCreatedOn(dtIssueDate.getDate());
         doc.setTerms((String) cmbTerms.getSelectedItem());
         return doc;
     }
-
+           
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,7 +51,7 @@ public class AcDocHeaderComponent extends JPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        dtDate = new org.jdesktop.swingx.JXDatePicker();
+        dtIssueDate = new org.jdesktop.swingx.JXDatePicker();
         txtInvRef = new javax.swing.JTextField();
         txtUser = new javax.swing.JTextField();
         cmbTerms = new javax.swing.JComboBox();
@@ -91,16 +96,17 @@ public class AcDocHeaderComponent extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(jLabel4, gridBagConstraints);
 
-        dtDate.setMaximumSize(new java.awt.Dimension(108, 20));
-        dtDate.setMinimumSize(new java.awt.Dimension(108, 20));
-        dtDate.setPreferredSize(new java.awt.Dimension(108, 20));
+        dtIssueDate.setEditable(false);
+        dtIssueDate.setMaximumSize(new java.awt.Dimension(108, 20));
+        dtIssueDate.setMinimumSize(new java.awt.Dimension(108, 20));
+        dtIssueDate.setPreferredSize(new java.awt.Dimension(108, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 2, 2, 2);
-        add(dtDate, gridBagConstraints);
+        add(dtIssueDate, gridBagConstraints);
 
         txtInvRef.setEditable(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -153,7 +159,7 @@ public class AcDocHeaderComponent extends JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cmbTerms;
-    private org.jdesktop.swingx.JXDatePicker dtDate;
+    private org.jdesktop.swingx.JXDatePicker dtIssueDate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

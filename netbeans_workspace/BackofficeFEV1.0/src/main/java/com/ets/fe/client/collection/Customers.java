@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
-public class Customers {
+public class Customers{
     
     @XmlElement
     private List<Customer> list = new ArrayList<>();

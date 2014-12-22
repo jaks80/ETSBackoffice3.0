@@ -1,6 +1,5 @@
 package com.ets.fe.pnr.gui;
 
-import com.ets.fe.Main;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.report.model.TicketSaleReport;
 import com.ets.fe.util.DateUtil;
@@ -11,12 +10,9 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JInternalFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -86,7 +82,7 @@ public class TktSaleReportFrame extends JInternalFrame implements PropertyChange
                 tableModel.insertRow(row, new Object[]{t.getTktDateString(), t.getTktStatus(),
                     t.getPnr().getGdsPnr(), t.getPnr().getBookingAgtOid(), t.getPnr().getTicketingAgtOid(),
                     t.getPnr().getAirLineCode(), t.getFullPaxNameWithPaxNo(), t.getFullTicketNo(),
-                    t.getBaseFare(), t.getTax(), t.getCommission(), t.getFee(), t.getNetPurchaseFare()});
+                    t.getBaseFare(), t.getTax(), t.getCommission(), t.getFee(), t.calculateNetPurchaseFare()});
                 row++;
             }
         } else {

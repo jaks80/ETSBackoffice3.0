@@ -1,11 +1,10 @@
-package com.ets.fe;
+package com.ets.fe.a_main;
 
-import com.ets.fe.pnr.gui.PnrPanel;
-import com.ets.fe.a_maintask.UnInvoicedPnrTask;
+import com.ets.fe.a_maintask.GlobalSearchTask;
+import com.ets.fe.pnr.gui.task.DeletePnrTask;
 import com.ets.fe.pnr.model.Pnr;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JRootPane;
 import javax.swing.event.ChangeEvent;
@@ -18,12 +17,11 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
  */
 public class DashBoardFrame extends JInternalFrame {
 
-    private final JDesktopPane desktopPane;
-    private UnInvoicedPnrTask unInvoicedPnrTask;
+    //private final JDesktopPane desktopPane;
+    private GlobalSearchTask globalSearchTask;
     private final List<PnrPanel> pnrTabs = new ArrayList<>();
 
-    public DashBoardFrame(JDesktopPane desktopPane) {
-        this.desktopPane = desktopPane;
+    public DashBoardFrame() {      
         initComponents();
         remove_title_bar();
     }
@@ -31,7 +29,7 @@ public class DashBoardFrame extends JInternalFrame {
     private void showPnrPanel() {
         int index = tblUninvoicedPnr.getSelectedRow();
         if (index != -1) {
-            Pnr pnr = unInvoicedPnrTask.getUnInvoicedPnrs().get(index);
+            Pnr pnr = globalSearchTask.getPnrs().get(index);
 
             PnrPanel panel = getPanel(pnr.getGdsPnr());
             if (panel == null) {
@@ -42,6 +40,15 @@ public class DashBoardFrame extends JInternalFrame {
             } else {
                 mainTabPane.setSelectedComponent(panel);
             }
+        }
+    }
+   
+    private void deletePnr(){
+    int index = tblUninvoicedPnr.getSelectedRow();
+        if (index != -1) {
+            Pnr pnr = globalSearchTask.getPnrs().get(index);
+            DeletePnrTask task = new DeletePnrTask(pnr, pnrBusyLabel, tblUninvoicedPnr);
+            task.execute();            
         }
     }
 
@@ -76,16 +83,17 @@ public class DashBoardFrame extends JInternalFrame {
         jTable2 = new javax.swing.JTable();
         btnRefreshPnr = new javax.swing.JButton();
         btnPnrDetails = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnDeletePnr = new javax.swing.JButton();
         pnrBusyLabel = new org.jdesktop.swingx.JXBusyLabel();
         pnrSearch = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
-        jTextField8 = new javax.swing.JTextField();
+        txtPnr = new javax.swing.JTextField();
+        txtInvRef = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtName = new javax.swing.JTextField();
+        btnSearch = new javax.swing.JButton();
         pnlInvoice = new javax.swing.JPanel();
         jTabbedPane3 = new javax.swing.JTabbedPane();
         jScrollPane9 = new javax.swing.JScrollPane();
@@ -96,10 +104,13 @@ public class DashBoardFrame extends JInternalFrame {
         jButton11 = new javax.swing.JButton();
         jButton12 = new javax.swing.JButton();
         pnlFlight = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        progressBar = new javax.swing.JProgressBar();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel2 = new javax.swing.JLabel();
 
         setBorder(null);
         setPreferredSize(new java.awt.Dimension(861, 400));
-        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         mainTabPane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -113,6 +124,7 @@ public class DashBoardFrame extends JInternalFrame {
         pnlTask.setLayout(new java.awt.GridBagLayout());
 
         tabPnr.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        tabPnr.setPreferredSize(new java.awt.Dimension(457, 250));
 
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
@@ -198,26 +210,20 @@ public class DashBoardFrame extends JInternalFrame {
         gridBagConstraints.gridy = 1;
         pnlTask.add(btnPnrDetails, gridBagConstraints);
 
-        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete.png"))); // NOI18N
-        jButton9.setBorderPainted(false);
-        jButton9.setMaximumSize(new java.awt.Dimension(45, 30));
-        jButton9.setMinimumSize(new java.awt.Dimension(45, 30));
-        jButton9.setPreferredSize(new java.awt.Dimension(45, 30));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        pnlTask.add(jButton9, gridBagConstraints);
-
-        jButton1.setText("NT");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnDeletePnr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete.png"))); // NOI18N
+        btnDeletePnr.setBorderPainted(false);
+        btnDeletePnr.setMaximumSize(new java.awt.Dimension(45, 30));
+        btnDeletePnr.setMinimumSize(new java.awt.Dimension(45, 30));
+        btnDeletePnr.setPreferredSize(new java.awt.Dimension(45, 30));
+        btnDeletePnr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnDeletePnrActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        pnlTask.add(jButton1, gridBagConstraints);
+        gridBagConstraints.gridy = 2;
+        pnlTask.add(btnDeletePnr, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
@@ -231,30 +237,14 @@ public class DashBoardFrame extends JInternalFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.33;
+        gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         jPanel1.add(pnlTask, gridBagConstraints);
 
         pnrSearch.setBorder(javax.swing.BorderFactory.createTitledBorder("Search"));
-        pnrSearch.setLayout(new java.awt.GridBagLayout());
+        pnrSearch.setPreferredSize(new java.awt.Dimension(457, 250));
 
-        jLabel4.setText("Pax Name");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        pnrSearch.add(jLabel4, gridBagConstraints);
-
-        jLabel5.setText("Inv Refference");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        pnrSearch.add(jLabel5, gridBagConstraints);
+        jPanel2.setLayout(new java.awt.GridBagLayout());
 
         jLabel6.setText("Gds PNR");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -262,33 +252,90 @@ public class DashBoardFrame extends JInternalFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        pnrSearch.add(jLabel6, gridBagConstraints);
-
-        jTextField6.setText("jTextField3");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        pnrSearch.add(jTextField6, gridBagConstraints);
-
-        jTextField7.setText("jTextField4");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        pnrSearch.add(jTextField7, gridBagConstraints);
-
-        jTextField8.setText("jTextField5");
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel2.add(jLabel6, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        pnrSearch.add(jTextField8, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel2.add(txtPnr, gridBagConstraints);
+
+        txtInvRef.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtInvRefActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel2.add(txtInvRef, gridBagConstraints);
+
+        jLabel5.setText("Inv Refference");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel2.add(jLabel5, gridBagConstraints);
+
+        jLabel4.setText("Pax Name");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel2.add(jLabel4, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel2.add(txtName, gridBagConstraints);
+
+        btnSearch.setText("Search");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel2.add(btnSearch, gridBagConstraints);
+
+        javax.swing.GroupLayout pnrSearchLayout = new javax.swing.GroupLayout(pnrSearch);
+        pnrSearch.setLayout(pnrSearchLayout);
+        pnrSearchLayout.setHorizontalGroup(
+            pnrSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnrSearchLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(205, Short.MAX_VALUE))
+        );
+        pnrSearchLayout.setVerticalGroup(
+            pnrSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnrSearchLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -296,11 +343,12 @@ public class DashBoardFrame extends JInternalFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.33;
+        gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         jPanel1.add(pnrSearch, gridBagConstraints);
 
         pnlInvoice.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
+        pnlInvoice.setPreferredSize(new java.awt.Dimension(366, 250));
         pnlInvoice.setLayout(new java.awt.GridBagLayout());
 
         jTabbedPane3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -382,21 +430,22 @@ public class DashBoardFrame extends JInternalFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.33;
+        gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         jPanel1.add(pnlInvoice, gridBagConstraints);
 
         pnlFlight.setBorder(javax.swing.BorderFactory.createTitledBorder("Flight Today"));
+        pnlFlight.setPreferredSize(new java.awt.Dimension(366, 250));
 
         javax.swing.GroupLayout pnlFlightLayout = new javax.swing.GroupLayout(pnlFlight);
         pnlFlight.setLayout(pnlFlightLayout);
         pnlFlightLayout.setHorizontalGroup(
             pnlFlightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 442, Short.MAX_VALUE)
+            .addGap(0, 473, Short.MAX_VALUE)
         );
         pnlFlightLayout.setVerticalGroup(
             pnlFlightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 140, Short.MAX_VALUE)
+            .addGap(0, 95, Short.MAX_VALUE)
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -405,25 +454,78 @@ public class DashBoardFrame extends JInternalFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.33;
+        gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         jPanel1.add(pnlFlight, gridBagConstraints);
 
         mainTabPane.addTab("Dashboard", jPanel1);
 
-        getContentPane().add(mainTabPane);
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel3.setMaximumSize(new java.awt.Dimension(32767, 24));
+        jPanel3.setMinimumSize(new java.awt.Dimension(71, 24));
+        jPanel3.setPreferredSize(new java.awt.Dimension(980, 24));
+        jPanel3.setLayout(new java.awt.GridBagLayout());
+
+        progressBar.setMaximumSize(new java.awt.Dimension(32767, 18));
+        progressBar.setMinimumSize(new java.awt.Dimension(10, 18));
+        progressBar.setPreferredSize(new java.awt.Dimension(146, 18));
+        progressBar.setStringPainted(true);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 1, 0, 1);
+        jPanel3.add(progressBar, gridBagConstraints);
+
+        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
+        jPanel3.add(jSeparator2, gridBagConstraints);
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("Message:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(1, 2, 1, 2);
+        jPanel3.add(jLabel2, gridBagConstraints);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(2, 2, 2)
+                .addComponent(mainTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 857, Short.MAX_VALUE)
+                .addGap(2, 2, 2))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(2, 2, 2)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addGap(2, 2, 2))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addComponent(mainTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                .addGap(1, 1, 1)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-//        PnrPanel p = new PnrPanel();
-//        mainTabPane.addTab("Test panel", p);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void btnRefreshPnrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshPnrActionPerformed
-        unInvoicedPnrTask = new UnInvoicedPnrTask(pnrBusyLabel, tblUninvoicedPnr);
-        unInvoicedPnrTask.execute();
+        globalSearchTask = new GlobalSearchTask("UNINVOICED_PNR",pnrBusyLabel, tblUninvoicedPnr);
+        globalSearchTask.execute();
     }//GEN-LAST:event_btnRefreshPnrActionPerformed
 
     private void btnPnrDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPnrDetailsActionPerformed
@@ -432,28 +534,45 @@ public class DashBoardFrame extends JInternalFrame {
         }
     }//GEN-LAST:event_btnPnrDetailsActionPerformed
 
+    private void btnDeletePnrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletePnrActionPerformed
+        deletePnr();
+    }//GEN-LAST:event_btnDeletePnrActionPerformed
+
+    private void txtInvRefActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtInvRefActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtInvRefActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        String name = txtName.getText();
+        String pnr = txtPnr.getText();
+        String invRef = txtInvRef.getText();
+        globalSearchTask = new GlobalSearchTask("QUERY_SEARCH",pnrBusyLabel, tblUninvoicedPnr,pnr,invRef,name);
+        globalSearchTask.execute();
+    }//GEN-LAST:event_btnSearchActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDeletePnr;
     private javax.swing.JButton btnPnrDetails;
     private javax.swing.JButton btnRefreshPnr;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnSearch;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton9;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
     private org.jdesktop.swingx.JXTable jXTable10;
     private org.jdesktop.swingx.JXTable jXTable9;
     private javax.swing.JTabbedPane mainTabPane;
@@ -462,8 +581,12 @@ public class DashBoardFrame extends JInternalFrame {
     private javax.swing.JPanel pnlTask;
     private org.jdesktop.swingx.JXBusyLabel pnrBusyLabel;
     private javax.swing.JPanel pnrSearch;
+    private javax.swing.JProgressBar progressBar;
     private javax.swing.JTabbedPane tabPnr;
     private javax.swing.JTable tblUninvoicedPnr;
+    private javax.swing.JTextField txtInvRef;
+    private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtPnr;
     // End of variables declaration//GEN-END:variables
 
     private void remove_title_bar() {
@@ -472,5 +595,9 @@ public class DashBoardFrame extends JInternalFrame {
         ((BasicInternalFrameUI) this.getUI()).setNorthPane(null);
         this.setBorder(null);
     }
-
+    public void removeTabRefference(String pnr) {        
+        PnrPanel panel = getPanel(pnr);
+        pnrTabs.remove(panel);
+        mainTabPane.remove(panel);        
+    }    
 }

@@ -360,17 +360,15 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
     // End of variables declaration//GEN-END:variables
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
+        if ("progress".equals(evt.getPropertyName())) {
             int progress = (Integer) evt.getNewValue();
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    customers = task.get();
+                    customers = (Customers) task.get();
                     populateTblCustomer();
-                } catch (InterruptedException ex) {
-                    lblInfo.setText("Error: " + ex);
-                } catch (ExecutionException ex) {
-                    lblInfo.setText("Error: " + ex);
+                } catch (InterruptedException | ExecutionException ex) {
+                    System.out.println("Exception:"+ex);
                 } finally {
                     btnSearch.setEnabled(true);
                 }

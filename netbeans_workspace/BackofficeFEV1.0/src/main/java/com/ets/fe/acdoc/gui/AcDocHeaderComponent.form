@@ -56,8 +56,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="org.jdesktop.swingx.JXDatePicker" name="dtDate">
+    <Component class="org.jdesktop.swingx.JXDatePicker" name="dtIssueDate">
       <Properties>
+        <Property name="editable" type="boolean" value="false"/>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[108, 20]"/>
         </Property>

@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
-public class Agents {
+public class Agents{
     
     @XmlElement
     private List<Agent> list = new ArrayList<>();

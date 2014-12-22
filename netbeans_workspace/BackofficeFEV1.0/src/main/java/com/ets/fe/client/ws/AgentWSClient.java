@@ -18,6 +18,18 @@ public class AgentWSClient {
 
     }
 
+    public Agents find(String keyword) {
+        String url = APIConfig.get("ws.agent.keyword") +"?keyword="+keyword;
+        return RestClientUtil.getEntity(Agents.class, url, new Agents());
+
+    }
+    
+    public Agents findTicketingsAgent() {
+        String url = APIConfig.get("ws.agent.ticketingagents");
+        return RestClientUtil.getEntity(Agents.class, url, new Agents());
+
+    }
+        
     public Agent create(Agent agent) {
        String url = APIConfig.get("ws.agent.new");
        Agent persistedAgent = RestClientUtil.postEntity(Agent.class, url, agent);

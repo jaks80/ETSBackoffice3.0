@@ -365,7 +365,7 @@ public void search() {
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    agents = task.get();
+                    agents = (Agents) task.get();
                     populateTblAgent();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(AgentFrame.class.getName()).log(Level.SEVERE, null, ex);
