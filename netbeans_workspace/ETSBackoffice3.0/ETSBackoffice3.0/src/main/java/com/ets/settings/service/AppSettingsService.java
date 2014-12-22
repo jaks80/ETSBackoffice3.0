@@ -30,8 +30,8 @@ public class AppSettingsService {
         return agentService.saveorUpdate(agent);
     }
             
-    public List<AppSettings> findAll() {
-        return dao.findAll(AppSettings.class);
+    public AppSettings getSettings() {
+        return dao.findByID(AppSettings.class, Long.parseLong("1"));
     }
 
     public AppSettings saveorUpdate(AppSettings appSettings) {

@@ -212,7 +212,7 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.mileage = mileage;
     }
     
-@ManyToOne
+    @ManyToOne
     @JoinColumn(name = "pnr_fk")
     public Pnr getPnr() {
         return pnr;

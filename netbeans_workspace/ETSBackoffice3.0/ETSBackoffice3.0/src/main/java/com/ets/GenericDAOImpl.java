@@ -42,10 +42,8 @@ public abstract class GenericDAOImpl<T, Long extends Serializable> implements Ge
         }
     }
 
-    public void save(T entity) {
-                 
-       getSession().saveOrUpdate(entity);
-      
+    public void save(T entity) {                 
+       getSession().saveOrUpdate(entity);      
     }
 
     public void saveBulk(List<T> entityList){

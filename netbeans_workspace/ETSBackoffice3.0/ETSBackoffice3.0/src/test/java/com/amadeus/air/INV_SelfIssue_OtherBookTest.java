@@ -79,8 +79,8 @@ public class INV_SelfIssue_OtherBookTest {
         t1.setNumericAirLineCode("229");
         t1.setOrginalTicketNo(null);
         t1.setPassengerNo(1);
-        t1.setPaxForeName("RABEA MRS");
-        t1.setPaxSurName("BEGUM");
+        t1.setForeName("RABEA MRS");
+        t1.setSurName("BEGUM");
         t1.setRestrictions("VALID KU ONLY,NON-END 625A");
         t1.setTicketNo("1632104330");
         t1.setTktStatus(TicketStatus.ISSUE);
@@ -98,8 +98,8 @@ public class INV_SelfIssue_OtherBookTest {
         assertEquals(expResult.get(0).getNumericAirLineCode(), result.get(0).getNumericAirLineCode());
         assertEquals(expResult.get(0).getOrginalTicketNo(), result.get(0).getOrginalTicketNo());
         assertEquals(expResult.get(0).getPassengerNo(), result.get(0).getPassengerNo());
-        assertEquals(expResult.get(0).getPaxForeName(), result.get(0).getPaxForeName());
-        assertEquals(expResult.get(0).getPaxSurName(), result.get(0).getPaxSurName());
+        assertEquals(expResult.get(0).getForeName(), result.get(0).getForeName());
+        assertEquals(expResult.get(0).getSurName(), result.get(0).getSurName());
         assertEquals(expResult.get(0).getRestrictions(), result.get(0).getRestrictions());
         assertEquals(expResult.get(0).getTicketNo(), result.get(0).getTicketNo());
         assertEquals(expResult.get(0).getTktStatus(), result.get(0).getTktStatus());

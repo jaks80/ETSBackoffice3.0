@@ -18,7 +18,5 @@ public interface AgentDAO extends GenericDAO<Agent, Long>{
     
     public List findAgentNameList();
 
-    public List<Agent> findVendors();
-    
-    public List<Agent> findTicketingAgents();
+    public List<Agent> findTicketingAgents();       
 }

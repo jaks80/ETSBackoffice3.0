@@ -52,7 +52,7 @@ public class Remark extends PersistentObject implements Serializable {
         this.text = text;
     }
 
-@ManyToOne
+    @ManyToOne
     @JoinColumn(name = "pnrid_fk")
     public Pnr getPnr() {
         return pnr;

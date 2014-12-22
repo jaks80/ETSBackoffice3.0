@@ -49,8 +49,8 @@ public class VOIDTest {
         t1.setNumericAirLineCode("229");
         t1.setTicketNo("2797312568");        
         t1.setPassengerNo(1);
-        t1.setPaxForeName("RAHENA MRS");
-        t1.setPaxSurName("BEGUM CHOWDHURY");        
+        t1.setForeName("RAHENA MRS");
+        t1.setSurName("BEGUM CHOWDHURY");        
         t1.setTktStatus(TicketStatus.VOID);                
         expResult.add(t1);        
         
@@ -58,8 +58,8 @@ public class VOIDTest {
         
         assertEquals(expResult.get(0).getNumericAirLineCode(), result.get(0).getNumericAirLineCode());        
         assertEquals(expResult.get(0).getPassengerNo(), result.get(0).getPassengerNo());
-        assertEquals(expResult.get(0).getPaxForeName(), result.get(0).getPaxForeName());
-        assertEquals(expResult.get(0).getPaxSurName(), result.get(0).getPaxSurName());        
+        assertEquals(expResult.get(0).getForeName(), result.get(0).getForeName());
+        assertEquals(expResult.get(0).getSurName(), result.get(0).getSurName());        
         assertEquals(expResult.get(0).getTicketNo(), result.get(0).getTicketNo());
         assertEquals(expResult.get(0).getTktStatus(), result.get(0).getTktStatus());        
     }

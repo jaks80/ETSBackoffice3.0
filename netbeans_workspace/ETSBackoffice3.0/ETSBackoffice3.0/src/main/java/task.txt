@@ -1,3 +1,7 @@
+1. After deleting pnr refresh throws lots of exception in main pnr window.
+
+
+
 1. Test for sales acdoc
 2. Test for purchase acdoc
 3. Test for other acdoc

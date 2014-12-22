@@ -119,17 +119,6 @@ public class TSalesAcDocServiceTest {
     }
 
     //@Test
-    public void testGetById() {
-        System.out.println("getById");
-        long id = 0L;
-        TSalesAcDocService instance = new TSalesAcDocService();
-        TicketingSalesAcDoc expResult = null;
-        TicketingSalesAcDoc result = instance.getById(id);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
-    //@Test
     public void testGetByReffference() {
         System.out.println("getByReffference");
         int refNo = 0;

@@ -79,8 +79,8 @@ public class INV_ThirdPartyIssueTest {
         t1.setNumericAirLineCode("607");
         t1.setOrginalTicketNo(null);
         t1.setPassengerNo(1);
-        t1.setPaxForeName("RAYHAN MR");
-        t1.setPaxSurName("AHMED");
+        t1.setForeName("RAYHAN MR");
+        t1.setSurName("AHMED");
         t1.setRestrictions("VLD EY ONLY/NON ENDO/CHG-RFND-REF TKT OFF/RSTR APPLY/X-30M");
         t1.setTicketNo("2798289186-87");
         t1.setTktStatus(TicketStatus.ISSUE);
@@ -95,8 +95,8 @@ public class INV_ThirdPartyIssueTest {
         t2.setNumericAirLineCode("607");
         t2.setOrginalTicketNo(null);
         t2.setPassengerNo(2);
-        t2.setPaxForeName("ABUL MR");
-        t2.setPaxSurName("KHAIR");
+        t2.setForeName("ABUL MR");
+        t2.setSurName("KHAIR");
         t2.setRestrictions("VLD EY ONLY/NON ENDO/CHG-RFND-REF TKT OFF/RSTR APPLY/X-30M");
         t2.setTicketNo("2798289188-89");
         t2.setTktStatus(TicketStatus.ISSUE);
@@ -111,8 +111,8 @@ public class INV_ThirdPartyIssueTest {
         t3.setNumericAirLineCode("607");
         t3.setOrginalTicketNo(null);
         t3.setPassengerNo(3);
-        t3.setPaxForeName("FATIMA MRS");
-        t3.setPaxSurName("KHATUN");
+        t3.setForeName("FATIMA MRS");
+        t3.setSurName("KHATUN");
         t3.setRestrictions("VLD EY ONLY/NON ENDO/CHG-RFND-REF TKT OFF/RSTR APPLY/X-30M");
         t3.setTicketNo("2798289190-91");
         t3.setTktStatus(TicketStatus.ISSUE);
@@ -132,8 +132,8 @@ public class INV_ThirdPartyIssueTest {
         assertEquals(expResult.get(0).getNumericAirLineCode(), result.get(0).getNumericAirLineCode());
         assertEquals(expResult.get(0).getOrginalTicketNo(), result.get(0).getOrginalTicketNo());
         assertEquals(expResult.get(0).getPassengerNo(), result.get(0).getPassengerNo());
-        assertEquals(expResult.get(0).getPaxForeName(), result.get(0).getPaxForeName());
-        assertEquals(expResult.get(0).getPaxSurName(), result.get(0).getPaxSurName());
+        assertEquals(expResult.get(0).getForeName(), result.get(0).getForeName());
+        assertEquals(expResult.get(0).getSurName(), result.get(0).getSurName());
         assertEquals(expResult.get(0).getRestrictions(), result.get(0).getRestrictions());
         assertEquals(expResult.get(0).getTicketNo(), result.get(0).getTicketNo());
         assertEquals(expResult.get(0).getTktStatus(), result.get(0).getTktStatus());
@@ -147,8 +147,8 @@ public class INV_ThirdPartyIssueTest {
         assertEquals(expResult.get(1).getNumericAirLineCode(), result.get(1).getNumericAirLineCode());
         assertEquals(expResult.get(1).getOrginalTicketNo(), result.get(1).getOrginalTicketNo());
         assertEquals(expResult.get(1).getPassengerNo(), result.get(1).getPassengerNo());
-        assertEquals(expResult.get(1).getPaxForeName(), result.get(1).getPaxForeName());
-        assertEquals(expResult.get(1).getPaxSurName(), result.get(1).getPaxSurName());
+        assertEquals(expResult.get(1).getForeName(), result.get(1).getForeName());
+        assertEquals(expResult.get(1).getSurName(), result.get(1).getSurName());
         assertEquals(expResult.get(1).getRestrictions(), result.get(1).getRestrictions());
         assertEquals(expResult.get(1).getTicketNo(), result.get(1).getTicketNo());
         assertEquals(expResult.get(1).getTktStatus(), result.get(1).getTktStatus());
@@ -162,8 +162,8 @@ public class INV_ThirdPartyIssueTest {
         assertEquals(expResult.get(2).getNumericAirLineCode(), result.get(2).getNumericAirLineCode());
         assertEquals(expResult.get(2).getOrginalTicketNo(), result.get(2).getOrginalTicketNo());
         assertEquals(expResult.get(2).getPassengerNo(), result.get(2).getPassengerNo());
-        assertEquals(expResult.get(2).getPaxForeName(), result.get(2).getPaxForeName());
-        assertEquals(expResult.get(2).getPaxSurName(), result.get(2).getPaxSurName());
+        assertEquals(expResult.get(2).getForeName(), result.get(2).getForeName());
+        assertEquals(expResult.get(2).getSurName(), result.get(2).getSurName());
         assertEquals(expResult.get(2).getRestrictions(), result.get(2).getRestrictions());
         assertEquals(expResult.get(2).getTicketNo(), result.get(2).getTicketNo());
         assertEquals(expResult.get(2).getTktStatus(), result.get(2).getTktStatus());

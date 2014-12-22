@@ -73,4 +73,9 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
     public void setPnr(Pnr pnr) {
         this.pnr = pnr;
     }
+
+    @Override
+    public BigDecimal calculateDocumentedAmount() {
+        return new BigDecimal("0.00");
+    }
 }

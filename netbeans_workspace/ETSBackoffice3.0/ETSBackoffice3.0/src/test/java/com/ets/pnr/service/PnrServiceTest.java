@@ -165,16 +165,7 @@ public class PnrServiceTest {
         //fail("The test case is a prototype.");
     }
 
-    //@Test
-    public void testGetByGDSPnr() {
-        System.out.println("getByGDSPnr");
-        String gdsPnr = "";
-        PnrService instance = new PnrService();
-        Pnr expResult = null;
-        Pnr result = instance.getByGDSPnr(gdsPnr);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
+    
 
     //@Test
     public void testPnrHistory() {

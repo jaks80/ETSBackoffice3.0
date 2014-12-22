@@ -65,8 +65,7 @@ public class AirService {
 
     public List<Ticket> refundTicket(List<Ticket> tickets) {
         
-        Pnr persistedPnr = dao.findPnr(tickets.get(0).getTicketNo(), tickets.get(0).getPaxSurName());
-
+        Pnr persistedPnr = dao.findPnr(tickets.get(0).getTicketNo(), tickets.get(0).getSurName());
         List<Ticket> tobePersisted = new ArrayList<>();
 
         //Check if ticket already exist in db. If exist then ignore
@@ -74,7 +73,7 @@ public class AirService {
             boolean exist = false;
             for (Ticket to : persistedPnr.getTickets()) {
                 if (tn.getTicketNo().equals(to.getTicketNo())
-                        && tn.getPaxSurName().equals(tn.getPaxSurName())
+                        && tn.getSurName().equals(tn.getSurName())
                         && tn.getTktStatusString().equals(to.getTktStatusString())) {
                     exist = true;
                 }

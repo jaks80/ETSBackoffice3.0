@@ -302,8 +302,8 @@ public class AIRToPNRConverter {
         if(paxNumber!=null){
          ticket.setPassengerNo(Integer.valueOf(paxNumber));
         }
-        ticket.setPaxSurName(name[0].trim());
-        ticket.setPaxForeName(name[1].trim());
+        ticket.setSurName(name[0].trim());
+        ticket.setForeName(name[1].trim());
         return ticket;
     }
 

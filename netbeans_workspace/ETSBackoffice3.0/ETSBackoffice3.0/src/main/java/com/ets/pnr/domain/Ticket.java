@@ -38,9 +38,9 @@ public class Ticket extends PersistentObject implements Serializable {
     @XmlElement
     private Integer passengerNo;
     @XmlElement
-    private String paxSurName;
+    private String surName;
     @XmlElement
-    private String paxForeName;
+    private String foreName;
     @XmlElement
     private String numericAirLineCode;
     @XmlElement
@@ -110,7 +110,7 @@ public class Ticket extends PersistentObject implements Serializable {
     public String getFullPaxNameWithPaxNo() {
 
         String paxFullName = "";
-        paxFullName = getPassengerNo() + ". " + getPaxSurName() + " / " + getPaxForeName();
+        paxFullName = getPassengerNo() + ". " + getSurName() + " / " + getForeName();
 
         return paxFullName;
     }
@@ -131,20 +131,20 @@ public class Ticket extends PersistentObject implements Serializable {
         this.passengerNo = passengerNo;
     }
 
-    public String getPaxSurName() {
-        return paxSurName;
+    public String getSurName() {
+        return surName;
     }
 
-    public void setPaxSurName(String paxSurName) {
-        this.paxSurName = paxSurName;
+    public void setSurName(String surName) {
+        this.surName = surName;
     }
 
-    public String getPaxForeName() {
-        return paxForeName;
+    public String getForeName() {
+        return foreName;
     }
 
-    public void setPaxForeName(String paxForeName) {
-        this.paxForeName = paxForeName;
+    public void setForeName(String foreName) {
+        this.foreName = foreName;
     }
 
     public String getNumericAirLineCode() {
@@ -306,4 +306,20 @@ public class Ticket extends PersistentObject implements Serializable {
     public void setNetPurchaseFare(BigDecimal netPurchaseFare) {
         this.netPurchaseFare = netPurchaseFare;
     }
+
+//    public String getSurName() {
+//        return surName;
+//    }
+//
+//    public void setSurName(String surName) {
+//        this.surName = surName;
+//    }
+//
+//    public String getForeName() {
+//        return foreName;
+//    }
+//
+//    public void setForeName(String foreName) {
+//        this.foreName = foreName;
+//    }
 }

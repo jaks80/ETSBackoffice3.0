@@ -5,10 +5,11 @@ import com.ets.pnr.dao.PnrDAO;
 import com.ets.pnr.domain.Pnr;
 import com.ets.util.DateUtil;
 import com.ets.util.PnrUtil;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,16 +23,36 @@ public class PnrService {
     private PnrDAO dao;
 
     public void save(Pnr pnr) {
-
+        PnrUtil.initPnrChildren(pnr);
+        dao.save(pnr);
+        PnrUtil.undefinePnrChildren(pnr);
     }
 
-    public Pnr getByGDSPnr(String gdsPnr) {
-        Pnr pnr = new Pnr();
-
-        return pnr;
+    public boolean delete(Long id) {
+        Pnr pnr = getByIdWithChildren(id);
+        dao.delete(pnr);
+        return true;
     }
 
-    public Pnr getByIdWithChildren(long id){
+    public List<Pnr> getByGDSPnr(String gdsPnr) {
+        List<Pnr> list = new ArrayList<>();
+        list = dao.getByGDSPnr(gdsPnr);
+        for(Pnr p: list){
+         PnrUtil.undefinePnrInTickets(p, p.getTickets());
+        }
+        return list;
+    }
+
+    public List<Pnr> getPnrByName(String surName, String foreName) {
+        List<Pnr> list = new ArrayList<>();
+        list = dao.searchByPaxName(surName, foreName);
+        for(Pnr p: list){
+         PnrUtil.undefinePnrInTickets(p, p.getTickets());
+        }
+        return list;
+    }
+
+    public Pnr getByIdWithChildren(long id) {
         Pnr pnr = dao.getByIdWithChildren(id);
         PnrUtil.undefinePnrChildren(pnr);
         return pnr;
@@ -79,7 +100,7 @@ public class PnrService {
     public List<Pnr> searchUninvoicedPnr() {
         List<Pnr> pnrList = dao.searchUninvoicedPnr();
         for (Pnr p : pnrList) {
-            PnrUtil.undefinePnrInTickets(p,p.getTickets());
+            PnrUtil.undefinePnrInTickets(p, p.getTickets());
         }
         return pnrList;
     }
@@ -88,7 +109,7 @@ public class PnrService {
         Date date = DateUtil.stringToDate(dateString, "ddMMMyyyy");
         List<Pnr> pnrList = dao.searchPnrsToday(date);
         for (Pnr p : pnrList) {
-            PnrUtil.undefinePnrInTickets(p,p.getTickets());
+            PnrUtil.undefinePnrInTickets(p, p.getTickets());
         }
         return pnrList;
     }

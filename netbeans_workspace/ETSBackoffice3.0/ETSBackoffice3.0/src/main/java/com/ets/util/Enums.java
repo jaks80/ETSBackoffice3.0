@@ -91,7 +91,7 @@ public class Enums {
 
     public enum AcDocType {
 
-        INVOICE(0), PAYMENT(1), CREDITMEMO(2), DEBITMEMO(3), REFUND(4);
+        INVOICE(0), PAYMENT(1), CREDITMEMO(2), DEBITMEMO(3), REFUND(4), VOID(5);
         private int id;
 
         AcDocType(int id) {
@@ -114,6 +114,8 @@ public class Enums {
                     return DEBITMEMO.toString();
                 case 4:
                     return REFUND.toString();
+                case 5:
+                    return VOID.toString();
                 default:
                     return null;
             }

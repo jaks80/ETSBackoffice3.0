@@ -22,7 +22,7 @@ public class PnrUtil {
         PnrUtil.initPnrInRemark(pnr, pnr.getRemarks());
         PnrUtil.initPnrInTickets(pnr, pnr.getTickets());
         PnrUtil.initPnrInSegments(pnr, pnr.getSegments());
-        //PnrUtil.initItineraryInTickets(pnr.getSegments(), pnr.getTickets());
+       
     }
     
     public static void undefineChildrenInPnr(Pnr pnr){
@@ -34,34 +34,21 @@ public class PnrUtil {
     public static void undefinePnrChildren(Pnr pnr){
         PnrUtil.undefinePnrInRemark(pnr, pnr.getRemarks());
         PnrUtil.undefinePnrInTickets(pnr, pnr.getTickets());
-        PnrUtil.undefinePnrInSegments(pnr, pnr.getSegments());
-        //PnrUtil.undefineItineraryInTickets(pnr.getSegments(), pnr.getTickets());
-    }
-    
-//    public static void initItineraryInTickets(Set<Itinerary> segments, Set<Ticket> tickets) {
-//
-//        for (Ticket ticket : tickets) {
-//            ticket.setSegments(segments);
-//        }
-//    }
-//
-//    public static void undefineItineraryInTickets(Set<Itinerary> segments, Set<Ticket> tickets) {
-//
-//        for (Ticket ticket : tickets) {
-//            ticket.setSegments(null);
-//        }
-//    }
+        PnrUtil.undefinePnrInSegments(pnr, pnr.getSegments());        
+    }   
 
     public static Set<Remark> initPnrInRemark(Pnr pnr, Set<Remark> remarks) {
+        
+        
         for (Remark rm : remarks) {
-            //rm.setPnr(pnr);
+            rm.setPnr(pnr);            
         }
         return remarks;
     }
 
     public static Set<Remark> undefinePnrInRemark(Pnr pnr, Set<Remark> remarks) {
         for (Remark rm : remarks) {
-            //rm.setPnr(null);
+            rm.setPnr(null);
         }
         return remarks;
     }
@@ -74,25 +61,7 @@ public class PnrUtil {
             tempTickets.add(ticket);
         }
         return tempTickets;
-    }
-    
-//    public static Set<Ticket> initPnrInTickets(Pnr pnr, Set<Ticket> tickets) {
-//        Set<Ticket> tempTickets = new LinkedHashSet<>();
-//        for (Ticket ticket : tickets) {
-//            ticket.setPnr(pnr);
-//            tempTickets.add(ticket);
-//        }
-//        return tempTickets;
-//    }
-//
-//    public static List<Ticket> initPnrInTickets(Pnr pnr, List<Ticket> tickets) {
-//        List<Ticket> tempTickets = new ArrayList<>();
-//        for (Ticket ticket : tickets) {
-//            ticket.setPnr(pnr);
-//            tempTickets.add(ticket);
-//        }
-//        return tempTickets;
-//    }
+    }   
         
     public static Set<Ticket> undefinePnrInTickets(Pnr pnr, Set<Ticket> tickets) {
         Set<Ticket> tempTickets = new LinkedHashSet<>();
@@ -130,6 +99,8 @@ public class PnrUtil {
         oldPnr.setNoOfPax(newPnr.getNoOfPax());
         oldPnr.setBookingAgtOid(newPnr.getBookingAgtOid());
         oldPnr.setTicketingAgtOid(newPnr.getTicketingAgtOid());
+        oldPnr.setTicketingAgentSine(newPnr.getTicketingAgentSine());
+        oldPnr.setPnrCreatorAgentSine(newPnr.getPnrCreatorAgentSine());
         oldPnr.setPnrCreationDate(newPnr.getPnrCreationDate());
         oldPnr.setVendorPNR(newPnr.getVendorPNR());
         oldPnr.setAirLineCode(newPnr.getAirLineCode());
@@ -160,13 +131,13 @@ public class PnrUtil {
             for (Ticket t : oldTickets) {
                 if ((newTkt.getTicketNo() == null ? t.getTicketNo() == null : newTkt.getTicketNo().equals(t.getTicketNo()))
                         && newTkt.getTktStatus() == t.getTktStatus()
-                        && t.getPaxSurName().equals(newTkt.getPaxSurName())) {
+                        && t.getSurName().equals(newTkt.getSurName())) {
                     exist = true;
                     break;
                 } else if ((t.getTktStatus() == TicketStatus.BOOK || t.getTktStatus() == TicketStatus.VOID)
-                        && t.getPaxSurName().equals(newTkt.getPaxSurName())) {
+                        && t.getSurName().equals(newTkt.getSurName())) {
 
-                    t.setPaxForeName(newTkt.getPaxForeName());
+                    t.setForeName(newTkt.getForeName());
                     t.setTktStatus(newTkt.getTktStatus());
                     t.setNumericAirLineCode(newTkt.getNumericAirLineCode());
                     t.setTicketNo(newTkt.getTicketNo());

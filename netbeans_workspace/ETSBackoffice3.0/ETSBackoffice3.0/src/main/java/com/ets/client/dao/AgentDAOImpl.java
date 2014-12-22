@@ -2,7 +2,6 @@ package com.ets.client.dao;
 
 import com.ets.GenericDAOImpl;
 import com.ets.client.domain.Agent;
-import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Query;
 import org.springframework.stereotype.Service;
@@ -55,13 +54,12 @@ public class AgentDAOImpl extends GenericDAOImpl<Agent, Long> implements AgentDA
     }
 
     @Override
-    public List<Agent> findVendors() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public List<Agent> findTicketingAgents() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+        String hql = "select agt from Agent as agt, Pnr as p "               
+                + "where p.ticketingAgtOid = agt.officeID "                
+                + "group by agt order by agt.name ";
+        
+        Query query = getSession().createQuery(hql);
+        return query.list();
+    }        
 }

@@ -27,39 +27,44 @@ import org.springframework.stereotype.Controller;
 public class PnrWS {
 
     @Autowired
-    PnrService service;
+    private PnrService service;
 
     @POST
     @Path("/new")
     @Consumes("application/xml")
     @Produces("application/xml")
-    public Pnr create(Pnr pnr){
+    public Pnr create(Pnr pnr) {
         service.save(pnr);
         return pnr;
     }
 
     @PUT
-    @Path("/update/{id}")
+    @Path("/update")
     @Consumes("application/xml")
     @Produces("application/xml")
-    public Pnr update(@PathParam("id") long id, Pnr pnr){
-        System.out.println("PNR" + pnr.getGdsPnr());
+    public Pnr update(Pnr pnr) {
+        service.save(pnr);
         return pnr;
     }
 
     @DELETE
     @Path("/delete/{id}")
-    public Response delete(@PathParam("id") long id){
-        return Response.status(200).build();
+    public Response delete(@PathParam("id") long id) {
+
+        if (service.delete(id)) {
+            return Response.status(200).build();
+        } else {
+            return Response.status(500).build();
+        }
     }
 
     @GET
     @Produces("application/xml")
     @Path("/history")
     public Pnrs getHistory(@QueryParam("bookingAgtOid") String bookingAgtOid,
-                           @QueryParam("ticketingAgtOid") String ticketingAgtOid, 
-                           @QueryParam("dateStart") String dateStart, 
-                           @QueryParam("dateEnd") String dateEnd){
+            @QueryParam("ticketingAgtOid") String ticketingAgtOid,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
         Pnrs pnrs = service.pnrHistory(dateStart, dateEnd, ticketingAgtOid, bookingAgtOid);
         return pnrs;
     }
@@ -67,15 +72,15 @@ public class PnrWS {
     @GET
     @Produces("application/xml")
     @Path("/byid/{id}")
-    public Pnr getById(@PathParam("id") long id){
+    public Pnr getById(@PathParam("id") long id) {
         return service.getByIdWithChildren(id);
     }
 
     @GET
     @Produces("application/xml")
     @Path("/withchildren/{id}")
-    public Pnr getByIdWithChildren(@PathParam("id") long id){
-         throw new UnsupportedOperationException("Not supported yet.");
+    public Pnr getByIdWithChildren(@PathParam("id") long id) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @GET
@@ -87,32 +92,45 @@ public class PnrWS {
 
     @GET
     @Produces("application/xml")
-    @Path("/bypaxname/{tktNo}/{surName}")
+    @Path("/bypaxname")
     public Pnrs getPnrByName(@QueryParam("surName") String surName, @QueryParam("foreName") String foreName) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<Pnr> list = service.getPnrByName(surName, foreName);
+        Pnrs pnrs = new Pnrs();
+        pnrs.setList(list);
+        return pnrs;
     }
-    
+
+    @GET
+    @Produces("application/xml")
+    @Path("/bygdsPnr")
+    public Pnrs getPnrBygdsPnr(@QueryParam("gdsPnr") String gdsPnr) {
+        List<Pnr> list = service.getByGDSPnr(gdsPnr);
+        Pnrs pnrs = new Pnrs();
+        pnrs.setList(list);
+        return pnrs;
+    }
+
     @GET
     @Produces("application/xml")
     @Path("/uninvoicedpnr")
-    public Pnrs getUninvoicedPnr(){
-    
+    public Pnrs getUninvoicedPnr() {
+
         List<Pnr> list = service.searchUninvoicedPnr();
         Pnrs pnrs = new Pnrs();
         pnrs.setList(list);
-        
+
         return pnrs;
     }
 
     @GET
     @Produces("application/xml")
     @Path("/pnrtoday")
-    public Pnrs getPnrsToday(@QueryParam("date") String date){
-    
+    public Pnrs getPnrsToday(@QueryParam("date") String date) {
+
         List<Pnr> list = service.searchPnrsToday(date);
         Pnrs pnrs = new Pnrs();
         pnrs.setList(list);
-        
+
         return pnrs;
     }
 }

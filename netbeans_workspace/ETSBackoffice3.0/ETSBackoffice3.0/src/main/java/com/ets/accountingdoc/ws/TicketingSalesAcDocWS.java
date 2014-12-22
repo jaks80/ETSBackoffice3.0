@@ -8,7 +8,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -45,8 +44,7 @@ public class TicketingSalesAcDocWS {
     @GET
     @Path("/byid/{id}")
     public TicketingSalesAcDoc getbyId(@PathParam("id") long id) {
-
-        TicketingSalesAcDoc doc = service.getById(id);
+        TicketingSalesAcDoc doc = service.getWithChildrenById(id);
         return doc;
     }
 
@@ -68,29 +66,41 @@ public class TicketingSalesAcDocWS {
         return docs;
     }
 
-//    public List<TicketingSalesAcDoc> findOutstandingInvoice(Long contactableId, int type, Date from, Date to) {
-//
-//    }
-//
-//    public List<TicketingSalesAcDoc> invoiceHistoryByCriteria(Long contactableId,
-//            int contactableType, Integer docTypeFrom, Integer docTypeTo, Date from, Date to, Long tktingAgtFrom, Long tktingAgtTo) {
-//
-//    }
-//
-//    public void removeLine(AccountingDocumentLine l) {
-//
-//    }
-
+    @GET
+    @Path("/bypnrid")
+    public TicketingSalesAcDocs getByPnrId(@QueryParam("pnrId") Long pnrId) {
+        List<TicketingSalesAcDoc> list = service.getByPnrId(pnrId);
+        TicketingSalesAcDocs docs = new TicketingSalesAcDocs();
+        docs.setList(list);
+        return docs;
+    }
+    
     @POST
-    @Path("/new")
-    public TicketingSalesAcDoc create(TicketingSalesAcDoc ticketingSalesAcDoc) {
-        return service.newDocument(ticketingSalesAcDoc);
+    @Path("/newinv")
+    public TicketingSalesAcDoc createNewInvoice(@QueryParam("id") Long id, TicketingSalesAcDoc invoice) {
+        if (id == null) {
+            return service.newDocument(invoice);
+        } else {
+            return service.createNewDraftInvoice(id);
+        }
     }
 
-    @PUT
-    @Path("/update")
-    public TicketingSalesAcDoc update(TicketingSalesAcDoc ticketingSalesAcDoc) {
-        return service.update(ticketingSalesAcDoc);
+    @POST
+    @Path("/newtcrm")
+    public TicketingSalesAcDoc createNewTCreditMemo(@QueryParam("id") Long id) {
+        return null;
+    }
+
+    @POST
+    @Path("/newcrm")
+    public TicketingSalesAcDoc createNewCreditMemo(@QueryParam("id") Long id) {
+        return null;
+    }
+
+    @POST
+    @Path("/newdm")
+    public TicketingSalesAcDoc createNewDebitMemo(@QueryParam("id") Long id) {
+        return null;
     }
 
     @DELETE

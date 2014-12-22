@@ -47,7 +47,7 @@ public class AirDAOImpl extends GenericDAOImpl<Pnr, Long> implements AirDAO {
         String hql = "from Ticket as t "
                 + "left join fetch t.pnr as p "
                 + "left join fetch p.tickets as t "
-                + "where t.ticketNo = :ticketNo and t.paxSurName = :surName ";
+                + "where t.ticketNo = :ticketNo and t.surName = :surName ";
 
         Query query = getSession().createQuery(hql);
         query.setParameter("ticketNo", ticketNo);

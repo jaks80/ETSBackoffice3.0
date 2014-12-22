@@ -1,5 +1,11 @@
 package com.ets.accountingdoc.service;
 
+import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
+import com.ets.pnr.domain.Ticket;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 /**
  *
  * @author Yusuf
@@ -14,19 +20,20 @@ public class AcDocUtil {
         }
     }
 
-//    public static AccountingDocumentLine createNewLine(String title,
-//            String remark,
-//            BigDecimal discount, int qty,
-//            T entity) {
-//        AccountingDocumentLine newLine = AccountingDocumentLine();
-//        newLine.setRemark(remark);
-//        newLine.setQty(qty);
-//        newLine.setDiscount(discount);
-//
-//        if (entity instanceof OtherService) {
-//            newLine.setOtherService(entity);
-//        } else if (entity instanceof AdditionalCharge) {
-//            newLine.AdditionalCharge(entity);
-//        }
-//    }
+    public static Set<Ticket> initTSAcDocInTickets(TicketingSalesAcDoc doc, Set<Ticket> tickets) {
+        Set<Ticket> tempTickets = new LinkedHashSet<>();
+        for (Ticket t : tickets) {            
+            t.setTicketingSalesAcDoc(doc);            
+        }
+        return tempTickets;
+    }
+
+    public static Set<Ticket> undefineTSAcDoc(TicketingSalesAcDoc doc, Set<Ticket> tickets) {
+        Set<Ticket> tempTickets = new LinkedHashSet<>();
+        for (Ticket ticket : tickets) {
+            ticket.setTicketingSalesAcDoc(null);
+            tempTickets.add(ticket);
+        }
+        return tempTickets;
+    }
 }

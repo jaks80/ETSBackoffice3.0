@@ -42,6 +42,30 @@ public class AgentWS {
         return agents;
     }
 
+    @GET
+    @Path("/ticketingagents")
+    public Agents findTicketingAgents() {
+
+        List<Agent> list = service.findTicketingAgents();
+        Agents agents = new Agents();
+        agents.setList(list);
+        return agents;
+    }
+    
+    @GET
+    @Path("/agents/kw")
+    public Agents find(@QueryParam("keyword") String keyword) {
+
+        List<Agent> list = service.findAll(null, null, keyword);
+        if(list.isEmpty()){
+        list = service.findAll(keyword, null, null);
+        }
+        
+        Agents agents = new Agents();
+        agents.setList(list);
+        return agents;
+    }
+    
     @POST
     @Path("/new")
     public Agent create(Agent agent) {

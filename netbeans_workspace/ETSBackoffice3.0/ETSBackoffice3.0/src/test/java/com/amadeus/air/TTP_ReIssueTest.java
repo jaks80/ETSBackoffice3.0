@@ -56,8 +56,8 @@ public class TTP_ReIssueTest {
         t1.setTicketNo("3943767500");
         t1.setOrginalTicketNo("3535898495");
         t1.setPassengerNo(1);
-        t1.setPaxForeName("NABIL MSTR(CHD)(ID05MAR03)");
-        t1.setPaxSurName("MIAH");
+        t1.setForeName("NABIL MSTR(CHD)(ID05MAR03)");
+        t1.setSurName("MIAH");
         t1.setRestrictions("VALID ON AI ONLY PNR HJ3HV, NON-END/RER/CONV INTO MCO INBOUND 1ST CHANGE FREE/DC/");        
         t1.setTktStatus(TicketStatus.REISSUE);
                 
@@ -73,8 +73,8 @@ public class TTP_ReIssueTest {
         assertEquals(expResult.get(0).getNumericAirLineCode(), result.get(0).getNumericAirLineCode());
         assertEquals(expResult.get(0).getOrginalTicketNo(), result.get(0).getOrginalTicketNo());
         assertEquals(expResult.get(0).getPassengerNo(), result.get(0).getPassengerNo());
-        assertEquals(expResult.get(0).getPaxForeName(), result.get(0).getPaxForeName());
-        assertEquals(expResult.get(0).getPaxSurName(), result.get(0).getPaxSurName());
+        assertEquals(expResult.get(0).getForeName(), result.get(0).getForeName());
+        assertEquals(expResult.get(0).getSurName(), result.get(0).getSurName());
         assertEquals(expResult.get(0).getRestrictions(), result.get(0).getRestrictions());
         assertEquals(expResult.get(0).getTicketNo(), result.get(0).getTicketNo());
         assertEquals(expResult.get(0).getTktStatus(), result.get(0).getTktStatus());

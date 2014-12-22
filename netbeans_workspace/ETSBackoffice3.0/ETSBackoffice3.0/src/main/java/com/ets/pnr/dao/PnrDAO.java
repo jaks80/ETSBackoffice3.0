@@ -9,14 +9,14 @@ import java.util.List;
  *
  * @author Yusuf
  */
-public interface PnrDAO extends GenericDAO<Pnr, Long> {
-
-    public List<Pnr> find(String gdsPnr);
+public interface PnrDAO extends GenericDAO<Pnr, Long> {    
     
     public Pnr getByIdWithChildren(Long id);
 
     public List<Pnr> searchByTktNo(String tktNo);
 
+    public List<Pnr> getByGDSPnr(String gdsPnr);
+    
     public List<Pnr> searchByPaxName(String surName, String foreName);
 
     public List<Pnr> bookedPnrs();

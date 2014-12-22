@@ -79,8 +79,8 @@ public class INV_SelfIssue_SelfBookTest {
         t1.setNumericAirLineCode("065");
         t1.setOrginalTicketNo(null);
         t1.setPassengerNo(1);
-        t1.setPaxForeName("MD KAMRUL MR");
-        t1.setPaxSurName("BASHIR");
+        t1.setForeName("MD KAMRUL MR");
+        t1.setSurName("BASHIR");
         t1.setRestrictions(null);
         t1.setTicketNo("1632104224");
         t1.setTktStatus(TicketStatus.ISSUE);
@@ -98,8 +98,8 @@ public class INV_SelfIssue_SelfBookTest {
         assertEquals(expResult.get(0).getNumericAirLineCode(), result.get(0).getNumericAirLineCode());
         assertEquals(expResult.get(0).getOrginalTicketNo(), result.get(0).getOrginalTicketNo());
         assertEquals(expResult.get(0).getPassengerNo(), result.get(0).getPassengerNo());
-        assertEquals(expResult.get(0).getPaxForeName(), result.get(0).getPaxForeName());
-        assertEquals(expResult.get(0).getPaxSurName(), result.get(0).getPaxSurName());
+        assertEquals(expResult.get(0).getForeName(), result.get(0).getForeName());
+        assertEquals(expResult.get(0).getSurName(), result.get(0).getSurName());
         assertEquals(expResult.get(0).getRestrictions(), result.get(0).getRestrictions());
         assertEquals(expResult.get(0).getTicketNo(), result.get(0).getTicketNo());
         assertEquals(expResult.get(0).getTktStatus(), result.get(0).getTktStatus());

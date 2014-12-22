@@ -8,10 +8,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -37,18 +36,18 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
     private Pnr pnr;
     @XmlElement
     private Set<Ticket> tickets = new LinkedHashSet<>();
-    
-    
+
+
     public BigDecimal calculateTicketedSubTotal() {
        BigDecimal subtotal = new BigDecimal("0.00");
         for (Ticket t : getTickets()) {
             subtotal = subtotal.add(t.calculateNetSellingFare());
         }
         return subtotal;
-    }    
+    }
 
-    
-    @OneToMany(mappedBy = "ticketingSalesAcDoc")
+
+    @OneToMany(mappedBy = "ticketingSalesAcDoc",cascade = CascadeType.ALL)
     public Set<Ticket> getTickets() {
         return tickets;
     }
@@ -57,7 +56,7 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         this.tickets = tickets;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "pnr_fk")
     public Pnr getPnr() {
         return pnr;
@@ -65,5 +64,10 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
 
     public void setPnr(Pnr pnr) {
         this.pnr = pnr;
+    }
+
+    @Override
+    public BigDecimal calculateDocumentedAmount() {
+        return calculateTicketedSubTotal().add(calculateOtherServiceSubTotal().add(calculateAddChargesSubTotal()));
     }
 }

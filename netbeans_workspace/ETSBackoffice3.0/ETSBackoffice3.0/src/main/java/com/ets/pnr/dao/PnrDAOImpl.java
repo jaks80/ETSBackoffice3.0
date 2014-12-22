@@ -22,32 +22,32 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
 
-    @Override
-    public List<Pnr> find(String gdsPnr) {
-        String hql = "from Pnr as p "
-                + "left join p.tickets as t "
-                + "where p.gdsPNR = ? "
-                + "and t.passengerNo = (select min(t.passengerNo) from Ticket t where t.pnr.id = p.id) group by p.id";
-
-        Query query = getSession().createQuery(hql);
-        query.setParameter("gdsPnr", gdsPnr);
-        return query.list();
-    }
-
-    @Override
+    @Override    
+    @Transactional(readOnly = true)
     public Pnr getByIdWithChildren(Long id) {
 
         String hql = "select distinct p from Pnr as p "
                 + "left join fetch p.tickets as t "
                 + "left join fetch p.segments "
                 + "left join fetch p.remarks "
+                + "left join fetch p.agent "
+                + "left join fetch p.customer "
+                + "left join fetch p.ticketing_agent "
                 + "left join fetch t.ticketingSalesAcDoc "
-                + "left join fetch t.ticketingPurchaseAcDoc "
+                //+ "left join fetch t.ticketingPurchaseAcDoc "
                 + "where p.id = :id";
 
         Query query = getSession().createQuery(hql);
         query.setParameter("id", id);
         Pnr pnr = (Pnr) query.uniqueResult();
+        for (Ticket t : pnr.getTickets()) {
+            if (t.getTicketingSalesAcDoc() != null) {
+                t.getTicketingSalesAcDoc().setAccountingDocumentLines(null);
+                t.getTicketingSalesAcDoc().setTickets(null);
+                t.getTicketingSalesAcDoc().setPnr(null);
+                t.getTicketingSalesAcDoc().setRelatedDocuments(null);
+            }
+        }
         return pnr;
     }
 
@@ -93,6 +93,7 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Pnr> searchUninvoicedPnr() {
         List<Pnr> list = new ArrayList<>();
 
@@ -122,6 +123,7 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Pnr> searchPnrsToday(Date date) {
 
         List<Pnr> list = new ArrayList<>();
@@ -158,8 +160,73 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
     }
 
     @Override
-    public List<Pnr> searchByPaxName(String surName, String foreName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    @Transactional(readOnly = true)
+    public List<Pnr> getByGDSPnr(String gdsPnr) {
+        String hql = "select t,p from Ticket t "
+                + "inner join t.pnr as p "
+                + "where p.gdsPnr = :gdsPnr "
+                + "group by p.id";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameter("gdsPnr", gdsPnr);
+        List results = query.list();
+        Iterator it = results.iterator();
+        List<Pnr> list = new ArrayList<>();
+
+        while (it.hasNext()) {
+            Object[] objects = (Object[]) it.next();
+            Ticket leadPaxTicket = (Ticket) objects[0];
+            Pnr pnr = (Pnr) objects[1];
+            pnr.setSegments(null);
+            pnr.setRemarks(null);
+            pnr.setAgent(null);
+            pnr.setCustomer(null);
+            pnr.setTicketing_agent(null);
+            Set<Ticket> tickets = new LinkedHashSet<>();
+            tickets.add(leadPaxTicket);
+            pnr.setTickets(tickets);
+            list.add(pnr);
+        }
+
+        return list;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Pnr> searchByPaxName(String surName, String foreName) {
+        surName = nullToEmptyValue(surName).concat("%");
+        foreName = nullToEmptyValue(foreName).concat("%");
+
+        String hql = "select t,p from Ticket t "
+                + "inner join t.pnr as p "
+                + "where "
+                + "(t.surName is null or t.surName like :surName) and "
+                + "(t.foreName is null or t.foreName like :foreName) "
+                + "group by p.id ";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameter("surName", surName);
+        query.setParameter("foreName", foreName);
+
+        List results = query.list();
+        Iterator it = results.iterator();
+        List<Pnr> list = new ArrayList<>();
+
+        while (it.hasNext()) {
+            Object[] objects = (Object[]) it.next();
+            Ticket leadPaxTicket = (Ticket) objects[0];
+            Pnr pnr = (Pnr) objects[1];
+            pnr.setSegments(null);
+            pnr.setRemarks(null);
+            pnr.setAgent(null);
+            pnr.setCustomer(null);
+            pnr.setTicketing_agent(null);
+            Set<Ticket> tickets = new LinkedHashSet<>();
+            tickets.add(leadPaxTicket);
+            pnr.setTickets(tickets);
+            list.add(pnr);
+        }
+
+        return list;
+    }
 }

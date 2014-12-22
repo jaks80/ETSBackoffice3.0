@@ -4,6 +4,7 @@ import com.ets.PersistentObject;
 import com.ets.util.Enums.AcDocType;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.Access;
@@ -14,7 +15,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -33,6 +37,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 public abstract class AccountingDocument extends PersistentObject implements Serializable {
 
     @XmlElement
+    private Date docIssueDate;
+    @XmlElement
     private AcDocType acDoctype;
     @XmlElement
     private String terms;
@@ -47,7 +53,13 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
 
     @XmlElement
     private Set<AccountingDocumentLine> accountingDocumentLines = new LinkedHashSet<>();
-
+    @XmlElement
+    private Set<AccountingDocument> relatedDocuments = new LinkedHashSet<>();
+    @XmlElement
+    private AccountingDocument accountingDocument;
+    
+    public abstract BigDecimal calculateDocumentedAmount();
+    
     public BigDecimal calculateOtherServiceSubTotal() {
         BigDecimal subtotal = new BigDecimal("0.00");
         for (AccountingDocumentLine l : accountingDocumentLines) {
@@ -132,5 +144,33 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
 
     public void setIsArchived(int isArchived) {
         this.isArchived = isArchived;
+    }
+
+    @Temporal(javax.persistence.TemporalType.DATE)
+    public Date getDocIssueDate() {
+        return docIssueDate;
+    }
+
+    public void setDocIssueDate(Date docIssueDate) {
+        this.docIssueDate = docIssueDate;
+    }
+
+    @OneToMany(mappedBy = "accountingDocument")
+    public Set<AccountingDocument> getRelatedDocuments() {
+        return relatedDocuments;
+    }
+
+    public void setRelatedDocuments(Set<AccountingDocument> relatedDocuments) {
+        this.relatedDocuments = relatedDocuments;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_fk")
+    public AccountingDocument getAccountingDocument() {
+        return accountingDocument;
+    }
+
+    public void setAccountingDocument(AccountingDocument accountingDocument) {
+        this.accountingDocument = accountingDocument;
     }
 }

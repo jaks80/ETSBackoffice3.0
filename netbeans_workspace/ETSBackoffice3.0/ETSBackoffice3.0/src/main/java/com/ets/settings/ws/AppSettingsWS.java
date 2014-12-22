@@ -41,8 +41,8 @@ public class AppSettingsWS {
     @Path("/appsettings")
     public AppSettings find() {
 
-        List<AppSettings> list = service.findAll();
-        return list.get(0);
+       AppSettings appSettings = service.getSettings();
+        return appSettings;
     }
 
     @PUT

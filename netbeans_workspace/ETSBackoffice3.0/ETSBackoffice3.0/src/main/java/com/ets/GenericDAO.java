@@ -1,5 +1,6 @@
 package com.ets;
 
+import com.ets.client.domain.Agent;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +24,7 @@ public interface GenericDAO<T, Long extends Serializable> {
 
     public void deleteBulk(Set<T> entitySet);
 
-    public List findAll(Class clazz);
+    public List findAll(Class clazz);    
 
     public T findByID(Class clazz, Long id);
 
