@@ -39,15 +39,15 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
     @XmlElement
     private Date docIssueDate;
     @XmlElement
-    private AcDocType acDoctype;
+    private AcDocType type;
     @XmlElement
     private String terms;
     @XmlElement
-    private Long acDocRef;
+    private Long reference;
     @XmlElement
     private Integer version;
-    @XmlElement    
-    private int isArchived=0;//0-No 1-Yes
+    @XmlElement
+    private int isArchived = 0;//0-No 1-Yes
     @XmlElement
     private BigDecimal documentedAmount;
 
@@ -57,9 +57,9 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
     private Set<AccountingDocument> relatedDocuments = new LinkedHashSet<>();
     @XmlElement
     private AccountingDocument accountingDocument;
-    
+
     public abstract BigDecimal calculateDocumentedAmount();
-    
+
     public BigDecimal calculateOtherServiceSubTotal() {
         BigDecimal subtotal = new BigDecimal("0.00");
         for (AccountingDocumentLine l : accountingDocumentLines) {
@@ -80,35 +80,31 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
         return subtotal;
     }
 
+    public BigDecimal calculateTotalPayment() {
+        BigDecimal totalPayment = new BigDecimal("0.00");
+        for (AccountingDocument doc : this.relatedDocuments) {
+            if (doc.type.equals(AcDocType.PAYMENT)) {
+                totalPayment = totalPayment.add(doc.getDocumentedAmount());
+            }
+        }
+        return totalPayment;
+    }
+
+    public BigDecimal calculateDueAmount() {
+        BigDecimal dueAmount = new BigDecimal("0.00");
+        BigDecimal invoiceAmount = this.calculateDocumentedAmount();
+
+        if (this.type.equals(AcDocType.INVOICE)) {
+            for (AccountingDocument doc : this.relatedDocuments) {
+                dueAmount = dueAmount.add(doc.getDocumentedAmount());
+            }
+        }
+        return invoiceAmount.subtract(dueAmount);
+    }
+
     public void addLine(AccountingDocumentLine line) {
         this.accountingDocumentLines.add(line);
-    }
-
-    @Column(nullable = false)
-    public AcDocType getAcDoctype() {
-        return acDoctype;
-    }
-
-    public void setAcDoctype(AcDocType acDoctype) {
-        this.acDoctype = acDoctype;
-    }
-
-    public String getTerms() {
-        return terms;
-    }
-
-    public void setTerms(String terms) {
-        this.terms = terms;
-    }
-
-    @Column(nullable = false)
-    public Long getAcDocRef() {
-        return acDocRef;
-    }
-
-    public void setAcDocRef(Long acDocRef) {
-        this.acDocRef = acDocRef;
-    }
+    }  
 
     @Version
     public Integer getVersion() {
@@ -172,5 +168,31 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
 
     public void setAccountingDocument(AccountingDocument accountingDocument) {
         this.accountingDocument = accountingDocument;
+    }
+    
+      @Column(nullable = false)
+    public AcDocType getType() {
+        return type;
+    }
+
+    public void setType(AcDocType type) {
+        this.type = type;
+    }
+
+    public String getTerms() {
+        return terms;
+    }
+
+    public void setTerms(String terms) {
+        this.terms = terms;
+    }
+
+    @Column(nullable = false)
+    public Long getReference() {
+        return reference;
+    }
+
+    public void setReference(Long reference) {
+        this.reference = reference;
     }
 }

@@ -35,7 +35,7 @@ public class TicketingAcDocBL {
     public TicketingSalesAcDoc createNewTicketingInvoice() {
 
         TicketingSalesAcDoc invoice = new TicketingSalesAcDoc();
-        invoice.setAcDoctype(Enums.AcDocType.INVOICE);
+        invoice.setType(Enums.AcDocType.INVOICE);
         invoice.setPnr(pnr);
         invoice.setTickets(tickets);
         invoice.setDocIssueDate(getEarliestDate());

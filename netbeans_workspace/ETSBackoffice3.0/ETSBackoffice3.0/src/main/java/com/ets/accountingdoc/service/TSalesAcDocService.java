@@ -12,7 +12,6 @@ import com.ets.util.PnrUtil;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
-import javax.ws.rs.QueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,13 +39,13 @@ public class TSalesAcDocService {
     /**
      * Synchronize this to avoind acdoc ref duplication
      *
-     * @param ticketingSalesAcDoc
+     * @param doc     
      * @return
      */
     public synchronized TicketingSalesAcDoc newDocument(TicketingSalesAcDoc doc) {
         if (doc.getId() == null
-                && doc.getAcDoctype().equals(Enums.AcDocType.INVOICE)) {
-            doc.setAcDocRef(AcDocUtil.generateAcDocRef(dao.getNewAcDocRef()));
+                && doc.getType().equals(Enums.AcDocType.INVOICE)) {
+            doc.setReference(AcDocUtil.generateAcDocRef(dao.getNewAcDocRef()));
         }
         
         AcDocUtil.initTSAcDocInTickets(doc, doc.getTickets());

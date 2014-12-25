@@ -1,6 +1,6 @@
 package com.ets.mockdata;
 
-import com.ets.accountingdoc.domain.Payment;
+import com.ets.accountingdoc.domain.TicketingSalesPayment;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.util.Enums;
 import java.math.BigDecimal;
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class MockSalesAcDoc {
 
     private TicketingSalesAcDoc invoice ;
-    private Payment payment;
+    private TicketingSalesPayment payment;
     private TicketingSalesAcDoc creditNote;
     private TicketingSalesAcDoc debitNote;
     private TicketingSalesAcDoc refund;
@@ -26,7 +26,7 @@ public class MockSalesAcDoc {
     private TicketingSalesAcDoc createMockInvoice() {
 
         TicketingSalesAcDoc invoice = new TicketingSalesAcDoc();
-        invoice.setAcDoctype(Enums.AcDocType.INVOICE);
+        invoice.setType(Enums.AcDocType.INVOICE);
         invoice.setIsArchived(0);
         invoice.setTerms("Net Monthly");                   
 
@@ -36,20 +36,20 @@ public class MockSalesAcDoc {
     private TicketingSalesAcDoc createMockCreditNote() {
 
         TicketingSalesAcDoc cnote = new TicketingSalesAcDoc();
-        cnote.setAcDoctype(Enums.AcDocType.CREDITMEMO);
+        cnote.setType(Enums.AcDocType.CREDITMEMO);
         cnote.setIsArchived(0);        
 
         return cnote;
     }
         
-    private Payment createMockPayment() {
+    private TicketingSalesPayment createMockPayment() {
 
-        Payment payment = new Payment();
+        TicketingSalesPayment payment = new TicketingSalesPayment();
         payment.setRemark("Cash Payment by Abdur Rahman");
         payment.setPaymentType(Enums.PaymentType.CASH);
 
         TicketingSalesAcDoc paymentDoc = new TicketingSalesAcDoc();
-        paymentDoc.setAcDoctype(Enums.AcDocType.PAYMENT);
+        paymentDoc.setType(Enums.AcDocType.PAYMENT);
         paymentDoc.setIsArchived(0);
         paymentDoc.setDocumentedAmount(new BigDecimal("200.00"));       
 
@@ -60,7 +60,7 @@ public class MockSalesAcDoc {
         return invoice;
     }
 
-    public Payment getPayment() {
+    public TicketingSalesPayment getPayment() {
         return payment;
     }
 

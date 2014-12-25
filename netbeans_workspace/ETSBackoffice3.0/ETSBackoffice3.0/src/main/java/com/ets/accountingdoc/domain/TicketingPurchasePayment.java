@@ -7,8 +7,10 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -23,17 +25,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 @Access(AccessType.PROPERTY)
-public class Payment  extends PersistentObject implements Serializable {
+public class TicketingPurchasePayment  extends PersistentObject implements Serializable {
     
     @XmlElement
     private String remark;
     @XmlElement
-    private Set<AccountingDocument> payments = new LinkedHashSet<>();
-    @XmlElement
-    //@Column(nullable=false)
+    private Set<TicketingPurchaseAcDoc> payments = new LinkedHashSet<>();
+    @XmlElement    
     private PaymentType paymentType;
     
-    public Payment(){
+    public TicketingPurchasePayment(){
     
     }
 
@@ -45,13 +46,13 @@ public class Payment  extends PersistentObject implements Serializable {
         this.remark = remark;
     }
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Column(nullable=false)
-    public Set<AccountingDocument> getPayments() {
+    public Set<TicketingPurchaseAcDoc> getPayments() {
         return payments;
     }
 
-    public void setPayments(Set<AccountingDocument> payments) {
+    public void setPayments(Set<TicketingPurchaseAcDoc> payments) {
         this.payments = payments;
     }
 
@@ -63,7 +64,7 @@ public class Payment  extends PersistentObject implements Serializable {
         this.paymentType = paymentType;
     }      
     
-    public void addAccountingDocument(AccountingDocument payment){
+    public void addAccountingDocument(TicketingPurchaseAcDoc payment){
      this.payments.add(payment);
     }
 }

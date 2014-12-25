@@ -77,7 +77,7 @@ public class TSalesAcDocServiceTest {
         TicketingSalesAcDoc result = tSalesAcDocService.newDocument(newInvoice);
 
         assertEquals("784.20", result.getDocumentedAmount().toString());
-        assertEquals("1001", result.getAcDocRef().toString());
+        assertEquals("1001", result.getReference().toString());
         assertNotNull(result.getId());
 
         for (Ticket t : newInvoice.getTickets()) {

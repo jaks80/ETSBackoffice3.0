@@ -24,7 +24,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
 
     @Override
     public Long getNewAcDocRef() {
-        String hql = "select max(acDoc.acDocRef) from TicketingSalesAcDoc acDoc";
+        String hql = "select max(acDoc.reference) from TicketingSalesAcDoc acDoc";
         Query query = getSession().createQuery(hql);
 
         Object result = DataAccessUtils.uniqueResult(query.list());
@@ -70,7 +70,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + "left join fetch p.segments "
                 + "left join fetch p.agent "
                 + "left join fetch p.customer "
-                + "where a.id = :id and a.acDoctype <> 5";//5 is VOID
+                + "where a.id = :id and a.type <> 5";//5 is VOID
 
         Query query = getSession().createQuery(hql);
         query.setParameter("id", id);
@@ -92,7 +92,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         TicketingSalesAcDoc doc = (TicketingSalesAcDoc) query.uniqueResult();
         doc.setTickets(null);
         doc.setPnr(null);
-        doc.setAcDoctype(Enums.AcDocType.VOID);
+        doc.setType(Enums.AcDocType.VOID);
         lineDAO.deleteBulk(doc.getAccountingDocumentLines());
         save(doc);
         TicketingSalesAcDoc void_doc = (TicketingSalesAcDoc) query.uniqueResult();
