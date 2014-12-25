@@ -26,7 +26,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
     private AcDocSummeryTask summeryTask;
     private AccountingDocTask accountingDocTask;
     private String taskType;
-    private final PnrPanel parent;
+    private PnrPanel parent=null;
 
     private Long pnrId;
     private List<TicketingSalesAcDoc> tSAcDocList = new ArrayList<>();
@@ -34,7 +34,12 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
     private TicketingSalesAcDoc ticketingSalesAcDoc;
     private TicketingPurchaseAcDoc ticketingPurchaseAcDoc;
 
-    public AccountingDocumentsComponent(PnrPanel parent) {
+    
+     public AccountingDocumentsComponent() {        
+        initComponents();
+    }
+     
+     public AccountingDocumentsComponent(PnrPanel parent) {
         this.parent = parent;
         initComponents();
     }
@@ -78,7 +83,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         model.getDataVector().removeAllElements();
         int row = 0;
         for (TicketingSalesAcDoc s : tSAcDocList) {
-            model.insertRow(row, new Object[]{s.getAcDoctype(), s.getAcDocRef(), DateUtil.dateToString(s.getDocIssueDate()), s.getDocumentedAmount(), ""});
+            model.insertRow(row, new Object[]{s.getType(), s.getReference(), DateUtil.dateToString(s.getDocIssueDate()), s.getDocumentedAmount(), ""});
             row++;
         }
     }

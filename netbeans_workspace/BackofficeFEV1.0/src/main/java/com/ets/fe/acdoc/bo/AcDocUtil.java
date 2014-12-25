@@ -2,7 +2,6 @@ package com.ets.fe.acdoc.bo;
 
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
-import com.ets.fe.util.Enums;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.swing.JOptionPane;

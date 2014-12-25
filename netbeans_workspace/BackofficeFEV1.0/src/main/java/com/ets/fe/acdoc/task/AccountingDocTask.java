@@ -1,6 +1,7 @@
 package com.ets.fe.acdoc.task;
 
 import com.ets.fe.acdoc.model.AccountingDocument;
+import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.ws.TicketingSAcDocWSClient;
 import javax.swing.SwingWorker;
 
@@ -33,6 +34,9 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
                 case "VOID":
                     client._void(id);
                     break;
+                case "PAYMENT":
+                    client.createNewPayment((TicketingSalesAcDoc)accountingDocument);
+                    break;    
             }
         } else if ("PURCHASE".equals(docClass)) {
 

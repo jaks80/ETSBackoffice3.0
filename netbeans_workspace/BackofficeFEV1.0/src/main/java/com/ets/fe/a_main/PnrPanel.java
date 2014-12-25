@@ -2,6 +2,7 @@ package com.ets.fe.a_main;
 
 import com.ets.fe.a_maintask.CompletePnrTask;
 import com.ets.fe.acdoc.bo.AcDocUtil;
+import com.ets.fe.acdoc.gui.AccountingDocumentsComponent;
 import com.ets.fe.acdoc.gui.InvoiceDlg;
 import com.ets.fe.acdoc.task.NewTSalesInvoiceTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
@@ -159,8 +160,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         txtTotalPsgr = new javax.swing.JTextField();
         dtBookingDate = new org.jdesktop.swingx.JXDatePicker();
         lblPnr = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        accountingDocumentsComponent = new com.ets.fe.acdoc.gui.AccountingDocumentsComponent(this);
+        accountingDocumentsComponent = new AccountingDocumentsComponent(this);
         TicketPanel = new javax.swing.JPanel();
         tblSegment = new javax.swing.JTabbedPane();
         jPanel4 = new javax.swing.JPanel();
@@ -417,19 +417,6 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 4, 2);
         PnrPanel.add(lblPnr, gridBagConstraints);
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Accounting Documents", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(accountingDocumentsComponent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(accountingDocumentsComponent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
         javax.swing.GroupLayout TopPanelLayout = new javax.swing.GroupLayout(TopPanel);
         TopPanel.setLayout(TopPanelLayout);
         TopPanelLayout.setHorizontalGroup(
@@ -437,12 +424,12 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             .addGroup(TopPanelLayout.createSequentialGroup()
                 .addComponent(PnrPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(accountingDocumentsComponent, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE))
         );
         TopPanelLayout.setVerticalGroup(
             TopPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(PnrPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(PnrPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+            .addComponent(accountingDocumentsComponent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         innerSplitPane.setTopComponent(TopPanel);
@@ -658,7 +645,6 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JLabel lblPnr;

@@ -23,54 +23,53 @@ import org.jdesktop.swingx.JXTable;
  *
  * @author Yusuf
  */
-public class InvoiceDlg extends JDialog implements PropertyChangeListener {    
-     
+public class InvoiceDlg extends JDialog implements PropertyChangeListener {
+
     private Pnr pnr;
     private List<Ticket> tickets;
     private NewTSalesInvoiceTask newInvoiceTask;
     private TicketingSalesAcDoc tInvoice;
+
     public InvoiceDlg(Frame parent) {
         super(parent, true);
         initComponents();
     }
 
-    public boolean showDialog(TicketingSalesAcDoc tInvoice) {
-        //dlg.setTitle("New Invoice");
+    public boolean showDialog(TicketingSalesAcDoc tInvoice) {       
         this.tInvoice = tInvoice;
-        
+
         this.pnr = tInvoice.getPnr();
         this.tickets = tInvoice.getTickets();
         acDocHeaderComponent.display(tInvoice);
         populateTblTicket();
-        
-        if(pnr.getAgent()!=null){
-         txtAcDocFor.setText(pnr.getAgent().getName()+pnr.getAgent().getAddressCRSeperated());
-        }else{
-         txtAcDocFor.setText(pnr.getCustomer().getFullCustomerName()+pnr.getCustomer().getAddressCRSeperated());
+
+        if (pnr.getAgent() != null) {
+            txtAcDocFor.setText(pnr.getAgent().getName() + pnr.getAgent().getAddressCRSeperated());
+        } else {
+            txtAcDocFor.setText(pnr.getCustomer().getFullCustomerName() + pnr.getCustomer().getAddressCRSeperated());
         }
-        
+
         setLocationRelativeTo(this);
         setVisible(true);
         return true;
-    }    
-    
-    public void createInvoice(){
+    }
+
+    public void createInvoice() {
         newInvoiceTask = new NewTSalesInvoiceTask(tInvoice, progressBar);
         newInvoiceTask.addPropertyChangeListener(this);
         newInvoiceTask.execute();
     }
 
-    public void populateTblTicket() {        
+    public void populateTblTicket() {
         tblTicket.clearSelection();
         DefaultTableModel model = (DefaultTableModel) tblTicket.getModel();
         model.getDataVector().removeAllElements();
 
         int row = 0;
-        BigDecimal totalPurchase = new BigDecimal("0.00");
-        BigDecimal totalSelling = new BigDecimal("0.00");
-        BigDecimal tCom = new BigDecimal("0.00");
-        BigDecimal tNetPayable = new BigDecimal("0.00");
-        BigDecimal tPL = new BigDecimal("0.00");
+        BigDecimal totalGF = new BigDecimal("0.00");
+        BigDecimal totalDisc = new BigDecimal("0.00");
+        BigDecimal totalAtol = new BigDecimal("0.00");
+        BigDecimal totalNetPayable = new BigDecimal("0.00");
 
         for (Ticket t : this.tickets) {
             boolean invoiced = true;
@@ -79,18 +78,18 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
             } else {
                 invoiced = true;
             }
-            totalPurchase = totalPurchase.add(t.calculateNetPurchaseFare());
-            totalSelling = totalSelling.add(t.calculateNetSellingFare());
+            totalGF = totalGF.add(t.getGrossFare());
+            totalDisc = totalDisc.add(t.getDiscount());
+            totalAtol = totalAtol.add(t.getAtolChg());
+            totalNetPayable = totalNetPayable.add(t.calculateNetSellingFare());
 
             model.insertRow(row, new Object[]{t.getFullPaxNameWithPaxNo(),
-                t.getTktStatus(),t.getGrossFare(), t.getDiscount(),t.getAtolChg(),t.calculateNetSellingFare()});
+                t.getTktStatus(), t.getGrossFare(), t.getDiscount(), t.getAtolChg(), t.calculateNetSellingFare()});
 
             row++;
         }
 
-        model.addRow(new Object[]{"Totals", "", "", "", "", "", totalPurchase, "", "", "", totalSelling});
-
-        //tblTicket.setRowSelectionInterval(this.tickets.indexOf(this.ticket), this.tickets.indexOf(this.ticket));
+        model.addRow(new Object[]{"Totals","", totalGF, totalDisc, totalAtol, totalNetPayable});      
     }
 
     /**
@@ -632,7 +631,7 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       createInvoice();
+        createInvoice();
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

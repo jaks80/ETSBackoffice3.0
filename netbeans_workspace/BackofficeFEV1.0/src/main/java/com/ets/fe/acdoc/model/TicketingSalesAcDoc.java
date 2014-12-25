@@ -17,22 +17,26 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class TicketingSalesAcDoc extends AccountingDocument implements Serializable{
+public class TicketingSalesAcDoc extends AccountingDocument implements Serializable {
 
     @XmlElement
     private Pnr pnr;
     @XmlElement
     private List<Ticket> tickets = new ArrayList<>();
-    
-    
+
     public BigDecimal calculateTicketedSubTotal() {
-       BigDecimal subtotal = new BigDecimal("0.00");
+        BigDecimal subtotal = new BigDecimal("0.00");
         for (Ticket t : getTickets()) {
             subtotal = subtotal.add(t.calculateNetSellingFare());
         }
         return subtotal;
-    }    
-        
+    }
+
+    @Override
+    public BigDecimal calculateDocumentedAmount() {
+        return calculateTicketedSubTotal().add(calculateOtherServiceSubTotal().add(calculateAddChargesSubTotal()));
+    }
+
     public List<Ticket> getTickets() {
         return tickets;
     }

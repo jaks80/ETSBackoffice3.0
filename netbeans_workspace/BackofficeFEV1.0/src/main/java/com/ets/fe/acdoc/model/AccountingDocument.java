@@ -8,7 +8,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -24,11 +26,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 public abstract class AccountingDocument extends PersistentObject implements Serializable {
 
     @XmlElement
-    private AcDocType acDoctype;
+    private AcDocType type;
     @XmlElement
     private String terms;
     @XmlElement
-    private Long acDocRef;
+    private Long reference;
     @XmlElement
     private Integer version;
     @XmlElement    
@@ -36,15 +38,19 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
     @XmlElement
     private BigDecimal documentedAmount;
     @XmlElement
-    private Date docIssueDate;
-    
+    private Date docIssueDate;    
     @XmlElement
     private List<AccountingDocumentLine> accountingDocumentLines = new ArrayList<>();
+    @XmlElement
+    private Set<AccountingDocument> relatedDocuments = new LinkedHashSet<>();
+    @XmlElement
+    private AccountingDocument accountingDocument;
 
     public abstract List<Ticket> getTickets();
     public abstract void setTickets(List<Ticket> tickets);
     public abstract Pnr getPnr();
     public abstract void setPnr(Pnr pnr);
+    public abstract BigDecimal calculateDocumentedAmount();
     
     public BigDecimal calculateOtherServiceSubTotal() {
         BigDecimal subtotal = new BigDecimal("0.00");
@@ -66,16 +72,42 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
         return subtotal;
     }
 
+     public BigDecimal calculateTotalPayment() {
+        BigDecimal totalPayment = new BigDecimal("0.00");
+        for (AccountingDocument doc : this.relatedDocuments) {
+            if (doc.type.equals(AcDocType.PAYMENT)) {
+                totalPayment = totalPayment.add(doc.getDocumentedAmount());
+            }
+        }
+        return totalPayment;
+    }
+
+    public BigDecimal calculateDueAmount() {
+        BigDecimal dueAmount = new BigDecimal("0.00");
+        BigDecimal invoiceAmount = this.getDocumentedAmount();
+
+        if (this.type.equals(AcDocType.INVOICE)) {
+            for (AccountingDocument doc : this.relatedDocuments) {
+                dueAmount = dueAmount.add(doc.getDocumentedAmount());
+            }
+        }
+        return invoiceAmount.subtract(dueAmount);
+    }
+    
+    public void addRelatedDocument(AccountingDocument doc){
+     this.relatedDocuments.add(doc);
+    }
+    
     public void addLine(AccountingDocumentLine line) {
         this.accountingDocumentLines.add(line);
     }
 
-    public AcDocType getAcDoctype() {
-        return acDoctype;
+    public AcDocType getType() {
+        return type;
     }
 
-    public void setAcDoctype(AcDocType acDoctype) {
-        this.acDoctype = acDoctype;
+    public void setType(AcDocType type) {
+        this.type = type;
     }
 
     public String getTerms() {
@@ -86,12 +118,12 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
         this.terms = terms;
     }
    
-    public Long getAcDocRef() {
-        return acDocRef;
+    public Long getReference() {
+        return reference;
     }
 
-    public void setAcDocRef(Long acDocRef) {
-        this.acDocRef = acDocRef;
+    public void setReference(Long reference) {
+        this.reference = reference;
     }
     
     public Integer getVersion() {
@@ -132,5 +164,21 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
 
     public void setDocIssueDate(Date docIssueDate) {
         this.docIssueDate = docIssueDate;
+    }
+
+    public Set<AccountingDocument> getRelatedDocuments() {
+        return relatedDocuments;
+    }
+
+    public void setRelatedDocuments(Set<AccountingDocument> relatedDocuments) {
+        this.relatedDocuments = relatedDocuments;
+    }
+
+    public AccountingDocument getAccountingDocument() {
+        return accountingDocument;
+    }
+
+    public void setAccountingDocument(AccountingDocument accountingDocument) {
+        this.accountingDocument = accountingDocument;
     }
 }

@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class TicketingPurchaseAcDoc extends AccountingDocument implements Serializable{
+public class TicketingPurchaseAcDoc extends AccountingDocument implements Serializable {
 
     @XmlElement
     private String vendorRef;
@@ -27,14 +27,18 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
     private List<Ticket> tickets = new ArrayList<>();
     @XmlElement
     private Pnr pnr;
-    
-   
+
     public BigDecimal calculateTicketedSubTotal() {
-       BigDecimal subtotal = new BigDecimal("0.00");
+        BigDecimal subtotal = new BigDecimal("0.00");
         for (Ticket t : getTickets()) {
             subtotal = subtotal.add(t.calculateNetPurchaseFare());
         }
         return subtotal;
+    }
+
+    @Override
+    public BigDecimal calculateDocumentedAmount() {
+        return calculateTicketedSubTotal().add(calculateOtherServiceSubTotal().add(calculateAddChargesSubTotal()));
     }
 
     public String getVendorRef() {
@@ -44,7 +48,7 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
     public void setVendorRef(String vendorRef) {
         this.vendorRef = vendorRef;
     }
-    
+
     public List<Ticket> getTickets() {
         return tickets;
     }

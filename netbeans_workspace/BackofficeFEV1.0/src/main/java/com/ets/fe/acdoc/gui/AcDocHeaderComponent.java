@@ -18,15 +18,15 @@ public class AcDocHeaderComponent extends JPanel {
     
     public void display(AccountingDocument doc) {
         this.doc = doc;        
-        if (doc.getAcDocRef()!=null) {            
+        if (doc.getReference()!=null) {            
             cmbTerms.setEnabled(false);
         }else{
          cmbTerms.setEnabled(true);
         }
         
         dtIssueDate.setDate(doc.getDocIssueDate());
-        if(doc.getAcDocRef()!=null){
-         txtInvRef.setText(doc.getAcDocRef().toString());
+        if(doc.getReference()!=null){
+         txtInvRef.setText(doc.getReference().toString());
         }
         cmbTerms.setSelectedItem(doc.getTerms());
     }
@@ -126,6 +126,7 @@ public class AcDocHeaderComponent extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(txtUser, gridBagConstraints);
 
+        cmbTerms.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select", "Net 7", "Net monthly account", "CIA", "COD", "CWO", "Net 10", "Net 60", "Net 90" }));
         cmbTerms.setMaximumSize(new java.awt.Dimension(32767, 19));
         cmbTerms.setMinimumSize(new java.awt.Dimension(28, 19));
         cmbTerms.setPreferredSize(new java.awt.Dimension(28, 19));

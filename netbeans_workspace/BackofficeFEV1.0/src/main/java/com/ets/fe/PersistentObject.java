@@ -1,8 +1,10 @@
 package com.ets.fe;
 
+import com.ets.fe.app.model.User;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Objects;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -23,8 +25,10 @@ public abstract class PersistentObject implements Serializable {
     private Date createdOn;
     @XmlElement
     private Date lastModified;
-    //private User createdBy;
-    //private User lastModifiedBy;
+    @XmlElement
+    private User createdBy;
+    @XmlElement
+    private User lastModifiedBy;
 
     public PersistentObject() {
 
@@ -33,7 +37,7 @@ public abstract class PersistentObject implements Serializable {
     protected void copy(final PersistentObject source) {
         this.id = source.id;
         this.createdOn = source.createdOn;
-        this.lastModified = source.lastModified;
+        this.setLastModified(source.getLastModified());
     }
 
     @Override
@@ -56,13 +60,20 @@ public abstract class PersistentObject implements Serializable {
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+
     protected void updateObjectProperties() {
         Date date = new Date();
         if (createdOn == null) {
             createdOn = new Timestamp(date.getTime());
         }
 
-        lastModified = new Timestamp(date.getTime());
+        setLastModified(new Timestamp(date.getTime()));
     }
 
     public Date getCreatedOn() {
@@ -73,19 +84,35 @@ public abstract class PersistentObject implements Serializable {
         this.createdOn = createdOn;
     }
 
-    public Date getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(Timestamp lastModified) {
-        this.lastModified = lastModified;
-    }
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public User getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(User lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Date getLastModified() {
+        return lastModified;
     }
 }
