@@ -39,8 +39,13 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
     private OtherService otherService;
     @XmlElement
     private AdditionalCharge additionalCharge;
+
     @XmlElement
-    private AccountingDocument accountingDocument;
+    private TicketingSalesAcDoc ticketingSalesAcDoc;
+    @XmlElement
+    private TicketingPurchaseAcDoc ticketingPurchaseAcDoc;
+    @XmlElement
+    private OtherSalesAcDoc otherSalesAcDoc;
 
     public BigDecimal calculateOsNetSellingTotal() {
         return this.otherService.getSellingPrice().add(this.discount).multiply(new BigDecimal(qty));
@@ -95,12 +100,32 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "acdoc_fk")
-    public AccountingDocument getAccountingDocument() {
-        return accountingDocument;
+    @JoinColumn(name = "tsacdoc_fk")
+    public TicketingSalesAcDoc getTicketingSalesAcDoc() {
+        return ticketingSalesAcDoc;
     }
 
-    public void setAccountingDocument(AccountingDocument accountingDocument) {
-        this.accountingDocument = accountingDocument;
+    public void setTicketingSalesAcDoc(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        this.ticketingSalesAcDoc = ticketingSalesAcDoc;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tpacdoc_fk")
+    public TicketingPurchaseAcDoc getTicketingPurchaseAcDoc() {
+        return ticketingPurchaseAcDoc;
+    }
+
+    public void setTicketingPurchaseAcDoc(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
+        this.ticketingPurchaseAcDoc = ticketingPurchaseAcDoc;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "osacdoc_fk")
+    public OtherSalesAcDoc getOtherSalesAcDoc() {
+        return otherSalesAcDoc;
+    }
+
+    public void setOtherSalesAcDoc(OtherSalesAcDoc otherSalesAcDoc) {
+        this.otherSalesAcDoc = otherSalesAcDoc;
     }
 }

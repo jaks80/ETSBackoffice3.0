@@ -77,30 +77,31 @@ public class TicketingSalesAcDocWS {
     
     @POST
     @Path("/newinv")
-    public TicketingSalesAcDoc createNewInvoice(@QueryParam("id") Long id, TicketingSalesAcDoc invoice) {
-        if (id == null) {
+    public TicketingSalesAcDoc createNewInvoice(@QueryParam("pnrid") Long pnrid, TicketingSalesAcDoc invoice) {
+        if (pnrid == null) {
             return service.newDocument(invoice);
         } else {
-            return service.createNewDraftInvoice(id);
+            return service.newDraftInvoice(pnrid);
         }
     }
 
-    @POST
-    @Path("/newtcrm")
-    public TicketingSalesAcDoc createNewTCreditMemo(@QueryParam("id") Long id) {
-        return null;
+    @GET
+    @Path("/newtdraftdm")
+    public TicketingSalesAcDoc createNewDraftDebitMemo(@QueryParam("pnrid") Long pnrid) {
+        return service.newDraftDebitMemo(pnrid);
+    }
+    
+    @GET
+    @Path("/newtdraftcrm")
+    public TicketingSalesAcDoc createNewDraftCreditMemo(@QueryParam("pnrid") Long pnrid) {
+        return service.newDraftCreditMemo(pnrid);
     }
 
     @POST
-    @Path("/newcrm")
-    public TicketingSalesAcDoc createNewCreditMemo(@QueryParam("id") Long id) {
-        return null;
-    }
-
-    @POST
-    @Path("/newdm")
-    public TicketingSalesAcDoc createNewDebitMemo(@QueryParam("id") Long id) {
-        return null;
+    @Path("/newdoc")
+    public TicketingSalesAcDoc createNewDocument(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        TicketingSalesAcDoc doc = service.newDocument(ticketingSalesAcDoc);
+        return doc;
     }
 
     @DELETE

@@ -160,7 +160,8 @@ public class AIRToPNRConverter {
                 if (tax.compareTo(BigDecimal.ONE) < 0) {
                     tax = new BigDecimal("0.00");
                 }
-            }else if (s.startsWith("KS-") && s.length() > 4 && "INV".equals(air.getType())) {
+            }
+            else if (s.startsWith("KS-") && s.length() > 4 && "INV".equals(air.getType())) {
                 if(totalFare.compareTo(new BigDecimal("0.00")) == 1){
                  continue;
                 }
@@ -222,20 +223,6 @@ public class AIRToPNRConverter {
                 }
 
             }
-            /*
-            else if (s.startsWith("TK")) {
-
-                String[] data = AIRLineParser.parseTKLine(s);
-
-                Date tkOKDate = DateUtil.ddMMMToDate(data[0].substring(2));
-                if (ticket.getTktStatus() == 2 || ticket.getTktStatus() == 3) {
-                    if ("INV".equals(air.getType())) {
-                        ticket.setDocIssuedate(tkOKDate);
-                    } else {
-                        ticket.setDocIssuedate(DateUtil.yyMMddToDate(air.getCreationDate()));
-                    }
-                }
-            }*/
         }
 
         return tickets;
@@ -289,6 +276,14 @@ public class AIRToPNRConverter {
             } else if (s.startsWith("R-")) {
                 String[] data = AIRLineParser.parseRLine(s);
                 ticket.setDocIssuedate(DateUtil.refundDate(data[1]));
+            }else if (s.startsWith("FO") && s.length() > 4) {
+                String[] data = AIRLineParser.parseFOLine(s);
+
+                if (s.charAt(5) == '-') {
+                    ticket.setOrginalTicketNo(s.substring(6, 16));
+                } else {
+                    ticket.setOrginalTicketNo(s.substring(5, 15));
+                }
             }
         }
 

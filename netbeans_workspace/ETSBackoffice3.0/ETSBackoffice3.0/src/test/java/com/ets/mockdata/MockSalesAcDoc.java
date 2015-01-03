@@ -1,6 +1,6 @@
 package com.ets.mockdata;
 
-import com.ets.accountingdoc.domain.TicketingSalesPayment;
+import com.ets.accountingdoc.domain.Payment;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.util.Enums;
 import java.math.BigDecimal;
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class MockSalesAcDoc {
 
     private TicketingSalesAcDoc invoice ;
-    private TicketingSalesPayment payment;
+    private Payment payment;
     private TicketingSalesAcDoc creditNote;
     private TicketingSalesAcDoc debitNote;
     private TicketingSalesAcDoc refund;
@@ -27,7 +27,7 @@ public class MockSalesAcDoc {
 
         TicketingSalesAcDoc invoice = new TicketingSalesAcDoc();
         invoice.setType(Enums.AcDocType.INVOICE);
-        invoice.setIsArchived(0);
+        invoice.setStatus(Enums.AcDocStatus.ACTIVE);
         invoice.setTerms("Net Monthly");                   
 
         return invoice;
@@ -37,20 +37,20 @@ public class MockSalesAcDoc {
 
         TicketingSalesAcDoc cnote = new TicketingSalesAcDoc();
         cnote.setType(Enums.AcDocType.CREDITMEMO);
-        cnote.setIsArchived(0);        
+        invoice.setStatus(Enums.AcDocStatus.ACTIVE);   
 
         return cnote;
     }
         
-    private TicketingSalesPayment createMockPayment() {
+    private Payment createMockPayment() {
 
-        TicketingSalesPayment payment = new TicketingSalesPayment();
+        Payment payment = new Payment();
         payment.setRemark("Cash Payment by Abdur Rahman");
         payment.setPaymentType(Enums.PaymentType.CASH);
 
         TicketingSalesAcDoc paymentDoc = new TicketingSalesAcDoc();
         paymentDoc.setType(Enums.AcDocType.PAYMENT);
-        paymentDoc.setIsArchived(0);
+        invoice.setStatus(Enums.AcDocStatus.ACTIVE);
         paymentDoc.setDocumentedAmount(new BigDecimal("200.00"));       
 
         return payment;
@@ -60,7 +60,7 @@ public class MockSalesAcDoc {
         return invoice;
     }
 
-    public TicketingSalesPayment getPayment() {
+    public Payment getPayment() {
         return payment;
     }
 

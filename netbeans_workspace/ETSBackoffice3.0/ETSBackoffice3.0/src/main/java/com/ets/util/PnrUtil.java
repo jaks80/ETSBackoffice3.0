@@ -5,6 +5,7 @@ import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Remark;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums.TicketStatus;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -17,31 +18,30 @@ import java.util.Set;
  */
 public class PnrUtil {
 
-    public static void initPnrChildren(Pnr pnr){
-    
+    public static void initPnrChildren(Pnr pnr) {
+
         PnrUtil.initPnrInRemark(pnr, pnr.getRemarks());
         PnrUtil.initPnrInTickets(pnr, pnr.getTickets());
         PnrUtil.initPnrInSegments(pnr, pnr.getSegments());
-       
+
     }
-    
-    public static void undefineChildrenInPnr(Pnr pnr){
+
+    public static void undefineChildrenInPnr(Pnr pnr) {
         pnr.setTickets(null);
         pnr.setSegments(null);
         pnr.setRemarks(null);
     }
-    
-    public static void undefinePnrChildren(Pnr pnr){
+
+    public static void undefinePnrChildren(Pnr pnr) {
         PnrUtil.undefinePnrInRemark(pnr, pnr.getRemarks());
         PnrUtil.undefinePnrInTickets(pnr, pnr.getTickets());
-        PnrUtil.undefinePnrInSegments(pnr, pnr.getSegments());        
-    }   
+        PnrUtil.undefinePnrInSegments(pnr, pnr.getSegments());
+    }
 
     public static Set<Remark> initPnrInRemark(Pnr pnr, Set<Remark> remarks) {
-        
-        
+
         for (Remark rm : remarks) {
-            rm.setPnr(pnr);            
+            rm.setPnr(pnr);
         }
         return remarks;
     }
@@ -61,8 +61,8 @@ public class PnrUtil {
             tempTickets.add(ticket);
         }
         return tempTickets;
-    }   
-        
+    }
+
     public static Set<Ticket> undefinePnrInTickets(Pnr pnr, Set<Ticket> tickets) {
         Set<Ticket> tempTickets = new LinkedHashSet<>();
         for (Ticket ticket : tickets) {
@@ -72,7 +72,7 @@ public class PnrUtil {
         return tempTickets;
     }
 
-        public static List<Ticket> undefinePnrInTickets(Pnr pnr, List<Ticket> tickets) {
+    public static List<Ticket> undefinePnrInTickets(Pnr pnr, List<Ticket> tickets) {
         List<Ticket> tempTickets = new ArrayList<>();
         for (Ticket ticket : tickets) {
             ticket.setPnr(null);
@@ -80,7 +80,7 @@ public class PnrUtil {
         }
         return tempTickets;
     }
-        
+
     public static Set<Itinerary> initPnrInSegments(Pnr pnr, Set<Itinerary> segments) {
         for (Itinerary segment : segments) {
             segment.setPnr(pnr);
@@ -112,19 +112,19 @@ public class PnrUtil {
 
         Set<Ticket> oldTickets = new LinkedHashSet<>();
         Set<Ticket> newTickets = new LinkedHashSet<>();
-        
-        if (oldCollection instanceof ArrayList){
-         oldTickets = new LinkedHashSet<>(oldCollection);
-        }else{
-         oldTickets = (Set<Ticket>) oldCollection;
+
+        if (oldCollection instanceof ArrayList) {
+            oldTickets = new LinkedHashSet<>(oldCollection);
+        } else {
+            oldTickets = (Set<Ticket>) oldCollection;
         }
-        
-        if (newCollection instanceof ArrayList){
-         newTickets = new LinkedHashSet<>(oldCollection);
-        }else{
-         newTickets = (Set<Ticket>) newCollection;
+
+        if (newCollection instanceof ArrayList) {
+            newTickets = new LinkedHashSet<>(oldCollection);
+        } else {
+            newTickets = (Set<Ticket>) newCollection;
         }
-        
+
         for (Ticket newTkt : newTickets) {
             boolean exist = false;
 
@@ -179,4 +179,40 @@ public class PnrUtil {
         return finalSegments;
     }
 
+    public static Set<Ticket> getUnRefundedTickets(Pnr pnr) {
+        Set<Ticket> refundTickets = new LinkedHashSet<>();
+
+        for (Ticket t : pnr.getTickets()) {
+            if (t.getTktStatus().equals(Enums.TicketStatus.REFUND) && t.getTicketingSalesAcDoc() == null && t.getGrossFare().compareTo(new BigDecimal("0.00"))!=0) {
+                refundTickets.add(t);
+            }
+        }
+        return refundTickets;
+    }
+    
+    public static Set<Ticket> getUnInvoicedTicket(Pnr pnr){
+     Set<Ticket> tickets = new LinkedHashSet<>();
+
+        for (Ticket t : pnr.getTickets()) {
+            if (!t.getTktStatus().equals(Enums.TicketStatus.REFUND)&&
+                !t.getTktStatus().equals(Enums.TicketStatus.VOID) && 
+                    t.getTicketingSalesAcDoc() == null) {
+                tickets.add(t);
+            }
+        }
+        return tickets;
+    }
+    
+    public static Set<Ticket> getIssuedInvoicedTickets(Pnr pnr) {
+        Set<Ticket> invoicedTickets = new LinkedHashSet<>();
+
+        for (Ticket t : pnr.getTickets()) {
+            if ((t.getTktStatus().equals(Enums.TicketStatus.ISSUE) || 
+                    t.getTktStatus().equals(Enums.TicketStatus.REISSUE))&& 
+                    t.getTicketingSalesAcDoc()!=null) {
+                invoicedTickets.add(t);
+            }
+        }
+        return invoicedTickets;
+    }
 }

@@ -8,6 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -29,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Access(AccessType.PROPERTY)
 @Table(name = "tkt_purch_acdoc")
 //@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-public class TicketingPurchaseAcDoc extends AccountingDocument implements Serializable{
+public class TicketingPurchaseAcDoc extends AccountingDocument implements Serializable {
 
     @XmlElement
     private String vendorRef;
@@ -37,14 +38,40 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
     private Set<Ticket> tickets = new LinkedHashSet<>();
     @XmlElement
     private Pnr pnr;
-    
-   
+    @XmlElement
+    private Set<AccountingDocumentLine> accountingDocumentLines = new LinkedHashSet<>();
+    @XmlElement
+    private Set<TicketingPurchaseAcDoc> relatedDocuments = new LinkedHashSet<>();
+    @XmlElement
+    private TicketingPurchaseAcDoc accountingDocument;
+
+    @Override
     public BigDecimal calculateTicketedSubTotal() {
-       BigDecimal subtotal = new BigDecimal("0.00");
+        BigDecimal subtotal = new BigDecimal("0.00");
         for (Ticket t : getTickets()) {
             subtotal = subtotal.add(t.getNetPurchaseFare());
         }
         return subtotal;
+    }
+
+        @Override
+    public BigDecimal calculateOtherServiceSubTotal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public BigDecimal calculateAddChargesSubTotal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public BigDecimal calculateTotalPayment() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public BigDecimal calculateDueAmount() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public String getVendorRef() {
@@ -77,5 +104,33 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
     @Override
     public BigDecimal calculateDocumentedAmount() {
         return new BigDecimal("0.00");
+    }
+
+    @OneToMany(mappedBy = "accountingDocument", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    public Set<TicketingPurchaseAcDoc> getRelatedDocuments() {
+        return relatedDocuments;
+    }
+
+    public void setRelatedDocuments(Set<TicketingPurchaseAcDoc> relatedDocuments) {
+        this.relatedDocuments = relatedDocuments;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_fk")
+    public TicketingPurchaseAcDoc getAccountingDocument() {
+        return accountingDocument;
+    }
+
+    public void setAccountingDocument(TicketingPurchaseAcDoc accountingDocument) {
+        this.accountingDocument = accountingDocument;
+    }
+
+    @OneToMany(mappedBy = "ticketingPurchaseAcDoc", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    public Set<AccountingDocumentLine> getAccountingDocumentLines() {
+        return accountingDocumentLines;
+    }
+
+    public void setAccountingDocumentLines(Set<AccountingDocumentLine> accountingDocumentLines) {
+        this.accountingDocumentLines = accountingDocumentLines;
     }
 }

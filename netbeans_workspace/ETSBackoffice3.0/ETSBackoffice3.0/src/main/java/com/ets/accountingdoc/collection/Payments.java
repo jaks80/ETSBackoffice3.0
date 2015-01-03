@@ -1,6 +1,6 @@
 package com.ets.accountingdoc.collection;
 
-import com.ets.accountingdoc.domain.OtherSalesPayment;
+import com.ets.accountingdoc.domain.Payment;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
@@ -9,16 +9,16 @@ import javax.xml.bind.annotation.XmlElement;
  *
  * @author Yusuf
  */
-public class OtherSalesPayments {
+public class Payments {
     
     @XmlElement
-    private List<OtherSalesPayment> list = new ArrayList<>();
+    private List<Payment> list = new ArrayList<>();
 
-    public List<OtherSalesPayment> getList() {
+    public List<Payment> getList() {
         return list;
     }
 
-    public void setList(List<OtherSalesPayment> list) {
+    public void setList(List<Payment> list) {
         this.list = list;
     }        
 }

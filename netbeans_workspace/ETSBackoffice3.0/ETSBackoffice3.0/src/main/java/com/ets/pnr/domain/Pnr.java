@@ -115,7 +115,7 @@ public class Pnr extends PersistentObject implements Serializable {
     }
 
     @OneToMany(mappedBy = "pnr", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @OrderBy(value = "passengerNo")
+    @OrderBy(value = "id")
     public Set<Ticket> getTickets() {
         return tickets;
     }

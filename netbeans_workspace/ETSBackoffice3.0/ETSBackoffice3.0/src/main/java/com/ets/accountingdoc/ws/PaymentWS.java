@@ -1,11 +1,10 @@
 package com.ets.accountingdoc.ws;
 
-import com.ets.accountingdoc.collection.TicketingSalesPayments;
-import com.ets.accountingdoc.domain.TicketingSalesPayment;
-import com.ets.accountingdoc.service.TSalesPaymentService;
+import com.ets.accountingdoc.collection.Payments;
+import com.ets.accountingdoc.domain.Payment;
+import com.ets.accountingdoc.service.PaymentService;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,23 +15,23 @@ import org.springframework.stereotype.Controller;
  * @author Yusuf
  */
 @Controller
-@Path("/tspayment-management")
+@Path("/payment-management")
 @Consumes("application/xml")
 @Produces("application/xml")
-public class TicketingSalesPaymentWS {
+public class PaymentWS {
     
     @Autowired
-    TSalesPaymentService service;
+    PaymentService service;
     
     @POST
     @Path("/new")
-    public TicketingSalesPayment create(TicketingSalesPayment payment) {
+    public Payment create(Payment payment) {
         return service.save(payment);
     }
 
     @POST
     @Path("/newbulk")
-    public TicketingSalesPayments update(TicketingSalesPayments payments) {
+    public Payments createBulk(Payments payments) {
         return service.saveBulk(payments);
     }
 }

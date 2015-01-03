@@ -40,6 +40,10 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
         Query query = getSession().createQuery(hql);
         query.setParameter("id", id);
         Pnr pnr = (Pnr) query.uniqueResult();
+        
+        if(pnr==null){
+         return null;
+        }
         for (Ticket t : pnr.getTickets()) {
             if (t.getTicketingSalesAcDoc() != null) {
                 t.getTicketingSalesAcDoc().setAccountingDocumentLines(null);
