@@ -29,14 +29,18 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
     @XmlElement
     private AdditionalCharge additionalCharge;
     @XmlElement
-    private AccountingDocument accountingDocument;
+    private TicketingSalesAcDoc ticketingSalesAcDoc;
+    @XmlElement
+    private TicketingPurchaseAcDoc ticketingPurchaseAcDoc;
+    @XmlElement
+    private OtherSalesAcDoc otherSalesAcDoc;
 
     public BigDecimal calculateOsNetSellingTotal() {
-        return this.otherService.getSellingPrice().add(this.discount).multiply(new BigDecimal(qty));
+        return this.getOtherService().getSellingPrice().add(this.getDiscount()).multiply(new BigDecimal(getQty()));
     }
 
     public BigDecimal calculateAcNetSellingTotal() {
-        return this.additionalCharge.getCharge().add(this.discount);
+        return this.getAdditionalCharge().getCharge().add(this.getDiscount());
     }
 
     public String getRemark() {
@@ -79,11 +83,27 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
         this.additionalCharge = additionalCharge;
     }
 
-    public AccountingDocument getAccountingDocument() {
-        return accountingDocument;
+    public TicketingSalesAcDoc getTicketingSalesAcDoc() {
+        return ticketingSalesAcDoc;
     }
 
-    public void setAccountingDocument(AccountingDocument accountingDocument) {
-        this.accountingDocument = accountingDocument;
+    public void setTicketingSalesAcDoc(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        this.ticketingSalesAcDoc = ticketingSalesAcDoc;
+    }
+
+    public TicketingPurchaseAcDoc getTicketingPurchaseAcDoc() {
+        return ticketingPurchaseAcDoc;
+    }
+
+    public void setTicketingPurchaseAcDoc(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
+        this.ticketingPurchaseAcDoc = ticketingPurchaseAcDoc;
+    }
+
+    public OtherSalesAcDoc getOtherSalesAcDoc() {
+        return otherSalesAcDoc;
+    }
+
+    public void setOtherSalesAcDoc(OtherSalesAcDoc otherSalesAcDoc) {
+        this.otherSalesAcDoc = otherSalesAcDoc;
     }
 }

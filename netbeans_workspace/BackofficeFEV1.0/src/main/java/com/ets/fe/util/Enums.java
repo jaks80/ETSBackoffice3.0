@@ -120,6 +120,33 @@ public class Enums {
         }
     }
 
+    public enum AcDocStatus {
+
+        ACTIVE(0), ARCHIVE(1), VOID(2);
+        private int id;
+
+        AcDocStatus(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static String valueOf(int id) {
+            switch (id) {
+                case 0:
+                    return ACTIVE.toString();
+                case 1:
+                    return ARCHIVE.toString();
+                case 2:
+                    return VOID.toString();
+                default:
+                    return null;
+            }
+        }
+    }
+
     public enum PaymentType {
 
         CASH(0), CHEQUE(1), CREDIT_CARD(2), DEBIT_CARD(3), BANKT_RANSFER(4), OTHER(5);

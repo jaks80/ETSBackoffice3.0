@@ -8,8 +8,10 @@ import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.task.AcDocSummeryTask;
 import com.ets.fe.acdoc.task.AccountingDocTask;
 import com.ets.fe.util.DateUtil;
+import com.ets.fe.util.Enums;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -83,7 +85,11 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         model.getDataVector().removeAllElements();
         int row = 0;
         for (TicketingSalesAcDoc s : tSAcDocList) {
-            model.insertRow(row, new Object[]{s.getType(), s.getReference(), DateUtil.dateToString(s.getDocIssueDate()), s.getDocumentedAmount(), ""});
+            BigDecimal amount = s.getDocumentedAmount();
+            if(s.getType().equals(Enums.AcDocType.PAYMENT)){
+             amount = amount.abs();
+            }
+            model.insertRow(row, new Object[]{s.getType(), s.getReference(), DateUtil.dateToString(s.getDocIssueDate()), amount, ""});
             row++;
         }
     }

@@ -1,7 +1,6 @@
 package com.ets.fe.acdoc.bo;
 
-import com.ets.fe.acdoc.model.AccountingDocument;
-import com.ets.fe.acdoc.model.TicketingSalesPayment;
+import com.ets.fe.acdoc.model.Payment;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.util.Enums;
 import java.math.BigDecimal;
@@ -29,16 +28,16 @@ public class PaymentLogicTest {
         System.out.println("Batch Payment Processing Test");
         BigDecimal amount = new BigDecimal("230.00");
 
-        TicketingSalesPayment payment = new TicketingSalesPayment();
+        Payment payment = new Payment();
         Enums.PaymentType type = Enums.PaymentType.CASH;
         String remark = "Batch payment 230.00";
         List<TicketingSalesAcDoc> invoices = getMockInvoices();
         
         PaymentLogic instance = new PaymentLogic();        
         assertEquals(new BigDecimal("240.00"),instance.calculateTotalInvoiceAmount(invoices));
-        TicketingSalesPayment result = instance.processPayment(amount, invoices, remark, type);
+        Payment result = instance.processPayment(amount, invoices, remark, type);
         
-        List<TicketingSalesAcDoc> paymentDocs = result.getPayments();
+        List<TicketingSalesAcDoc> paymentDocs = result.gettSalesPayments();
         assertEquals(4, paymentDocs.size());
         
         assertEquals(invoices.get(0).getReference(),paymentDocs.get(0).getReference());
@@ -63,7 +62,7 @@ public class PaymentLogicTest {
     public void testProcessSinglePayment() {
         System.out.println("Single Payment Processing Test");
        
-        TicketingSalesPayment payment = new TicketingSalesPayment();
+        Payment payment = new Payment();
         Enums.PaymentType type = Enums.PaymentType.CASH;
         String remark = "Cash payment 20.00";
         List<TicketingSalesAcDoc> invoices = new ArrayList<>();
@@ -75,16 +74,16 @@ public class PaymentLogicTest {
         invoices.add(doc1);                
         
         PaymentLogic instance = new PaymentLogic();                
-        TicketingSalesPayment result = instance.processPayment(new BigDecimal("20.00"), invoices, remark, type);
+        Payment result = instance.processPayment(new BigDecimal("20.00"), invoices, remark, type);
         
-        List<TicketingSalesAcDoc> paymentDocs = result.getPayments();
+        List<TicketingSalesAcDoc> paymentDocs = result.gettSalesPayments();
         assertEquals(1, paymentDocs.size());
         
         assertEquals(invoices.get(0).getReference(),paymentDocs.get(0).getReference());        
         assertEquals(new BigDecimal("30.00"),invoices.get(0).calculateDueAmount());
         
         result = instance.processPayment(new BigDecimal("15.00"), invoices, remark, type);
-        paymentDocs = result.getPayments();
+        paymentDocs = result.gettSalesPayments();
         assertEquals(1, paymentDocs.size());
         
         assertEquals(invoices.get(0).getReference(),paymentDocs.get(0).getReference());        

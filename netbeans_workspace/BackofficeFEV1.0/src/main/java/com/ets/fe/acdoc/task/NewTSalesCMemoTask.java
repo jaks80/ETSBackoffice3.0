@@ -12,27 +12,26 @@ import javax.swing.SwingWorker;
  *
  * @author Yusuf
  */
-public class NewTSalesInvoiceTask extends SwingWorker<TicketingSalesAcDoc, Integer> {
+public class NewTSalesCMemoTask extends SwingWorker<TicketingSalesAcDoc, Integer> {
 
     private final Long pnrId;
     private JProgressBar progressBar;
-    private TicketingSalesAcDoc invoice;
+    private TicketingSalesAcDoc creditMemo;
 
-    public NewTSalesInvoiceTask(Long pnrId, JProgressBar progressBar) {
+    public NewTSalesCMemoTask(Long pnrId, JProgressBar progressBar) {
         this.pnrId = pnrId;
         this.progressBar = progressBar;
-        this.invoice = null;
+        this.creditMemo = null;
     }
 
-    public NewTSalesInvoiceTask(TicketingSalesAcDoc draftInvoice, JProgressBar progressBar) {
-        this.invoice = draftInvoice;
+    public NewTSalesCMemoTask(TicketingSalesAcDoc creditMemo, JProgressBar progressBar) {
+        this.creditMemo = creditMemo;
         this.progressBar = progressBar;
         this.pnrId = null;
     }
 
     @Override
     protected TicketingSalesAcDoc doInBackground() throws Exception {
-
         setProgress(10);
         Progress p = new Progress();
         Thread t = new Thread(p);
@@ -40,17 +39,14 @@ public class NewTSalesInvoiceTask extends SwingWorker<TicketingSalesAcDoc, Integ
 
         TicketingSAcDocWSClient client = new TicketingSAcDocWSClient();
 
-        if (invoice == null) {
-            invoice = client.newDraftInvoice(pnrId);
+        if (creditMemo == null) {
+            creditMemo = client.newDraftTCreditMemo(pnrId);
         } else {
-            if (invoice instanceof TicketingSalesAcDoc) {
-                invoice = client.newInvoice(invoice);
-            }
+            creditMemo = client.newSalesDocument(creditMemo);
         }
-
         p.cancel();
 
-        return invoice;
+        return creditMemo;
     }
 
     @Override

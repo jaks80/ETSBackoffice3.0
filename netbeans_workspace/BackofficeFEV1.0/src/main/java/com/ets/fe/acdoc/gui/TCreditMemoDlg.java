@@ -1,15 +1,10 @@
 package com.ets.fe.acdoc.gui;
 
-import com.ets.fe.acdoc.bo.PaymentLogic;
-import com.ets.fe.acdoc.model.Payment;
-import com.ets.fe.acdoc.task.NewTSalesInvoiceTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.task.AccountingDocTask;
-import com.ets.fe.acdoc.task.PaymentTask;
+import com.ets.fe.acdoc.task.NewTSalesCMemoTask;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
-import com.ets.fe.util.CheckInput;
-import com.ets.fe.util.Enums;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -18,13 +13,11 @@ import java.awt.font.TextAttribute;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -34,25 +27,19 @@ import org.jdesktop.swingx.JXTable;
  *
  * @author Yusuf
  */
-public class InvoiceDlg extends JDialog implements PropertyChangeListener {
+public class TCreditMemoDlg extends JDialog implements PropertyChangeListener {
 
-    private NewTSalesInvoiceTask newInvoiceTask;
+    private NewTSalesCMemoTask newTSalesCMemoTask;
     private AccountingDocTask accountingDocTask;
-    private PaymentTask paymentTask;
 
     private String taskType;
     private Pnr pnr;
     private List<Ticket> tickets;
-    private TicketingSalesAcDoc tInvoice;
-    //private List<TicketingSalesAcDoc> invoices = new ArrayList<>();
+    private TicketingSalesAcDoc tCreditMemo;
 
-    public InvoiceDlg(Frame parent) {
+    public TCreditMemoDlg(Frame parent) {
         super(parent, true);
         initComponents();
-        CheckInput a = new CheckInput();
-        a.setNegativeAccepted(true);
-        txtAmount.setDocument(a);
-        setPaymentType();
     }
 
     public boolean showDialog(TicketingSalesAcDoc tInvoice) {
@@ -62,40 +49,36 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         return true;
     }
 
-    private void displayInvoice(TicketingSalesAcDoc tInvoice) {
-        this.tInvoice = tInvoice;
-        this.pnr = tInvoice.getPnr();
-        this.tickets = tInvoice.getTickets();
-        acDocHeaderComponent.display(tInvoice);
+    private void displayInvoice(TicketingSalesAcDoc tCreditMemo) {
+        this.tCreditMemo = tCreditMemo;
+        this.pnr = tCreditMemo.getPnr();
+        this.tickets = tCreditMemo.getTickets();
+        acDocHeaderComponent.display(tCreditMemo);
         populateTblTicket();
-        displayBalance(tInvoice);
+        displayBalance(tCreditMemo);
         if (pnr.getAgent() != null) {
             txtAcDocFor.setText(pnr.getAgent().getName() + pnr.getAgent().getAddressCRSeperated());
         } else {
             txtAcDocFor.setText(pnr.getCustomer().getFullCustomerName() + pnr.getCustomer().getAddressCRSeperated());
-        }      
+        }
     }
 
     private void displayBalance(TicketingSalesAcDoc invoice) {
         lblSubTotal.setText(invoice.calculateTicketedSubTotal().add(invoice.calculateOtherServiceSubTotal()).toString());
         lblAddCharge.setText(invoice.calculateAddChargesSubTotal().toString());
-        lblInvAmount.setText(invoice.calculateDocumentedAmount().toString());
-        lblTotalPayment.setText(invoice.calculateTotalPayment().abs().toString());
-        lblOther.setText(invoice.calculateRelatedDocBalance().toString());
-        lblDue.setText(invoice.calculateDueAmount().toString());
-
+        lblInvAmount.setText(invoice.calculateDocumentedAmount().toString());       
     }
 
     public void createInvoice() {
         taskType = "CREATE";
-        newInvoiceTask = new NewTSalesInvoiceTask(tInvoice, progressBar);
-        newInvoiceTask.addPropertyChangeListener(this);
-        newInvoiceTask.execute();
+        newTSalesCMemoTask = new NewTSalesCMemoTask(tCreditMemo, progressBar);
+        newTSalesCMemoTask.addPropertyChangeListener(this);
+        newTSalesCMemoTask.execute();
     }
 
-    public void loadTSalesInvoice() {
+    public void loadTSalesCMemo() {
         taskType = "COMPLETE";
-        accountingDocTask = new AccountingDocTask(tInvoice.getId(), "SALES", "DETAILS");
+        accountingDocTask = new AccountingDocTask(tCreditMemo.getId(), "SALES", "DETAILS");
         accountingDocTask.addPropertyChangeListener(this);
         accountingDocTask.execute();
     }
@@ -130,30 +113,6 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         }
 
         model.addRow(new Object[]{"Totals", "", totalGF, totalDisc, totalAtol, totalNetPayable});
-    }
-
-    public void processPayment(List<TicketingSalesAcDoc> invoices) {
-        busyLabel.setText("");
-        taskType = "PAYMENT";
-        busyLabel.setBusy(true);
-        btnSubmitPayment.setEnabled(false);
-        String amountString = txtAmount.getText();
-        String remark = txtRef.getText();
-        Enums.PaymentType type = (Enums.PaymentType) cmbTType.getSelectedItem();
-
-        if (!amountString.isEmpty() && !remark.isEmpty() && cmbTType.getSelectedIndex() > 0) {
-            BigDecimal amount = new BigDecimal(amountString.trim());
-            PaymentLogic logic = new PaymentLogic();
-
-            if (amount.compareTo(logic.calculateTotalInvoiceAmount(invoices)) <= 0) {
-                Payment payment = logic.processPayment(amount, invoices, remark, type);
-                paymentTask = new PaymentTask(payment);
-                paymentTask.addPropertyChangeListener(this);
-                paymentTask.execute();
-            } else {
-                busyLabel.setText("Warning! Excess payment");
-            }
-        }
     }
 
     /**
@@ -207,34 +166,15 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel8 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        cmbTType = new javax.swing.JComboBox();
-        txtAmount = new javax.swing.JTextField();
-        txtRef = new javax.swing.JTextField();
-        btnSubmitPayment = new javax.swing.JButton();
-        jLabel11 = new javax.swing.JLabel();
-        lblTDueRefund = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
-        busyLabel = new org.jdesktop.swingx.JXBusyLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         lblSubTotal = new javax.swing.JLabel();
         lblAddCharge = new javax.swing.JLabel();
         lblInvAmount = new javax.swing.JLabel();
-        lblTotalPayment = new javax.swing.JLabel();
-        lblDue = new javax.swing.JLabel();
-        lblOther = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -262,7 +202,7 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
 
         lblTitle.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        lblTitle.setText("Invoice");
+        lblTitle.setText("Credit Memo");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -406,141 +346,6 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
 
         jTabbedPane2.addTab("Payments", jScrollPane3);
 
-        jPanel8.setLayout(new java.awt.GridBagLayout());
-
-        jLabel1.setText("T.Type");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 0);
-        jPanel8.add(jLabel1, gridBagConstraints);
-
-        jLabel9.setText("Amount");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 0);
-        jPanel8.add(jLabel9, gridBagConstraints);
-
-        jLabel10.setText("Remark");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 0);
-        jPanel8.add(jLabel10, gridBagConstraints);
-
-        cmbTType.setMinimumSize(new java.awt.Dimension(28, 19));
-        cmbTType.setPreferredSize(new java.awt.Dimension(28, 19));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(4, 2, 0, 2);
-        jPanel8.add(cmbTType, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
-        jPanel8.add(txtAmount, gridBagConstraints);
-
-        txtRef.setPreferredSize(new java.awt.Dimension(50, 20));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 2, 4, 2);
-        jPanel8.add(txtRef, gridBagConstraints);
-
-        btnSubmitPayment.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        btnSubmitPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/payment24.png"))); // NOI18N
-        btnSubmitPayment.setText("Submit");
-        btnSubmitPayment.setPreferredSize(new java.awt.Dimension(135, 30));
-        btnSubmitPayment.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSubmitPaymentActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel8.add(btnSubmitPayment, gridBagConstraints);
-
-        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel11.setText("Available Credit:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel8.add(jLabel11, gridBagConstraints);
-
-        lblTDueRefund.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        lblTDueRefund.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblTDueRefund.setText("0.00");
-        lblTDueRefund.setPreferredSize(new java.awt.Dimension(100, 14));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel8.add(lblTDueRefund, gridBagConstraints);
-
-        jButton6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/credit24.png"))); // NOI18N
-        jButton6.setText("Apply Credit");
-        jButton6.setPreferredSize(new java.awt.Dimension(135, 30));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 2, 2, 2);
-        jPanel8.add(jButton6, gridBagConstraints);
-
-        busyLabel.setDirection(null);
-        busyLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel8.add(busyLabel, gridBagConstraints);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
-
-        jTabbedPane2.addTab("New Payment", jPanel2);
-
         jPanel4.setBackground(new java.awt.Color(0, 0, 0));
         jPanel4.setLayout(new java.awt.GridBagLayout());
 
@@ -566,43 +371,13 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Inv.Amount:");
+        jLabel5.setText("CM.Amount:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 0);
         jPanel4.add(jLabel5, gridBagConstraints);
-
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("Payment:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 0);
-        jPanel4.add(jLabel6, gridBagConstraints);
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Outstanding:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 0);
-        jPanel4.add(jLabel7, gridBagConstraints);
-
-        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("Other (+/-):");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 0);
-        jPanel4.add(jLabel8, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
@@ -651,46 +426,10 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 2);
         jPanel4.add(lblInvAmount, gridBagConstraints);
 
-        lblTotalPayment.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        lblTotalPayment.setForeground(new java.awt.Color(51, 255, 0));
-        lblTotalPayment.setText("0.00");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 2);
-        jPanel4.add(lblTotalPayment, gridBagConstraints);
-
-        lblDue.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        lblDue.setForeground(new java.awt.Color(255, 0, 0));
-        lblDue.setText("0.00");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 2);
-        jPanel4.add(lblDue, gridBagConstraints);
-
-        lblOther.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        lblOther.setForeground(new java.awt.Color(255, 255, 255));
-        lblOther.setText("0.00");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 2);
-        jPanel4.add(lblOther, gridBagConstraints);
-
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete.png"))); // NOI18N
         jButton5.setPreferredSize(new java.awt.Dimension(50, 30));
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Invoice For", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Credit Memo For", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         txtAcDocFor.setColumns(20);
         txtAcDocFor.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
@@ -706,7 +445,7 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
         );
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/createInvoice.png"))); // NOI18N
@@ -794,8 +533,10 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
                         .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-                            .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                            .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -808,43 +549,24 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         createInvoice();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void btnSubmitPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitPaymentActionPerformed
-        List<TicketingSalesAcDoc> invoices = new ArrayList<>();
-        invoices.add(tInvoice);
-        processPayment(invoices);
-    }//GEN-LAST:event_btnSubmitPaymentActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ets.fe.acdoc.gui.AcDocHeaderComponent acDocHeaderComponent;
-    private javax.swing.JButton btnSubmitPayment;
-    private org.jdesktop.swingx.JXBusyLabel busyLabel;
-    private javax.swing.JComboBox cmbTType;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -860,26 +582,14 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
     private javax.swing.JTable jTable3;
     private org.jdesktop.swingx.JXTable jXTable1;
     private javax.swing.JLabel lblAddCharge;
-    private javax.swing.JLabel lblDue;
     private javax.swing.JLabel lblInvAmount;
-    private javax.swing.JLabel lblOther;
     private javax.swing.JLabel lblSubTotal;
-    private javax.swing.JLabel lblTDueRefund;
     private javax.swing.JLabel lblTitle;
-    private javax.swing.JLabel lblTotalPayment;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JTable tblTicket;
     private javax.swing.JTextArea txtAcDocFor;
-    private javax.swing.JTextField txtAmount;
-    private javax.swing.JTextField txtRef;
     // End of variables declaration//GEN-END:variables
-    
-    private void setPaymentType() {
-        DefaultComboBoxModel model = new DefaultComboBoxModel(Enums.PaymentType.values());
-        model.insertElementAt("Select", 0);
-        cmbTType.setModel(model);
-        cmbTType.setSelectedIndex(0);
-    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress".equals(evt.getPropertyName())) {
@@ -888,19 +598,15 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
             if (progress == 100) {
                 try {
                     if ("CREATE".equals(taskType)) {
-                        tInvoice = newInvoiceTask.get();
-                        displayInvoice(tInvoice);
+                        tCreditMemo = newTSalesCMemoTask.get();
+                        displayInvoice(tCreditMemo);
                     } else if ("COMPLETE".equals(taskType)) {
-                        loadTSalesInvoice();
-                    } else if ("PAYMENT".equals(taskType)) {
-                        loadTSalesInvoice();
-                         busyLabel.setBusy(false);
-                         btnSubmitPayment.setEnabled(true);
+                        loadTSalesCMemo();
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(InvoiceDlg.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
-                    taskType = "";                   
+                    taskType = "";
                 }
             }
         }

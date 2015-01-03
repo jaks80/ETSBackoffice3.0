@@ -11,26 +11,32 @@ import com.ets.fe.util.RestClientUtil;
  */
 public class TicketingSAcDocWSClient {
 
-    public TicketingSalesAcDoc createNewDraftInvoice(Long pnrId) {
-        String url = APIConfig.get("ws.tsacdoc.newinv") + "?id=" + pnrId;
+    public TicketingSalesAcDoc newDraftInvoice(Long pnrid) {
+        String url = APIConfig.get("ws.tsacdoc.newinv") + pnrid;
         TicketingSalesAcDoc persistedDoc = RestClientUtil.postEntity(TicketingSalesAcDoc.class, url, new TicketingSalesAcDoc());
         return persistedDoc;
     }
 
-    public TicketingSalesAcDoc createNewInvoice(TicketingSalesAcDoc ticketingSalesAcDoc) {
+    public TicketingSalesAcDoc newInvoice(TicketingSalesAcDoc ticketingSalesAcDoc) {
         String url = APIConfig.get("ws.tsacdoc.newinv");
         TicketingSalesAcDoc persistedDoc = RestClientUtil.postEntity(TicketingSalesAcDoc.class, url, ticketingSalesAcDoc);
         return persistedDoc;
     }
 
-    public TicketingSalesAcDoc createNewTCreditMemo(TicketingSalesAcDoc ticketingSalesAcDoc) {
-        String url = APIConfig.get("ws.tsacdoc.newtcrm");
-        TicketingSalesAcDoc persistedDoc = RestClientUtil.postEntity(TicketingSalesAcDoc.class, url, ticketingSalesAcDoc);
+     public TicketingSalesAcDoc newDraftDebitMemo(Long pnrid) {
+        String url = APIConfig.get("ws.tsacdoc.newtdraftdm")+ pnrid;
+        TicketingSalesAcDoc draftDebitMemo = RestClientUtil.getEntity(TicketingSalesAcDoc.class, url, new TicketingSalesAcDoc());
+        return draftDebitMemo;
+    }
+        
+    public TicketingSalesAcDoc newDraftTCreditMemo(Long pnrid) {
+        String url = APIConfig.get("ws.tsacdoc.newtdraftcrm")+ pnrid;
+        TicketingSalesAcDoc persistedDoc = RestClientUtil.getEntity(TicketingSalesAcDoc.class, url, new TicketingSalesAcDoc());
         return persistedDoc;
     }
 
-    public TicketingSalesAcDoc createNewCreditMemo(TicketingSalesAcDoc ticketingSalesAcDoc) {
-        String url = APIConfig.get("ws.tsacdoc.newcrm");
+    public TicketingSalesAcDoc newSalesDocument(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        String url = APIConfig.get("ws.tsacdoc.newdoc");
         TicketingSalesAcDoc persistedDoc = RestClientUtil.postEntity(TicketingSalesAcDoc.class, url, ticketingSalesAcDoc);
         return persistedDoc;
     }
@@ -39,18 +45,6 @@ public class TicketingSAcDocWSClient {
         String url = APIConfig.get("ws.tsacdoc.newpayment");
         TicketingSalesAcDoc persistedPayment = RestClientUtil.postEntity(TicketingSalesAcDoc.class, url, payment);
         return persistedPayment;
-    }
-
-    public TicketingSalesAcDoc createNewDebitMemo(TicketingSalesAcDoc ticketingSalesAcDoc) {
-        String url = APIConfig.get("ws.tsacdoc.newdm");
-        TicketingSalesAcDoc persistedDoc = RestClientUtil.postEntity(TicketingSalesAcDoc.class, url, ticketingSalesAcDoc);
-        return persistedDoc;
-    }
-
-    public TicketingSalesAcDoc update(TicketingSalesAcDoc ticketingSalesAcDoc) {
-        String url = APIConfig.get("ws.tsacdoc.update");
-        TicketingSalesAcDoc persistedDoc = RestClientUtil.postEntity(TicketingSalesAcDoc.class, url, ticketingSalesAcDoc);
-        return persistedDoc;
     }
 
     public Integer delete(long id) {

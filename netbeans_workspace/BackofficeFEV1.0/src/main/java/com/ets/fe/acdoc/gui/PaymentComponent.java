@@ -1,38 +1,31 @@
 package com.ets.fe.acdoc.gui;
 
-import com.ets.fe.a_main.PnrPanel;
-import com.ets.fe.a_main.TicketingAgentComponent;
 import com.ets.fe.acdoc.bo.PaymentLogic;
-import com.ets.fe.acdoc.model.AccountingDocument;
+import com.ets.fe.acdoc.model.Payment;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
-import com.ets.fe.acdoc.model.TicketingSalesPayment;
-import com.ets.fe.acdoc.task.AccountingDocTask;
+import com.ets.fe.acdoc.task.PaymentTask;
 import com.ets.fe.util.CheckInput;
-import com.ets.fe.util.Enums;
 import com.ets.fe.util.Enums.PaymentType;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 
 /**
  *
  * @author Yusuf
  */
-public class PaymentComponent extends javax.swing.JPanel implements PropertyChangeListener {
+public class PaymentComponent extends javax.swing.JPanel{
 
-    private TicketingSalesAcDoc doc;
-    private AccountingDocTask task;
-    private String taskType = "PAYMENT";
-    private PnrPanel parent;
+    //private TicketingSalesAcDoc doc;
+    private PaymentTask task;
+    private InvoiceDlg parent;
     private List<TicketingSalesAcDoc> invoices;
 
-    public PaymentComponent(List<TicketingSalesAcDoc> invoices) {
+    public PaymentComponent() {
+        initComponents();
+    }
+
+    public PaymentComponent(List<TicketingSalesAcDoc> invoices,InvoiceDlg parent) {
         initComponents();
         setPaymentType();
         this.invoices = invoices;
@@ -42,18 +35,21 @@ public class PaymentComponent extends javax.swing.JPanel implements PropertyChan
     }
 
     public void processPayment() {
+        busyLabel.setText("");
+        busyLabel.setBusy(true);
         String amountString = txtAmount.getText();
         String remark = txtRef.getText();
-        PaymentType type = (PaymentType) cmbTType.getSelectedItem();
+        PaymentType type =  (PaymentType) cmbTType.getSelectedItem();
 
-        if (!amountString.isEmpty() && !remark.isEmpty() && cmbTType.getSelectedIndex() <= 0) {
-            List<TicketingSalesAcDoc> invoices = new ArrayList<>();
-            invoices.add(doc);
+        if (!amountString.isEmpty() && !remark.isEmpty() && cmbTType.getSelectedIndex() > 0) {
             BigDecimal amount = new BigDecimal(amountString.trim());
             PaymentLogic logic = new PaymentLogic();
 
-            if (amount.compareTo(logic.calculateTotalInvoiceAmount(invoices)) > 0) {
-                TicketingSalesPayment docs = logic.processPayment(amount, invoices, remark, type);
+            if (amount.compareTo(logic.calculateTotalInvoiceAmount(invoices)) <= 0) {
+                Payment payment = logic.processPayment(amount, invoices, remark, type);
+                task = new PaymentTask(payment);
+                task.addPropertyChangeListener(parent);
+                task.execute();
             } else {
                 busyLabel.setText("Warning! Excess payment");
             }
@@ -61,8 +57,10 @@ public class PaymentComponent extends javax.swing.JPanel implements PropertyChan
     }
 
     private void setPaymentType() {
-        DefaultComboBoxModel model = new DefaultComboBoxModel(Enums.PaymentType.values());
+        DefaultComboBoxModel model = new DefaultComboBoxModel(PaymentType.values());
+        model.insertElementAt("Select", 0);
         cmbTType.setModel(model);
+        cmbTType.setSelectedIndex(0);
     }
 
     /**
@@ -113,6 +111,8 @@ public class PaymentComponent extends javax.swing.JPanel implements PropertyChan
         gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 0);
         add(jLabel3, gridBagConstraints);
 
+        cmbTType.setMinimumSize(new java.awt.Dimension(28, 19));
+        cmbTType.setPreferredSize(new java.awt.Dimension(28, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -123,6 +123,7 @@ public class PaymentComponent extends javax.swing.JPanel implements PropertyChan
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -133,7 +134,7 @@ public class PaymentComponent extends javax.swing.JPanel implements PropertyChan
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -143,16 +144,17 @@ public class PaymentComponent extends javax.swing.JPanel implements PropertyChan
         btnSubmit.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnSubmit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/payment24.png"))); // NOI18N
         btnSubmit.setText("Submit");
+        btnSubmit.setPreferredSize(new java.awt.Dimension(135, 30));
         btnSubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSubmitActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(btnSubmit, gridBagConstraints);
@@ -181,7 +183,7 @@ public class PaymentComponent extends javax.swing.JPanel implements PropertyChan
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/credit24.png"))); // NOI18N
         jButton2.setText("Apply Credit");
-        jButton2.setPreferredSize(new java.awt.Dimension(130, 31));
+        jButton2.setPreferredSize(new java.awt.Dimension(135, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
@@ -189,13 +191,14 @@ public class PaymentComponent extends javax.swing.JPanel implements PropertyChan
         gridBagConstraints.insets = new java.awt.Insets(0, 2, 2, 2);
         add(jButton2, gridBagConstraints);
 
-        busyLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         busyLabel.setDirection(null);
-        busyLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        busyLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(busyLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
@@ -219,30 +222,14 @@ public class PaymentComponent extends javax.swing.JPanel implements PropertyChan
     private javax.swing.JTextField txtRef;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress".equals(evt.getPropertyName())) {
-            int progress = (Integer) evt.getNewValue();
-            if (progress == 100) {
-                try {
-                    if ("SUMMERY".equals(taskType)) {
-
-                        AccountingDocument doc = task.get();
-
-                        if (doc instanceof TicketingSalesAcDoc) {
-                            doc = (TicketingSalesAcDoc) doc;
-                        } else {
-
-                        }
-
-                        //populateTblSales();
-                    }
-                } catch (InterruptedException | ExecutionException ex) {
-                    Logger.getLogger(TicketingAgentComponent.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-                    taskType = "";
-                }
-            }
-        }
-    }
+//    @Override
+//    public void propertyChange(PropertyChangeEvent evt) {
+//        if ("progress".equals(evt.getPropertyName())) {
+//            int progress = (Integer) evt.getNewValue();
+//            if (progress == 100) {
+//                       parent.loadTSalesInvoice();
+//                       busyLabel.setBusy(false);
+//            }
+//        }
+//    }
 }

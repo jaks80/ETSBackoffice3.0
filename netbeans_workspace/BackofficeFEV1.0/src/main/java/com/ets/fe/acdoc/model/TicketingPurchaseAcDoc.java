@@ -28,6 +28,7 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
     @XmlElement
     private Pnr pnr;
 
+    @Override
     public BigDecimal calculateTicketedSubTotal() {
         BigDecimal subtotal = new BigDecimal("0.00");
         for (Ticket t : getTickets()) {
@@ -36,11 +37,31 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
         return subtotal;
     }
 
-    @Override
+        @Override
     public BigDecimal calculateDocumentedAmount() {
-        return calculateTicketedSubTotal().add(calculateOtherServiceSubTotal().add(calculateAddChargesSubTotal()));
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public BigDecimal calculateOtherServiceSubTotal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public BigDecimal calculateAddChargesSubTotal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public BigDecimal calculateTotalPayment() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public BigDecimal calculateDueAmount() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     public String getVendorRef() {
         return vendorRef;
     }

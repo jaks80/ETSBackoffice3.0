@@ -4,8 +4,10 @@ import com.ets.fe.a_maintask.CompletePnrTask;
 import com.ets.fe.acdoc.bo.AcDocUtil;
 import com.ets.fe.acdoc.gui.AccountingDocumentsComponent;
 import com.ets.fe.acdoc.gui.InvoiceDlg;
+import com.ets.fe.acdoc.gui.TCreditMemoDlg;
 import com.ets.fe.acdoc.task.NewTSalesInvoiceTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
+import com.ets.fe.acdoc.task.NewTSalesCMemoTask;
 import com.ets.fe.client.gui.AgentFrame;
 import com.ets.fe.pnr.gui.task.SavePnrTask;
 import com.ets.fe.pnr.model.Itinerary;
@@ -41,6 +43,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
     private String taskType = "";//PNR,NEW_INVOICE,
 
     private NewTSalesInvoiceTask newInvoiceTask;
+    private NewTSalesCMemoTask newTSalesCMemoTask;
     private CompletePnrTask completePnrTask;
     private SavePnrTask savePnrTask;
 
@@ -110,14 +113,34 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         }
     }
 
+    public void newTSalesCreditMemoTask() {
+        if (AcDocUtil.validateSellingFare(pnr.getTickets()) && AcDocUtil.validateContactable(pnr)) {
+            this.taskType = "NEW_TCMEMO";
+            newTSalesCMemoTask = new NewTSalesCMemoTask(pnrId, progressBar);
+            newTSalesCMemoTask.addPropertyChangeListener(this);
+            newTSalesCMemoTask.execute();
+        }
+    }
+
     public void showTSalesInvoiceDlg(TicketingSalesAcDoc acdoc) {
         Window w = SwingUtilities.getWindowAncestor(this);
         Frame owner = w instanceof Frame ? (Frame) w : null;
 
         InvoiceDlg dlg = new InvoiceDlg(owner);
-        dlg.setLocationRelativeTo(this);        
-        if (dlg.showDialog(acdoc)) {            
-             callAccountingDocs();            
+        dlg.setLocationRelativeTo(this);
+        if (dlg.showDialog(acdoc)) {
+            callAccountingDocs();
+        }
+    }
+
+    public void showTSalesCMemoDlg(TicketingSalesAcDoc acdoc) {
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+
+        TCreditMemoDlg dlg = new TCreditMemoDlg(owner);
+        dlg.setLocationRelativeTo(this);
+        if (dlg.showDialog(acdoc)) {
+            callAccountingDocs();
         }
     }
 
@@ -192,6 +215,11 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
 
         jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/STCrn24.png"))); // NOI18N
         jButton9.setPreferredSize(new java.awt.Dimension(57, 30));
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
         CommandPanel.add(jButton9);
 
         btnCreateInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/STInv24.png"))); // NOI18N
@@ -613,6 +641,10 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         this.pnr.setAirLineCode(checkValue(txtAirline, pnr.getAirLineCode()));
     }//GEN-LAST:event_txtAirlineFocusLost
 
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        newTSalesCreditMemoTask();
+    }//GEN-LAST:event_jButton9ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel CommandPanel;
@@ -671,6 +703,9 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
                 try {
                     if ("NEW_INVOICE".equals(taskType)) {
                         showTSalesInvoiceDlg((TicketingSalesAcDoc) newInvoiceTask.get());
+                    } else if ("NEW_TCMEMO".equals(taskType)) {
+                        TicketingSalesAcDoc cMemo = (TicketingSalesAcDoc) newTSalesCMemoTask.get();
+                        showTSalesCMemoDlg(cMemo);
                     } else {
                         pnr = completePnrTask.get();
                         if (pnr != null) {
