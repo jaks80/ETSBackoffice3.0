@@ -5,12 +5,21 @@
 
 <hibernate-configuration>
   <session-factory>
+    
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
     <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/etsbackoffice?zeroDateTimeBehavior=convertToNull</property>
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">ets215</property>
     
+    
+    <!--
+    <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+    <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+    <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/etsbackoffice</property>
+    <property name="hibernate.connection.username">postgres</property>
+    <property name="hibernate.connection.password">ets215</property>
+    -->
     <mapping class="com.ets.PersistentObject" package="com.ets"/>   
     <mapping class="com.ets.pnr.domain.Pnr" package="com.ets.pnr.domain"/>
     <mapping class="com.ets.pnr.domain.Ticket" package="com.ets.pnr.domain"/>
@@ -31,11 +40,13 @@
     <mapping class="com.ets.client.domain.Contactable" package="com.ets.client.domain"/>        
     
     <mapping class="com.ets.accountingdoc.domain.AccountingDocument" package="com.ets.accountingdoc.domain"/>        
-    <mapping class="com.ets.accountingdoc.domain.TicketingAcDocument" package="com.ets.accountingdoc.domain"/>        
+    <mapping class="com.ets.accountingdoc.domain.OtherSalesAcDoc" package="com.ets.accountingdoc.domain"/>        
     <mapping class="com.ets.accountingdoc.domain.TicketingPurchaseAcDoc" package="com.ets.accountingdoc.domain"/>        
     <mapping class="com.ets.accountingdoc.domain.TicketingSalesAcDoc" package="com.ets.accountingdoc.domain"/>        
     <mapping class="com.ets.accountingdoc.domain.AccountingDocumentLine" package="com.ets.accountingdoc.domain"/> 
     <mapping class="com.ets.accountingdoc.domain.Payment" package="com.ets.accountingdoc.domain"/>        
+    
+    <mapping class="com.ets.hqltest.TktSalesAcdoc" package="com.ets.hqltest"/>
         
   </session-factory>
 </hibernate-configuration>

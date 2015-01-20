@@ -100,6 +100,8 @@ public class PnrService {
     public List<Pnr> searchUninvoicedPnr() {
         List<Pnr> pnrList = dao.searchUninvoicedPnr();
         for (Pnr p : pnrList) {
+            p.setSegments(null);
+            p.setRemarks(null);
             PnrUtil.undefinePnrInTickets(p, p.getTickets());
         }
         return pnrList;

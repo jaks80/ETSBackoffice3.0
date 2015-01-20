@@ -34,7 +34,7 @@ public class OtherSalesAcDoc extends AccountingDocument implements Serializable 
     @XmlElement
     private Set<OtherSalesAcDoc> relatedDocuments = new LinkedHashSet<>();
     @XmlElement
-    private OtherSalesAcDoc accountingDocument;
+    private OtherSalesAcDoc parent;
 
     @Override
     public BigDecimal calculateDocumentedAmount() {
@@ -66,7 +66,7 @@ public class OtherSalesAcDoc extends AccountingDocument implements Serializable 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @OneToMany(mappedBy = "accountingDocument", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public Set<OtherSalesAcDoc> getRelatedDocuments() {
         return relatedDocuments;
     }
@@ -77,12 +77,12 @@ public class OtherSalesAcDoc extends AccountingDocument implements Serializable 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_fk")
-    public OtherSalesAcDoc getAccountingDocument() {
-        return accountingDocument;
+    public OtherSalesAcDoc getParent() {
+        return parent;
     }
 
-    public void setAccountingDocument(OtherSalesAcDoc accountingDocument) {
-        this.accountingDocument = accountingDocument;
+    public void setParent(OtherSalesAcDoc parent) {
+        this.parent = parent;
     }
 
     @OneToMany(mappedBy = "otherSalesAcDoc", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -93,4 +93,20 @@ public class OtherSalesAcDoc extends AccountingDocument implements Serializable 
     public void setAccountingDocumentLines(Set<AccountingDocumentLine> accountingDocumentLines) {
         this.accountingDocumentLines = accountingDocumentLines;
     }
+
+    @Override
+    public BigDecimal calculateTotalDebitMemo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public BigDecimal calculateTotalCreditMemo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public BigDecimal calculateTotalRefund() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

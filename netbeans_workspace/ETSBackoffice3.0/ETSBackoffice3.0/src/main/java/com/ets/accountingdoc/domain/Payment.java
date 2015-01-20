@@ -31,11 +31,11 @@ public class Payment extends PersistentObject implements Serializable {
     @XmlElement
     private String remark;
     @XmlElement
-    private Set<TicketingSalesAcDoc> tSalesPayments = new LinkedHashSet<>();
+    private Set<TicketingSalesAcDoc> tSalesAcDocuments = new LinkedHashSet<>();
     @XmlElement
-    private Set<OtherSalesAcDoc> oSalesPayments = new LinkedHashSet<>();
+    private Set<OtherSalesAcDoc> oSalesAcDocuments = new LinkedHashSet<>();
     @XmlElement
-    private Set<TicketingPurchaseAcDoc> tPurchasePayments = new LinkedHashSet<>();
+    private Set<TicketingPurchaseAcDoc> tPurchaseAcDocuments = new LinkedHashSet<>();
     @XmlElement
     private PaymentType paymentType;
 
@@ -59,18 +59,13 @@ public class Payment extends PersistentObject implements Serializable {
         this.paymentType = paymentType;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "payment_tsacdoc",
-            joinColumns = @JoinColumn(name = "tsacdoc_id"),
-            inverseJoinColumns = @JoinColumn(name = "payment_id")
-    )
-    public Set<TicketingSalesAcDoc> gettSalesPayments() {
-        return tSalesPayments;
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)   
+    public Set<TicketingSalesAcDoc> gettSalesAcDocuments() {
+        return tSalesAcDocuments;
     }
 
-    public void settSalesPayments(Set<TicketingSalesAcDoc> tSalesPayments) {
-        this.tSalesPayments = tSalesPayments;
+    public void settSalesAcDocuments(Set<TicketingSalesAcDoc> tSalesAcDocuments) {
+        this.tSalesAcDocuments = tSalesAcDocuments;
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -79,25 +74,24 @@ public class Payment extends PersistentObject implements Serializable {
             joinColumns = @JoinColumn(name = "oacdoc_id"),
             inverseJoinColumns = @JoinColumn(name = "payment_id")
     )
-    public Set<OtherSalesAcDoc> getoSalesPayments() {
-        return oSalesPayments;
+    public Set<OtherSalesAcDoc> getoSalesAcDocuments() {
+        return oSalesAcDocuments;
     }
 
-    public void setoSalesPayments(Set<OtherSalesAcDoc> oSalesPayments) {
-        this.oSalesPayments = oSalesPayments;
+    public void setoSalesAcDocuments(Set<OtherSalesAcDoc> oSalesAcDocuments) {
+        this.oSalesAcDocuments = oSalesAcDocuments;
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "payment_tpacdoc",
+    @JoinTable(name = "payment_tpacdoc",
             joinColumns = @JoinColumn(name = "tpacdoc_id"),
             inverseJoinColumns = @JoinColumn(name = "payment_id")
     )
-    public Set<TicketingPurchaseAcDoc> gettPurchasePayments() {
-        return tPurchasePayments;
+    public Set<TicketingPurchaseAcDoc> gettPurchaseAcDocuments() {
+        return tPurchaseAcDocuments;
     }
 
-    public void settPurchasePayments(Set<TicketingPurchaseAcDoc> tPurchasePayments) {
-        this.tPurchasePayments = tPurchasePayments;
+    public void settPurchaseAcDocuments(Set<TicketingPurchaseAcDoc> tPurchaseAcDocuments) {
+        this.tPurchaseAcDocuments = tPurchaseAcDocuments;
     }
 }

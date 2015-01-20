@@ -7,7 +7,6 @@ import com.ets.mockdata.MockSalesAcDoc;
 import com.ets.pnr.domain.Itinerary;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -149,8 +148,8 @@ public class TSalesAcDocServiceTest {
         Date to = null;
         TSalesAcDocService instance = new TSalesAcDocService();
         List<TicketingSalesAcDoc> expResult = null;
-        List<TicketingSalesAcDoc> result = instance.getOutstandingInvoice(contactableId, type, from, to);
-        assertEquals(expResult, result);
+        //List<TicketingSalesAcDoc> result = instance.getOutstandingInvoice(contactableId, type, from, to);
+        //assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }
 
@@ -167,8 +166,8 @@ public class TSalesAcDocServiceTest {
         Long tktingAgtTo = null;
         TSalesAcDocService instance = new TSalesAcDocService();
         List<TicketingSalesAcDoc> expResult = null;
-        List<TicketingSalesAcDoc> result = instance.invoiceHistoryByCriteria(contactableId, contactableType, docTypeFrom, docTypeTo, from, to, tktingAgtFrom, tktingAgtTo);
-        assertEquals(expResult, result);
+        //List<TicketingSalesAcDoc> result = instance.invoiceHistoryByCriteria(contactableId, contactableType, docTypeFrom, docTypeTo, from, to, tktingAgtFrom, tktingAgtTo);
+        //assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }
 

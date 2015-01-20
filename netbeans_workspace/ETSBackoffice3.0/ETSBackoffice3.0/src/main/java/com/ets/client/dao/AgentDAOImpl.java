@@ -55,9 +55,7 @@ public class AgentDAOImpl extends GenericDAOImpl<Agent, Long> implements AgentDA
 
     @Override
     public List<Agent> findTicketingAgents() {
-        String hql = "select agt from Agent as agt, Pnr as p "               
-                + "where p.ticketingAgtOid = agt.officeID "                
-                + "group by agt order by agt.name ";
+        String hql = "select distinct agt from Agent as agt, Pnr as p where p.ticketingAgtOid = agt.officeID order by agt.name ";
         
         Query query = getSession().createQuery(hql);
         return query.list();

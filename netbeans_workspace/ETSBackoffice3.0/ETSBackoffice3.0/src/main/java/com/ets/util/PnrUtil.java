@@ -203,6 +203,18 @@ public class PnrUtil {
         return tickets;
     }
     
+    public static Set<Ticket> getUnInvoicedReIssuedTicket(Pnr pnr){
+     Set<Ticket> tickets = new LinkedHashSet<>();
+
+        for (Ticket t : pnr.getTickets()) {
+            if (t.getTktStatus().equals(Enums.TicketStatus.REISSUE)&&                
+                    t.getTicketingSalesAcDoc() == null) {
+                tickets.add(t);
+            }
+        }
+        return tickets;
+    }
+    
     public static Set<Ticket> getIssuedInvoicedTickets(Pnr pnr) {
         Set<Ticket> invoicedTickets = new LinkedHashSet<>();
 

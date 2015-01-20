@@ -15,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -39,16 +40,20 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
 
     @XmlElement
     private Set<AccountingDocumentLine> accountingDocumentLines = new LinkedHashSet<>();
+
     @XmlElement
     private Set<TicketingSalesAcDoc> relatedDocuments = new LinkedHashSet<>();
     @XmlElement
-    private TicketingSalesAcDoc accountingDocument;
+    private TicketingSalesAcDoc parent;
+
+    @XmlElement
+    private Payment payment;
 
     @Override
     public BigDecimal calculateDocumentedAmount() {
         return calculateTicketedSubTotal().add(calculateOtherServiceSubTotal().add(calculateAddChargesSubTotal()));
     }
-    
+
     @Override
     public BigDecimal calculateTicketedSubTotal() {
         BigDecimal subtotal = new BigDecimal("0.00");
@@ -63,7 +68,7 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         BigDecimal subtotal = new BigDecimal("0.00");
         for (AccountingDocumentLine l : accountingDocumentLines) {
             if (l.getOtherService() != null) {
-                subtotal = subtotal.add(l.calculateOsNetSellingTotal());
+                subtotal = subtotal.add(l.calculateOServiceLineTotal());
             }
         }
         return subtotal;
@@ -73,35 +78,65 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
     public BigDecimal calculateAddChargesSubTotal() {
         BigDecimal subtotal = new BigDecimal("0.00");
         for (AccountingDocumentLine l : accountingDocumentLines) {
-            if (l.getAdditionalCharge() != null) {
-                subtotal = subtotal.add(l.calculateAcNetSellingTotal());
-            }
+            subtotal = subtotal.add(l.calculateAChargeLineTotal());
         }
         return subtotal;
+    }
+    
+    @Override
+    public BigDecimal calculateTotalDebitMemo() {
+         BigDecimal total = new BigDecimal("0.00");
+        for (AccountingDocument doc : this.relatedDocuments) {
+            if (doc.getType().equals(Enums.AcDocType.DEBITMEMO)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
+    }
+
+    @Override
+    public BigDecimal calculateTotalCreditMemo() {
+         BigDecimal total = new BigDecimal("0.00");
+        for (AccountingDocument doc : this.relatedDocuments) {
+            if (doc.getType().equals(Enums.AcDocType.CREDITMEMO)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
     }
 
     @Override
     public BigDecimal calculateTotalPayment() {
-        BigDecimal totalPayment = new BigDecimal("0.00");
+        BigDecimal total = new BigDecimal("0.00");
         for (AccountingDocument doc : this.relatedDocuments) {
             if (doc.getType().equals(Enums.AcDocType.PAYMENT)) {
-                totalPayment = totalPayment.add(doc.getDocumentedAmount());
+                total = total.add(doc.getDocumentedAmount());
             }
         }
-        return totalPayment;
+        return total;
     }
 
     @Override
-    public BigDecimal calculateDueAmount() {
-        BigDecimal dueAmount = new BigDecimal("0.00");
-        BigDecimal invoiceAmount = this.calculateDocumentedAmount();
+    public BigDecimal calculateTotalRefund() {
+        BigDecimal total = new BigDecimal("0.00");
+        for (AccountingDocument doc : this.relatedDocuments) {
+            if (doc.getType().equals(Enums.AcDocType.REFUND)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
+    }
+    
+    @Override
+    public BigDecimal calculateDueAmount() {       
+        BigDecimal invoiceAmount = this.getDocumentedAmount();
 
         if (getType().equals(Enums.AcDocType.INVOICE)) {
             for (AccountingDocument doc : this.relatedDocuments) {
-                dueAmount = dueAmount.add(doc.getDocumentedAmount());
+                invoiceAmount = invoiceAmount.add(doc.getDocumentedAmount());
             }
         }
-        return invoiceAmount.subtract(dueAmount);
+        return invoiceAmount;
     }
 
     public void addLine(AccountingDocumentLine line) {
@@ -127,7 +162,8 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         this.pnr = pnr;
     }
 
-    @OneToMany(mappedBy = "accountingDocument", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parent")
+    @OrderBy(value = "id")
     public Set<TicketingSalesAcDoc> getRelatedDocuments() {
         return relatedDocuments;
     }
@@ -136,14 +172,14 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         this.relatedDocuments = relatedDocuments;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "parent_fk")
-    public TicketingSalesAcDoc getAccountingDocument() {
-        return accountingDocument;
+    public TicketingSalesAcDoc getParent() {
+        return parent;
     }
 
-    public void setAccountingDocument(TicketingSalesAcDoc accountingDocument) {
-        this.accountingDocument = accountingDocument;
+    public void setParent(TicketingSalesAcDoc parent) {
+        this.parent = parent;
     }
 
     @OneToMany(mappedBy = "ticketingSalesAcDoc", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -154,8 +190,18 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
     public void setAccountingDocumentLines(Set<AccountingDocumentLine> accountingDocumentLines) {
         this.accountingDocumentLines = accountingDocumentLines;
     }
-    
-    public void addTicket(Ticket ticket){
-     this.tickets.add(ticket);
+
+    public void addTicket(Ticket ticket) {
+        this.tickets.add(ticket);
+    }
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_fk")
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
     }
 }

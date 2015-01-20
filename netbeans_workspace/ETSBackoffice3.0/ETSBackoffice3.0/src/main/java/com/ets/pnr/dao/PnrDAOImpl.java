@@ -101,27 +101,29 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
     public List<Pnr> searchUninvoicedPnr() {
         List<Pnr> list = new ArrayList<>();
 
-        String hql = "select t,p from Ticket t "
-                + "inner join t.pnr as p "
-                + "where t.ticketingSalesAcDoc is null group by p.id";
+//        String hql = "select t,p from Ticket t "
+//                + "inner join t.pnr as p "
+//                + "where t.ticketingSalesAcDoc is null group by t.pnr.id";
+        
+        String hql = "select distinct p from Pnr p left join fetch p.tickets as t where t.ticketingSalesAcDoc is null group by p.id";
 
         Query query = getSession().createQuery(hql);
-        List results = query.list();
+        list = query.list();
 
-        Iterator it = results.iterator();
-
-        while (it.hasNext()) {
-            Object[] objects = (Object[]) it.next();
-            Ticket leadPaxTicket = (Ticket) objects[0];
-            Pnr pnr = (Pnr) objects[1];
-            pnr.setTickets(null);//Avoid lazy loading here. Create a new hashset and set
-            pnr.setSegments(null);
-            pnr.setRemarks(null);
-            Set<Ticket> tickets = new LinkedHashSet<>();
-            tickets.add(leadPaxTicket);
-            pnr.setTickets(tickets);
-            list.add(pnr);
-        }
+//        Iterator it = results.iterator();
+//
+//        while (it.hasNext()) {
+//            Object[] objects = (Object[]) it.next();
+//            Ticket leadPaxTicket = (Ticket) objects[0];
+//            Pnr pnr = (Pnr) objects[1];
+//            pnr.setTickets(null);//Avoid lazy loading here. Create a new hashset and set
+//            pnr.setSegments(null);
+//            pnr.setRemarks(null);
+//            Set<Ticket> tickets = new LinkedHashSet<>();
+//            tickets.add(leadPaxTicket);
+//            pnr.setTickets(tickets);
+//            list.add(pnr);
+//        }
 
         return list;
     }

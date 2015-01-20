@@ -3,6 +3,10 @@ package com.ets.accountingdoc.ws;
 import com.ets.accountingdoc.collection.TicketingSalesAcDocs;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accountingdoc.service.TSalesAcDocService;
+import com.ets.report.model.acdoc.InvoiceReport;
+import com.ets.util.DateUtil;
+import com.ets.util.Enums;
+import java.util.Date;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -74,27 +78,12 @@ public class TicketingSalesAcDocWS {
         docs.setList(list);
         return docs;
     }
-    
-    @POST
-    @Path("/newinv")
-    public TicketingSalesAcDoc createNewInvoice(@QueryParam("pnrid") Long pnrid, TicketingSalesAcDoc invoice) {
-        if (pnrid == null) {
-            return service.newDocument(invoice);
-        } else {
-            return service.newDraftInvoice(pnrid);
-        }
-    }
 
     @GET
-    @Path("/newtdraftdm")
-    public TicketingSalesAcDoc createNewDraftDebitMemo(@QueryParam("pnrid") Long pnrid) {
-        return service.newDraftDebitMemo(pnrid);
-    }
-    
-    @GET
-    @Path("/newtdraftcrm")
-    public TicketingSalesAcDoc createNewDraftCreditMemo(@QueryParam("pnrid") Long pnrid) {
-        return service.newDraftCreditMemo(pnrid);
+    @Path("/draftdoc")
+    public TicketingSalesAcDoc newDraftDocument(@QueryParam("pnrid") Long pnrid) {
+        TicketingSalesAcDoc doc = service.newDraftDocument(pnrid);
+        return doc;
     }
 
     @POST
@@ -113,6 +102,47 @@ public class TicketingSalesAcDocWS {
     @DELETE
     @Path("/void/{id}")
     public Response _void(@PathParam("id") long id) {
-        return Response.status(200).build();
+        boolean success = service._void(id);
+        if (success) {
+            return Response.status(200).build();
+        } else {
+            return Response.status(400).build();
+        }
+    }
+
+    //*****************Reporting Methods are Bellow******************//
+    @GET
+    @Path("/acdoc_report")
+    public InvoiceReport outstandingDocumentReport(
+            @QueryParam("doctype") Enums.AcDocType doctype,
+            @QueryParam("clienttype") Enums.ClientType clienttype,
+            @QueryParam("clientid") Long clientid,            
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        InvoiceReport report = service.dueInvoiceReport(doctype,
+                clienttype,clientid, dateFrom, dateTo);
+
+        return report;
+    }
+
+    @GET
+    @Path("/acdoc_history")
+    public InvoiceReport documentHistoryReport(
+            @QueryParam("clienttype") Enums.ClientType clienttype,
+            @QueryParam("clientid") Long clientid,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+        
+        InvoiceReport report = service.invoiceHistoryReport(clienttype,
+                clientid, dateFrom, dateTo);
+
+        return report;
     }
 }

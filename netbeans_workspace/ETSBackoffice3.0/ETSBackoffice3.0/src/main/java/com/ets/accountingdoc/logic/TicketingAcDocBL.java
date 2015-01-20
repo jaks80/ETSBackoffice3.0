@@ -22,28 +22,19 @@ import java.util.Set;
 public class TicketingAcDocBL {
 
     private Pnr pnr;
-    private Set<Ticket> tickets = new LinkedHashSet<>();
-
-    public TicketingAcDocBL(Pnr pnr, Set<Ticket> tickets) {
-        this.pnr = pnr;
-        this.tickets = tickets;
-    }
 
     public TicketingAcDocBL(Pnr pnr) {
         this.pnr = pnr;
-        this.tickets = pnr.getTickets();
     }
 
-    public TicketingSalesAcDoc createNewTicketingInvoice() {
+    public TicketingSalesAcDoc newTicketingDraftInvoice(TicketingSalesAcDoc invoice,Set<Ticket> unDocumentedTickets) {
 
-        TicketingSalesAcDoc invoice = new TicketingSalesAcDoc();
+        //TicketingSalesAcDoc invoice = new TicketingSalesAcDoc();
         invoice.setType(Enums.AcDocType.INVOICE);
-        //invoice.setPnr(pnr);
-        //invoice.setTickets(tickets);
-        invoice.setDocIssueDate(getEarliestDate(tickets));
+        invoice.setDocIssueDate(getEarliestDate(unDocumentedTickets));
         invoice.setStatus(Enums.AcDocStatus.ACTIVE);
         Set<Ticket> ticketsToInv = new LinkedHashSet<>();
-        for (Ticket t : this.tickets) {
+        for (Ticket t : unDocumentedTickets) {
             if (t.getTicketingSalesAcDoc() == null && invoice.getDocIssueDate().equals(t.getDocIssuedate())) {
                 ticketsToInv.add(t);
             }
@@ -52,70 +43,42 @@ public class TicketingAcDocBL {
         if (ticketsToInv.isEmpty()) {
             return null;
         }
-        tickets.removeAll(ticketsToInv);
+        unDocumentedTickets.removeAll(ticketsToInv);
         invoice.setTickets(ticketsToInv);
         invoice.setPnr(pnr);
         return invoice;
     }
 
-    public TicketingSalesAcDoc createNewTicketingDebitMemo(TicketingSalesAcDoc invoice) {
+    public TicketingSalesAcDoc newTicketingDraftDMemo(TicketingSalesAcDoc invoice, Set<Ticket> unDocumentedTickets) {
 
-        Set<Ticket> unInvoicedTickets = PnrUtil.getUnRefundedTickets(pnr);
         TicketingSalesAcDoc debitMemo = new TicketingSalesAcDoc();
         debitMemo.setType(Enums.AcDocType.DEBITMEMO);
         debitMemo.setPnr(pnr);
-        debitMemo.setDocIssueDate(getEarliestDate(unInvoicedTickets));
+        debitMemo.setReference(invoice.getReference());
+        debitMemo.setDocIssueDate(getEarliestDate(unDocumentedTickets));
         debitMemo.setStatus(Enums.AcDocStatus.ACTIVE);
-
-        for (Ticket t : unInvoicedTickets) {
+        debitMemo.setParent(invoice);
+        for (Ticket t : unDocumentedTickets) {
             if (t.getTicketingSalesAcDoc() == null && debitMemo.getDocIssueDate().equals(t.getDocIssuedate())) {
                 debitMemo.addTicket(t);
             }
-        }
-        if (debitMemo.getTickets().isEmpty()) {
-            return null;
         }
 
         return debitMemo;
     }
 
-    public TicketingSalesAcDoc createNewTicketingCMemo(TicketingSalesAcDoc invoice) {
-
-        Set<Ticket> unRefundedTickets = PnrUtil.getUnRefundedTickets(pnr);
-        Set<Ticket> invoicedTickets = PnrUtil.getIssuedInvoicedTickets(pnr);
-
-        List<Ticket> ticketsToCredit = new ArrayList<>();
-
-        for (Ticket current_tkt : invoicedTickets) {
-            for (Ticket unRefundedTicket : unRefundedTickets) {
-                if (unRefundedTicket.getOrginalTicketNo() != null) {
-                    if (unRefundedTicket.getOrginalTicketNo().equals(current_tkt.getTicketNo())) {
-                        unRefundedTicket.setTicketingSalesAcDoc(current_tkt.getTicketingSalesAcDoc());
-                        ticketsToCredit.add(unRefundedTicket);
-                    }
-                } else {
-                    if (unRefundedTicket.getTicketNo().equals(current_tkt.getTicketNo())) {
-                        unRefundedTicket.setTicketingSalesAcDoc(current_tkt.getTicketingSalesAcDoc());
-                        ticketsToCredit.add(unRefundedTicket);
-                    }
-                }
-            }
-        }
-
-        if (ticketsToCredit.isEmpty()) {
-            return null;
-        }
+    public TicketingSalesAcDoc newTicketingDraftCMemo(TicketingSalesAcDoc invoice, Set<Ticket> unDocumentedTickets) {
 
         TicketingSalesAcDoc creditMemo = new TicketingSalesAcDoc();
-        creditMemo.setAccountingDocument(invoice);
-        creditMemo.setReference(invoice.getReference());
-        creditMemo.setPnr(pnr);
-        creditMemo.setStatus(Enums.AcDocStatus.ACTIVE);
         creditMemo.setType(Enums.AcDocType.CREDITMEMO);
-        creditMemo.setDocIssueDate(getEarliestDate(new LinkedHashSet(ticketsToCredit)));
+        creditMemo.setPnr(pnr);
+        creditMemo.setReference(invoice.getReference());
+        creditMemo.setDocIssueDate(getEarliestDate(unDocumentedTickets));
+        creditMemo.setStatus(Enums.AcDocStatus.ACTIVE);
+        creditMemo.setParent(invoice);
 
-        for (Ticket t : ticketsToCredit) {
-            if (Objects.equals(t.getTicketingSalesAcDoc().getId(), invoice.getId())) {
+        for (Ticket t : unDocumentedTickets) {
+            if (t.getTicketingSalesAcDoc() == null && creditMemo.getDocIssueDate().equals(t.getDocIssuedate())) {
                 creditMemo.addTicket(t);
             }
         }

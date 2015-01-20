@@ -32,6 +32,8 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
     @XmlElement
     private String remark;
     @XmlElement
+    private BigDecimal amount = new BigDecimal("0.00");
+    @XmlElement
     private BigDecimal discount = new BigDecimal("0.00");
     @XmlElement
     private int qty = 1;
@@ -47,12 +49,16 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
     @XmlElement
     private OtherSalesAcDoc otherSalesAcDoc;
 
-    public BigDecimal calculateOsNetSellingTotal() {
+    public BigDecimal calculateOServiceLineTotal() {
         return this.otherService.getSellingPrice().add(this.discount).multiply(new BigDecimal(qty));
     }
 
-    public BigDecimal calculateAcNetSellingTotal() {
-        return this.additionalCharge.getCharge().add(this.discount);
+    /**
+     * Additional charge has no discount nor quantity
+     * @return 
+     */
+    public BigDecimal calculateAChargeLineTotal() {
+        return this.amount;
     }
 
     public String getRemark() {
@@ -127,5 +133,13 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
 
     public void setOtherSalesAcDoc(OtherSalesAcDoc otherSalesAcDoc) {
         this.otherSalesAcDoc = otherSalesAcDoc;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 }

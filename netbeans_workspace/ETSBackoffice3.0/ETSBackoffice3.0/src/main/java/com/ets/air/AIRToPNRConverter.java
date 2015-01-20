@@ -160,6 +160,25 @@ public class AIRToPNRConverter {
                 if (tax.compareTo(BigDecimal.ONE) < 0) {
                     tax = new BigDecimal("0.00");
                 }
+            }else if (s.startsWith("KN-") && s.length() > 4) {
+                
+                if(totalFare.compareTo(new BigDecimal("0.00")) == 1){
+                 continue;
+                }
+                String[] data = AIRLineParser.parseKNLine(s);                
+                localCurrencyCode = data[12].replaceAll("[^A-Z]", "");
+                bfCurrencyCode = data[0].replaceAll("[^A-Z]", "").substring(1);
+
+                totalFare = new BigDecimal(data[12].replaceAll("[a-zA-Z]", "").trim());
+                if (totalFare.compareTo(BigDecimal.ONE) > 0) {
+                    baseFare = new BigDecimal((data[0].replaceAll("[a-zA-Z]", "").trim()));
+                }
+
+                tax = totalFare.subtract(baseFare);
+
+                if (tax.compareTo(BigDecimal.ONE) < 0) {
+                    tax = new BigDecimal("0.00");
+                }
             }
             else if (s.startsWith("KS-") && s.length() > 4 && "INV".equals(air.getType())) {
                 if(totalFare.compareTo(new BigDecimal("0.00")) == 1){

@@ -33,6 +33,31 @@ public class Enums {
         }
     }
 
+    public enum ClientType {
+
+        AGENT(0), CUSTOMER(1);
+        private int id;
+
+        ClientType(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static String valueOf(int id) {
+            switch (id) {
+                case 0:
+                    return AGENT.toString();
+                case 1:
+                    return CUSTOMER.toString();
+                default:
+                    return null;
+            }
+        }
+    }
+
     public enum AIRType {
 
         BT(0), TTP(1), INV(2), TRFP(3);
@@ -141,6 +166,33 @@ public class Enums {
                     return ARCHIVE.toString();
                 case 2:
                     return VOID.toString();
+                default:
+                    return null;
+            }
+        }
+    }
+
+    public enum CalculationType {
+
+        FIXED(0), VARIABLE(1), PERCENT(2);
+        private int id;
+
+        CalculationType(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static String valueOf(int id) {
+            switch (id) {
+                case 0:
+                    return FIXED.toString();
+                case 1:
+                    return VARIABLE.toString();
+                case 2:
+                    return PERCENT.toString();
                 default:
                     return null;
             }

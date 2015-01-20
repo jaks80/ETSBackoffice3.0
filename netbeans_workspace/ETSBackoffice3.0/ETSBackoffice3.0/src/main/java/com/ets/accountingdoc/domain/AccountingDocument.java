@@ -1,6 +1,7 @@
 package com.ets.accountingdoc.domain;
 
 import com.ets.PersistentObject;
+import com.ets.accountingdoc.collection.Payments;
 import com.ets.util.Enums.AcDocStatus;
 import com.ets.util.Enums.AcDocType;
 import java.io.Serializable;
@@ -44,7 +45,7 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
     private AcDocStatus status;
     @XmlElement
     private BigDecimal documentedAmount;
-
+    
     public abstract BigDecimal calculateTicketedSubTotal();
 
     public abstract BigDecimal calculateOtherServiceSubTotal();
@@ -53,9 +54,17 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
     
     public abstract BigDecimal calculateDocumentedAmount();
 
+    public abstract BigDecimal calculateTotalDebitMemo();
+    
+    public abstract BigDecimal calculateTotalCreditMemo();
+        
     public abstract BigDecimal calculateTotalPayment();
+    
+    public abstract BigDecimal calculateTotalRefund();
 
     public abstract BigDecimal calculateDueAmount();
+    
+    
 
     @Version
     public Integer getVersion() {
