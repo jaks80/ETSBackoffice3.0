@@ -12,20 +12,20 @@ import javax.swing.SwingWorker;
  *
  * @author Yusuf
  */
-public class NewTSalesInvoiceTask extends SwingWorker<TicketingSalesAcDoc, Integer> {
+public class NewTSalesDocumentTask extends SwingWorker<TicketingSalesAcDoc, Integer> {
 
     private final Long pnrId;
     private JProgressBar progressBar;
-    private TicketingSalesAcDoc invoice;
+    private TicketingSalesAcDoc ticketingSalesAcDoc;
 
-    public NewTSalesInvoiceTask(Long pnrId, JProgressBar progressBar) {
+    public NewTSalesDocumentTask(Long pnrId, JProgressBar progressBar) {
         this.pnrId = pnrId;
         this.progressBar = progressBar;
-        this.invoice = null;
+        this.ticketingSalesAcDoc = null;
     }
 
-    public NewTSalesInvoiceTask(TicketingSalesAcDoc draftInvoice, JProgressBar progressBar) {
-        this.invoice = draftInvoice;
+    public NewTSalesDocumentTask(TicketingSalesAcDoc draftDocument, JProgressBar progressBar) {
+        this.ticketingSalesAcDoc = draftDocument;
         this.progressBar = progressBar;
         this.pnrId = null;
     }
@@ -40,17 +40,15 @@ public class NewTSalesInvoiceTask extends SwingWorker<TicketingSalesAcDoc, Integ
 
         TicketingSAcDocWSClient client = new TicketingSAcDocWSClient();
 
-        if (invoice == null) {
-            invoice = client.newDraftInvoice(pnrId);
+        if (ticketingSalesAcDoc == null) {
+            ticketingSalesAcDoc = client.newDraftDocument(pnrId);
         } else {
-            if (invoice instanceof TicketingSalesAcDoc) {
-                invoice = client.newInvoice(invoice);
-            }
+            ticketingSalesAcDoc = client.newSalesDocument(ticketingSalesAcDoc);
         }
 
         p.cancel();
 
-        return invoice;
+        return ticketingSalesAcDoc;
     }
 
     @Override

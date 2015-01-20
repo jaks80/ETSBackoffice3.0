@@ -2,17 +2,14 @@ package com.ets.fe.a_main;
 
 import com.ets.fe.a_maintask.CompletePnrTask;
 import com.ets.fe.acdoc.bo.AcDocUtil;
-import com.ets.fe.acdoc.gui.AccountingDocumentsComponent;
-import com.ets.fe.acdoc.gui.InvoiceDlg;
-import com.ets.fe.acdoc.gui.TCreditMemoDlg;
-import com.ets.fe.acdoc.task.NewTSalesInvoiceTask;
+import com.ets.fe.acdoc.gui.*;
+import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
-import com.ets.fe.acdoc.task.NewTSalesCMemoTask;
 import com.ets.fe.client.gui.AgentFrame;
 import com.ets.fe.pnr.gui.task.SavePnrTask;
-import com.ets.fe.pnr.model.Itinerary;
-import com.ets.fe.pnr.model.Pnr;
+import com.ets.fe.pnr.model.*;
 import com.ets.fe.util.DocumentSizeFilter;
+import com.ets.fe.util.Enums;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Window;
@@ -42,8 +39,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
     private List<Itinerary> segments;
     private String taskType = "";//PNR,NEW_INVOICE,
 
-    private NewTSalesInvoiceTask newInvoiceTask;
-    private NewTSalesCMemoTask newTSalesCMemoTask;
+    private NewTSalesDocumentTask newTSalesDocumentTask;
     private CompletePnrTask completePnrTask;
     private SavePnrTask savePnrTask;
 
@@ -104,21 +100,12 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         ticketingAgentComponent.setTicketingAgent(pnr);
     }
 
-    public void newTSalesInvoiceTask() {
+    public void newTSalesAcDocumentTask() {
         if (AcDocUtil.validateSellingFare(pnr.getTickets()) && AcDocUtil.validateContactable(pnr)) {
-            this.taskType = "NEW_INVOICE";
-            newInvoiceTask = new NewTSalesInvoiceTask(pnrId, progressBar);
-            newInvoiceTask.addPropertyChangeListener(this);
-            newInvoiceTask.execute();
-        }
-    }
-
-    public void newTSalesCreditMemoTask() {
-        if (AcDocUtil.validateSellingFare(pnr.getTickets()) && AcDocUtil.validateContactable(pnr)) {
-            this.taskType = "NEW_TCMEMO";
-            newTSalesCMemoTask = new NewTSalesCMemoTask(pnrId, progressBar);
-            newTSalesCMemoTask.addPropertyChangeListener(this);
-            newTSalesCMemoTask.execute();
+            this.taskType = "AC_DOCUMENT";
+            newTSalesDocumentTask = new NewTSalesDocumentTask(pnrId, progressBar);
+            newTSalesDocumentTask.addPropertyChangeListener(this);
+            newTSalesDocumentTask.execute();
         }
     }
 
@@ -129,21 +116,47 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         InvoiceDlg dlg = new InvoiceDlg(owner);
         dlg.setLocationRelativeTo(this);
         if (dlg.showDialog(acdoc)) {
-            callAccountingDocs();
+            //callAccountingDocs();
+            loadCompletePnr();
         }
     }
 
-    public void showTSalesCMemoDlg(TicketingSalesAcDoc acdoc) {
+    public void showTSalesAcDocDlg(TicketingSalesAcDoc acdoc) {
         Window w = SwingUtilities.getWindowAncestor(this);
         Frame owner = w instanceof Frame ? (Frame) w : null;
 
-        TCreditMemoDlg dlg = new TCreditMemoDlg(owner);
+        TicketingSalesDocDlg dlg = new TicketingSalesDocDlg(owner);
+        dlg.setLocationRelativeTo(this);
+        if (dlg.showDialog(acdoc)) {
+            //callAccountingDocs();
+            loadCompletePnr();
+        }
+    }
+
+    public void showSalesAcDocDlg(TicketingSalesAcDoc acdoc) {
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+
+        if (acdoc.getId() == null) {
+            TicketingSalesAcDoc invoice = accountingDocumentsComponent.getSalesSummeryInvoice();
+            acdoc.setPnr(pnr);
+            acdoc.setReference(invoice.getReference());
+            acdoc.setParent(invoice);
+            acdoc.setDocIssueDate(new java.util.Date());
+        }
+        SalesAcDocumentDlg dlg = new SalesAcDocumentDlg(owner);
         dlg.setLocationRelativeTo(this);
         if (dlg.showDialog(acdoc)) {
             callAccountingDocs();
         }
     }
 
+    public void loadCompletePnr(){
+     completePnrTask = new CompletePnrTask(pnrId, progressBar);
+        completePnrTask.addPropertyChangeListener(this);
+        completePnrTask.execute();
+        callAccountingDocs();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -156,8 +169,6 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
 
         CommandPanel = new javax.swing.JPanel();
         jButton10 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
         btnCreateInvoice = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
@@ -207,20 +218,12 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
 
         jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/SCNote24.png"))); // NOI18N
         jButton10.setPreferredSize(new java.awt.Dimension(57, 30));
-        CommandPanel.add(jButton10);
-
-        jButton11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/SDNote24.png"))); // NOI18N
-        jButton11.setPreferredSize(new java.awt.Dimension(57, 30));
-        CommandPanel.add(jButton11);
-
-        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/STCrn24.png"))); // NOI18N
-        jButton9.setPreferredSize(new java.awt.Dimension(57, 30));
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                jButton10ActionPerformed(evt);
             }
         });
-        CommandPanel.add(jButton9);
+        CommandPanel.add(jButton10);
 
         btnCreateInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/STInv24.png"))); // NOI18N
         btnCreateInvoice.setPreferredSize(new java.awt.Dimension(57, 30));
@@ -611,14 +614,11 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        completePnrTask = new CompletePnrTask(pnrId, progressBar);
-        completePnrTask.addPropertyChangeListener(this);
-        completePnrTask.execute();
-        callAccountingDocs();
+       loadCompletePnr();
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void btnCreateInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateInvoiceActionPerformed
-        newTSalesInvoiceTask();
+        newTSalesAcDocumentTask();
     }//GEN-LAST:event_btnCreateInvoiceActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -641,9 +641,9 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         this.pnr.setAirLineCode(checkValue(txtAirline, pnr.getAirLineCode()));
     }//GEN-LAST:event_txtAirlineFocusLost
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        newTSalesCreditMemoTask();
-    }//GEN-LAST:event_jButton9ActionPerformed
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        showSalesAcDocDlg(new TicketingSalesAcDoc());
+    }//GEN-LAST:event_jButton10ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -661,12 +661,10 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
     private javax.swing.JSplitPane innerSplitPane;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -701,11 +699,17 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    if ("NEW_INVOICE".equals(taskType)) {
-                        showTSalesInvoiceDlg((TicketingSalesAcDoc) newInvoiceTask.get());
-                    } else if ("NEW_TCMEMO".equals(taskType)) {
-                        TicketingSalesAcDoc cMemo = (TicketingSalesAcDoc) newTSalesCMemoTask.get();
-                        showTSalesCMemoDlg(cMemo);
+                    if ("AC_DOCUMENT".equals(taskType)) {
+                        TicketingSalesAcDoc draftDocument = newTSalesDocumentTask.get();
+
+                        if (draftDocument != null) {
+                            if (draftDocument.getType().equals(Enums.AcDocType.INVOICE)) {
+                                showTSalesInvoiceDlg(draftDocument);
+                            } else if (draftDocument.getType().equals(Enums.AcDocType.DEBITMEMO)
+                                    || draftDocument.getType().equals(Enums.AcDocType.CREDITMEMO)) {
+                                showTSalesAcDocDlg(draftDocument);
+                            }
+                        }
                     } else {
                         pnr = completePnrTask.get();
                         if (pnr != null) {

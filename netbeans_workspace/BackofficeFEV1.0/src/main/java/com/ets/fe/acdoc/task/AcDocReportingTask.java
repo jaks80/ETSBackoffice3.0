@@ -1,8 +1,10 @@
 package com.ets.fe.acdoc.task;
 
-import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
+import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc.ws.TicketingSAcDocWSClient;
 import com.ets.fe.client.gui.AgentSearchTask;
+import com.ets.fe.util.Enums;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JProgressBar;
@@ -12,41 +14,43 @@ import javax.swing.SwingWorker;
  *
  * @author Yusuf
  */
-public class NewTSalesCMemoTask extends SwingWorker<TicketingSalesAcDoc, Integer> {
+public class AcDocReportingTask extends SwingWorker<InvoiceReport, Integer> {
 
-    private final Long pnrId;
     private JProgressBar progressBar;
-    private TicketingSalesAcDoc creditMemo;
+    private Enums.AcDocType doctype = null;
+    private Enums.ClientType clienttype = null;
+    private Long clientid = null;
+    private Date dateFrom = null;
+    private Date dateTo = null;
 
-    public NewTSalesCMemoTask(Long pnrId, JProgressBar progressBar) {
-        this.pnrId = pnrId;
-        this.progressBar = progressBar;
-        this.creditMemo = null;
-    }
+    public AcDocReportingTask(Enums.AcDocType doctype, Enums.ClientType clienttype,
+            Long clientid, Date dateFrom, Date dateTo) {
 
-    public NewTSalesCMemoTask(TicketingSalesAcDoc creditMemo, JProgressBar progressBar) {
-        this.creditMemo = creditMemo;
-        this.progressBar = progressBar;
-        this.pnrId = null;
+        this.doctype = doctype;
+        this.clienttype = clienttype;
+        this.clientid = clientid;
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
     }
 
     @Override
-    protected TicketingSalesAcDoc doInBackground() throws Exception {
+    protected InvoiceReport doInBackground() throws Exception {
         setProgress(10);
         Progress p = new Progress();
         Thread t = new Thread(p);
         t.start();
 
         TicketingSAcDocWSClient client = new TicketingSAcDocWSClient();
+        InvoiceReport report = null;
 
-        if (creditMemo == null) {
-            creditMemo = client.newDraftTCreditMemo(pnrId);
+        if (doctype == null) {
+            report = client.documentHistoryReport(clienttype, clientid, dateFrom, dateTo);
         } else {
-            creditMemo = client.newSalesDocument(creditMemo);
+            report = client.outstandingDocumentReport(doctype, clienttype, clientid, dateFrom, dateTo);
         }
-        p.cancel();
 
-        return creditMemo;
+        p.cancel();
+        return report;
     }
 
     @Override
@@ -84,4 +88,5 @@ public class NewTSalesCMemoTask extends SwingWorker<TicketingSalesAcDoc, Integer
             stop = true;
         }
     }
+
 }

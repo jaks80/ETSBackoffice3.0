@@ -31,8 +31,10 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
     @XmlElement
     private Set<TicketingSalesAcDoc> relatedDocuments = new LinkedHashSet<>();
     @XmlElement
-    private TicketingSalesAcDoc accountingDocument;
-
+    private TicketingSalesAcDoc parent;
+    @XmlElement
+    private Payment payment;
+    
     @Override
     public BigDecimal calculateTicketedSubTotal() {
         BigDecimal subtotal = new BigDecimal("0.00");
@@ -77,10 +79,10 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
 
     public BigDecimal calculateRelatedDocBalance() {
         BigDecimal relAmount = new BigDecimal("0.00");
-        for (AccountingDocument doc : this.relatedDocuments) {
+        for (TicketingSalesAcDoc doc : this.relatedDocuments) {
             if (!doc.getType().equals(Enums.AcDocType.PAYMENT)) {
                 if (this.getId() != null) {
-                    relAmount = relAmount.add(doc.calculateDocumentedAmount());
+                    relAmount = relAmount.add(doc.getDocumentedAmount());
                 } else {
                 }
 
@@ -104,6 +106,7 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
                 if (doc.getDocumentedAmount() == null) {
                     doc.setDocumentedAmount(doc.calculateDocumentedAmount());
                 }
+                System.out.println("Doc amout: "+doc.getDocumentedAmount());
                 dueAmount = dueAmount.add(doc.getDocumentedAmount());
             }
         }
@@ -147,11 +150,23 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         this.relatedDocuments = relatedDocuments;
     }
 
-    public TicketingSalesAcDoc getAccountingDocument() {
-        return accountingDocument;
+    public TicketingSalesAcDoc getParent() {
+        return parent;
     }
 
-    public void setAccountingDocument(TicketingSalesAcDoc accountingDocument) {
-        this.accountingDocument = accountingDocument;
+    public void setParent(TicketingSalesAcDoc parent) {
+        this.parent = parent;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+    
+    public void addLine(AccountingDocumentLine line){
+     this.accountingDocumentLines.add(line);
     }
 }

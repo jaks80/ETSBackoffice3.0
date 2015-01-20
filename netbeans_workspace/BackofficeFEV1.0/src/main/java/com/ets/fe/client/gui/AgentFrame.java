@@ -1,9 +1,7 @@
 package com.ets.fe.client.gui;
 
 import com.ets.fe.client.collection.Agents;
-import com.ets.fe.client.collection.Agents;
 import com.ets.fe.client.model.Agent;
-import com.ets.fe.client.model.Customer;
 import java.awt.Frame;
 import java.awt.Window;
 import java.beans.PropertyChangeEvent;

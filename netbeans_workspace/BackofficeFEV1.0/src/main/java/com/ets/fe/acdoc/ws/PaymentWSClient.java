@@ -9,10 +9,10 @@ import com.ets.fe.util.RestClientUtil;
  *
  * @author Yusuf
  */
-
 public class PaymentWSClient {
+
     public Payment create(Payment payment) {
-        String url = APIConfig.get("ws.pay.new");        
+        String url = APIConfig.get("ws.pay.new");
         Payment ppayment = RestClientUtil.postEntity(Payment.class, url, payment);
         return ppayment;
     }
@@ -20,6 +20,12 @@ public class PaymentWSClient {
     public Payments update(Payments payments) {
         String url = APIConfig.get("ws.pay.newbulk");
         Payments ppayment = RestClientUtil.postEntity(Payments.class, url, payments);
+        return ppayment;
+    }
+
+    public Payments paymentBySalesInvoice(Long invoiceid) {
+        String url = APIConfig.get("ws.pay.bysinv")+invoiceid;
+        Payments ppayment = RestClientUtil.getEntity(Payments.class, url, new Payments());
         return ppayment;
     }
 }

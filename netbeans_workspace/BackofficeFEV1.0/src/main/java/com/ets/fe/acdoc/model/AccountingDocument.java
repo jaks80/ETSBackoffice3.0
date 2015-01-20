@@ -33,6 +33,8 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
     private BigDecimal documentedAmount;
     @XmlElement
     private Date docIssueDate;
+    @XmlElement
+    private String remark;
 
     public abstract BigDecimal calculateTicketedSubTotal();
 
@@ -100,5 +102,13 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
 
     public void setStatus(AcDocStatus status) {
         this.status = status;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

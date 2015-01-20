@@ -1,10 +1,10 @@
 package com.ets.fe.acdoc.gui;
 
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
-import com.ets.fe.acdoc.task.AccountingDocTask;
-import com.ets.fe.acdoc.task.NewTSalesCMemoTask;
+import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
+import com.ets.fe.util.Enums;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -27,35 +27,53 @@ import org.jdesktop.swingx.JXTable;
  *
  * @author Yusuf
  */
-public class TCreditMemoDlg extends JDialog implements PropertyChangeListener {
+public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListener {
 
-    private NewTSalesCMemoTask newTSalesCMemoTask;
-    private AccountingDocTask accountingDocTask;
-
+    private NewTSalesDocumentTask newTSalesDocumentTask;
     private String taskType;
     private Pnr pnr;
     private List<Ticket> tickets;
-    private TicketingSalesAcDoc tCreditMemo;
+    private TicketingSalesAcDoc document;
 
-    public TCreditMemoDlg(Frame parent) {
+    public TicketingSalesDocDlg(Frame parent) {
         super(parent, true);
         initComponents();
     }
 
-    public boolean showDialog(TicketingSalesAcDoc tInvoice) {
-        displayInvoice(tInvoice);
+    public boolean showDialog(TicketingSalesAcDoc document) {
+        displayDocument(document);
         setLocationRelativeTo(this);
         setVisible(true);
         return true;
     }
 
-    private void displayInvoice(TicketingSalesAcDoc tCreditMemo) {
-        this.tCreditMemo = tCreditMemo;
-        this.pnr = tCreditMemo.getPnr();
-        this.tickets = tCreditMemo.getTickets();
-        acDocHeaderComponent.display(tCreditMemo);
+    private void controllComponent(TicketingSalesAcDoc document) {
+        if (document.getId() == null) {
+            btnCreateDocument.setEnabled(true);
+            btnEmail.setEnabled(false);
+            btnPrint.setEnabled(false);
+            btnOfficeCopy.setEnabled(false);
+        } else {
+            btnCreateDocument.setEnabled(false);
+            btnEmail.setEnabled(true);
+            btnPrint.setEnabled(true);
+            btnOfficeCopy.setEnabled(true);
+        }
+    }
+
+    private void displayDocument(TicketingSalesAcDoc document) {
+        this.document = document;
+        this.pnr = document.getPnr();
+        this.tickets = document.getTickets();
+        if(document.getType().equals(Enums.AcDocType.DEBITMEMO)){
+         lblTitle.setText("Debit Memo");
+        }else if(document.getType().equals(Enums.AcDocType.CREDITMEMO)){
+         lblTitle.setText("Credit Memo");
+        }
+        acDocHeaderComponent.display(document);
         populateTblTicket();
-        displayBalance(tCreditMemo);
+        displayBalance(document);
+        controllComponent(document);
         if (pnr.getAgent() != null) {
             txtAcDocFor.setText(pnr.getAgent().getName() + pnr.getAgent().getAddressCRSeperated());
         } else {
@@ -66,21 +84,14 @@ public class TCreditMemoDlg extends JDialog implements PropertyChangeListener {
     private void displayBalance(TicketingSalesAcDoc invoice) {
         lblSubTotal.setText(invoice.calculateTicketedSubTotal().add(invoice.calculateOtherServiceSubTotal()).toString());
         lblAddCharge.setText(invoice.calculateAddChargesSubTotal().toString());
-        lblInvAmount.setText(invoice.calculateDocumentedAmount().toString());       
+        lblInvAmount.setText(invoice.calculateDocumentedAmount().toString());
     }
 
-    public void createInvoice() {
+    public void createDocument() {
         taskType = "CREATE";
-        newTSalesCMemoTask = new NewTSalesCMemoTask(tCreditMemo, progressBar);
-        newTSalesCMemoTask.addPropertyChangeListener(this);
-        newTSalesCMemoTask.execute();
-    }
-
-    public void loadTSalesCMemo() {
-        taskType = "COMPLETE";
-        accountingDocTask = new AccountingDocTask(tCreditMemo.getId(), "SALES", "DETAILS");
-        accountingDocTask.addPropertyChangeListener(this);
-        accountingDocTask.execute();
+        newTSalesDocumentTask = new NewTSalesDocumentTask(document, progressBar);
+        newTSalesDocumentTask.addPropertyChangeListener(this);
+        newTSalesDocumentTask.execute();
     }
 
     public void populateTblTicket() {
@@ -126,10 +137,6 @@ public class TCreditMemoDlg extends JDialog implements PropertyChangeListener {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel5 = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        lblTitle = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        acDocHeaderComponent = new com.ets.fe.acdoc.gui.AcDocHeaderComponent();
         jPanel3 = new javax.swing.JPanel();
         progressBar = new javax.swing.JProgressBar();
         jSeparator2 = new javax.swing.JSeparator();
@@ -163,9 +170,6 @@ public class TCreditMemoDlg extends JDialog implements PropertyChangeListener {
         jTable2 = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
         jXTable1 = new org.jdesktop.swingx.JXTable();
-        jTabbedPane2 = new javax.swing.JTabbedPane();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -175,15 +179,16 @@ public class TCreditMemoDlg extends JDialog implements PropertyChangeListener {
         lblSubTotal = new javax.swing.JLabel();
         lblAddCharge = new javax.swing.JLabel();
         lblInvAmount = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         txtAcDocFor = new javax.swing.JTextArea();
         jPanel7 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnCreateDocument = new javax.swing.JButton();
+        btnPrint = new javax.swing.JButton();
+        btnEmail = new javax.swing.JButton();
+        btnOfficeCopy = new javax.swing.JButton();
+        lblTitle = new javax.swing.JLabel();
+        acDocHeaderComponent = new com.ets.fe.acdoc.gui.AcDocHeaderComponent();
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -199,32 +204,6 @@ public class TCreditMemoDlg extends JDialog implements PropertyChangeListener {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
         setResizable(false);
-
-        lblTitle.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        lblTitle.setText("Credit Memo");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSeparator1)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addComponent(acDocHeaderComponent, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(2, 2, 2)
-                .addComponent(lblTitle)
-                .addGap(2, 2, 2)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(acDocHeaderComponent, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                .addContainerGap())
-        );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel3.setMaximumSize(new java.awt.Dimension(32767, 24));
@@ -329,23 +308,6 @@ public class TCreditMemoDlg extends JDialog implements PropertyChangeListener {
 
         jTabbedPane1.addTab("Other Charges", jScrollPane4);
 
-        jTabbedPane2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane3.setViewportView(jTable3);
-
-        jTabbedPane2.addTab("Payments", jScrollPane3);
-
         jPanel4.setBackground(new java.awt.Color(0, 0, 0));
         jPanel4.setLayout(new java.awt.GridBagLayout());
 
@@ -426,10 +388,7 @@ public class TCreditMemoDlg extends JDialog implements PropertyChangeListener {
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 2);
         jPanel4.add(lblInvAmount, gridBagConstraints);
 
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete.png"))); // NOI18N
-        jButton5.setPreferredSize(new java.awt.Dimension(50, 30));
-
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Credit Memo For", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Agent/Customer", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         txtAcDocFor.setColumns(20);
         txtAcDocFor.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
@@ -441,127 +400,124 @@ public class TCreditMemoDlg extends JDialog implements PropertyChangeListener {
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/createInvoice.png"))); // NOI18N
-        jButton1.setToolTipText("Create New Invoice");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jPanel7.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel7.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        btnCreateDocument.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/createInvoice.png"))); // NOI18N
+        btnCreateDocument.setToolTipText("Create New Invoice");
+        btnCreateDocument.setFocusable(false);
+        btnCreateDocument.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCreateDocument.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnCreateDocument.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnCreateDocumentActionPerformed(evt);
             }
         });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
-        jButton2.setToolTipText("Print");
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnPrint.setToolTipText("Print");
+        btnPrint.setFocusable(false);
+        btnPrint.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnPrint.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
-        jButton3.setToolTipText("Email Invoice");
-        jButton3.setFocusable(false);
-        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
+        btnEmail.setToolTipText("Email Invoice");
+        btnEmail.setFocusable(false);
+        btnEmail.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnEmail.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
-        jButton4.setToolTipText("Print Office Copy");
-        jButton4.setFocusable(false);
-        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnOfficeCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnOfficeCopy.setToolTipText("Print Office Copy");
+        btnOfficeCopy.setFocusable(false);
+        btnOfficeCopy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnOfficeCopy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+
+        lblTitle.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblTitle.setForeground(new java.awt.Color(255, 51, 0));
+        lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblTitle.setText("AC Document");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCreateDocument)
                 .addGap(0, 0, 0)
-                .addComponent(jButton2)
+                .addComponent(btnPrint)
                 .addGap(0, 0, 0)
-                .addComponent(jButton3)
+                .addComponent(btnEmail)
                 .addGap(0, 0, 0)
-                .addComponent(jButton4))
+                .addComponent(btnOfficeCopy))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnCreateDocument, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnOfficeCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 622, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(460, 460, 460)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 2, Short.MAX_VALUE))
+            .addComponent(jTabbedPane1)
+            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(acDocHeaderComponent, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(2, 2, 2)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(acDocHeaderComponent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        createInvoice();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnCreateDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateDocumentActionPerformed
+        createDocument();
+    }//GEN-LAST:event_btnCreateDocumentActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ets.fe.acdoc.gui.AcDocHeaderComponent acDocHeaderComponent;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton btnCreateDocument;
+    private javax.swing.JButton btnEmail;
+    private javax.swing.JButton btnOfficeCopy;
+    private javax.swing.JButton btnPrint;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -569,17 +525,13 @@ public class TCreditMemoDlg extends JDialog implements PropertyChangeListener {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
     private org.jdesktop.swingx.JXTable jXTable1;
     private javax.swing.JLabel lblAddCharge;
     private javax.swing.JLabel lblInvAmount;
@@ -598,10 +550,8 @@ public class TCreditMemoDlg extends JDialog implements PropertyChangeListener {
             if (progress == 100) {
                 try {
                     if ("CREATE".equals(taskType)) {
-                        tCreditMemo = newTSalesCMemoTask.get();
-                        displayInvoice(tCreditMemo);
-                    } else if ("COMPLETE".equals(taskType)) {
-                        loadTSalesCMemo();
+                        document = newTSalesDocumentTask.get();
+                        displayDocument(document);
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(InvoiceDlg.class.getName()).log(Level.SEVERE, null, ex);

@@ -2,22 +2,26 @@ package com.ets.fe.acdoc.gui;
 
 import com.ets.fe.a_main.PnrPanel;
 import com.ets.fe.a_main.TicketingAgentComponent;
-import com.ets.fe.acdoc.model.AccountingDocument;
-import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
-import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
+import com.ets.fe.acdoc.model.*;
 import com.ets.fe.acdoc.task.AcDocSummeryTask;
 import com.ets.fe.acdoc.task.AccountingDocTask;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.font.TextAttribute;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import org.jdesktop.swingx.JXTable;
 
 /**
  *
@@ -28,33 +32,35 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
     private AcDocSummeryTask summeryTask;
     private AccountingDocTask accountingDocTask;
     private String taskType;
-    private PnrPanel parent=null;
+    private PnrPanel parent = null;
 
     private Long pnrId;
     private List<TicketingSalesAcDoc> tSAcDocList = new ArrayList<>();
     private List<TicketingPurchaseAcDoc> tPAcDocList = new ArrayList<>();
     private TicketingSalesAcDoc ticketingSalesAcDoc;
+    private TicketingSalesAcDoc salesSummeryInvoice;
     private TicketingPurchaseAcDoc ticketingPurchaseAcDoc;
 
-    
-     public AccountingDocumentsComponent() {        
+    public AccountingDocumentsComponent() {
         initComponents();
     }
-     
-     public AccountingDocumentsComponent(PnrPanel parent) {
+
+    public AccountingDocumentsComponent(PnrPanel parent) {
         this.parent = parent;
         initComponents();
     }
 
-    public void getSalesInvoice() {
+    public void getSalesDocument() {
         taskType = "COMPLETE";
         if (tablAcDoc.getSelectedIndex() == 0) {
             int index = tblSales.getSelectedRow();
             if (index != -1) {
                 Long id = tSAcDocList.get(index).getId();
+                if(!tSAcDocList.get(index).getType().equals(Enums.AcDocType.PAYMENT)){
                 accountingDocTask = new AccountingDocTask(id, "SALES", "DETAILS");
                 accountingDocTask.addPropertyChangeListener(this);
                 accountingDocTask.execute();
+                }
             }
         }
     }
@@ -86,10 +92,10 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         int row = 0;
         for (TicketingSalesAcDoc s : tSAcDocList) {
             BigDecimal amount = s.getDocumentedAmount();
-            if(s.getType().equals(Enums.AcDocType.PAYMENT)){
-             amount = amount.abs();
+            if (s.getType().equals(Enums.AcDocType.PAYMENT)) {
+                amount = amount.abs();
             }
-            model.insertRow(row, new Object[]{s.getType(), s.getReference(), DateUtil.dateToString(s.getDocIssueDate()), amount, ""});
+            model.insertRow(row, new Object[]{s.getType(), s.getReference(), DateUtil.dateToString(s.getDocIssueDate()), amount, "",s.getStatus()});
             row++;
         }
     }
@@ -105,7 +111,18 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
 
         tablAcDoc = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblSales = new org.jdesktop.swingx.JXTable();
+        tblSales = new JXTable(){
+            public Component prepareRenderer(TableCellRenderer renderer,int rowIndex, int vColIndex) 
+            {
+                Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
+                String s = this.getModel().getValueAt(rowIndex, 5).toString();
+                if(s.equalsIgnoreCase("VOID")){
+                    Map  attributes = c.getFont().getAttributes();
+                    attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
+                    Font newFont = new Font(attributes);
+                    c.setFont(newFont);}
+                return c;} 
+        };
         jScrollPane2 = new javax.swing.JScrollPane();
         jXTable2 = new org.jdesktop.swingx.JXTable();
         jButton2 = new javax.swing.JButton();
@@ -117,11 +134,11 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
 
             },
             new String [] {
-                "Type", "Refference", "Issue Date", "Amount", "Issued By"
+                "Type", "Refference", "Issue Date", "Amount", "Issued By", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -201,11 +218,11 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        getSalesInvoice();
+        getSalesDocument();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void btnVoidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoidActionPerformed
-        // TODO add your handling code here
+        _voidDocument();
     }//GEN-LAST:event_btnVoidActionPerformed
 
 
@@ -233,6 +250,9 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                         for (AccountingDocument doc : docs) {
                             if (doc instanceof TicketingSalesAcDoc) {
                                 tSAcDocList.add((TicketingSalesAcDoc) doc);
+                                if (doc.getType().equals(Enums.AcDocType.INVOICE)) {
+                                    salesSummeryInvoice = (TicketingSalesAcDoc) doc;
+                                }
                             } else {
                                 tPAcDocList.add((TicketingPurchaseAcDoc) doc);
                             }
@@ -244,19 +264,35 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
 
                         if (doc instanceof TicketingSalesAcDoc) {
                             ticketingSalesAcDoc = (TicketingSalesAcDoc) doc;
+                            if (ticketingSalesAcDoc.getType().equals(Enums.AcDocType.INVOICE)) {
+                                parent.showTSalesInvoiceDlg(ticketingSalesAcDoc);
+                            } else if (ticketingSalesAcDoc.getType().equals(Enums.AcDocType.DEBITMEMO)
+                                    || ticketingSalesAcDoc.getType().equals(Enums.AcDocType.CREDITMEMO)) {
+
+                                if (!ticketingSalesAcDoc.getTickets().isEmpty()) {
+                                    parent.showTSalesAcDocDlg(ticketingSalesAcDoc);
+                                } else {
+                                    parent.showSalesAcDocDlg(ticketingSalesAcDoc);
+                                }
+                            }
                         } else {
                             ticketingPurchaseAcDoc = (TicketingPurchaseAcDoc) doc;
                         }
-                        parent.showTSalesInvoiceDlg(ticketingSalesAcDoc);
+                        taskType = "";
                     } else if ("VOID".equals(taskType)) {
-                        search(pnrId);
+                        //search(pnrId);
+                        parent.loadCompletePnr();
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(TicketingAgentComponent.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
-                    taskType = "";
+                    
                 }
             }
         }
+    }
+
+    public TicketingSalesAcDoc getSalesSummeryInvoice() {
+        return salesSummeryInvoice;
     }
 }

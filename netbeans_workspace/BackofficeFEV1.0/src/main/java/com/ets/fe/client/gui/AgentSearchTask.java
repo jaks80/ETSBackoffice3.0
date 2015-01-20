@@ -12,9 +12,9 @@ import javax.swing.JProgressBar;
  */
 public class AgentSearchTask extends ContactableSearchTask {
 
-    private String name = "";
-    private String officeID = "";
-    private String postCode = "";
+    private String name = null;
+    private String officeID = null;
+    private String postCode = null;
     private JProgressBar progressBar;
     private String keyword = null;
 
@@ -30,6 +30,10 @@ public class AgentSearchTask extends ContactableSearchTask {
         this.progressBar = progressBar;
     }
 
+    public AgentSearchTask() {
+ 
+    }
+        
     @Override
     protected Agents doInBackground() {
 

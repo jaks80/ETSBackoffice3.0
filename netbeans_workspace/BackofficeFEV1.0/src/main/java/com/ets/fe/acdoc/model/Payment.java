@@ -21,28 +21,16 @@ public class Payment extends PersistentObject implements Serializable {
     @XmlElement
     private String remark;
     @XmlElement
-    private List<TicketingSalesAcDoc> tSalesPayments = new ArrayList<>();
+    private List<TicketingSalesAcDoc> tSalesAcDocuments = new ArrayList<>();
     @XmlElement
-    private List<OtherSalesAcDoc> oSalesPayments = new ArrayList<>();
+    private List<OtherSalesAcDoc> oSalesAcDocuments = new ArrayList<>();
     @XmlElement
-    private List<TicketingPurchaseAcDoc> tPurchasePayments = new ArrayList<>();
+    private List<TicketingPurchaseAcDoc> tPurchaseAcDocuments = new ArrayList<>();
     @XmlElement
     private PaymentType paymentType;
 
     public Payment() {
 
-    }
-
-    public void addTSalesPayment(TicketingSalesAcDoc doc) {
-        this.tSalesPayments.add(doc);
-    }
-
-    public void addTPurchasePayment(TicketingPurchaseAcDoc doc) {
-        this.tPurchasePayments.add(doc);
-    }
-
-    public void addOSalesPayment(OtherSalesAcDoc doc) {
-        this.getoSalesPayments().add(doc);
     }
 
     public String getRemark() {
@@ -61,27 +49,31 @@ public class Payment extends PersistentObject implements Serializable {
         this.paymentType = paymentType;
     }
 
-    public List<TicketingSalesAcDoc> gettSalesPayments() {
-        return tSalesPayments;
+    public List<TicketingSalesAcDoc> gettSalesAcDocuments() {
+        return tSalesAcDocuments;
     }
 
-    public void settSalesPayments(List<TicketingSalesAcDoc> tSalesPayments) {
-        this.tSalesPayments = tSalesPayments;
+    public void settSalesAcDocuments(List<TicketingSalesAcDoc> tSalesAcDocuments) {
+        this.tSalesAcDocuments = tSalesAcDocuments;
     }
 
-    public List<TicketingPurchaseAcDoc> gettPurchasePayments() {
-        return tPurchasePayments;
+    public List<OtherSalesAcDoc> getoSalesAcDocuments() {
+        return oSalesAcDocuments;
     }
 
-    public void settPurchasePayments(List<TicketingPurchaseAcDoc> tPurchasePayments) {
-        this.tPurchasePayments = tPurchasePayments;
+    public void setoSalesAcDocuments(List<OtherSalesAcDoc> oSalesAcDocuments) {
+        this.oSalesAcDocuments = oSalesAcDocuments;
     }
 
-    public List<OtherSalesAcDoc> getoSalesPayments() {
-        return oSalesPayments;
+    public List<TicketingPurchaseAcDoc> gettPurchaseAcDocuments() {
+        return tPurchaseAcDocuments;
     }
 
-    public void setoSalesPayments(List<OtherSalesAcDoc> oSalesPayments) {
-        this.oSalesPayments = oSalesPayments;
+    public void settPurchaseAcDocuments(List<TicketingPurchaseAcDoc> tPurchaseAcDocuments) {
+        this.tPurchaseAcDocuments = tPurchaseAcDocuments;
+    }
+    
+    public void addTSalesDocument(TicketingSalesAcDoc  ticketingSalesAcDoc){
+     this.tSalesAcDocuments.add(ticketingSalesAcDoc);
     }
 }

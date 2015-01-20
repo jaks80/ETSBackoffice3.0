@@ -1,6 +1,7 @@
 package com.ets.fe.os.model;
 
 import com.ets.fe.PersistentObject;
+import com.ets.fe.util.Enums.CalculationType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -22,7 +23,7 @@ public class AdditionalCharge extends PersistentObject implements Serializable{
     @XmlElement
     private BigDecimal charge = new BigDecimal("0.00");  
     @XmlElement
-    private int calculationType = 0; //1-Manual 2-Fixed Rate 3-Percentage
+    private CalculationType calculationType;
     @XmlElement
     private boolean isArchived;
     
@@ -46,11 +47,11 @@ public class AdditionalCharge extends PersistentObject implements Serializable{
         this.charge = charge;
     }
 
-    public int getCalculationType() {
+    public CalculationType getCalculationType() {
         return calculationType;
     }
 
-    public void setCalculationType(int calculationType) {
+    public void setCalculationType(CalculationType calculationType) {
         this.calculationType = calculationType;
     }        
 

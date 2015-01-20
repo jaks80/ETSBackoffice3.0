@@ -2,13 +2,14 @@ package com.ets.fe.acdoc.gui;
 
 import com.ets.fe.acdoc.bo.PaymentLogic;
 import com.ets.fe.acdoc.model.Payment;
-import com.ets.fe.acdoc.task.NewTSalesInvoiceTask;
+import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.task.AccountingDocTask;
 import com.ets.fe.acdoc.task.PaymentTask;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.util.CheckInput;
+import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.Color;
 import java.awt.Component;
@@ -18,7 +19,6 @@ import java.awt.font.TextAttribute;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -36,15 +36,16 @@ import org.jdesktop.swingx.JXTable;
  */
 public class InvoiceDlg extends JDialog implements PropertyChangeListener {
 
-    private NewTSalesInvoiceTask newInvoiceTask;
+    private NewTSalesDocumentTask newInvoiceTask;
     private AccountingDocTask accountingDocTask;
     private PaymentTask paymentTask;
 
     private String taskType;
     private Pnr pnr;
     private List<Ticket> tickets;
+    private List<TicketingSalesAcDoc> paymentDocuments;
     private TicketingSalesAcDoc tInvoice;
-    //private List<TicketingSalesAcDoc> invoices = new ArrayList<>();
+    private boolean allowPayment = true;
 
     public InvoiceDlg(Frame parent) {
         super(parent, true);
@@ -56,6 +57,7 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
     }
 
     public boolean showDialog(TicketingSalesAcDoc tInvoice) {
+
         displayInvoice(tInvoice);
         setLocationRelativeTo(this);
         setVisible(true);
@@ -63,32 +65,36 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
     }
 
     private void displayInvoice(TicketingSalesAcDoc tInvoice) {
+
         this.tInvoice = tInvoice;
         this.pnr = tInvoice.getPnr();
         this.tickets = tInvoice.getTickets();
+
         acDocHeaderComponent.display(tInvoice);
         populateTblTicket();
         displayBalance(tInvoice);
+        populateTblPayment(tInvoice);
+        controllComponent(tInvoice);
         if (pnr.getAgent() != null) {
             txtAcDocFor.setText(pnr.getAgent().getName() + pnr.getAgent().getAddressCRSeperated());
         } else {
             txtAcDocFor.setText(pnr.getCustomer().getFullCustomerName() + pnr.getCustomer().getAddressCRSeperated());
-        }      
+        }
     }
 
     private void displayBalance(TicketingSalesAcDoc invoice) {
+
         lblSubTotal.setText(invoice.calculateTicketedSubTotal().add(invoice.calculateOtherServiceSubTotal()).toString());
         lblAddCharge.setText(invoice.calculateAddChargesSubTotal().toString());
         lblInvAmount.setText(invoice.calculateDocumentedAmount().toString());
         lblTotalPayment.setText(invoice.calculateTotalPayment().abs().toString());
         lblOther.setText(invoice.calculateRelatedDocBalance().toString());
         lblDue.setText(invoice.calculateDueAmount().toString());
-
     }
 
     public void createInvoice() {
         taskType = "CREATE";
-        newInvoiceTask = new NewTSalesInvoiceTask(tInvoice, progressBar);
+        newInvoiceTask = new NewTSalesDocumentTask(tInvoice, progressBar);
         newInvoiceTask.addPropertyChangeListener(this);
         newInvoiceTask.execute();
     }
@@ -98,6 +104,13 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         accountingDocTask = new AccountingDocTask(tInvoice.getId(), "SALES", "DETAILS");
         accountingDocTask.addPropertyChangeListener(this);
         accountingDocTask.execute();
+    }
+
+    public void paymentTask(Payment payment, Long invoiceId) {
+        taskType = "PAYMENT";
+        paymentTask = new PaymentTask(payment, invoiceId);
+        paymentTask.addPropertyChangeListener(this);
+        paymentTask.execute();
     }
 
     public void populateTblTicket() {
@@ -132,7 +145,27 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         model.addRow(new Object[]{"Totals", "", totalGF, totalDisc, totalAtol, totalNetPayable});
     }
 
-    public void processPayment(List<TicketingSalesAcDoc> invoices) {
+    private void populateTblPayment(TicketingSalesAcDoc invoice) {
+        tblPayment.clearSelection();
+        DefaultTableModel model = (DefaultTableModel) tblPayment.getModel();
+        model.getDataVector().removeAllElements();
+
+        int row = 0;
+        for (TicketingSalesAcDoc doc : invoice.getRelatedDocuments()) {
+            String remark = "";
+            if (doc.getType().equals(Enums.AcDocType.PAYMENT) || doc.getType().equals(Enums.AcDocType.REFUND)) {
+                Payment payment = doc.getPayment();
+                if (payment != null) {
+                    remark = doc.getPayment().getPaymentType().toString();
+                    remark = remark + " / " + doc.getPayment().getRemark();
+                }
+            }
+            model.insertRow(row, new Object[]{doc.getType(), remark, doc.getDocumentedAmount(), DateUtil.dateToString(doc.getDocIssueDate())});
+            row++;
+        }
+    }
+
+    public void processPayment(TicketingSalesAcDoc invoice) {
         busyLabel.setText("");
         taskType = "PAYMENT";
         busyLabel.setBusy(true);
@@ -145,14 +178,18 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
             BigDecimal amount = new BigDecimal(amountString.trim());
             PaymentLogic logic = new PaymentLogic();
 
-            if (amount.compareTo(logic.calculateTotalInvoiceAmount(invoices)) <= 0) {
-                Payment payment = logic.processPayment(amount, invoices, remark, type);
-                paymentTask = new PaymentTask(payment);
+            if (amount.compareTo(invoice.calculateDueAmount().abs()) <= 0) {
+                Payment payment = logic.processSinglePayment(amount, invoice, remark, type);
+                paymentTask = new PaymentTask(payment, null);
                 paymentTask.addPropertyChangeListener(this);
                 paymentTask.execute();
             } else {
                 busyLabel.setText("Warning! Excess payment");
+                btnSubmitPayment.setEnabled(true);
             }
+        } else {
+            busyLabel.setText("Warning! Mandatory fields!");
+            btnSubmitPayment.setEnabled(true);
         }
     }
 
@@ -204,9 +241,9 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         jTable2 = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
         jXTable1 = new org.jdesktop.swingx.JXTable();
-        jTabbedPane2 = new javax.swing.JTabbedPane();
+        tabPayment = new javax.swing.JTabbedPane();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        tblPayment = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -240,10 +277,10 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         jScrollPane5 = new javax.swing.JScrollPane();
         txtAcDocFor = new javax.swing.JTextArea();
         jPanel7 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnCreateDocument = new javax.swing.JButton();
+        btnPrint = new javax.swing.JButton();
+        btnEmail = new javax.swing.JButton();
+        btnOfficeCopy = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -257,7 +294,6 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setAlwaysOnTop(true);
         setResizable(false);
 
         lblTitle.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -282,7 +318,7 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
                 .addGap(2, 2, 2)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(acDocHeaderComponent, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                .addComponent(acDocHeaderComponent, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -389,9 +425,10 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
 
         jTabbedPane1.addTab("Other Charges", jScrollPane4);
 
-        jTabbedPane2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        tabPayment.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        //tabPayment.addChangeListener(tabPaymentListener);
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        tblPayment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -399,12 +436,29 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Type", "Remark", "Amount", "Date"
             }
-        ));
-        jScrollPane3.setViewportView(jTable3);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
 
-        jTabbedPane2.addTab("Payments", jScrollPane3);
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblPayment.getTableHeader().setReorderingAllowed(false);
+        jScrollPane3.setViewportView(tblPayment);
+        if (tblPayment.getColumnModel().getColumnCount() > 0) {
+            tblPayment.getColumnModel().getColumn(0).setMinWidth(80);
+            tblPayment.getColumnModel().getColumn(0).setMaxWidth(80);
+            tblPayment.getColumnModel().getColumn(2).setMinWidth(80);
+            tblPayment.getColumnModel().getColumn(2).setMaxWidth(80);
+            tblPayment.getColumnModel().getColumn(3).setMinWidth(80);
+            tblPayment.getColumnModel().getColumn(3).setMaxWidth(80);
+        }
+
+        tabPayment.addTab("Payments", jScrollPane3);
 
         jPanel8.setLayout(new java.awt.GridBagLayout());
 
@@ -536,10 +590,10 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
-        jTabbedPane2.addTab("New Payment", jPanel2);
+        tabPayment.addTab("New Payment", jPanel2);
 
         jPanel4.setBackground(new java.awt.Color(0, 0, 0));
         jPanel4.setLayout(new java.awt.GridBagLayout());
@@ -709,34 +763,37 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
             .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/createInvoice.png"))); // NOI18N
-        jButton1.setToolTipText("Create New Invoice");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jPanel7.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel7.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        btnCreateDocument.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/createInvoice.png"))); // NOI18N
+        btnCreateDocument.setToolTipText("Create New Invoice");
+        btnCreateDocument.setFocusable(false);
+        btnCreateDocument.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCreateDocument.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnCreateDocument.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnCreateDocumentActionPerformed(evt);
             }
         });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
-        jButton2.setToolTipText("Print");
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnPrint.setToolTipText("Print");
+        btnPrint.setFocusable(false);
+        btnPrint.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnPrint.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
-        jButton3.setToolTipText("Email Invoice");
-        jButton3.setFocusable(false);
-        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
+        btnEmail.setToolTipText("Email Invoice");
+        btnEmail.setFocusable(false);
+        btnEmail.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnEmail.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
-        jButton4.setToolTipText("Print Office Copy");
-        jButton4.setFocusable(false);
-        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnOfficeCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnOfficeCopy.setToolTipText("Print Office Copy");
+        btnOfficeCopy.setFocusable(false);
+        btnOfficeCopy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnOfficeCopy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -744,20 +801,20 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnCreateDocument)
                 .addGap(0, 0, 0)
-                .addComponent(jButton2)
+                .addComponent(btnPrint)
                 .addGap(0, 0, 0)
-                .addComponent(jButton3)
+                .addComponent(btnEmail)
                 .addGap(0, 0, 0)
-                .addComponent(jButton4))
+                .addComponent(btnOfficeCopy))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnCreateDocument, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnOfficeCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -767,7 +824,7 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tabPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -794,8 +851,8 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
                         .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-                            .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                            .addComponent(tabPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -804,26 +861,24 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnCreateDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateDocumentActionPerformed
         createInvoice();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnCreateDocumentActionPerformed
 
     private void btnSubmitPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitPaymentActionPerformed
-        List<TicketingSalesAcDoc> invoices = new ArrayList<>();
-        invoices.add(tInvoice);
-        processPayment(invoices);
+        processPayment(tInvoice);
     }//GEN-LAST:event_btnSubmitPaymentActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ets.fe.acdoc.gui.AcDocHeaderComponent acDocHeaderComponent;
+    private javax.swing.JButton btnCreateDocument;
+    private javax.swing.JButton btnEmail;
+    private javax.swing.JButton btnOfficeCopy;
+    private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSubmitPayment;
     private org.jdesktop.swingx.JXBusyLabel busyLabel;
     private javax.swing.JComboBox cmbTType;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
@@ -855,9 +910,7 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
     private org.jdesktop.swingx.JXTable jXTable1;
     private javax.swing.JLabel lblAddCharge;
     private javax.swing.JLabel lblDue;
@@ -868,18 +921,21 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblTotalPayment;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JTabbedPane tabPayment;
+    private javax.swing.JTable tblPayment;
     private javax.swing.JTable tblTicket;
     private javax.swing.JTextArea txtAcDocFor;
     private javax.swing.JTextField txtAmount;
     private javax.swing.JTextField txtRef;
     // End of variables declaration//GEN-END:variables
-    
+
     private void setPaymentType() {
         DefaultComboBoxModel model = new DefaultComboBoxModel(Enums.PaymentType.values());
         model.insertElementAt("Select", 0);
         cmbTType.setModel(model);
         cmbTType.setSelectedIndex(0);
     }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress".equals(evt.getPropertyName())) {
@@ -890,19 +946,54 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
                     if ("CREATE".equals(taskType)) {
                         tInvoice = newInvoiceTask.get();
                         displayInvoice(tInvoice);
-                    } else if ("COMPLETE".equals(taskType)) {
-                        loadTSalesInvoice();
                     } else if ("PAYMENT".equals(taskType)) {
+                        busyLabel.setBusy(false);
+                        btnSubmitPayment.setEnabled(true);
                         loadTSalesInvoice();
-                         busyLabel.setBusy(false);
-                         btnSubmitPayment.setEnabled(true);
+                        resetPaymentComponent();
+                    } else if ("COMPLETE".equals(taskType)) {
+                        tInvoice = (TicketingSalesAcDoc) accountingDocTask.get();
+                        displayInvoice(tInvoice);
+                        taskType = "";
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(InvoiceDlg.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
-                    taskType = "";                   
+
                 }
             }
         }
+    }
+
+    private void controllComponent(TicketingSalesAcDoc tInvoice) {
+        if (tInvoice.getReference() == null) {
+            btnCreateDocument.setEnabled(true);
+            btnEmail.setEnabled(false);
+            btnPrint.setEnabled(false);
+            btnOfficeCopy.setEnabled(false);
+            allowPayment = false;
+            tabPayment.setEnabledAt(1, allowPayment);
+        } else {
+            btnCreateDocument.setEnabled(false);
+            btnEmail.setEnabled(true);
+            btnPrint.setEnabled(true);
+            btnOfficeCopy.setEnabled(true);
+            if (tInvoice.calculateDueAmount().compareTo(new BigDecimal("0.00")) == 0) {
+                allowPayment = false;
+                tabPayment.setEnabledAt(1, allowPayment);
+                tabPayment.setSelectedIndex(0);
+            } else {
+                allowPayment = true;
+                tabPayment.setEnabledAt(1, allowPayment);
+                tabPayment.setSelectedIndex(1);
+            }
+        }
+    }
+
+    private void resetPaymentComponent() {
+        tabPayment.setSelectedIndex(0);
+        setPaymentType();
+        txtAmount.setText("");
+        txtRef.setText("");
     }
 }

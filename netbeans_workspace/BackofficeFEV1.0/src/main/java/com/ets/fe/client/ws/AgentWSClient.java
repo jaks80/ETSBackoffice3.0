@@ -13,7 +13,20 @@ public class AgentWSClient {
 
     public Agents find(String name,String postCode,String officeID) {
 
-        String url = APIConfig.get("ws.agent.agents") +"?name="+name+"&postCode="+postCode+"&officeID="+officeID;
+        String url = APIConfig.get("ws.agent.agents");
+        
+        if(name !=null && !name.isEmpty()){
+         url = url+"?name="+name; 
+        }
+        
+        if(postCode !=null && !postCode.isEmpty()){
+         url = url +"&postCode="+postCode;
+        }
+        
+        if(officeID !=null && !officeID.isEmpty()){
+         url = url + "&officeID="+officeID;
+        }
+        
         return RestClientUtil.getEntity(Agents.class, url, new Agents());
 
     }

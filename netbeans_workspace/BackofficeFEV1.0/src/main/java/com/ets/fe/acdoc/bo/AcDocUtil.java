@@ -1,8 +1,11 @@
 package com.ets.fe.acdoc.bo;
 
+import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
+import com.ets.fe.util.Enums;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -11,6 +14,17 @@ import javax.swing.JOptionPane;
  * @author Yusuf
  */
 public class AcDocUtil {
+
+    public static List<TicketingSalesAcDoc> getPayments(TicketingSalesAcDoc invoice) {
+
+        List<TicketingSalesAcDoc> payments = new ArrayList<>();
+        for (TicketingSalesAcDoc doc : payments) {
+            if (doc.getType().equals(Enums.AcDocType.PAYMENT) || doc.getType().equals(Enums.AcDocType.REFUND)) {
+                payments.add(doc);
+            }
+        }
+        return payments;
+    }
 
     public static boolean validateSellingFare(List<Ticket> ticketsToInvoice) {
         boolean okToInvoice = false;

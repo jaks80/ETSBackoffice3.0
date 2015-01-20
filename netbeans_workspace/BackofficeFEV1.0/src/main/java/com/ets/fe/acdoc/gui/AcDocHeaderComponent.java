@@ -1,6 +1,10 @@
 package com.ets.fe.acdoc.gui;
 
 import com.ets.fe.acdoc.model.AccountingDocument;
+import com.ets.fe.acdoc.model.OtherSalesAcDoc;
+import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
+import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
+import com.ets.fe.util.DateUtil;
 import javax.swing.JPanel;
 
 /**
@@ -8,35 +12,44 @@ import javax.swing.JPanel;
  * @author Yusuf
  */
 public class AcDocHeaderComponent extends JPanel {
-        
+
     private AccountingDocument doc;
 
     public AcDocHeaderComponent() {
         initComponents();
     }
 
-    
     public void display(AccountingDocument doc) {
-        this.doc = doc;        
-        if (doc.getReference()!=null) {            
+        this.doc = doc;
+        if (doc.getId() != null) {
             cmbTerms.setEnabled(false);
-        }else{
-         cmbTerms.setEnabled(true);
+        } else {
+            cmbTerms.setEnabled(true);
         }
-        
-        dtIssueDate.setDate(doc.getDocIssueDate());
-        if(doc.getReference()!=null){
-         txtInvRef.setText(doc.getReference().toString());
+        if (doc instanceof TicketingSalesAcDoc) {
+            txtVendorRef.setVisible(false);
+            lblVendorRef.setVisible(false);
+        } else if (doc instanceof TicketingPurchaseAcDoc) {
+            txtVendorRef.setVisible(true);
+            lblVendorRef.setVisible(true);
+        } else if (doc instanceof OtherSalesAcDoc) {
+            txtVendorRef.setVisible(false);
+            lblVendorRef.setVisible(false);
+        }
+
+        txtIssueDate.setText(DateUtil.dateToString(doc.getDocIssueDate()));
+        if (doc.getReference() != null) {
+            txtInvRef.setText(doc.getReference().toString());
         }
         cmbTerms.setSelectedItem(doc.getTerms());
     }
 
     public AccountingDocument getDocument() {
-        doc.setCreatedOn(dtIssueDate.getDate());
+        doc.setCreatedOn(doc.getDocIssueDate());
         doc.setTerms((String) cmbTerms.getSelectedItem());
         return doc;
     }
-           
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -51,12 +64,12 @@ public class AcDocHeaderComponent extends JPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        dtIssueDate = new org.jdesktop.swingx.JXDatePicker();
         txtInvRef = new javax.swing.JTextField();
         txtUser = new javax.swing.JTextField();
         cmbTerms = new javax.swing.JComboBox();
-        jLabel5 = new javax.swing.JLabel();
+        lblVendorRef = new javax.swing.JLabel();
         txtVendorRef = new javax.swing.JTextField();
+        txtIssueDate = new javax.swing.JTextField();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -96,19 +109,8 @@ public class AcDocHeaderComponent extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(jLabel4, gridBagConstraints);
 
-        dtIssueDate.setEditable(false);
-        dtIssueDate.setMaximumSize(new java.awt.Dimension(108, 20));
-        dtIssueDate.setMinimumSize(new java.awt.Dimension(108, 20));
-        dtIssueDate.setPreferredSize(new java.awt.Dimension(108, 20));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 2, 2);
-        add(dtIssueDate, gridBagConstraints);
-
         txtInvRef.setEditable(false);
+        txtInvRef.setBackground(new java.awt.Color(255, 255, 255));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -118,15 +120,18 @@ public class AcDocHeaderComponent extends JPanel {
         add(txtInvRef, gridBagConstraints);
 
         txtUser.setEditable(false);
+        txtUser.setBackground(new java.awt.Color(255, 255, 255));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(txtUser, gridBagConstraints);
 
-        cmbTerms.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select", "Net 7", "Net monthly account", "CIA", "COD", "CWO", "Net 10", "Net 60", "Net 90" }));
+        cmbTerms.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select", "End of Month", "Payment in Advance", "Cash with Order", "Cash on Delivery", "Net 7", "Net 10", "Net 60", "Net 90" }));
         cmbTerms.setMaximumSize(new java.awt.Dimension(32767, 19));
         cmbTerms.setMinimumSize(new java.awt.Dimension(28, 19));
         cmbTerms.setPreferredSize(new java.awt.Dimension(28, 19));
@@ -138,14 +143,14 @@ public class AcDocHeaderComponent extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(cmbTerms, gridBagConstraints);
 
-        jLabel5.setText("Vendor Ref");
+        lblVendorRef.setText("Vendor Ref");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        add(jLabel5, gridBagConstraints);
+        add(lblVendorRef, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
@@ -155,18 +160,25 @@ public class AcDocHeaderComponent extends JPanel {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(txtVendorRef, gridBagConstraints);
+
+        txtIssueDate.setEditable(false);
+        txtIssueDate.setBackground(new java.awt.Color(255, 255, 255));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        add(txtIssueDate, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cmbTerms;
-    private org.jdesktop.swingx.JXDatePicker dtIssueDate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel lblVendorRef;
     private javax.swing.JTextField txtInvRef;
+    private javax.swing.JTextField txtIssueDate;
     private javax.swing.JTextField txtUser;
     private javax.swing.JTextField txtVendorRef;
     // End of variables declaration//GEN-END:variables

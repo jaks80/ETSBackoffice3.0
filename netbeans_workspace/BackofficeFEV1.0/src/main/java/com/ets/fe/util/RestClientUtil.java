@@ -55,8 +55,7 @@ public class RestClientUtil {
         T persistentEntity = null;
         try {
             Response response = getWebTarget(destUrl).request().post(Entity.entity(entity, "application/xml"));
-            persistentEntity = response.readEntity(type);
-            System.out.println("HTTP Status:" + response.getStatus());
+            persistentEntity = response.readEntity(type);            
             response.close();
         } catch (Exception e) {
             e.printStackTrace();
