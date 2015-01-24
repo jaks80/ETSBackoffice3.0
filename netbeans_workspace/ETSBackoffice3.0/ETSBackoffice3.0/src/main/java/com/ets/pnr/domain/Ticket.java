@@ -97,6 +97,33 @@ public class Ticket extends PersistentObject implements Serializable {
     }
 
     @Transient
+    public String getFullPaxName() {
+
+        String paxFullName = "";
+        paxFullName = getSurName() + " / " + getForeName();
+
+        return paxFullName;
+    }
+
+    @Transient
+    public boolean isInfant() {
+        if (this.getForeName().contains("INF")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Transient
+    public boolean isChild() {
+        if (this.getForeName().contains("CHD")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Transient
     public String getTktDateString() {
         return DateUtil.dateToString(getDocIssuedate());
     }

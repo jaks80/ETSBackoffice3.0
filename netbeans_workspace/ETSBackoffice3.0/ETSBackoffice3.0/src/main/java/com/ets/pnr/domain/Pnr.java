@@ -5,6 +5,7 @@ import com.ets.client.domain.Agent;
 import com.ets.client.domain.Customer;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.Access;
@@ -218,4 +219,28 @@ public class Pnr extends PersistentObject implements Serializable {
     public void setTicketing_agent(Agent ticketing_agent) {
         this.ticketing_agent = ticketing_agent;
     }
+
+    public String calculateLeadPaxName() {
+        Ticket leadPax = null;
+        int paxNo = 99;
+
+        for (Ticket t : this.tickets) {
+            if (t.getPassengerNo() <= paxNo && (!t.isChild() && !t.isInfant())) {
+                leadPax = t;
+                paxNo = t.getPassengerNo();
+            }
+        }
+        if (leadPax != null) {
+            return leadPax.getFullPaxName();
+        } else {
+            Iterator<Ticket> iterator = this.tickets.iterator();
+            Ticket setElement = new Ticket();
+            while (iterator.hasNext()) {
+                setElement = iterator.next();
+                break;
+            }
+            return setElement.getFullPaxName();
+        }
+    }
+
 }

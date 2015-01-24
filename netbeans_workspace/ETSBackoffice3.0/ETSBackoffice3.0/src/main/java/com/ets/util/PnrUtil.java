@@ -183,48 +183,78 @@ public class PnrUtil {
         Set<Ticket> refundTickets = new LinkedHashSet<>();
 
         for (Ticket t : pnr.getTickets()) {
-            if (t.getTktStatus().equals(Enums.TicketStatus.REFUND) && t.getTicketingSalesAcDoc() == null && t.getGrossFare().compareTo(new BigDecimal("0.00"))!=0) {
+            if (t.getTktStatus().equals(Enums.TicketStatus.REFUND) && t.getTicketingSalesAcDoc() == null && t.getGrossFare().compareTo(new BigDecimal("0.00")) != 0) {
                 refundTickets.add(t);
             }
         }
         return refundTickets;
     }
-    
-    public static Set<Ticket> getUnInvoicedTicket(Pnr pnr){
-     Set<Ticket> tickets = new LinkedHashSet<>();
+
+    public static Set<Ticket> getUnInvoicedTicket(Pnr pnr) {
+        Set<Ticket> tickets = new LinkedHashSet<>();
 
         for (Ticket t : pnr.getTickets()) {
-            if (!t.getTktStatus().equals(Enums.TicketStatus.REFUND)&&
-                !t.getTktStatus().equals(Enums.TicketStatus.VOID) && 
-                    t.getTicketingSalesAcDoc() == null) {
+            if (!t.getTktStatus().equals(Enums.TicketStatus.REFUND)
+                    && !t.getTktStatus().equals(Enums.TicketStatus.VOID)
+                    && t.getTicketingSalesAcDoc() == null) {
                 tickets.add(t);
             }
         }
         return tickets;
     }
-    
-    public static Set<Ticket> getUnInvoicedReIssuedTicket(Pnr pnr){
-     Set<Ticket> tickets = new LinkedHashSet<>();
+
+    public static Set<Ticket> getUnInvoicedReIssuedTicket(Pnr pnr) {
+        Set<Ticket> tickets = new LinkedHashSet<>();
 
         for (Ticket t : pnr.getTickets()) {
-            if (t.getTktStatus().equals(Enums.TicketStatus.REISSUE)&&                
-                    t.getTicketingSalesAcDoc() == null) {
+            if (t.getTktStatus().equals(Enums.TicketStatus.REISSUE)
+                    && t.getTicketingSalesAcDoc() == null) {
                 tickets.add(t);
             }
         }
         return tickets;
     }
-    
+
     public static Set<Ticket> getIssuedInvoicedTickets(Pnr pnr) {
         Set<Ticket> invoicedTickets = new LinkedHashSet<>();
 
         for (Ticket t : pnr.getTickets()) {
-            if ((t.getTktStatus().equals(Enums.TicketStatus.ISSUE) || 
-                    t.getTktStatus().equals(Enums.TicketStatus.REISSUE))&& 
-                    t.getTicketingSalesAcDoc()!=null) {
+            if ((t.getTktStatus().equals(Enums.TicketStatus.ISSUE)
+                    || t.getTktStatus().equals(Enums.TicketStatus.REISSUE))
+                    && t.getTicketingSalesAcDoc() != null) {
                 invoicedTickets.add(t);
             }
         }
         return invoicedTickets;
+    }
+
+    public static String getOutBoundFlightSummery(Set<Itinerary> segments) {
+        StringBuilder sb = new StringBuilder();
+        Itinerary fs = getFirstSegment(segments);
+        
+        sb.append(fs.getDeptDate()+"/");
+        sb.append(fs.getDeptFrom()+"-"+fs.getDeptTo()+"/");
+        sb.append(fs.getAirLineID());        
+        
+        return sb.toString();
+    }
+
+    public static Itinerary getFirstSegment(Set<Itinerary> segments) {
+        Itinerary firstSegment = null;
+        Long index = null;
+
+        for (Itinerary i : segments) {
+            if (index == null) {
+                index = i.getId();
+                firstSegment = i;
+            } else {
+                if (i.getId() < index) {
+                    index = i.getId();
+                    firstSegment = i;
+                }
+            }
+
+        }
+        return firstSegment;
     }
 }

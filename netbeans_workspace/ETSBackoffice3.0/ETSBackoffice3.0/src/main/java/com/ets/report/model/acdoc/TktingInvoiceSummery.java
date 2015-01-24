@@ -20,6 +20,8 @@ public class TktingInvoiceSummery implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @XmlElement
+    private Long id;
+    @XmlElement
     private Long reference;
     @XmlElement
     private Enums.AcDocType type;
@@ -34,7 +36,7 @@ public class TktingInvoiceSummery implements Serializable {
     @XmlElement
     private BigDecimal due;
     @XmlElement
-    private Date docIssueDate;
+    private String docIssueDate;
     @XmlElement
     private String gdsPnr;
     @XmlElement
@@ -43,7 +45,8 @@ public class TktingInvoiceSummery implements Serializable {
     private String outBoundDetails;
     @XmlElement
     private String leadPsgr;
-
+    
+    
     public Long getReference() {
         return reference;
     }
@@ -100,11 +103,11 @@ public class TktingInvoiceSummery implements Serializable {
         this.due = due;
     }
 
-    public Date getDocIssueDate() {
+    public String getDocIssueDate() {
         return docIssueDate;
     }
 
-    public void setDocIssueDate(Date docIssueDate) {
+    public void setDocIssueDate(String docIssueDate) {
         this.docIssueDate = docIssueDate;
     }
 
@@ -138,6 +141,14 @@ public class TktingInvoiceSummery implements Serializable {
 
     public void setLeadPsgr(String leadPsgr) {
         this.leadPsgr = leadPsgr;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

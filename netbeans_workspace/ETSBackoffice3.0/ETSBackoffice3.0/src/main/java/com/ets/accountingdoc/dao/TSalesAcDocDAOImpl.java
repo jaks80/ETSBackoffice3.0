@@ -2,14 +2,9 @@ package com.ets.accountingdoc.dao;
 
 import com.ets.GenericDAOImpl;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
-import com.ets.pnr.domain.Itinerary;
-import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import org.hibernate.Query;
@@ -108,9 +103,9 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
             operator = '>';//To get outstanding invoice
         }
 
-        if (clienttype != null && clienttype.equals("Agent")) {
+        if (clienttype != null && clienttype.equals(Enums.ClientType.AGENT)) {
             concatClient = "inner join fetch p.agent as client ";
-        } else if (clienttype != null && clienttype.equals("Customer")) {
+        } else if (clienttype != null && clienttype.equals(Enums.ClientType.CUSTOMER)) {
             concatClient = "inner join fetch p.customer as client ";
         } else {
             concatClient = "left join fetch p.agent left join fetch p.customer ";
@@ -145,9 +140,9 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         String concatClient = "";
         String clientcondition = "and (:clientid is null or client.id = :clientid) ";
 
-        if (clienttype != null && clienttype.equals("Agent")) {
+        if (clienttype != null && clienttype.equals(Enums.ClientType.AGENT)) {
             concatClient = "inner join fetch p.agent as client ";
-        } else if (clienttype != null && clienttype.equals("Customer")) {
+        } else if (clienttype != null && clienttype.equals(Enums.ClientType.CUSTOMER)) {
             concatClient = "inner join fetch p.customer as client ";
         } else {
             concatClient = "left join fetch p.agent left join fetch p.customer ";

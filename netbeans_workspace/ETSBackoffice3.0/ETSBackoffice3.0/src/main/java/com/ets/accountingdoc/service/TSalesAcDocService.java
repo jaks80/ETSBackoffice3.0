@@ -1,5 +1,6 @@
 package com.ets.accountingdoc.service;
 
+import com.ets.Application;
 import com.ets.accountingdoc.dao.AccountingDocumentLineDAO;
 import com.ets.accountingdoc.dao.TSalesAcDocDAO;
 import com.ets.accountingdoc.domain.AccountingDocumentLine;
@@ -11,6 +12,7 @@ import com.ets.pnr.domain.Ticket;
 import com.ets.pnr.service.PnrService;
 import com.ets.report.model.acdoc.InvoiceReport;
 import com.ets.report.model.acdoc.TktingInvoiceSummery;
+import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import com.ets.util.Enums.AcDocType;
 import com.ets.util.PnrUtil;
@@ -137,7 +139,7 @@ public class TSalesAcDocService {
 
     public TicketingSalesAcDoc getWithChildrenById(long id) {
         TicketingSalesAcDoc doc = dao.getWithChildrenById(id);
-
+        validateDocumentedAmount(doc);
         return undefineChildren(doc);
     }
 
@@ -247,20 +249,21 @@ public class TSalesAcDocService {
         BigDecimal totalRefund = new BigDecimal("0.00");
 
         InvoiceReport report = new InvoiceReport();
-        for (TicketingSalesAcDoc invoice : invoices) {
-            
+        for (TicketingSalesAcDoc invoice : invoices) {            
+
             Set<TicketingSalesAcDoc> relatedDocs = AcDocUtil.filterVoidRelatedDocuments(invoice.getRelatedDocuments());
             invoice.setRelatedDocuments(relatedDocs);
-            
+
             TktingInvoiceSummery invSummery = new TktingInvoiceSummery();
 
-            invSummery.setDocIssueDate(invoice.getDocIssueDate());
+            invSummery.setId(invoice.getId());
+            invSummery.setDocIssueDate(DateUtil.dateToString(invoice.getDocIssueDate()));
             invSummery.setGdsPnr(invoice.getPnr().getGdsPnr());
             invSummery.setNoOfPax(invoice.getPnr().getNoOfPax());
             invSummery.setReference(invoice.getReference());
             invSummery.setStatus(invoice.getStatus());
             invSummery.setType(invoice.getType());
-
+            invSummery.setOutBoundDetails(PnrUtil.getOutBoundFlightSummery(invoice.getPnr().getSegments()));
             invSummery.setDocumentedAmount(invoice.getDocumentedAmount());
             invSummery.setOtherAmount(invoice.calculateTotalDebitMemo().add(invoice.calculateTotalCreditMemo()));
             invSummery.setPayment(invoice.calculateTotalPayment().add(invoice.calculateTotalRefund()));
@@ -275,6 +278,21 @@ public class TSalesAcDocService {
 
             report.addInvoice(invSummery);
         }
+        String currency = Application.currency();
+        report.setTotalInvAmount(currency + totalInvAmount.toString());
+        report.setTotalCMAmount(currency + totalCMAmount.toString());
+        report.setTotalDMAmount(currency + totalDMAmount.toString());
+        report.setTotalDue(currency + totalDue.toString());
+        report.setTotalPayment(currency + totalPayment.toString());
+        report.setTotalRefund(currency + totalRefund.toString());
+
         return report;
+    }
+
+    private void validateDocumentedAmount(TicketingSalesAcDoc doc) {
+        if (doc.calculateDocumentedAmount().compareTo(doc.getDocumentedAmount()) != 0) {
+            doc.setDocumentedAmount(doc.calculateDocumentedAmount());
+            dao.save(doc);
+        }
     }
 }
