@@ -34,18 +34,6 @@ public class TicketingSalesAcDocWS {
     TSalesAcDocService service;
 
     @GET
-    @Path("/ticketingSalesAcDocs")
-    public TicketingSalesAcDocs get(@QueryParam("name") String name,
-            @QueryParam("postCode") String postCode,
-            @QueryParam("officeID") String officeID) {
-
-        List<TicketingSalesAcDoc> list = service.findAll();
-        TicketingSalesAcDocs ticketingSalesAcDocs = new TicketingSalesAcDocs();
-        ticketingSalesAcDocs.setList(list);
-        return ticketingSalesAcDocs;
-    }
-
-    @GET
     @Path("/byid/{id}")
     public TicketingSalesAcDoc getbyId(@PathParam("id") long id) {
         TicketingSalesAcDoc doc = service.getWithChildrenById(id);

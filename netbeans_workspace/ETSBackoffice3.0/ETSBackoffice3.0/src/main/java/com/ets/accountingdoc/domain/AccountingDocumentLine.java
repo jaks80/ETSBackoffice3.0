@@ -1,7 +1,6 @@
 package com.ets.accountingdoc.domain;
 
 import com.ets.PersistentObject;
-import com.ets.otherservice.domain.AdditionalCharge;
 import com.ets.otherservice.domain.OtherService;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -39,13 +38,7 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
     private int qty = 1;
     @XmlElement
     private OtherService otherService;
-    @XmlElement
-    private AdditionalCharge additionalCharge;
 
-    @XmlElement
-    private TicketingSalesAcDoc ticketingSalesAcDoc;
-    @XmlElement
-    private TicketingPurchaseAcDoc ticketingPurchaseAcDoc;
     @XmlElement
     private OtherSalesAcDoc otherSalesAcDoc;
 
@@ -93,36 +86,6 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
 
     public void setOtherService(OtherService otherService) {
         this.otherService = otherService;
-    }
-
-    @OneToOne
-    @JoinColumn(name = "add_charge_fk")
-    public AdditionalCharge getAdditionalCharge() {
-        return additionalCharge;
-    }
-
-    public void setAdditionalCharge(AdditionalCharge additionalCharge) {
-        this.additionalCharge = additionalCharge;
-    }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tsacdoc_fk")
-    public TicketingSalesAcDoc getTicketingSalesAcDoc() {
-        return ticketingSalesAcDoc;
-    }
-
-    public void setTicketingSalesAcDoc(TicketingSalesAcDoc ticketingSalesAcDoc) {
-        this.ticketingSalesAcDoc = ticketingSalesAcDoc;
-    }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tpacdoc_fk")
-    public TicketingPurchaseAcDoc getTicketingPurchaseAcDoc() {
-        return ticketingPurchaseAcDoc;
-    }
-
-    public void setTicketingPurchaseAcDoc(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
-        this.ticketingPurchaseAcDoc = ticketingPurchaseAcDoc;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,9 +1,10 @@
 package com.ets.accountingdoc.service;
 
 import com.ets.Application;
-import com.ets.accountingdoc.dao.AccountingDocumentLineDAO;
+import com.ets.accountingdoc.dao.AdditionalChgLineDAO;
 import com.ets.accountingdoc.dao.TSalesAcDocDAO;
-import com.ets.accountingdoc.domain.AccountingDocumentLine;
+import com.ets.accountingdoc.domain.AdditionalChargeLine;
+import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accountingdoc.logic.TicketingAcDocBL;
 import com.ets.pnr.dao.TicketDAO;
@@ -34,15 +35,14 @@ public class TSalesAcDocService {
 
     @Resource(name = "tSalesAcDocDAO")
     private TSalesAcDocDAO dao;
-
     @Autowired
     private PnrService pnrService;
-
     @Autowired
     private TicketDAO ticketDAO;
-
     @Autowired
-    private AccountingDocumentLineDAO accountingDocumentLineDAO;
+    TPurchaseAcDocService purchase_service;
+    @Autowired
+    private AdditionalChgLineDAO additionalChgLineDAO;
 
     /**
      * If there is no accounting document in Pnr it creates an invoiced.
@@ -57,6 +57,7 @@ public class TSalesAcDocService {
 
         Pnr pnr = pnrService.getByIdWithChildren(pnrid);
         List<TicketingSalesAcDoc> acdocList = dao.getByPnrId(pnrid);
+
         TicketingAcDocBL logic = new TicketingAcDocBL(pnr);
 
         TicketingSalesAcDoc invoice = null;
@@ -75,8 +76,8 @@ public class TSalesAcDocService {
             draftDocument = logic.newTicketingDraftInvoice(invoice, uninvoicedTicket);
 
         } else if (invoice.getStatus().equals(Enums.AcDocStatus.VOID)) {
-            invoice.setReference(null);
-            invoice.setStatus(Enums.AcDocStatus.ACTIVE);
+            //invoice.setReference(null);
+            //invoice.setStatus(Enums.AcDocStatus.ACTIVE);
             Set<Ticket> uninvoicedTicket = PnrUtil.getUnInvoicedTicket(pnr);
             draftDocument = logic.newTicketingDraftInvoice(invoice, uninvoicedTicket);
         } else {
@@ -116,25 +117,53 @@ public class TSalesAcDocService {
             PnrUtil.initPnrInTickets(doc.getPnr(), doc.getTickets());
         }
 
-        if (doc.getAccountingDocumentLines() != null && !doc.getAccountingDocumentLines().isEmpty()) {
-            AcDocUtil.initAcDocInLine(doc, doc.getAccountingDocumentLines());
+        if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
+            AcDocUtil.initAddChgLine(doc, doc.getAdditionalChargeLines());
         }
 
-        if (!doc.getTickets().isEmpty() || !doc.getAccountingDocumentLines().isEmpty()) {
+        if (!doc.getTickets().isEmpty() || !doc.getAdditionalChargeLines().isEmpty()) {
             doc.setDocumentedAmount(doc.calculateDocumentedAmount());
         }
-
+        doc.setStatus(Enums.AcDocStatus.ACTIVE);               
         dao.save(doc);
 
+        if(!doc.getTickets().isEmpty()){
+         autoCreatePurchaseDocuments(doc);
+        }
+                
         AcDocUtil.undefineTSAcDoc(doc, doc.getTickets());
-        if (doc.getAccountingDocumentLines() != null && !doc.getAccountingDocumentLines().isEmpty()) {
-            AcDocUtil.UndefineAcDocInLine(doc, doc.getAccountingDocumentLines());
+        if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
+            AcDocUtil.undefineAddChgLine(doc, doc.getAdditionalChargeLines());
         }
         return doc;
     }
 
-    public List<TicketingSalesAcDoc> findAll() {
-        return dao.findAll(TicketingSalesAcDoc.class);
+    /**
+     * Every time a sales document is generated, a corresponding purchase document
+     * should generate automatically. Logic is document will be generated automatically mirroring sales document
+     * but should be editable by user except ticket fields
+     * @param doc 
+     */
+    private void autoCreatePurchaseDocuments(TicketingSalesAcDoc doc) {
+
+        TicketingPurchaseAcDoc p_doc = new TicketingPurchaseAcDoc();
+
+        TicketingAcDocBL logic = new TicketingAcDocBL(doc.getPnr());
+
+        if (doc.getType().equals(Enums.AcDocType.INVOICE)) {
+            p_doc = logic.newTicketingPurchaseInvoice(doc);
+            purchase_service.newDocument(p_doc);
+
+        } else if (doc.getType().equals(Enums.AcDocType.DEBITMEMO)) {
+            TicketingPurchaseAcDoc invoice = purchase_service.findInvoiceByPnrId(doc.getPnr().getId());
+            p_doc = logic.newTicketingPurchaseDMemo(doc, invoice);
+            purchase_service.newDocument(p_doc);
+
+        } else if (doc.getType().equals(Enums.AcDocType.CREDITMEMO)) {
+            TicketingPurchaseAcDoc invoice = purchase_service.findInvoiceByPnrId(doc.getPnr().getId());
+            p_doc = logic.newTicketingPurchaseCMemo(doc, invoice);
+            purchase_service.newDocument(p_doc);
+        }
     }
 
     public TicketingSalesAcDoc getWithChildrenById(long id) {
@@ -154,11 +183,11 @@ public class TSalesAcDocService {
             if (r.getType().equals(Enums.AcDocType.PAYMENT) || r.getType().equals(Enums.AcDocType.REFUND)) {
                 AcDocUtil.undefineTSAcDocumentInPayment(r);
             }
-            AcDocUtil.UndefineAcDocInLine(r, r.getAccountingDocumentLines());
+            AcDocUtil.undefineAddChgLine(r, r.getAdditionalChargeLines());
         }
         doc.setRelatedDocuments(relatedDocs);
-        if (doc.getAccountingDocumentLines() != null && !doc.getAccountingDocumentLines().isEmpty()) {
-            AcDocUtil.UndefineAcDocInLine(doc, doc.getAccountingDocumentLines());
+        if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
+            AcDocUtil.undefineAddChgLine(doc, doc.getAdditionalChargeLines());
         }
 
         PnrUtil.undefinePnrInSegments(doc.getPnr(), doc.getPnr().getSegments());
@@ -188,17 +217,13 @@ public class TSalesAcDocService {
             for (Ticket t : a.getTickets()) {
                 t.setTicketingSalesAcDoc(null);
             }
-            AcDocUtil.UndefineAcDocInLine(a, a.getAccountingDocumentLines());
+            AcDocUtil.undefineAddChgLine(a, a.getAdditionalChargeLines());
         }
         return list;
     }
 
-    public void removeLine(AccountingDocumentLine l) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void delete(TicketingSalesAcDoc ticketingSalesAcDoc) {
-        dao.delete(ticketingSalesAcDoc);
+    public void delete(TicketingSalesAcDoc document) {
+        dao.delete(document);
     }
 
     /**
@@ -220,10 +245,17 @@ public class TSalesAcDocService {
                 t.setTicketingSalesAcDoc(null);
             }
 
-            ticketDAO.saveBulk(new ArrayList(tickets));
-            accountingDocumentLineDAO.deleteBulk(doc.getAccountingDocumentLines());
-            doc.setStatus(Enums.AcDocStatus.VOID);
+            if (!tickets.isEmpty()) {
+                ticketDAO.saveBulk(new ArrayList(tickets));
+            }
 
+            Set<AdditionalChargeLine> additionalChargeLines = doc.getAdditionalChargeLines();
+
+            if (!additionalChargeLines.isEmpty()) {
+                additionalChgLineDAO.deleteBulk(additionalChargeLines);
+                doc.setAdditionalChargeLines(null);
+            }
+            doc.setStatus(Enums.AcDocStatus.VOID);
             dao.save(doc);
             return true;
         }
@@ -249,7 +281,7 @@ public class TSalesAcDocService {
         BigDecimal totalRefund = new BigDecimal("0.00");
 
         InvoiceReport report = new InvoiceReport();
-        for (TicketingSalesAcDoc invoice : invoices) {            
+        for (TicketingSalesAcDoc invoice : invoices) {
 
             Set<TicketingSalesAcDoc> relatedDocs = AcDocUtil.filterVoidRelatedDocuments(invoice.getRelatedDocuments());
             invoice.setRelatedDocuments(relatedDocs);

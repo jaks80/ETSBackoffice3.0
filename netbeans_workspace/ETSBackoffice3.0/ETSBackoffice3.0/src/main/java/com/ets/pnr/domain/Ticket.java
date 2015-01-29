@@ -322,10 +322,12 @@ public class Ticket extends PersistentObject implements Serializable {
         this.netSellingFare = netSellingFare;
     }
 
+    @Transient
     public BigDecimal getNetSellingFare() {
         return netSellingFare;
     }
 
+    @Transient
     public BigDecimal getNetPurchaseFare() {
         return netPurchaseFare;
     }

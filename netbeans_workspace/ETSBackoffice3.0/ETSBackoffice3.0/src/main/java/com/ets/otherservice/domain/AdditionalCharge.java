@@ -1,16 +1,12 @@
 package com.ets.otherservice.domain;
 
 import com.ets.PersistentObject;
-import com.ets.accountingdoc.domain.AccountingDocument;
 import com.ets.util.Enums.CalculationType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -33,9 +29,7 @@ public class AdditionalCharge extends PersistentObject implements Serializable{
     @XmlElement
     private CalculationType calculationType;
     @XmlElement
-    private boolean isArchived;
-    @XmlElement
-    private AccountingDocument accountingDocument;
+    private boolean isArchived;    
 
     public AdditionalCharge(){
 
@@ -71,15 +65,5 @@ public class AdditionalCharge extends PersistentObject implements Serializable{
 
     public void setIsArchived(boolean isArchived) {
         this.isArchived = isArchived;
-    }
-
-@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "acdoc_fk")
-    public AccountingDocument getAccountingDocument() {
-        return accountingDocument;
-    }
-
-    public void setAccountingDocument(AccountingDocument accountingDocument) {
-        this.accountingDocument = accountingDocument;
     }
 }

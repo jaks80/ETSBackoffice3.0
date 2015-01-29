@@ -71,7 +71,7 @@ public class TSalesAcDocServiceTest {
 
         newInvoice.setDocumentedAmount(newInvoice.calculateTicketedSubTotal().
                 add(newInvoice.calculateAddChargesSubTotal().
-                        add(newInvoice.calculateOtherServiceSubTotal())));
+                        add(newInvoice.calculateAddChargesSubTotal())));
 
         TicketingSalesAcDoc result = tSalesAcDocService.newDocument(newInvoice);
 
@@ -105,16 +105,6 @@ public class TSalesAcDocServiceTest {
 //        }
 //        assertEquals("287.10", result.getDocumentedAmount().toString());
 //        assertNotNull(persistedCNote.getId());
-    }
-
-    //@Test
-    public void testFindAll() {
-        System.out.println("findAll");
-        TSalesAcDocService instance = new TSalesAcDocService();
-        List<TicketingSalesAcDoc> expResult = null;
-        List<TicketingSalesAcDoc> result = instance.findAll();
-        assertEquals(expResult, result);
-
     }
 
     //@Test

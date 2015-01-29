@@ -18,7 +18,7 @@ public interface TPurchaseAcDocDAO extends GenericDAO<TicketingPurchaseAcDoc, Lo
 
     public List<TicketingPurchaseAcDoc> getByGDSPnr(String GdsPnr);
     
-    public List<TicketingPurchaseAcDoc> findOutstandingDocuments(Enums.AcDocType type,Enums.ClientType clienttype,Long clientid,Date dateStart,Date dateEnd);      
+    public List<TicketingPurchaseAcDoc> findOutstandingDocuments(Enums.AcDocType type,Long agentid,Date dateStart,Date dateEnd);      
     
-    public List<TicketingPurchaseAcDoc> findInvoiceHistory(Enums.ClientType clienttype,Long clientid,Date dateStart,Date dateEnd);
+    public List<TicketingPurchaseAcDoc> findInvoiceHistory(Long agentid,Date dateStart,Date dateEnd);
 }

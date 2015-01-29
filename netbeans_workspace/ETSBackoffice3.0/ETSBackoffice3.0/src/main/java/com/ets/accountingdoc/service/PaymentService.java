@@ -42,7 +42,7 @@ public class PaymentService {
         for (TicketingSalesAcDoc d : paydocs) {
             d.setTickets(null);
             d.setRelatedDocuments(null);
-            d.setAccountingDocumentLines(null);
+            d.setAdditionalChargeLines(null);
             //d.getParent().setTickets(null);
             //d.getParent().setRelatedDocuments(null);
             //d.getParent().setAccountingDocumentLines(null);
@@ -66,10 +66,10 @@ public class PaymentService {
             for (TicketingSalesAcDoc d : paydocs) {
                 d.setTickets(null);
                 d.setRelatedDocuments(null);
-                d.setAccountingDocumentLines(null);
+                d.setAdditionalChargeLines(null);
                 d.getParent().setTickets(null);
                 d.getParent().setRelatedDocuments(null);
-                d.getParent().setAccountingDocumentLines(null);
+                d.getParent().setAdditionalChargeLines(null);
             }
             p.settPurchaseAcDocuments(null);
             p.setoSalesAcDocuments(null);

@@ -68,12 +68,7 @@ public class Payment extends PersistentObject implements Serializable {
         this.tSalesAcDocuments = tSalesAcDocuments;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "payment_oacdoc",
-            joinColumns = @JoinColumn(name = "oacdoc_id"),
-            inverseJoinColumns = @JoinColumn(name = "payment_id")
-    )
+   @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public Set<OtherSalesAcDoc> getoSalesAcDocuments() {
         return oSalesAcDocuments;
     }
@@ -82,11 +77,7 @@ public class Payment extends PersistentObject implements Serializable {
         this.oSalesAcDocuments = oSalesAcDocuments;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "payment_tpacdoc",
-            joinColumns = @JoinColumn(name = "tpacdoc_id"),
-            inverseJoinColumns = @JoinColumn(name = "payment_id")
-    )
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public Set<TicketingPurchaseAcDoc> gettPurchaseAcDocuments() {
         return tPurchaseAcDocuments;
     }

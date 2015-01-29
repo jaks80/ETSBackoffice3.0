@@ -1,18 +1,16 @@
 package com.ets.accountingdoc.ws;
 
 import com.ets.accountingdoc.collection.TicketingPurchaseAcDocs;
+import com.ets.accountingdoc.collection.TicketingSalesAcDocs;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
+import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accountingdoc.service.TPurchaseAcDocService;
+import com.ets.report.model.acdoc.InvoiceReport;
+import com.ets.util.DateUtil;
+import com.ets.util.Enums;
+import java.util.Date;
 import java.util.List;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,22 +29,28 @@ public class TicketingPurchaseAcDocWS {
     TPurchaseAcDocService service;
 
     @GET
-    @Path("/ticketingPurchaseAcDocs")
-    public TicketingPurchaseAcDocs find(@QueryParam("name") String name,
-            @QueryParam("postCode") String postCode,
-            @QueryParam("officeID") String officeID) {
-
-        List<TicketingPurchaseAcDoc> list = service.findAll();
-        TicketingPurchaseAcDocs ticketingPurchaseAcDocs = new TicketingPurchaseAcDocs();
-        ticketingPurchaseAcDocs.setList(list);
-        return ticketingPurchaseAcDocs;
-    }
-    
-    @GET
     @Path("/byid/{id}")
     public TicketingPurchaseAcDoc getbyId(@PathParam("id") long id) {
-        TicketingPurchaseAcDoc doc = service.getById(id);
+        TicketingPurchaseAcDoc doc = service.getWithChildrenById(id);
         return doc;
+    }
+
+    @GET
+    @Path("/bypnr/{pnr}")
+    public TicketingPurchaseAcDocs getByGDSPnr(@PathParam("pnr") String pnr) {
+        List<TicketingPurchaseAcDoc> list = service.getByGDSPnr(pnr);
+        TicketingPurchaseAcDocs docs = new TicketingPurchaseAcDocs();
+        docs.setList(list);
+        return docs;
+    }
+
+    @GET
+    @Path("/bypnrid")
+    public TicketingPurchaseAcDocs getByPnrId(@QueryParam("pnrId") Long pnrId) {
+        List<TicketingPurchaseAcDoc> list = service.getByPnrId(pnrId);
+        TicketingPurchaseAcDocs docs = new TicketingPurchaseAcDocs();
+        docs.setList(list);
+        return docs;
     }
 
     @GET
@@ -75,10 +79,43 @@ public class TicketingPurchaseAcDocWS {
     public Response delete(@PathParam("id") long id) {
         return Response.status(200).build();
     }
-    
+
     @DELETE
     @Path("/void/{id}")
     public Response _void(@PathParam("id") long id) {
         return Response.status(200).build();
+    }
+
+    //*****************Reporting Methods are Bellow******************//
+    @GET
+    @Path("/acdoc_report")
+    public InvoiceReport outstandingDocumentReport(
+            @QueryParam("doctype") Enums.AcDocType doctype,
+            @QueryParam("agentid") Long agentid,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        InvoiceReport report = service.dueInvoiceReport(doctype,
+                agentid, dateFrom, dateTo);
+
+        return report;
+    }
+
+    @GET
+    @Path("/acdoc_history")
+    public InvoiceReport documentHistoryReport(
+            @QueryParam("agentid") Long agentid,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        InvoiceReport report = service.invoiceHistoryReport(agentid, dateFrom, dateTo);
+
+        return report;
     }
 }

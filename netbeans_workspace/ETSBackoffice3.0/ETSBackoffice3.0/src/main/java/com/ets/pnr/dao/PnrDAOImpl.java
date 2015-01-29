@@ -46,7 +46,7 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
         }
         for (Ticket t : pnr.getTickets()) {
             if (t.getTicketingSalesAcDoc() != null) {
-                t.getTicketingSalesAcDoc().setAccountingDocumentLines(null);
+                t.getTicketingSalesAcDoc().setAdditionalChargeLines(null);
                 t.getTicketingSalesAcDoc().setTickets(null);
                 t.getTicketingSalesAcDoc().setPnr(null);
                 t.getTicketingSalesAcDoc().setRelatedDocuments(null);

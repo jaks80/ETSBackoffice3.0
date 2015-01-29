@@ -36,6 +36,9 @@ public class OtherSalesAcDoc extends AccountingDocument implements Serializable 
     @XmlElement
     private OtherSalesAcDoc parent;
 
+    @XmlElement
+    private Payment payment;
+
     @Override
     public BigDecimal calculateDocumentedAmount() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -46,9 +49,14 @@ public class OtherSalesAcDoc extends AccountingDocument implements Serializable 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
     public BigDecimal calculateOtherServiceSubTotal() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        BigDecimal subtotal = new BigDecimal("0.00");
+        for (AccountingDocumentLine l : accountingDocumentLines) {
+            if (l.getOtherService() != null) {
+                subtotal = subtotal.add(l.calculateOServiceLineTotal());
+            }
+        }
+        return subtotal;
     }
 
     @Override
@@ -109,4 +117,13 @@ public class OtherSalesAcDoc extends AccountingDocument implements Serializable 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_fk")
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
 }

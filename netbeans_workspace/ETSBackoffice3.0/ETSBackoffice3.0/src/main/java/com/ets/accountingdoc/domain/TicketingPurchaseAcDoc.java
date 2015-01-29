@@ -2,6 +2,7 @@ package com.ets.accountingdoc.domain;
 
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
+import com.ets.util.Enums;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
@@ -29,7 +30,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.NONE)
 @Access(AccessType.PROPERTY)
 @Table(name = "tkt_purch_acdoc")
-//@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public class TicketingPurchaseAcDoc extends AccountingDocument implements Serializable {
 
     @XmlElement
@@ -39,39 +39,92 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
     @XmlElement
     private Pnr pnr;
     @XmlElement
-    private Set<AccountingDocumentLine> accountingDocumentLines = new LinkedHashSet<>();
+    private Set<AdditionalChargeLine> additionalChargeLines = new LinkedHashSet<>();
     @XmlElement
     private Set<TicketingPurchaseAcDoc> relatedDocuments = new LinkedHashSet<>();
     @XmlElement
     private TicketingPurchaseAcDoc parent;
 
+    @XmlElement
+    private Payment payment;
+
+    @Override
+    public BigDecimal calculateDocumentedAmount() {
+        return calculateTicketedSubTotal().add(calculateAddChargesSubTotal());
+    }
+
     @Override
     public BigDecimal calculateTicketedSubTotal() {
         BigDecimal subtotal = new BigDecimal("0.00");
         for (Ticket t : getTickets()) {
-            subtotal = subtotal.add(t.getNetPurchaseFare());
+            subtotal = subtotal.add(t.calculateNetPurchaseFare());
         }
         return subtotal;
     }
 
-        @Override
-    public BigDecimal calculateOtherServiceSubTotal() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     @Override
     public BigDecimal calculateAddChargesSubTotal() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        BigDecimal subtotal = new BigDecimal("0.00");
+        for (AdditionalChargeLine l : getAdditionalChargeLines()) {
+            subtotal = subtotal.add(l.getAmount());
+        }
+        return subtotal;
     }
 
     @Override
     public BigDecimal calculateTotalPayment() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        BigDecimal total = new BigDecimal("0.00");
+        for (AccountingDocument doc : this.relatedDocuments) {
+            if (doc.getType().equals(Enums.AcDocType.PAYMENT)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
     }
 
     @Override
     public BigDecimal calculateDueAmount() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        BigDecimal invoiceAmount = this.getDocumentedAmount();
+
+        if (getType().equals(Enums.AcDocType.INVOICE)) {
+            for (AccountingDocument doc : this.relatedDocuments) {
+                invoiceAmount = invoiceAmount.add(doc.getDocumentedAmount());
+            }
+        }
+        return invoiceAmount;
+    }
+
+    @Override
+    public BigDecimal calculateTotalDebitMemo() {
+        BigDecimal total = new BigDecimal("0.00");
+        for (AccountingDocument doc : this.relatedDocuments) {
+            if (doc.getType().equals(Enums.AcDocType.DEBITMEMO)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
+    }
+
+    @Override
+    public BigDecimal calculateTotalCreditMemo() {
+        BigDecimal total = new BigDecimal("0.00");
+        for (AccountingDocument doc : this.relatedDocuments) {
+            if (doc.getType().equals(Enums.AcDocType.CREDITMEMO)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
+    }
+
+    @Override
+    public BigDecimal calculateTotalRefund() {
+        BigDecimal total = new BigDecimal("0.00");
+        for (AccountingDocument doc : this.relatedDocuments) {
+            if (doc.getType().equals(Enums.AcDocType.REFUND)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
     }
 
     public String getVendorRef() {
@@ -82,7 +135,7 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
         this.vendorRef = vendorRef;
     }
 
-    @OneToMany(mappedBy = "ticketingPurchaseAcDoc")
+    @OneToMany(mappedBy = "ticketingPurchaseAcDoc", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public Set<Ticket> getTickets() {
         return tickets;
     }
@@ -99,11 +152,6 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
 
     public void setPnr(Pnr pnr) {
         this.pnr = pnr;
-    }
-
-    @Override
-    public BigDecimal calculateDocumentedAmount() {
-        return new BigDecimal("0.00");
     }
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -126,26 +174,21 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
     }
 
     @OneToMany(mappedBy = "ticketingPurchaseAcDoc", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    public Set<AccountingDocumentLine> getAccountingDocumentLines() {
-        return accountingDocumentLines;
+    public Set<AdditionalChargeLine> getAdditionalChargeLines() {
+        return additionalChargeLines;
     }
 
-    public void setAccountingDocumentLines(Set<AccountingDocumentLine> accountingDocumentLines) {
-        this.accountingDocumentLines = accountingDocumentLines;
+    public void setAdditionalChargeLines(Set<AdditionalChargeLine> additionalChargeLines) {
+        this.additionalChargeLines = additionalChargeLines;
     }
 
-    @Override
-    public BigDecimal calculateTotalDebitMemo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_fk")
+    public Payment getPayment() {
+        return payment;
     }
 
-    @Override
-    public BigDecimal calculateTotalCreditMemo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public BigDecimal calculateTotalRefund() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setPayment(Payment payment) {
+        this.payment = payment;
     }
 }

@@ -34,8 +34,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     @Transactional(readOnly = true)
     public List<TicketingSalesAcDoc> getByPnrId(Long pnrId) {
         String hql = "select distinct a from TicketingSalesAcDoc as a "
-                + "left join fetch a.accountingDocumentLines as adl "
-                + "left join fetch adl.otherService "
+                + "left join fetch a.additionalChargeLines as adl "                
                 + "left join fetch adl.additionalCharge "
                 + "left join fetch a.tickets as t "
                 + "left join fetch a.relatedDocuments as a1 "
@@ -58,8 +57,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     public TicketingSalesAcDoc getWithChildrenById(Long id) {
 
         String hql = "select distinct a from TicketingSalesAcDoc as a "
-                + "left join fetch a.accountingDocumentLines as adl "
-                + "left join fetch adl.otherService "
+                + "left join fetch a.additionalChargeLines as adl "                
                 + "left join fetch adl.additionalCharge "
                 + "left join fetch a.tickets as t "
                 + "left join fetch a.pnr as p "
@@ -69,8 +67,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + "left join fetch a.relatedDocuments as a1 "
                 + "left join fetch a1.payment as payment "
                 + "left join fetch a1.tickets as t1 "
-                + "left join fetch a1.accountingDocumentLines as adl1 "
-                + "left join fetch adl1.otherService "
+                + "left join fetch a1.additionalChargeLines as adl1 "               
                 + "left join fetch adl1.additionalCharge "
                 + "where a.id = :id";
 
@@ -122,7 +119,8 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + "from TicketingSalesAcDoc b "
                 + "where a.reference=b.reference and b.status = 0 group by b.reference)" + operator + "0 "
                 + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
-                + clientcondition;
+                + clientcondition
+                + " order by a.id";
 
         Query query = getSession().createQuery(hql);
         if (!clientcondition.isEmpty()) {
@@ -156,7 +154,8 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + concatClient
                 + "where a.status = 0 and a.type = 0 "
                 + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
-                + clientcondition;
+                + clientcondition
+                + " order by a.id";
 
         Query query = getSession().createQuery(hql);
         if (!clientcondition.isEmpty()) {

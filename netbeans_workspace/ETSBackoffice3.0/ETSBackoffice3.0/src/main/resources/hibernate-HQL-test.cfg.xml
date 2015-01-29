@@ -43,7 +43,8 @@
     <mapping class="com.ets.accountingdoc.domain.OtherSalesAcDoc" package="com.ets.accountingdoc.domain"/>        
     <mapping class="com.ets.accountingdoc.domain.TicketingPurchaseAcDoc" package="com.ets.accountingdoc.domain"/>        
     <mapping class="com.ets.accountingdoc.domain.TicketingSalesAcDoc" package="com.ets.accountingdoc.domain"/>        
-    <mapping class="com.ets.accountingdoc.domain.AccountingDocumentLine" package="com.ets.accountingdoc.domain"/> 
+    <mapping class="com.ets.accountingdoc.domain.AccountingDocumentLine" package="com.ets.accountingdoc.domain"/>
+    <mapping class="com.ets.accountingdoc.domain.AdditionalChargeLine" package="com.ets.accountingdoc.domain"/>  
     <mapping class="com.ets.accountingdoc.domain.Payment" package="com.ets.accountingdoc.domain"/>        
     
     <mapping class="com.ets.hqltest.TktSalesAcdoc" package="com.ets.hqltest"/>
