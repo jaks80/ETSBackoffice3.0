@@ -27,14 +27,14 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
     @XmlElement
     private List<Ticket> tickets = new ArrayList<>();
     @XmlElement
-    private Set<AccountingDocumentLine> accountingDocumentLines = new LinkedHashSet<>();
+    private List<AdditionalChargeLine> additionalChargeLines = new ArrayList<>();
     @XmlElement
     private Set<TicketingSalesAcDoc> relatedDocuments = new LinkedHashSet<>();
     @XmlElement
     private TicketingSalesAcDoc parent;
     @XmlElement
     private Payment payment;
-    
+
     @Override
     public BigDecimal calculateTicketedSubTotal() {
         BigDecimal subtotal = new BigDecimal("0.00");
@@ -45,23 +45,10 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
     }
 
     @Override
-    public BigDecimal calculateOtherServiceSubTotal() {
-        BigDecimal subtotal = new BigDecimal("0.00");
-        for (AccountingDocumentLine l : accountingDocumentLines) {
-            if (l.getOtherService() != null) {
-                subtotal = subtotal.add(l.calculateOsNetSellingTotal());
-            }
-        }
-        return subtotal;
-    }
-
-    @Override
     public BigDecimal calculateAddChargesSubTotal() {
         BigDecimal subtotal = new BigDecimal("0.00");
-        for (AccountingDocumentLine l : accountingDocumentLines) {
-            if (l.getAdditionalCharge() != null) {
-                subtotal = subtotal.add(l.calculateAcNetSellingTotal());
-            }
+        for (AdditionalChargeLine l : this.getAdditionalChargeLines()) {
+            subtotal = subtotal.add(l.getAmount());
         }
         return subtotal;
     }
@@ -106,7 +93,7 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
                 if (doc.getDocumentedAmount() == null) {
                     doc.setDocumentedAmount(doc.calculateDocumentedAmount());
                 }
-                System.out.println("Doc amout: "+doc.getDocumentedAmount());
+                System.out.println("Doc amout: " + doc.getDocumentedAmount());
                 dueAmount = dueAmount.add(doc.getDocumentedAmount());
             }
         }
@@ -115,7 +102,7 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
 
     @Override
     public BigDecimal calculateDocumentedAmount() {
-        return calculateTicketedSubTotal().add(calculateOtherServiceSubTotal().add(calculateAddChargesSubTotal()));
+        return calculateTicketedSubTotal().add(calculateAddChargesSubTotal());
     }
 
     public List<Ticket> getTickets() {
@@ -132,14 +119,6 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
 
     public void setPnr(Pnr pnr) {
         this.pnr = pnr;
-    }
-
-    public Set<AccountingDocumentLine> getAccountingDocumentLines() {
-        return accountingDocumentLines;
-    }
-
-    public void setAccountingDocumentLines(Set<AccountingDocumentLine> accountingDocumentLines) {
-        this.accountingDocumentLines = accountingDocumentLines;
     }
 
     public Set<TicketingSalesAcDoc> getRelatedDocuments() {
@@ -165,8 +144,16 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
     public void setPayment(Payment payment) {
         this.payment = payment;
     }
-    
-    public void addLine(AccountingDocumentLine line){
-     this.accountingDocumentLines.add(line);
+
+    public void addLine(AdditionalChargeLine line) {
+        this.getAdditionalChargeLines().add(line);
+    }
+
+    public List<AdditionalChargeLine> getAdditionalChargeLines() {
+        return additionalChargeLines;
+    }
+
+    public void setAdditionalChargeLines(List<AdditionalChargeLine> additionalChargeLines) {
+        this.additionalChargeLines = additionalChargeLines;
     }
 }

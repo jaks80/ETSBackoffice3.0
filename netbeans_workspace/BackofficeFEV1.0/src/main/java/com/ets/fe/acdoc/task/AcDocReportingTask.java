@@ -24,13 +24,14 @@ public class AcDocReportingTask extends SwingWorker<InvoiceReport, Integer> {
     private Date dateTo = null;
 
     public AcDocReportingTask(Enums.AcDocType doctype, Enums.ClientType clienttype,
-            Long clientid, Date dateFrom, Date dateTo) {
+            Long clientid, Date dateFrom, Date dateTo,JProgressBar progressBar) {
 
         this.doctype = doctype;
         this.clienttype = clienttype;
         this.clientid = clientid;
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
+        this.progressBar = progressBar;
     }
 
     @Override

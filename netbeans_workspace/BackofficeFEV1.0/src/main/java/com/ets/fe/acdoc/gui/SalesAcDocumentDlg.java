@@ -118,7 +118,7 @@ public class SalesAcDocumentDlg extends javax.swing.JDialog implements PropertyC
         jPanel6 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         txtAcDocFor = new javax.swing.JTextArea();
-        acDocHeaderComponent = new com.ets.fe.acdoc.gui.AcDocHeaderComponent();
+        acDocHeaderComponent = new com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent();
         jLabel1 = new javax.swing.JLabel();
         txtAmount = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -349,7 +349,7 @@ public class SalesAcDocumentDlg extends javax.swing.JDialog implements PropertyC
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.ets.fe.acdoc.gui.AcDocHeaderComponent acDocHeaderComponent;
+    private com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent acDocHeaderComponent;
     private javax.swing.JButton btnCreateDocument;
     private javax.swing.JButton btnEmail;
     private javax.swing.JButton btnOfficeCopy;

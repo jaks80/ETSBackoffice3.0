@@ -1,10 +1,11 @@
-package com.ets.fe.acdoc.gui;
+package com.ets.fe.acdoc.gui.comp;
 
 import com.ets.fe.acdoc.model.AccountingDocument;
 import com.ets.fe.acdoc.model.OtherSalesAcDoc;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.util.DateUtil;
+import com.ets.fe.util.Enums;
 import javax.swing.JPanel;
 
 /**
@@ -21,10 +22,10 @@ public class AcDocHeaderComponent extends JPanel {
 
     public void display(AccountingDocument doc) {
         this.doc = doc;
-        if (doc.getId() != null) {
-            cmbTerms.setEnabled(false);
-        } else {
+        if (doc.getId() == null || doc.getStatus().equals(Enums.AcDocStatus.VOID)) {
             cmbTerms.setEnabled(true);
+        } else {
+            cmbTerms.setEnabled(false);
         }
         if (doc instanceof TicketingSalesAcDoc) {
             txtVendorRef.setVisible(false);

@@ -82,7 +82,7 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
     }
 
     private void displayBalance(TicketingSalesAcDoc invoice) {
-        lblSubTotal.setText(invoice.calculateTicketedSubTotal().add(invoice.calculateOtherServiceSubTotal()).toString());
+        lblSubTotal.setText(invoice.calculateTicketedSubTotal().add(invoice.calculateAddChargesSubTotal()).toString());
         lblAddCharge.setText(invoice.calculateAddChargesSubTotal().toString());
         lblInvAmount.setText(invoice.calculateDocumentedAmount().toString());
     }
@@ -166,8 +166,6 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
                 }
                 return c;} 
         };
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
         jXTable1 = new org.jdesktop.swingx.JXTable();
         jPanel4 = new javax.swing.JPanel();
@@ -188,7 +186,7 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
         btnEmail = new javax.swing.JButton();
         btnOfficeCopy = new javax.swing.JButton();
         lblTitle = new javax.swing.JLabel();
-        acDocHeaderComponent = new com.ets.fe.acdoc.gui.AcDocHeaderComponent();
+        acDocHeaderComponent = new com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent();
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -277,21 +275,6 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
         }
 
         jTabbedPane1.addTab("Tickets", jScrollPane1);
-
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane2.setViewportView(jTable2);
-
-        jTabbedPane1.addTab("Other Service", jScrollPane2);
 
         jXTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -509,7 +492,7 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.ets.fe.acdoc.gui.AcDocHeaderComponent acDocHeaderComponent;
+    private com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent acDocHeaderComponent;
     private javax.swing.JButton btnCreateDocument;
     private javax.swing.JButton btnEmail;
     private javax.swing.JButton btnOfficeCopy;
@@ -524,14 +507,12 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable2;
     private org.jdesktop.swingx.JXTable jXTable1;
     private javax.swing.JLabel lblAddCharge;
     private javax.swing.JLabel lblInvAmount;

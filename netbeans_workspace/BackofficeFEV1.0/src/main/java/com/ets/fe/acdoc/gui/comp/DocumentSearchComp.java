@@ -6,6 +6,7 @@ import com.ets.fe.client.gui.AgentSearchTask;
 import com.ets.fe.client.gui.CustomerSearchTask;
 import com.ets.fe.client.model.Agent;
 import com.ets.fe.client.model.Customer;
+import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,26 +27,35 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  *
  * @author Yusuf
  */
-public class DocumentSearchComponent extends javax.swing.JPanel implements PropertyChangeListener {
+public class DocumentSearchComp extends javax.swing.JPanel implements PropertyChangeListener {
+
+    public static Long getClient_id() {
+        return client_id;
+    }
 
     private AgentSearchTask agentTask;
     private CustomerSearchTask customerTask;
 
-    private List<Customer> customerList = new ArrayList<>();
-    private List<Agent> agentList = new ArrayList<>();
+    private static List<Customer> customerList = new ArrayList<>();
+    private static List<Agent> agentList = new ArrayList<>();
+    private static Enums.ClientType client_type;
+    private static Long client_id;
 
-    private Date startDate;
-    private Date endDate;
-
-    public DocumentSearchComponent() {
+    public DocumentSearchComp() {
         initComponents();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                rdoAgent.doClick();
+            }
+        });
     }
 
     private void displayAgent() {
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
-            public void run() {                               
+            public void run() {
                 List cmbElement = new ArrayList();
 
                 for (Agent agent : agentList) {
@@ -57,7 +67,7 @@ public class DocumentSearchComponent extends javax.swing.JPanel implements Prope
                 DefaultComboBoxModel cmbContactableModel = new DefaultComboBoxModel(cmbElement.toArray());
                 cmbContactableModel.insertElementAt("All", 0);
                 cmbContactable.setModel(cmbContactableModel);
-                cmbContactable.setSelectedIndex(0);                       
+                cmbContactable.setSelectedIndex(0);
 
             }
         });
@@ -67,7 +77,7 @@ public class DocumentSearchComponent extends javax.swing.JPanel implements Prope
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
-            public void run() {                                
+            public void run() {
                 List cmbElement = new ArrayList();
 
                 for (Customer customer : customerList) {
@@ -80,7 +90,7 @@ public class DocumentSearchComponent extends javax.swing.JPanel implements Prope
                 DefaultComboBoxModel cmbContactableModel = new DefaultComboBoxModel(cmbElement.toArray());
                 cmbContactableModel.insertElementAt("All", 0);
                 cmbContactable.setModel(cmbContactableModel);
-                cmbContactable.setSelectedIndex(0);                         
+                cmbContactable.setSelectedIndex(0);
             }
         });
     }
@@ -103,6 +113,7 @@ public class DocumentSearchComponent extends javax.swing.JPanel implements Prope
 
         public void actionPerformed(ActionEvent e) {
             agentTask();
+            client_type = Enums.ClientType.AGENT;
         }
     };
 
@@ -110,6 +121,7 @@ public class DocumentSearchComponent extends javax.swing.JPanel implements Prope
 
         public void actionPerformed(ActionEvent e) {
             customerTask();
+            client_type = Enums.ClientType.CUSTOMER;
         }
     };
 
@@ -117,39 +129,44 @@ public class DocumentSearchComponent extends javax.swing.JPanel implements Prope
 
         public void actionPerformed(ActionEvent e) {
             cmbContactable.setSelectedIndex(-1);
+            cmbContactable.setEnabled(false);
+            client_type = null;
         }
     };
 
-        private ActionListener cmbContactableListener = new ActionListener() {
+    private ActionListener cmbContactableListener = new ActionListener() {
 
         public void actionPerformed(ActionEvent e) {
             String[] data;
             long id = 0;
-            if(cmbContactable.getSelectedIndex()>0){
-            data = cmbContactable.getSelectedItem().toString().split("-");
-            id = Long.parseLong(data[2]);
+            if (cmbContactable.getSelectedIndex() > 0) {
+                data = cmbContactable.getSelectedItem().toString().split("-");
+                id = Long.parseLong(data[2]);
             }
 
             if (rdoAgent.isSelected()) {
                 loop:
                 for (Agent a : agentList) {
-                    if (a.getId()== id) {                        
-                        txtClientDetails.setText(a.getFullAddressCRSeperated());
+                    if (a.getId() == id) {
+                        txtClientDetails.setText(a.getName());
+                        txtClientDetails.append(a.getFullAddressCRSeperated());
                         break loop;
                     }
                 }
             } else if (rdoCustomer.isSelected()) {
                 loop:
                 for (Customer c : customerList) {
-                    if (c.getId()== id) {                       
-                        txtClientDetails.setText(c.getFullAddressCRSeperated());
+                    if (c.getId() == id) {
+                        txtClientDetails.setText(c.getFullCustomerName());
+                        txtClientDetails.append(c.getFullAddressCRSeperated());
                         break loop;
                     }
                 }
             }
+            client_id = getContactableId();
         }
     };
-        
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -168,12 +185,6 @@ public class DocumentSearchComponent extends javax.swing.JPanel implements Prope
         cmbContactable = new javax.swing.JComboBox();
         cmbContactable.addActionListener(cmbContactableListener);
         AutoCompleteDecorator.decorate(cmbContactable);
-        jLabel2 = new javax.swing.JLabel();
-        jXDatePicker1 = new org.jdesktop.swingx.JXDatePicker();
-        jLabel3 = new javax.swing.JLabel();
-        jXDatePicker2 = new org.jdesktop.swingx.JXDatePicker();
-        jButton1 = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtClientDetails = new javax.swing.JTextArea();
@@ -182,7 +193,6 @@ public class DocumentSearchComponent extends javax.swing.JPanel implements Prope
         setLayout(new java.awt.GridBagLayout());
 
         buttonGroup1.add(rdoAgent);
-        rdoAgent.setSelected(true);
         rdoAgent.setText("Agent");
         rdoAgent.addActionListener(radioAgentListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -221,7 +231,7 @@ public class DocumentSearchComponent extends javax.swing.JPanel implements Prope
         add(jLabel1, gridBagConstraints);
 
         cmbContactable.setEditable(true);
-        cmbContactable.setPreferredSize(new java.awt.Dimension(28, 19));
+        cmbContactable.setPreferredSize(new java.awt.Dimension(28, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -230,64 +240,6 @@ public class DocumentSearchComponent extends javax.swing.JPanel implements Prope
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(cmbContactable, gridBagConstraints);
-
-        jLabel2.setText("Date From");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        add(jLabel2, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        add(jXDatePicker1, gridBagConstraints);
-
-        jLabel3.setText("Date To");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        add(jLabel3, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        add(jXDatePicker2, gridBagConstraints);
-
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search24.png"))); // NOI18N
-        jButton1.setMaximumSize(new java.awt.Dimension(57, 30));
-        jButton1.setMinimumSize(new java.awt.Dimension(57, 30));
-        jButton1.setPreferredSize(new java.awt.Dimension(57, 30));
-        jButton1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        add(jButton1, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
-        add(jSeparator1, gridBagConstraints);
 
         jLabel4.setText("Client Details");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -325,15 +277,9 @@ public class DocumentSearchComponent extends javax.swing.JPanel implements Prope
     private org.jdesktop.swingx.JXBusyLabel busyLabel;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox cmbContactable;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
-    private org.jdesktop.swingx.JXDatePicker jXDatePicker1;
-    private org.jdesktop.swingx.JXDatePicker jXDatePicker2;
     private javax.swing.JRadioButton rdoAgent;
     private javax.swing.JRadioButton rdoAll;
     private javax.swing.JRadioButton rdoCustomer;
@@ -356,38 +302,26 @@ public class DocumentSearchComponent extends javax.swing.JPanel implements Prope
                         displayCustomer();
                     }
                 } catch (InterruptedException | ExecutionException ex) {
-                    Logger.getLogger(DocumentSearchComponent.class.getName()).log(Level.SEVERE, null, ex);
-                }finally{
-                busyLabel.setBusy(false);
+                    Logger.getLogger(DocumentSearchComp.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    busyLabel.setBusy(false);
                 }
             }
         }
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public Long getContactableId() {
+    private Long getContactableId() {
         Long id = null;
         if (cmbContactable.getSelectedIndex() > 0) {
             String[] data = cmbContactable.getSelectedItem().toString().split("-");
             id = Long.parseLong(data[2]);
+        } else {
+            return null;
         }
         return id;
     }
 
-    public Enums.ClientType getContactableType() {
-        if (rdoAgent.isSelected()) {
-            return Enums.ClientType.AGENT;
-        } else if (rdoCustomer.isSelected()) {
-            return Enums.ClientType.CUSTOMER;
-        } else {
-            return null;
-        }
+    public static Enums.ClientType getContactableType() {
+        return client_type;
     }
 }

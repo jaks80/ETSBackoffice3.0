@@ -1,5 +1,6 @@
 package com.ets.fe.a_main;
 
+import com.ets.fe.acdoc.gui.comp.AccountingDocumentsComponent;
 import com.ets.fe.a_maintask.CompletePnrTask;
 import com.ets.fe.acdoc.bo.AcDocUtil;
 import com.ets.fe.acdoc.gui.*;
@@ -651,7 +652,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
     private javax.swing.JPanel PnrPanel;
     private javax.swing.JPanel TicketPanel;
     private javax.swing.JPanel TopPanel;
-    private com.ets.fe.acdoc.gui.AccountingDocumentsComponent accountingDocumentsComponent;
+    private com.ets.fe.acdoc.gui.comp.AccountingDocumentsComponent accountingDocumentsComponent;
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnCreateInvoice;
     private javax.swing.JButton btnRefresh;

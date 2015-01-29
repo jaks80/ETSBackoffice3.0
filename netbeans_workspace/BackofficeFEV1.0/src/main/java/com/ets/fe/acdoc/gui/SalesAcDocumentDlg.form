@@ -174,7 +174,7 @@
             </Container>
           </SubComponents>
         </Container>
-        <Component class="com.ets.fe.acdoc.gui.AcDocHeaderComponent" name="acDocHeaderComponent">
+        <Component class="com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent" name="acDocHeaderComponent">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>

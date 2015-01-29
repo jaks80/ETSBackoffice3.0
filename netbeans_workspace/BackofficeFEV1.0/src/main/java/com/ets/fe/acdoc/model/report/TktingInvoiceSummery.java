@@ -34,7 +34,7 @@ public class TktingInvoiceSummery implements Serializable {
     @XmlElement
     private BigDecimal due;
     @XmlElement
-    private Date docIssueDate;
+    private String docIssueDate;
     @XmlElement
     private String gdsPnr;
     @XmlElement
@@ -100,11 +100,11 @@ public class TktingInvoiceSummery implements Serializable {
         this.due = due;
     }
 
-    public Date getDocIssueDate() {
+    public String getDocIssueDate() {
         return docIssueDate;
     }
 
-    public void setDocIssueDate(Date docIssueDate) {
+    public void setDocIssueDate(String docIssueDate) {
         this.docIssueDate = docIssueDate;
     }
 

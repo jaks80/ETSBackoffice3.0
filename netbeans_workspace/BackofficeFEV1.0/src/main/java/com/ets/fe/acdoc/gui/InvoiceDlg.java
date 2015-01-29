@@ -1,11 +1,14 @@
 package com.ets.fe.acdoc.gui;
 
+import com.ets.fe.Application;
 import com.ets.fe.acdoc.bo.PaymentLogic;
+import com.ets.fe.acdoc.model.AdditionalChargeLine;
 import com.ets.fe.acdoc.model.Payment;
 import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.task.AccountingDocTask;
 import com.ets.fe.acdoc.task.PaymentTask;
+import com.ets.fe.os.model.AdditionalCharge;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.util.CheckInput;
@@ -19,6 +22,7 @@ import java.awt.font.TextAttribute;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -43,16 +47,28 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
     private String taskType;
     private Pnr pnr;
     private List<Ticket> tickets;
-    private List<TicketingSalesAcDoc> paymentDocuments;
+    //private List<TicketingSalesAcDoc> paymentDocuments;
     private TicketingSalesAcDoc tInvoice;
     private boolean allowPayment = true;
+
+    private List<AdditionalChargeLine> chargeLines = new ArrayList<>();
+    private List<AdditionalCharge> charges = Application.getAdditionalCharges();
 
     public InvoiceDlg(Frame parent) {
         super(parent, true);
         initComponents();
         CheckInput a = new CheckInput();
+        CheckInput b = new CheckInput();
+        CheckInput c = new CheckInput();
+        CheckInput d = new CheckInput();
+
         a.setNegativeAccepted(true);
+
         txtAmount.setDocument(a);
+        txtCHFee.setDocument(b);
+        txtPostage.setDocument(c);
+        txtOther.setDocument(d);
+
         setPaymentType();
     }
 
@@ -69,12 +85,15 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         this.tInvoice = tInvoice;
         this.pnr = tInvoice.getPnr();
         this.tickets = tInvoice.getTickets();
+        this.chargeLines = tInvoice.getAdditionalChargeLines();
 
         acDocHeaderComponent.display(tInvoice);
         populateTblTicket();
         displayBalance(tInvoice);
+        displayOtherCharge();
         populateTblPayment(tInvoice);
         controllComponent(tInvoice);
+
         if (pnr.getAgent() != null) {
             txtAcDocFor.setText(pnr.getAgent().getName() + pnr.getAgent().getAddressCRSeperated());
         } else {
@@ -84,7 +103,7 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
 
     private void displayBalance(TicketingSalesAcDoc invoice) {
 
-        lblSubTotal.setText(invoice.calculateTicketedSubTotal().add(invoice.calculateOtherServiceSubTotal()).toString());
+        lblSubTotal.setText(invoice.calculateTicketedSubTotal().add(invoice.calculateAddChargesSubTotal()).toString());
         lblAddCharge.setText(invoice.calculateAddChargesSubTotal().toString());
         lblInvAmount.setText(invoice.calculateDocumentedAmount().toString());
         lblTotalPayment.setText(invoice.calculateTotalPayment().abs().toString());
@@ -92,7 +111,51 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         lblDue.setText(invoice.calculateDueAmount().toString());
     }
 
+    private void displayOtherCharge() {
+        if (!chargeLines.isEmpty()) {
+            for (AdditionalChargeLine line : chargeLines) {
+                if (line.getAdditionalCharge().getTitle().equals("Other")) {
+                    txtOther.setText(line.getAmount().toString());
+                } else if (line.getAdditionalCharge().getTitle().equals("Card Handling")) {
+                    txtCHFee.setText(line.getAmount().toString());
+                } else if (line.getAdditionalCharge().getTitle().equals("Postage")) {
+                    txtPostage.setText(line.getAmount().toString());
+                }
+            }
+        }
+    }
+
+    private void createOtherChargeLine() {
+        String chFee = txtCHFee.getText();
+        String postage = txtPostage.getText();
+        String other = txtOther.getText();        
+
+        if (chFee != null && !chFee.isEmpty()) {
+            AdditionalChargeLine line = new AdditionalChargeLine();
+            line.setAmount(new BigDecimal(chFee));
+            line.setAdditionalCharge(Application.getCardHandlingFee());
+            chargeLines.add(line);
+        } 
+        
+        if (postage != null && !postage.isEmpty()) {
+            AdditionalChargeLine line = new AdditionalChargeLine();
+            line.setAmount(new BigDecimal(postage));
+            line.setAdditionalCharge(Application.getPostage());
+            chargeLines.add(line);
+        } 
+        
+        if (other != null && !other.isEmpty()) {
+            AdditionalChargeLine line = new AdditionalChargeLine();
+            line.setAmount(new BigDecimal(other));
+            line.setAdditionalCharge(Application.getOther());            
+            chargeLines.add(line);
+        }
+    }
+
     public void createInvoice() {
+        createOtherChargeLine();
+        tInvoice.setAdditionalChargeLines(chargeLines);
+        
         taskType = "CREATE";
         newInvoiceTask = new NewTSalesDocumentTask(tInvoice, progressBar);
         newInvoiceTask.addPropertyChangeListener(this);
@@ -207,7 +270,7 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         jPanel1 = new javax.swing.JPanel();
         lblTitle = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        acDocHeaderComponent = new com.ets.fe.acdoc.gui.AcDocHeaderComponent();
+        acDocHeaderComponent = new com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent();
         jPanel3 = new javax.swing.JPanel();
         progressBar = new javax.swing.JProgressBar();
         jSeparator2 = new javax.swing.JSeparator();
@@ -215,11 +278,11 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblTicket = new JXTable(){
-            public Component prepareRenderer(TableCellRenderer renderer,int rowIndex, int vColIndex) 
+            public Component prepareRenderer(TableCellRenderer renderer,int rowIndex, int vColIndex)
             {
                 Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
                 String s = this.getModel().getValueAt(rowIndex, 1).toString();
-                if (s.equalsIgnoreCase("BOOK") ) 
+                if (s.equalsIgnoreCase("BOOK") )
                 {c.setForeground(Color.yellow);
                 } else if(s.equalsIgnoreCase("ISSUE")){
                     c.setForeground(Color.green);
@@ -235,12 +298,15 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
                 else{
                     c.setForeground(Color.WHITE);
                 }
-                return c;} 
+                return c;}
         };
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jXTable1 = new org.jdesktop.swingx.JXTable();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        txtCHFee = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        txtPostage = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        txtOther = new javax.swing.JTextField();
         tabPayment = new javax.swing.JTabbedPane();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblPayment = new javax.swing.JTable();
@@ -272,7 +338,6 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         lblTotalPayment = new javax.swing.JLabel();
         lblDue = new javax.swing.JLabel();
         lblOther = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         txtAcDocFor = new javax.swing.JTextArea();
@@ -281,6 +346,7 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         btnPrint = new javax.swing.JButton();
         btnEmail = new javax.swing.JButton();
         btnOfficeCopy = new javax.swing.JButton();
+        btnAtol = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -395,35 +461,71 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
 
         jTabbedPane1.addTab("Tickets", jScrollPane1);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+        jLabel12.setText("Card Handling Fee:");
+
+        txtCHFee.setText("0.00");
+        txtCHFee.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtCHFeeFocusGained(evt);
             }
-        ));
-        jScrollPane2.setViewportView(jTable2);
+        });
 
-        jTabbedPane1.addTab("Other Service", jScrollPane2);
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel13.setText("Postage:");
 
-        jXTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+        txtPostage.setText("0.00");
+        txtPostage.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtPostageFocusGained(evt);
             }
-        ));
-        jScrollPane4.setViewportView(jXTable1);
+        });
 
-        jTabbedPane1.addTab("Other Charges", jScrollPane4);
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel14.setText("Other:");
+
+        txtOther.setText("0.00");
+        txtOther.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtOtherFocusGained(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtCHFee, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                    .addComponent(txtPostage)
+                    .addComponent(txtOther))
+                .addContainerGap(372, Short.MAX_VALUE))
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(txtCHFee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(4, 4, 4)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel13)
+                    .addComponent(txtPostage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(4, 4, 4)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(txtOther, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(80, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Other Charges", jPanel9);
 
         tabPayment.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         //tabPayment.addChangeListener(tabPaymentListener);
@@ -741,9 +843,6 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 2);
         jPanel4.add(lblOther, gridBagConstraints);
 
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete.png"))); // NOI18N
-        jButton5.setPreferredSize(new java.awt.Dimension(50, 30));
-
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Invoice For", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         txtAcDocFor.setColumns(20);
@@ -795,12 +894,16 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         btnOfficeCopy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnOfficeCopy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
+        btnAtol.setText("ATOL");
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAtol)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCreateDocument)
                 .addGap(0, 0, 0)
                 .addComponent(btnPrint)
@@ -815,6 +918,7 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
             .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnOfficeCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnAtol, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -822,12 +926,9 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(tabPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(tabPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
                 .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -848,8 +949,7 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
                 .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(36, 36, 36)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
                             .addComponent(tabPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
@@ -869,9 +969,22 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
         processPayment(tInvoice);
     }//GEN-LAST:event_btnSubmitPaymentActionPerformed
 
+    private void txtPostageFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPostageFocusGained
+        txtPostage.selectAll();
+    }//GEN-LAST:event_txtPostageFocusGained
+
+    private void txtCHFeeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCHFeeFocusGained
+        txtCHFee.selectAll();
+    }//GEN-LAST:event_txtCHFeeFocusGained
+
+    private void txtOtherFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtOtherFocusGained
+        txtOther.selectAll();
+    }//GEN-LAST:event_txtOtherFocusGained
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.ets.fe.acdoc.gui.AcDocHeaderComponent acDocHeaderComponent;
+    private com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent acDocHeaderComponent;
+    private javax.swing.JButton btnAtol;
     private javax.swing.JButton btnCreateDocument;
     private javax.swing.JButton btnEmail;
     private javax.swing.JButton btnOfficeCopy;
@@ -879,11 +992,13 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
     private javax.swing.JButton btnSubmitPayment;
     private org.jdesktop.swingx.JXBusyLabel busyLabel;
     private javax.swing.JComboBox cmbTType;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -900,18 +1015,15 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable2;
-    private org.jdesktop.swingx.JXTable jXTable1;
     private javax.swing.JLabel lblAddCharge;
     private javax.swing.JLabel lblDue;
     private javax.swing.JLabel lblInvAmount;
@@ -926,6 +1038,9 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
     private javax.swing.JTable tblTicket;
     private javax.swing.JTextArea txtAcDocFor;
     private javax.swing.JTextField txtAmount;
+    private javax.swing.JTextField txtCHFee;
+    private javax.swing.JTextField txtOther;
+    private javax.swing.JTextField txtPostage;
     private javax.swing.JTextField txtRef;
     // End of variables declaration//GEN-END:variables
 
@@ -966,18 +1081,26 @@ public class InvoiceDlg extends JDialog implements PropertyChangeListener {
     }
 
     private void controllComponent(TicketingSalesAcDoc tInvoice) {
-        if (tInvoice.getReference() == null) {
+        if (tInvoice.getId()== null || tInvoice.getStatus().equals(Enums.AcDocStatus.VOID)) {
             btnCreateDocument.setEnabled(true);
             btnEmail.setEnabled(false);
             btnPrint.setEnabled(false);
             btnOfficeCopy.setEnabled(false);
             allowPayment = false;
             tabPayment.setEnabledAt(1, allowPayment);
+            txtCHFee.setEditable(true);
+            txtPostage.setEditable(true);
+            txtOther.setEditable(true);
         } else {
             btnCreateDocument.setEnabled(false);
             btnEmail.setEnabled(true);
             btnPrint.setEnabled(true);
             btnOfficeCopy.setEnabled(true);
+
+            txtCHFee.setEditable(false);
+            txtPostage.setEditable(false);
+            txtOther.setEditable(false);
+
             if (tInvoice.calculateDueAmount().compareTo(new BigDecimal("0.00")) == 0) {
                 allowPayment = false;
                 tabPayment.setEnabledAt(1, allowPayment);

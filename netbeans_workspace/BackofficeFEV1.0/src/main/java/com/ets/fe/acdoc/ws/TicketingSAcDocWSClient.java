@@ -78,8 +78,11 @@ public class TicketingSAcDocWSClient {
 
         String url = APIConfig.get("ws.tsacdoc.report") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo + "&doctype=" + doctype;
 
+        if (clienttype != null) {
+            url = url + "&clienttype=" + clienttype;
+        }
         if (clientid != null) {
-            url = url + "?clienttype=" + clienttype + "?clienttype=" + clienttype;
+            url = url + "&clientid=" + clientid;
         }
 
         InvoiceReport report = RestClientUtil.getEntity(InvoiceReport.class, url, new InvoiceReport());
@@ -93,8 +96,11 @@ public class TicketingSAcDocWSClient {
         String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
 
         String url = APIConfig.get("ws.tsacdoc.history") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo;
+        if (clienttype != null) {
+            url = url + "&clienttype=" + clienttype;
+        }
         if (clientid != null) {
-            url = url + "?clienttype=" + clienttype + "?clienttype=" + clienttype;
+            url = url + "&clientid=" + clientid;
         }
 
         InvoiceReport report = RestClientUtil.getEntity(InvoiceReport.class, url, new InvoiceReport());

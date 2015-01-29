@@ -1,7 +1,9 @@
 package com.ets.fe.acdoc.task;
 
 import com.ets.fe.acdoc.model.AccountingDocument;
+import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
+import com.ets.fe.acdoc.ws.TicketingPAcDocWSClient;
 import com.ets.fe.acdoc.ws.TicketingSAcDocWSClient;
 import javax.swing.SwingWorker;
 
@@ -39,7 +41,18 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
                     break;    
             }
         } else if ("PURCHASE".equals(docClass)) {
-
+            TicketingPAcDocWSClient client = new TicketingPAcDocWSClient();
+            switch (taskType) {
+                case "DETAILS":
+                    accountingDocument = client.getbyId(id);
+                    break;
+                case "VOID":
+                    client._void(id);
+                    break;
+                case "PAYMENT":
+                    client.createNewPayment((TicketingPurchaseAcDoc)accountingDocument);
+                    break;    
+            }
         }
 
         return accountingDocument;

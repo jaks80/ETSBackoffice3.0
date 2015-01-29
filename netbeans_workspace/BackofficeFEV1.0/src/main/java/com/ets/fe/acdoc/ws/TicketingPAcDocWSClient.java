@@ -3,18 +3,28 @@ package com.ets.fe.acdoc.ws;
 import com.ets.accountingdoc.collection.TicketingPurchaseAcDocs;
 import com.ets.fe.APIConfig;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
+import com.ets.fe.acdoc.model.report.InvoiceReport;
+import com.ets.fe.util.DateUtil;
+import com.ets.fe.util.Enums;
 import com.ets.fe.util.RestClientUtil;
+import java.util.Date;
 
 /**
  *
  * @author Yusuf
  */
 public class TicketingPAcDocWSClient {
-    
-        public TicketingPurchaseAcDoc create(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
+
+    public TicketingPurchaseAcDoc create(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
         String url = APIConfig.get("ws.tpacdoc.new");
         TicketingPurchaseAcDoc persistedDoc = RestClientUtil.postEntity(TicketingPurchaseAcDoc.class, url, ticketingPurchaseAcDoc);
         return persistedDoc;
+    }
+
+    public TicketingPurchaseAcDoc createNewPayment(TicketingPurchaseAcDoc payment) {
+        String url = APIConfig.get("ws.tsacdoc.newpayment");
+        TicketingPurchaseAcDoc persistedPayment = RestClientUtil.postEntity(TicketingPurchaseAcDoc.class, url, payment);
+        return persistedPayment;
     }
 
     public TicketingPurchaseAcDoc update(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
@@ -51,5 +61,40 @@ public class TicketingPAcDocWSClient {
         String url = APIConfig.get("ws.tpacdoc.bypnr" + pnr);
         TicketingPurchaseAcDocs docs = RestClientUtil.getEntity(TicketingPurchaseAcDocs.class, url, new TicketingPurchaseAcDocs());
         return docs;
+    }
+
+    public TicketingPurchaseAcDocs getByPnrId(Long pnrId) {
+        String url = APIConfig.get("ws.tpacdoc.bypnrid") + "?pnrId=" + pnrId;
+        TicketingPurchaseAcDocs docs = RestClientUtil.getEntity(TicketingPurchaseAcDocs.class, url, new TicketingPurchaseAcDocs());
+        return docs;
+    }
+
+    public InvoiceReport outstandingDocumentReport(Enums.AcDocType doctype,Long agentid, Date _dateFrom, Date _dateTo) {
+
+        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+
+        String url = APIConfig.get("ws.tpacdoc.report") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo + "&doctype=" + doctype;
+
+        if (agentid != null) {
+            url = url + "&agentid=" + agentid;
+        }
+
+        InvoiceReport report = RestClientUtil.getEntity(InvoiceReport.class, url, new InvoiceReport());
+        return report;
+    }
+
+    public InvoiceReport documentHistoryReport(Long agentid, Date _dateFrom, Date _dateTo) {
+
+        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+
+        String url = APIConfig.get("ws.tsacdoc.history") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo;
+        if (agentid != null) {
+            url = url + "&agentid=" + agentid;
+        }
+
+        InvoiceReport report = RestClientUtil.getEntity(InvoiceReport.class, url, new InvoiceReport());
+        return report;
     }
 }

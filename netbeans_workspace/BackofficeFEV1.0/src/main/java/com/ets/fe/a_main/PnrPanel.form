@@ -367,7 +367,7 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Component class="com.ets.fe.acdoc.gui.AccountingDocumentsComponent" name="accountingDocumentsComponent">
+                <Component class="com.ets.fe.acdoc.gui.comp.AccountingDocumentsComponent" name="accountingDocumentsComponent">
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new AccountingDocumentsComponent(this);"/>
                   </AuxValues>

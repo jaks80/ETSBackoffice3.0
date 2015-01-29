@@ -37,13 +37,8 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
         return subtotal;
     }
 
-        @Override
-    public BigDecimal calculateDocumentedAmount() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     @Override
-    public BigDecimal calculateOtherServiceSubTotal() {
+    public BigDecimal calculateDocumentedAmount() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -61,7 +56,7 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
     public BigDecimal calculateDueAmount() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     public String getVendorRef() {
         return vendorRef;
     }

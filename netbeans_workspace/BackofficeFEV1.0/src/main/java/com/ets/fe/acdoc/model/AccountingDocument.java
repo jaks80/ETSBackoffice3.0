@@ -36,9 +36,7 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
     @XmlElement
     private String remark;
 
-    public abstract BigDecimal calculateTicketedSubTotal();
-
-    public abstract BigDecimal calculateOtherServiceSubTotal();
+    public abstract BigDecimal calculateTicketedSubTotal();    
 
     public abstract BigDecimal calculateAddChargesSubTotal();
     

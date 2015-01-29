@@ -360,7 +360,7 @@ public class Main extends JFrame {
         settings = new AppSettings();
         }
         if (dlg.showDialog(settings)) {
-            SettingsTask task = new SettingsTask(settings);
+            SettingsTask task = new SettingsTask(settings);            
             task.execute();
         }
     }//GEN-LAST:event_menuAppSettingsActionPerformed

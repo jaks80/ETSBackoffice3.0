@@ -1,7 +1,6 @@
 package com.ets.fe.acdoc.model.report;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -20,65 +19,65 @@ public class InvoiceReport implements Serializable{
     private static long serialVersionUID = 1L;
     
     @XmlElement
-    private BigDecimal totalInvAmount = new BigDecimal("0.00");
+    private String totalInvAmount = new String("0.00");
     @XmlElement
-    private BigDecimal totalDMAmount = new BigDecimal("0.00");
+    private String totalDMAmount = new String("0.00");
     @XmlElement
-    private BigDecimal totalCMAmount = new BigDecimal("0.00");
+    private String totalCMAmount = new String("0.00");
     @XmlElement
-    private BigDecimal totalDue = new BigDecimal("0.00");
+    private String totalDue = new String("0.00");
     @XmlElement
-    private BigDecimal totalPayment = new BigDecimal("0.00");
+    private String totalPayment = new String("0.00");
     @XmlElement
-    private BigDecimal totalRefund = new BigDecimal("0.00");
+    private String totalRefund = new String("0.00");
     @XmlElement
     private List<TktingInvoiceSummery> invoices = new ArrayList<>();
 
-    public BigDecimal getTotalInvAmount() {
+    public String getTotalInvAmount() {
         return totalInvAmount;
     }
 
-    public void setTotalInvAmount(BigDecimal totalInvAmount) {
+    public void setTotalInvAmount(String totalInvAmount) {
         this.totalInvAmount = totalInvAmount;
     }
 
-    public BigDecimal getTotalDMAmount() {
+    public String getTotalDMAmount() {
         return totalDMAmount;
     }
 
-    public void setTotalDMAmount(BigDecimal totalDMAmount) {
+    public void setTotalDMAmount(String totalDMAmount) {
         this.totalDMAmount = totalDMAmount;
     }
 
-    public BigDecimal getTotalCMAmount() {
+    public String getTotalCMAmount() {
         return totalCMAmount;
     }
 
-    public void setTotalCMAmount(BigDecimal totalCMAmount) {
+    public void setTotalCMAmount(String totalCMAmount) {
         this.totalCMAmount = totalCMAmount;
     }
 
-    public BigDecimal getTotalDue() {
+    public String getTotalDue() {
         return totalDue;
     }
 
-    public void setTotalDue(BigDecimal totalDue) {
+    public void setTotalDue(String totalDue) {
         this.totalDue = totalDue;
     }
 
-    public BigDecimal getTotalPayment() {
+    public String getTotalPayment() {
         return totalPayment;
     }
 
-    public void setTotalPayment(BigDecimal totalPayment) {
+    public void setTotalPayment(String totalPayment) {
         this.totalPayment = totalPayment;
     }
 
-    public BigDecimal getTotalRefund() {
+    public String getTotalRefund() {
         return totalRefund;
     }
 
-    public void setTotalRefund(BigDecimal totalRefund) {
+    public void setTotalRefund(String totalRefund) {
         this.totalRefund = totalRefund;
     }
 
