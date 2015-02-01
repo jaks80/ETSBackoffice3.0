@@ -56,17 +56,35 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         initComponents();
     }
 
-    public void getSalesDocument() {
+    public void getDocument() {
         taskType = "COMPLETE";
-        if (tabAcDoc.getSelectedIndex() == 0) {
-            int index = tblSales.getSelectedRow();
-            if (index != -1) {
-                Long id = tSAcDocList.get(index).getId();
-                if (!tSAcDocList.get(index).getType().equals(Enums.AcDocType.PAYMENT)) {
-                    accountingDocTask = new AccountingDocTask(id, "SALES", "DETAILS");
-                    accountingDocTask.addPropertyChangeListener(this);
-                    accountingDocTask.execute();
-                }
+        int index = 0;
+        Long id = null;
+
+        if (null != docClass) {
+            switch (docClass) {
+                case "SALES":
+                    index = tblSales.getSelectedRow();
+                    id = tSAcDocList.get(index).getId();
+                    if (index != -1) {
+                        if (!tSAcDocList.get(index).getType().equals(Enums.AcDocType.PAYMENT)) {
+                            accountingDocTask = new AccountingDocTask(id, docClass, "DETAILS");
+                            accountingDocTask.addPropertyChangeListener(this);
+                            accountingDocTask.execute();
+                        }
+                    }
+                    break;
+                case "PURCHASE":
+                    index = tblPurchase.getSelectedRow();
+                    id = tPAcDocList.get(index).getId();
+                    if (index != -1) {
+                        if (!tPAcDocList.get(index).getType().equals(Enums.AcDocType.PAYMENT)) {
+                            accountingDocTask = new AccountingDocTask(id, docClass, "DETAILS");
+                            accountingDocTask.addPropertyChangeListener(this);
+                            accountingDocTask.execute();
+                        }
+                    }
+                    break;
             }
         }
     }
@@ -96,13 +114,17 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         DefaultTableModel model = (DefaultTableModel) tblSales.getModel();
         model.getDataVector().removeAllElements();
         int row = 0;
-        for (TicketingSalesAcDoc s : tSAcDocList) {
-            BigDecimal amount = s.getDocumentedAmount();
-            if (s.getType().equals(Enums.AcDocType.PAYMENT)) {
-                amount = amount.abs();
+        if (!tSAcDocList.isEmpty()) {
+            for (TicketingSalesAcDoc s : tSAcDocList) {
+                BigDecimal amount = s.getDocumentedAmount();
+                if (s.getType().equals(Enums.AcDocType.PAYMENT)) {
+                    amount = amount.abs();
+                }
+                model.insertRow(row, new Object[]{s.getType(), s.getReference(), DateUtil.dateToString(s.getDocIssueDate()), amount, "", s.getStatus()});
+                row++;
             }
-            model.insertRow(row, new Object[]{s.getType(), s.getReference(), DateUtil.dateToString(s.getDocIssueDate()), amount, "", s.getStatus()});
-            row++;
+        } else {
+            model.insertRow(row, new Object[]{"", "", "", "", "", ""});
         }
     }
 
@@ -110,14 +132,18 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         DefaultTableModel model = (DefaultTableModel) tblPurchase.getModel();
         model.getDataVector().removeAllElements();
         int row = 0;
-        for (TicketingPurchaseAcDoc s : tPAcDocList) {
-            BigDecimal amount = s.getDocumentedAmount();
-            if (s.getType().equals(Enums.AcDocType.PAYMENT)) {
-                amount = amount.abs();
+        if (!tPAcDocList.isEmpty()) {
+            for (TicketingPurchaseAcDoc s : tPAcDocList) {
+                BigDecimal amount = s.getDocumentedAmount();
+                if (s.getType().equals(Enums.AcDocType.PAYMENT)) {
+                    amount = amount.abs();
+                }
+                model.insertRow(row, new Object[]{s.getType(), s.getReference(), s.getVendorRef(),
+                    DateUtil.dateToString(s.getDocIssueDate()), amount, s.getStatus()});
+                row++;
             }
-            model.insertRow(row, new Object[]{s.getType(), s.getReference(), s.getVendorRef(),
-                DateUtil.dateToString(s.getDocIssueDate()), amount, s.getStatus()});
-            row++;
+        } else {
+            model.insertRow(row, new Object[]{"", "", "", "", "", ""});
         }
     }
 
@@ -158,10 +184,10 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                     c.setFont(newFont);}
                 return c;} 
         };
-        jButton2 = new javax.swing.JButton();
+        btnViewDocument = new javax.swing.JButton();
         btnPrint = new javax.swing.JButton();
         btnVoid = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
 
         tblSales.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -207,10 +233,10 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
 
         tabAcDoc.addTab("Purchase Documents", jScrollPane2);
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details.png"))); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnViewDocument.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details.png"))); // NOI18N
+        btnViewDocument.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnViewDocumentActionPerformed(evt);
             }
         });
 
@@ -226,7 +252,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
             }
         });
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh24.png"))); // NOI18N
+        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh24.png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -235,9 +261,9 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnViewDocument, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
                 .addComponent(tabAcDoc, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE))
         );
@@ -247,20 +273,20 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(btnViewDocument)
                         .addGap(2, 2, 2)
                         .addComponent(btnPrint)
                         .addGap(2, 2, 2)
-                        .addComponent(jButton1)
+                        .addComponent(btnRefresh)
                         .addGap(18, 18, Short.MAX_VALUE)
                         .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tabAcDoc, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        getSalesDocument();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void btnViewDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewDocumentActionPerformed
+        getDocument();
+    }//GEN-LAST:event_btnViewDocumentActionPerformed
 
     private void btnVoidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoidActionPerformed
         _voidDocument();
@@ -269,14 +295,14 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnPrint;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnViewDocument;
     private javax.swing.JButton btnVoid;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane tabAcDoc;
-    private org.jdesktop.swingx.JXTable tblPurchase;
-    private org.jdesktop.swingx.JXTable tblSales;
+    private static org.jdesktop.swingx.JXTable tblPurchase;
+    private static org.jdesktop.swingx.JXTable tblSales;
     // End of variables declaration//GEN-END:variables
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -330,10 +356,21 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                             }
                         } else {
                             ticketingPurchaseAcDoc = (TicketingPurchaseAcDoc) doc;
+
+                            if (ticketingPurchaseAcDoc.getType().equals(Enums.AcDocType.INVOICE)) {
+                                parent.showTPurchaseInvoiceDlg(ticketingPurchaseAcDoc);
+                            } else if (ticketingPurchaseAcDoc.getType().equals(Enums.AcDocType.DEBITMEMO)
+                                    || ticketingPurchaseAcDoc.getType().equals(Enums.AcDocType.CREDITMEMO)) {
+
+                                if (!ticketingPurchaseAcDoc.getTickets().isEmpty()) {
+                                    parent.showTPurchaseAcDocDlg(ticketingPurchaseAcDoc);
+                                } else {
+                                    parent.showPurchaseAcDocDlg(ticketingPurchaseAcDoc);
+                                }
+                            }
                         }
                         taskType = "";
-                    } else if ("VOID".equals(taskType)) {
-                        //search(pnrId);
+                    } else if ("VOID".equals(taskType)) {                        
                         parent.loadCompletePnr();
                     }
                 } catch (InterruptedException | ExecutionException ex) {
@@ -366,4 +403,8 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
             }
         }
     };
+
+    public TicketingPurchaseAcDoc getPurchaseSummeryInvoice() {
+        return purchaseSummeryInvoice;
+    }
 }

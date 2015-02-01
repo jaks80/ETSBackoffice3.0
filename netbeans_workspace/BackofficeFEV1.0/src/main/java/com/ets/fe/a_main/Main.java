@@ -4,7 +4,8 @@ import com.amadeus.reader.EventSource;
 import com.amadeus.reader.ResponseHandler;
 import com.ets.fe.APIConfig;
 import com.ets.fe.Application;
-import com.ets.fe.acdoc.gui.DueSalesInvoiceFrame;
+import com.ets.fe.acdoc.gui.TPurchaseInvoiceReportingFrame;
+import com.ets.fe.acdoc.gui.TSalesInvoiceReportingFrame;
 import com.ets.fe.app.model.AppSettings;
 import com.ets.fe.client.gui.*;
 import com.ets.fe.client.model.Customer;
@@ -112,6 +113,8 @@ public class Main extends JFrame {
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
         menuDueSalesInvoice = new javax.swing.JMenuItem();
+        jMenu7 = new javax.swing.JMenu();
+        menuPReporting = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -234,7 +237,7 @@ public class Main extends JFrame {
 
         jMenu6.setText("Sales");
 
-        menuDueSalesInvoice.setText("Outstanding Invoice");
+        menuDueSalesInvoice.setText("Sales Invoice: Report");
         menuDueSalesInvoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuDueSalesInvoiceActionPerformed(evt);
@@ -243,6 +246,18 @@ public class Main extends JFrame {
         jMenu6.add(menuDueSalesInvoice);
 
         jMenuBar1.add(jMenu6);
+
+        jMenu7.setText("Purchase");
+
+        menuPReporting.setText("Purchase Invoice: Report");
+        menuPReporting.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuPReportingActionPerformed(evt);
+            }
+        });
+        jMenu7.add(menuPReporting);
+
+        jMenuBar1.add(jMenu7);
 
         setJMenuBar(jMenuBar1);
 
@@ -378,7 +393,7 @@ public class Main extends JFrame {
     }//GEN-LAST:event_menuMainAgentActionPerformed
 
     private void menuDueSalesInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDueSalesInvoiceActionPerformed
-        DueSalesInvoiceFrame frame = new DueSalesInvoiceFrame(desktopPane);
+        TSalesInvoiceReportingFrame frame = new TSalesInvoiceReportingFrame(desktopPane);
         desktopPane.add(frame);
         try {
             frame.setSelected(true);
@@ -387,6 +402,17 @@ public class Main extends JFrame {
         }
         frame.setVisible(true);
     }//GEN-LAST:event_menuDueSalesInvoiceActionPerformed
+
+    private void menuPReportingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPReportingActionPerformed
+        TPurchaseInvoiceReportingFrame frame = new TPurchaseInvoiceReportingFrame(desktopPane);
+        desktopPane.add(frame);
+        try {
+            frame.setSelected(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        frame.setVisible(true);
+    }//GEN-LAST:event_menuPReportingActionPerformed
 
     /**
      * @param args the command line arguments
@@ -432,6 +458,7 @@ public class Main extends JFrame {
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenu jMenu7;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
@@ -443,6 +470,7 @@ public class Main extends JFrame {
     private javax.swing.JMenuItem menuAppSettings;
     private javax.swing.JMenuItem menuDueSalesInvoice;
     private javax.swing.JMenuItem menuMainAgent;
+    private javax.swing.JMenuItem menuPReporting;
     private javax.swing.JMenuItem menuPnrHistory;
     // End of variables declaration//GEN-END:variables
 }

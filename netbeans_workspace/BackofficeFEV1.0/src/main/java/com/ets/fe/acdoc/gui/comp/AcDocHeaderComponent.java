@@ -31,8 +31,11 @@ public class AcDocHeaderComponent extends JPanel {
             txtVendorRef.setVisible(false);
             lblVendorRef.setVisible(false);
         } else if (doc instanceof TicketingPurchaseAcDoc) {
+            TicketingPurchaseAcDoc temp = (TicketingPurchaseAcDoc) doc;
             txtVendorRef.setVisible(true);
             lblVendorRef.setVisible(true);
+            txtVendorRef.setText(temp.getVendorRef());
+            cmbTerms.setEnabled(true);
         } else if (doc instanceof OtherSalesAcDoc) {
             txtVendorRef.setVisible(false);
             lblVendorRef.setVisible(false);
@@ -92,7 +95,7 @@ public class AcDocHeaderComponent extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(jLabel2, gridBagConstraints);
 
-        jLabel3.setText("Terms");
+        jLabel3.setText("Terms *");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -172,7 +175,7 @@ public class AcDocHeaderComponent extends JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox cmbTerms;
+    public static javax.swing.JComboBox cmbTerms;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -181,6 +184,7 @@ public class AcDocHeaderComponent extends JPanel {
     private javax.swing.JTextField txtInvRef;
     private javax.swing.JTextField txtIssueDate;
     private javax.swing.JTextField txtUser;
-    private javax.swing.JTextField txtVendorRef;
+    public static javax.swing.JTextField txtVendorRef;
     // End of variables declaration//GEN-END:variables
+
 }

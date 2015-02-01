@@ -64,9 +64,10 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         return totalPayment;
     }
 
+    @Override
     public BigDecimal calculateRelatedDocBalance() {
         BigDecimal relAmount = new BigDecimal("0.00");
-        for (TicketingSalesAcDoc doc : this.relatedDocuments) {
+        for (AccountingDocument doc : this.relatedDocuments) {
             if (!doc.getType().equals(Enums.AcDocType.PAYMENT)) {
                 if (this.getId() != null) {
                     relAmount = relAmount.add(doc.getDocumentedAmount());
@@ -92,8 +93,7 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
 
                 if (doc.getDocumentedAmount() == null) {
                     doc.setDocumentedAmount(doc.calculateDocumentedAmount());
-                }
-                System.out.println("Doc amout: " + doc.getDocumentedAmount());
+                }                
                 dueAmount = dueAmount.add(doc.getDocumentedAmount());
             }
         }
@@ -133,8 +133,9 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         return parent;
     }
 
-    public void setParent(TicketingSalesAcDoc parent) {
-        this.parent = parent;
+    @Override
+    public void setParent(AccountingDocument parent) {
+        this.parent = (TicketingSalesAcDoc) parent;
     }
 
     public Payment getPayment() {

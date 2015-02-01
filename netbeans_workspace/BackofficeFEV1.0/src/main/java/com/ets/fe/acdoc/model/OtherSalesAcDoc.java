@@ -1,5 +1,6 @@
 package com.ets.fe.acdoc.model;
 
+import com.ets.fe.pnr.model.Pnr;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
@@ -83,6 +84,21 @@ public class OtherSalesAcDoc extends AccountingDocument implements Serializable{
 
     public void setParent(OtherSalesAcDoc parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public BigDecimal calculateRelatedDocBalance() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Pnr getPnr() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setParent(AccountingDocument doc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -19,9 +19,9 @@
           <Group type="102" alignment="1" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="btnVoid" min="-2" pref="30" max="-2" attributes="0"/>
-                  <Component id="jButton2" min="-2" pref="30" max="-2" attributes="0"/>
+                  <Component id="btnViewDocument" min="-2" pref="30" max="-2" attributes="0"/>
                   <Component id="btnPrint" min="-2" pref="30" max="-2" attributes="0"/>
-                  <Component id="jButton1" min="-2" pref="30" max="-2" attributes="0"/>
+                  <Component id="btnRefresh" min="-2" pref="30" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
               <Component id="tabAcDoc" pref="507" max="32767" attributes="0"/>
@@ -34,11 +34,11 @@
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnViewDocument" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                       <Component id="btnPrint" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnRefresh" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="32767" attributes="0"/>
                       <Component id="btnVoid" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -123,6 +123,7 @@
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JXTable(){&#xd;&#xa;public Component prepareRenderer(TableCellRenderer renderer,int rowIndex, int vColIndex) &#xd;&#xa;{&#xd;&#xa;Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);&#xd;&#xa;String s = this.getModel().getValueAt(rowIndex, 5).toString();&#xd;&#xa;if(s.equalsIgnoreCase(&quot;VOID&quot;)){&#xd;&#xa;Map  attributes = c.getFont().getAttributes();&#xd;&#xa;attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);&#xd;&#xa;Font newFont = new Font(attributes);&#xd;&#xa;c.setFont(newFont);}&#xd;&#xa;return c;} &#xd;&#xa;}"/>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
               </AuxValues>
             </Component>
           </SubComponents>
@@ -194,20 +195,21 @@
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JXTable(){&#xd;&#xa;public Component prepareRenderer(TableCellRenderer renderer,int rowIndex, int vColIndex) &#xd;&#xa;{&#xd;&#xa;Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);&#xd;&#xa;String s = this.getModel().getValueAt(rowIndex, 5).toString();&#xd;&#xa;if(s.equalsIgnoreCase(&quot;VOID&quot;)){&#xd;&#xa;Map  attributes = c.getFont().getAttributes();&#xd;&#xa;attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);&#xd;&#xa;Font newFont = new Font(attributes);&#xd;&#xa;c.setFont(newFont);}&#xd;&#xa;return c;} &#xd;&#xa;}"/>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
               </AuxValues>
             </Component>
           </SubComponents>
         </Container>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="btnViewDocument">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/icons/details.png"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnViewDocumentActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnPrint">
@@ -236,7 +238,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVoidActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="btnRefresh">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/icons/refresh24.png"/>

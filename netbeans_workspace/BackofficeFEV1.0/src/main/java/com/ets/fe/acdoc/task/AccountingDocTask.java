@@ -37,8 +37,8 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
                     client._void(id);
                     break;
                 case "PAYMENT":
-                    client.createNewPayment((TicketingSalesAcDoc)accountingDocument);
-                    break;    
+                    client.createNewPayment((TicketingSalesAcDoc) accountingDocument);
+                    break;
             }
         } else if ("PURCHASE".equals(docClass)) {
             TicketingPAcDocWSClient client = new TicketingPAcDocWSClient();
@@ -50,8 +50,8 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
                     client._void(id);
                     break;
                 case "PAYMENT":
-                    client.createNewPayment((TicketingPurchaseAcDoc)accountingDocument);
-                    break;    
+                    client.createNewPayment((TicketingPurchaseAcDoc) accountingDocument);
+                    break;
             }
         }
 

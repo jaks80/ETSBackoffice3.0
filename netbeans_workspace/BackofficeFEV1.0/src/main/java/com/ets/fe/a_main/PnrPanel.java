@@ -4,6 +4,7 @@ import com.ets.fe.acdoc.gui.comp.AccountingDocumentsComponent;
 import com.ets.fe.a_maintask.CompletePnrTask;
 import com.ets.fe.acdoc.bo.AcDocUtil;
 import com.ets.fe.acdoc.gui.*;
+import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.client.gui.AgentFrame;
@@ -114,7 +115,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         Window w = SwingUtilities.getWindowAncestor(this);
         Frame owner = w instanceof Frame ? (Frame) w : null;
 
-        InvoiceDlg dlg = new InvoiceDlg(owner);
+        SalesInvoiceDlg dlg = new SalesInvoiceDlg(owner);
         dlg.setLocationRelativeTo(this);
         if (dlg.showDialog(acdoc)) {
             //callAccountingDocs();
@@ -148,15 +149,59 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         SalesAcDocumentDlg dlg = new SalesAcDocumentDlg(owner);
         dlg.setLocationRelativeTo(this);
         if (dlg.showDialog(acdoc)) {
-            callAccountingDocs();
+            //callAccountingDocs();
+            loadCompletePnr();
+        }
+    }
+    
+    public void showTPurchaseInvoiceDlg(TicketingPurchaseAcDoc acdoc) {
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+
+        PurchaseInvoiceDlg dlg = new PurchaseInvoiceDlg(owner);
+        dlg.setLocationRelativeTo(this);
+        if (dlg.showDialog(acdoc)) {           
+            //callAccountingDocs();
+            loadCompletePnr();
         }
     }
 
+    public void showTPurchaseAcDocDlg(TicketingPurchaseAcDoc acdoc) {
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+
+        TicketingPurchaseDocDlg dlg = new TicketingPurchaseDocDlg(owner);
+        dlg.setLocationRelativeTo(this);
+        if (dlg.showDialog(acdoc)) {
+            //callAccountingDocs();
+            loadCompletePnr();
+        }
+    }
+    
+    public void showPurchaseAcDocDlg(TicketingPurchaseAcDoc acdoc) {
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+
+        if (acdoc.getId() == null) {
+            TicketingPurchaseAcDoc invoice = accountingDocumentsComponent.getPurchaseSummeryInvoice();
+            acdoc.setPnr(pnr);
+            acdoc.setReference(invoice.getReference());
+            acdoc.setParent(invoice);
+            acdoc.setDocIssueDate(new java.util.Date());
+        }
+        PurchaseAcDocumentDlg dlg = new PurchaseAcDocumentDlg(owner);
+        dlg.setLocationRelativeTo(this);
+        if (dlg.showDialog(acdoc)) {
+            //callAccountingDocs();
+            loadCompletePnr();
+        }
+    }
+        
     public void loadCompletePnr(){
      completePnrTask = new CompletePnrTask(pnrId, progressBar);
-        completePnrTask.addPropertyChangeListener(this);
-        completePnrTask.execute();
-        callAccountingDocs();
+     completePnrTask.addPropertyChangeListener(this);
+     completePnrTask.execute();
+     callAccountingDocs();
     }
     /**
      * This method is called from within the constructor to initialize the form.

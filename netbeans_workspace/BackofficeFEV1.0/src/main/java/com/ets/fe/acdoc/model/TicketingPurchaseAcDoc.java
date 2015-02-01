@@ -2,6 +2,7 @@ package com.ets.fe.acdoc.model;
 
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
+import com.ets.fe.util.Enums;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -24,9 +25,17 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
     @XmlElement
     private String vendorRef;
     @XmlElement
+    private Pnr pnr;
+    @XmlElement
     private List<Ticket> tickets = new ArrayList<>();
     @XmlElement
-    private Pnr pnr;
+    private List<AdditionalChargeLine> additionalChargeLines = new ArrayList<>();
+    @XmlElement
+    private Set<TicketingPurchaseAcDoc> relatedDocuments = new LinkedHashSet<>();
+    @XmlElement
+    private TicketingPurchaseAcDoc parent;
+    @XmlElement
+    private Payment payment;
 
     @Override
     public BigDecimal calculateTicketedSubTotal() {
@@ -39,22 +48,63 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
 
     @Override
     public BigDecimal calculateDocumentedAmount() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return calculateTicketedSubTotal().add(calculateAddChargesSubTotal());
     }
 
     @Override
     public BigDecimal calculateAddChargesSubTotal() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        BigDecimal subtotal = new BigDecimal("0.00");
+        for (AdditionalChargeLine l : this.getAdditionalChargeLines()) {
+            subtotal = subtotal.add(l.getAmount());
+        }
+        return subtotal;
     }
 
     @Override
     public BigDecimal calculateTotalPayment() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        BigDecimal totalPayment = new BigDecimal("0.00");
+        for (AccountingDocument doc : this.relatedDocuments) {
+            if (doc.getType().equals(Enums.AcDocType.PAYMENT)) {
+                totalPayment = totalPayment.add(doc.getDocumentedAmount());//Can not use calculate
+            }
+        }
+        return totalPayment;
+    }
+
+    @Override
+    public BigDecimal calculateRelatedDocBalance() {
+        BigDecimal relAmount = new BigDecimal("0.00");
+        for (AccountingDocument doc : this.relatedDocuments) {
+            if (!doc.getType().equals(Enums.AcDocType.PAYMENT)) {
+                if (this.getId() != null) {
+                    relAmount = relAmount.add(doc.getDocumentedAmount());
+                } else {
+                }
+
+            }
+        }
+        return relAmount;
     }
 
     @Override
     public BigDecimal calculateDueAmount() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        BigDecimal dueAmount = new BigDecimal("0.00");
+        BigDecimal invoiceAmount = getDocumentedAmount();
+
+        if (invoiceAmount == null) {
+            invoiceAmount = calculateDocumentedAmount();
+        }
+
+        if (getType().equals(Enums.AcDocType.INVOICE)) {
+            for (AccountingDocument doc : this.relatedDocuments) {
+
+                if (doc.getDocumentedAmount() == null) {
+                    doc.setDocumentedAmount(doc.calculateDocumentedAmount());
+                }
+                dueAmount = dueAmount.add(doc.getDocumentedAmount());
+            }
+        }
+        return invoiceAmount.add(dueAmount);
     }
 
     public String getVendorRef() {
@@ -73,11 +123,45 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
         this.tickets = tickets;
     }
 
+    @Override
     public Pnr getPnr() {
         return pnr;
     }
 
     public void setPnr(Pnr pnr) {
         this.pnr = pnr;
+    }
+
+    public List<AdditionalChargeLine> getAdditionalChargeLines() {
+        return additionalChargeLines;
+    }
+
+    public void setAdditionalChargeLines(List<AdditionalChargeLine> additionalChargeLines) {
+        this.additionalChargeLines = additionalChargeLines;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
+    public Set<TicketingPurchaseAcDoc> getRelatedDocuments() {
+        return relatedDocuments;
+    }
+
+    public void setRelatedDocuments(Set<TicketingPurchaseAcDoc> relatedDocuments) {
+        this.relatedDocuments = relatedDocuments;
+    }
+
+    public TicketingPurchaseAcDoc getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(AccountingDocument parent) {
+        this.parent = (TicketingPurchaseAcDoc) parent;
     }
 }

@@ -1,8 +1,8 @@
 package com.ets.fe.acdoc.gui;
 
 import com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent;
-import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
-import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
+import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
+import com.ets.fe.acdoc.task.TktingPurchaseDocTask;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.util.Enums;
@@ -28,41 +28,40 @@ import org.jdesktop.swingx.JXTable;
  *
  * @author Yusuf
  */
-public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListener {
-
-    private NewTSalesDocumentTask newTSalesDocumentTask;
-    private String taskType;
+public class TicketingPurchaseDocDlg extends JDialog implements PropertyChangeListener {
+       
     private Pnr pnr;
     private List<Ticket> tickets;
-    private TicketingSalesAcDoc document;
+    private TicketingPurchaseAcDoc document;
+    
+    private String taskType;
+    private TktingPurchaseDocTask newTPurchaseDocumentTask;
 
-    public TicketingSalesDocDlg(Frame parent) {
+    public TicketingPurchaseDocDlg(Frame parent) {
         super(parent, true);
         initComponents();
     }
 
-    public boolean showDialog(TicketingSalesAcDoc document) {
+    public boolean showDialog(TicketingPurchaseAcDoc document) {
         displayDocument(document);
         setLocationRelativeTo(this);
         setVisible(true);
         return true;
     }
 
-    private void controllComponent(TicketingSalesAcDoc document) {
-        if (document.getId() == null) {
-            btnCreateDocument.setEnabled(true);
+    private void controllComponent(TicketingPurchaseAcDoc document) {
+        if (document.getId() == null) {            
             btnEmail.setEnabled(false);
             btnPrint.setEnabled(false);
             btnOfficeCopy.setEnabled(false);
-        } else {
-            btnCreateDocument.setEnabled(false);
+        } else {            
             btnEmail.setEnabled(true);
             btnPrint.setEnabled(true);
             btnOfficeCopy.setEnabled(true);
         }
     }
 
-    private void displayDocument(TicketingSalesAcDoc document) {
+    private void displayDocument(TicketingPurchaseAcDoc document) {
         this.document = document;
         this.pnr = document.getPnr();
         this.tickets = document.getTickets();
@@ -82,21 +81,21 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
         }
     }
 
-    private void displayBalance(TicketingSalesAcDoc invoice) {
+    private void displayBalance(TicketingPurchaseAcDoc invoice) {
         lblSubTotal.setText(invoice.calculateTicketedSubTotal().add(invoice.calculateAddChargesSubTotal()).toString());
         lblAddCharge.setText(invoice.calculateAddChargesSubTotal().toString());
         lblInvAmount.setText(invoice.calculateDocumentedAmount().toString());
     }
 
-    public void createDocument() {
-        String terms = (String) AcDocHeaderComponent.cmbTerms.getSelectedItem();
-        if (!"Select".equals(terms)) {
-            taskType = "CREATE";
-            document.setTerms(terms);  
-            newTSalesDocumentTask = new NewTSalesDocumentTask(document, progressBar);
-            newTSalesDocumentTask.addPropertyChangeListener(this);
-            newTSalesDocumentTask.execute();
-        }
+    public void saveDocument() {
+        btnSave.setEnabled(false);
+        String terms = (String) AcDocHeaderComponent.cmbTerms.getSelectedItem();        
+            taskType = "SAVE";
+            document.setTerms(terms);
+            document.setVendorRef(AcDocHeaderComponent.txtVendorRef.getText());
+            newTPurchaseDocumentTask = new TktingPurchaseDocTask(document, progressBar);
+            newTPurchaseDocumentTask.addPropertyChangeListener(this);
+            newTPurchaseDocumentTask.execute();        
     }
 
     public void populateTblTicket() {
@@ -112,7 +111,7 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
 
         for (Ticket t : this.tickets) {
             boolean invoiced = true;
-            if (t.getTicketingSalesAcDoc() == null) {
+            if (t.getTicketingPurchaseAcDoc() == null) {
                 invoiced = false;
             } else {
                 invoiced = true;
@@ -186,7 +185,7 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
         jScrollPane5 = new javax.swing.JScrollPane();
         txtAcDocFor = new javax.swing.JTextArea();
         jPanel7 = new javax.swing.JPanel();
-        btnCreateDocument = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
         btnPrint = new javax.swing.JButton();
         btnEmail = new javax.swing.JButton();
         btnOfficeCopy = new javax.swing.JButton();
@@ -258,7 +257,7 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Passenger Name", "Status", "Gross Fare", "Disc", "ATOL", "NetPayable"
+                "Passenger Name", "Status", "Base Fare", "Tax", "Disc", "Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -397,14 +396,14 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
         jPanel7.setBackground(new java.awt.Color(102, 102, 102));
         jPanel7.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        btnCreateDocument.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/createInvoice.png"))); // NOI18N
-        btnCreateDocument.setToolTipText("Create New Invoice");
-        btnCreateDocument.setFocusable(false);
-        btnCreateDocument.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnCreateDocument.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnCreateDocument.addActionListener(new java.awt.event.ActionListener() {
+        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save24.png"))); // NOI18N
+        btnSave.setToolTipText("Create New Invoice");
+        btnSave.setFocusable(false);
+        btnSave.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSave.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateDocumentActionPerformed(evt);
+                btnSaveActionPerformed(evt);
             }
         });
 
@@ -429,7 +428,7 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
         lblTitle.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblTitle.setForeground(new java.awt.Color(255, 51, 0));
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblTitle.setText("AC Document");
+        lblTitle.setText("Purchase AC Document");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -438,7 +437,7 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnCreateDocument)
+                .addComponent(btnSave)
                 .addGap(0, 0, 0)
                 .addComponent(btnPrint)
                 .addGap(0, 0, 0)
@@ -448,7 +447,7 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnCreateDocument, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnOfficeCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -490,17 +489,17 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCreateDocumentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateDocumentActionPerformed
-        createDocument();
-    }//GEN-LAST:event_btnCreateDocumentActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        saveDocument();
+    }//GEN-LAST:event_btnSaveActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent acDocHeaderComponent;
-    private javax.swing.JButton btnCreateDocument;
     private javax.swing.JButton btnEmail;
     private javax.swing.JButton btnOfficeCopy;
     private javax.swing.JButton btnPrint;
+    private javax.swing.JButton btnSave;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -534,14 +533,15 @@ public class TicketingSalesDocDlg extends JDialog implements PropertyChangeListe
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    if ("CREATE".equals(taskType)) {
-                        document = newTSalesDocumentTask.get();
+                    if ("SAVE".equals(taskType)) {
+                        document = newTPurchaseDocumentTask.get();
                         displayDocument(document);
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(SalesInvoiceDlg.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
                     taskType = "";
+                    btnSave.setEnabled(false);
                 }
             }
         }

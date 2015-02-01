@@ -41,12 +41,20 @@ public class DocumentSearchComp extends javax.swing.JPanel implements PropertyCh
     private static Enums.ClientType client_type;
     private static Long client_id;
 
+
     public DocumentSearchComp() {
+        initComponents();
+        
+    }
+    public DocumentSearchComp(boolean _rdoAgent, boolean _rdoCustomer, boolean _rdoAll) {
         initComponents();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 rdoAgent.doClick();
+                rdoAgent.setVisible(_rdoAgent);
+                rdoCustomer.setVisible(_rdoCustomer);
+                rdoAll.setVisible(_rdoAll);
             }
         });
     }
@@ -95,7 +103,7 @@ public class DocumentSearchComp extends javax.swing.JPanel implements PropertyCh
         });
     }
 
-    private void agentTask() {
+    public void agentTask() {
         busyLabel.setBusy(true);
         agentTask = new AgentSearchTask();
         agentTask.addPropertyChangeListener(this);

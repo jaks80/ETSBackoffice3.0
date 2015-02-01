@@ -1,10 +1,8 @@
 package com.ets.fe.acdoc.task;
 
-import com.ets.fe.acdoc.model.report.InvoiceReport;
-import com.ets.fe.acdoc.ws.TicketingSAcDocWSClient;
+import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
+import com.ets.fe.acdoc.ws.TicketingPAcDocWSClient;
 import com.ets.fe.client.gui.AgentSearchTask;
-import com.ets.fe.util.Enums;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JProgressBar;
@@ -14,44 +12,42 @@ import javax.swing.SwingWorker;
  *
  * @author Yusuf
  */
-public class AcDocReportingTask extends SwingWorker<InvoiceReport, Integer> {
+public class TktingPurchaseDocTask extends SwingWorker<TicketingPurchaseAcDoc, Integer> {
 
+    private final Long pnrId;
     private JProgressBar progressBar;
-    private Enums.AcDocType doctype = null;
-    private Enums.ClientType clienttype = null;
-    private Long clientid = null;
-    private Date dateFrom = null;
-    private Date dateTo = null;
+    private TicketingPurchaseAcDoc document;
 
-    public AcDocReportingTask(Enums.AcDocType doctype, Enums.ClientType clienttype,
-            Long clientid, Date dateFrom, Date dateTo,JProgressBar progressBar) {
-
-        this.doctype = doctype;
-        this.clienttype = clienttype;
-        this.clientid = clientid;
-        this.dateFrom = dateFrom;
-        this.dateTo = dateTo;
+    public TktingPurchaseDocTask(Long pnrId, JProgressBar progressBar) {
+        this.pnrId = pnrId;
         this.progressBar = progressBar;
+        this.document = null;
+    }
+
+    public TktingPurchaseDocTask(TicketingPurchaseAcDoc draftDocument, JProgressBar progressBar) {
+        this.document = draftDocument;
+        this.progressBar = progressBar;
+        this.pnrId = null;
     }
 
     @Override
-    protected InvoiceReport doInBackground() throws Exception {
+    protected TicketingPurchaseAcDoc doInBackground() throws Exception {
+
         setProgress(10);
         Progress p = new Progress();
         Thread t = new Thread(p);
         t.start();
 
-        TicketingSAcDocWSClient client = new TicketingSAcDocWSClient();
-        InvoiceReport report = null;
+        TicketingPAcDocWSClient client = new TicketingPAcDocWSClient();
 
-        if (doctype == null) {
-            report = client.documentHistoryReport(clienttype, clientid, dateFrom, dateTo);
+        if (document.getId() == null) {
+            document = client.create(document);
         } else {
-            report = client.outstandingDocumentReport(doctype, clienttype, clientid, dateFrom, dateTo);
+            document = client.update(document);
         }
 
         p.cancel();
-        return report;
+        return document;
     }
 
     @Override
@@ -89,5 +85,4 @@ public class AcDocReportingTask extends SwingWorker<InvoiceReport, Integer> {
             stop = true;
         }
     }
-
 }

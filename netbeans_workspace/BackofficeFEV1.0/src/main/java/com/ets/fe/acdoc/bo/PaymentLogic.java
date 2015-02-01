@@ -1,6 +1,7 @@
 package com.ets.fe.acdoc.bo;
 
 import com.ets.fe.Application;
+import com.ets.fe.acdoc.model.AccountingDocument;
 import com.ets.fe.acdoc.model.Payment;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.util.Enums;
@@ -24,7 +25,7 @@ public class PaymentLogic {
      * @param type
      * @return
      */
-    public Payment processSinglePayment(BigDecimal amount, TicketingSalesAcDoc invoice, String remark, Enums.PaymentType type) {
+    public Payment processSinglePayment(BigDecimal amount, AccountingDocument invoice, String remark, Enums.PaymentType type) {
         if (amount.compareTo(invoice.calculateDueAmount().abs()) > 0) {
             return null;
         } else {

@@ -3,7 +3,7 @@ package com.ets.fe.acdoc.gui;
 import com.ets.fe.acdoc.gui.comp.DocumentSearchComp;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
-import com.ets.fe.acdoc.task.AcDocReportingTask;
+import com.ets.fe.acdoc.task.SalesAcDocReportingTask;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.Color;
@@ -24,18 +24,18 @@ import org.jdesktop.swingx.JXTable;
  *
  * @author Yusuf
  */
-public class DueSalesInvoiceFrame extends javax.swing.JInternalFrame implements PropertyChangeListener {
+public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame implements PropertyChangeListener {
 
     private JDesktopPane desktopPane;
-    private AcDocReportingTask task;
+    private SalesAcDocReportingTask task;
     private InvoiceReport report;
 
-    public DueSalesInvoiceFrame(JDesktopPane desktopPane) {
+    public TSalesInvoiceReportingFrame(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
         initComponents();
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
         dtTo.setDate(DateUtil.getEndOfMonth());
-        documentSearchComponent = new DocumentSearchComp();
+        documentSearchComponent = new DocumentSearchComp(true,true,true);
     }
 
     private void search() {
@@ -47,11 +47,11 @@ public class DueSalesInvoiceFrame extends javax.swing.JInternalFrame implements 
         Date to = dtTo.getDate();
 
         if (rdoDueInvoice.isSelected()) {
-            task = new AcDocReportingTask(Enums.AcDocType.INVOICE, client_type, client_id, from, to, progressBar);
+            task = new SalesAcDocReportingTask(Enums.AcDocType.INVOICE, client_type, client_id, from, to, progressBar);
         } else if (rdoDueRefund.isSelected()) {
-            task = new AcDocReportingTask(Enums.AcDocType.REFUND, client_type, client_id, from, to, progressBar);
+            task = new SalesAcDocReportingTask(Enums.AcDocType.REFUND, client_type, client_id, from, to, progressBar);
         } else if (rdoInvHistory.isSelected()) {
-            task = new AcDocReportingTask(null, client_type, client_id, from, to, progressBar);
+            task = new SalesAcDocReportingTask(null, client_type, client_id, from, to, progressBar);
         }
 
         task.addPropertyChangeListener(this);
@@ -363,6 +363,7 @@ public class DueSalesInvoiceFrame extends javax.swing.JInternalFrame implements 
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 4);
         jPanel2.add(lblDue, gridBagConstraints);
 
+        tblReport.setBackground(new java.awt.Color(102, 102, 102));
         tblReport.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -552,7 +553,7 @@ public class DueSalesInvoiceFrame extends javax.swing.JInternalFrame implements 
                     report = task.get();
                     populateTable();
                 } catch (InterruptedException | ExecutionException ex) {
-                    Logger.getLogger(DueSalesInvoiceFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(TSalesInvoiceReportingFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
                     btnSearch.setEnabled(true);
                 }

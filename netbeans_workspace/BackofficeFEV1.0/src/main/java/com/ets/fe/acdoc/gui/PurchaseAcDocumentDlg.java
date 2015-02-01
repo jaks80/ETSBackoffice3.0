@@ -1,8 +1,9 @@
 package com.ets.fe.acdoc.gui;
 
 import com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent;
-import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
+import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
+import com.ets.fe.acdoc.task.TktingPurchaseDocTask;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.util.CheckInput;
 import com.ets.fe.util.Enums;
@@ -19,13 +20,13 @@ import java.util.logging.Logger;
  *
  * @author Yusuf
  */
-public class SalesAcDocumentDlg extends javax.swing.JDialog implements PropertyChangeListener {
+public class PurchaseAcDocumentDlg extends javax.swing.JDialog implements PropertyChangeListener {
 
-    private NewTSalesDocumentTask newTSalesDocumentTask;
+    private TktingPurchaseDocTask tktingPurchaseDocTask;
     private Pnr pnr;
-    private TicketingSalesAcDoc document;
+    private TicketingPurchaseAcDoc document;
 
-    public SalesAcDocumentDlg(Frame parent) {
+    public PurchaseAcDocumentDlg(Frame parent) {
         super(parent, true);
         initComponents();
         CheckInput a = new CheckInput();
@@ -33,14 +34,14 @@ public class SalesAcDocumentDlg extends javax.swing.JDialog implements PropertyC
         txtAmount.setDocument(a);
     }
 
-    public boolean showDialog(TicketingSalesAcDoc document) {
+    public boolean showDialog(TicketingPurchaseAcDoc document) {
         displayDocument(document);
         setLocationRelativeTo(this);
         setVisible(true);
         return true;
     }
 
-    private void displayDocument(TicketingSalesAcDoc document) {
+    private void displayDocument(TicketingPurchaseAcDoc document) {
         this.document = document;
         this.pnr = document.getPnr();
         AcDocType docType = document.getType();
@@ -86,16 +87,16 @@ public class SalesAcDocumentDlg extends javax.swing.JDialog implements PropertyC
                 }
 
                 document.setStatus(Enums.AcDocStatus.ACTIVE);
-                newTSalesDocumentTask = new NewTSalesDocumentTask(document, progressBar);
-                newTSalesDocumentTask.addPropertyChangeListener(this);
-                newTSalesDocumentTask.execute();
+                tktingPurchaseDocTask = new TktingPurchaseDocTask(document, progressBar);
+                tktingPurchaseDocTask.addPropertyChangeListener(this);
+                tktingPurchaseDocTask.execute();
             } else {
 
             }
         }
     }
 
-    private void controllComponent(TicketingSalesAcDoc document) {
+    private void controllComponent(TicketingPurchaseAcDoc document) {
         if (document.getId() == null) {
             btnCreateDocument.setEnabled(true);
             btnEmail.setEnabled(false);
@@ -383,7 +384,7 @@ public class SalesAcDocumentDlg extends javax.swing.JDialog implements PropertyC
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    document = newTSalesDocumentTask.get();
+                    document = tktingPurchaseDocTask.get();
                     displayDocument(document);
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(SalesInvoiceDlg.class.getName()).log(Level.SEVERE, null, ex);

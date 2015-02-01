@@ -116,10 +116,25 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuDueSalesInvoice">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Outstanding Invoice"/>
+                <Property name="text" type="java.lang.String" value="Sales Invoice: Report"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuDueSalesInvoiceActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="jMenu7">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Purchase"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="menuPReporting">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Purchase Invoice: Report"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuPReportingActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

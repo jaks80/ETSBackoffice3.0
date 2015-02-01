@@ -1,6 +1,7 @@
 package com.ets.fe.acdoc.model;
 
 import com.ets.fe.PersistentObject;
+import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.util.Enums.AcDocStatus;
 import com.ets.fe.util.Enums.AcDocType;
 import java.io.Serializable;
@@ -40,11 +41,17 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
 
     public abstract BigDecimal calculateAddChargesSubTotal();
     
+    public abstract BigDecimal calculateRelatedDocBalance();
+    
     public abstract BigDecimal calculateDocumentedAmount();
 
     public abstract BigDecimal calculateTotalPayment();
 
     public abstract BigDecimal calculateDueAmount();
+    
+    public abstract Pnr getPnr();
+    
+    public abstract void setParent(AccountingDocument doc);
 
     public AcDocType getType() {
         return type;
