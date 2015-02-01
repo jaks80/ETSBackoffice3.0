@@ -1,13 +1,10 @@
 package com.ets.accountingdoc.service;
 
 import com.ets.Application;
-import com.ets.accountingdoc.dao.AdditionalChgLineDAO;
 import com.ets.accountingdoc.dao.TSalesAcDocDAO;
-import com.ets.accountingdoc.domain.AdditionalChargeLine;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accountingdoc.logic.TicketingAcDocBL;
-import com.ets.pnr.dao.TicketDAO;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.pnr.service.PnrService;
@@ -18,7 +15,6 @@ import com.ets.util.Enums;
 import com.ets.util.Enums.AcDocType;
 import com.ets.util.PnrUtil;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -38,11 +34,7 @@ public class TSalesAcDocService {
     @Autowired
     private PnrService pnrService;
     @Autowired
-    private TicketDAO ticketDAO;
-    @Autowired
-    TPurchaseAcDocService purchase_service;
-    @Autowired
-    private AdditionalChgLineDAO additionalChgLineDAO;
+    TPurchaseAcDocService purchase_service;    
 
     /**
      * If there is no accounting document in Pnr it creates an invoiced.
@@ -76,8 +68,6 @@ public class TSalesAcDocService {
             draftDocument = logic.newTicketingDraftInvoice(invoice, uninvoicedTicket);
 
         } else if (invoice.getStatus().equals(Enums.AcDocStatus.VOID)) {
-            //invoice.setReference(null);
-            //invoice.setStatus(Enums.AcDocStatus.ACTIVE);
             Set<Ticket> uninvoicedTicket = PnrUtil.getUnInvoicedTicket(pnr);
             draftDocument = logic.newTicketingDraftInvoice(invoice, uninvoicedTicket);
         } else {
@@ -85,8 +75,10 @@ public class TSalesAcDocService {
             Set<Ticket> reIssuedTickets = PnrUtil.getUnInvoicedReIssuedTicket(pnr);
             Set<Ticket> refundedTickets = PnrUtil.getUnRefundedTickets(pnr);
 
+            //We need only Invoice here not children
             invoice.setTickets(null);
             invoice.setRelatedDocuments(null);
+            invoice.setAdditionalChargeLines(null);
 
             if (!reIssuedTickets.isEmpty()) {
                 draftDocument = logic.newTicketingDraftDMemo(invoice, reIssuedTickets);
@@ -124,14 +116,17 @@ public class TSalesAcDocService {
         if (!doc.getTickets().isEmpty() || !doc.getAdditionalChargeLines().isEmpty()) {
             doc.setDocumentedAmount(doc.calculateDocumentedAmount());
         }
-        doc.setStatus(Enums.AcDocStatus.ACTIVE);               
-        dao.save(doc);
-
+        
+        TicketingPurchaseAcDoc p_doc = null;
         if(!doc.getTickets().isEmpty()){
-         autoCreatePurchaseDocuments(doc);
+         p_doc = autoCreatePurchaseDocuments(doc);
         }
                 
+        doc.setStatus(Enums.AcDocStatus.ACTIVE);               
+        dao.save(doc);
+                
         AcDocUtil.undefineTSAcDoc(doc, doc.getTickets());
+        AcDocUtil.undefineTPAcDoc(p_doc, doc.getTickets());
         if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
             AcDocUtil.undefineAddChgLine(doc, doc.getAdditionalChargeLines());
         }
@@ -144,7 +139,7 @@ public class TSalesAcDocService {
      * but should be editable by user except ticket fields
      * @param doc 
      */
-    private void autoCreatePurchaseDocuments(TicketingSalesAcDoc doc) {
+    private TicketingPurchaseAcDoc autoCreatePurchaseDocuments(TicketingSalesAcDoc doc) {
 
         TicketingPurchaseAcDoc p_doc = new TicketingPurchaseAcDoc();
 
@@ -152,23 +147,30 @@ public class TSalesAcDocService {
 
         if (doc.getType().equals(Enums.AcDocType.INVOICE)) {
             p_doc = logic.newTicketingPurchaseInvoice(doc);
-            purchase_service.newDocument(p_doc);
+            purchase_service.createNewDocument(p_doc);
 
         } else if (doc.getType().equals(Enums.AcDocType.DEBITMEMO)) {
             TicketingPurchaseAcDoc invoice = purchase_service.findInvoiceByPnrId(doc.getPnr().getId());
             p_doc = logic.newTicketingPurchaseDMemo(doc, invoice);
-            purchase_service.newDocument(p_doc);
+            purchase_service.createNewDocument(p_doc);
 
         } else if (doc.getType().equals(Enums.AcDocType.CREDITMEMO)) {
             TicketingPurchaseAcDoc invoice = purchase_service.findInvoiceByPnrId(doc.getPnr().getId());
             p_doc = logic.newTicketingPurchaseCMemo(doc, invoice);
-            purchase_service.newDocument(p_doc);
+            purchase_service.createNewDocument(p_doc);
         }
+        return p_doc;
     }
 
     public TicketingSalesAcDoc getWithChildrenById(long id) {
         TicketingSalesAcDoc doc = dao.getWithChildrenById(id);
         validateDocumentedAmount(doc);
+        doc.getParent().setAdditionalChargeLines(null);
+        doc.getParent().setPayment(null);
+        doc.getParent().setPnr(null);
+        doc.getParent().setTickets(null);
+        doc.getParent().setRelatedDocuments(null);
+        
         return undefineChildren(doc);
     }
 
@@ -176,6 +178,7 @@ public class TSalesAcDocService {
 
         for (Ticket t : doc.getTickets()) {
             t.setTicketingSalesAcDoc(null);
+            t.setTicketingPurchaseAcDoc(null);
         }
 
         Set<TicketingSalesAcDoc> relatedDocs = AcDocUtil.filterVoidRelatedDocuments(doc.getRelatedDocuments());
@@ -240,23 +243,8 @@ public class TSalesAcDocService {
         if (doc.getType().equals(Enums.AcDocType.INVOICE) && !relatedDocs.isEmpty()) {
             return false;
         } else {
-            Set<Ticket> tickets = doc.getTickets();
-            for (Ticket t : tickets) {
-                t.setTicketingSalesAcDoc(null);
-            }
-
-            if (!tickets.isEmpty()) {
-                ticketDAO.saveBulk(new ArrayList(tickets));
-            }
-
-            Set<AdditionalChargeLine> additionalChargeLines = doc.getAdditionalChargeLines();
-
-            if (!additionalChargeLines.isEmpty()) {
-                additionalChgLineDAO.deleteBulk(additionalChargeLines);
-                doc.setAdditionalChargeLines(null);
-            }
-            doc.setStatus(Enums.AcDocStatus.VOID);
-            dao.save(doc);
+            
+            dao.voidDocument(undefineChildren(doc));
             return true;
         }
     }

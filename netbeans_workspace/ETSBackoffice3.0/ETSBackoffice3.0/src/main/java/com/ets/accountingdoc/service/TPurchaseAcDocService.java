@@ -3,7 +3,6 @@ package com.ets.accountingdoc.service;
 import com.ets.Application;
 import com.ets.accountingdoc.dao.TPurchaseAcDocDAO;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
-import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.pnr.domain.Ticket;
 import com.ets.report.model.acdoc.InvoiceReport;
 import com.ets.report.model.acdoc.TktingInvoiceSummery;
@@ -27,7 +26,7 @@ public class TPurchaseAcDocService {
     @Resource(name = "tPurchaseAcDocDAO")
     private TPurchaseAcDocDAO dao;
 
-    public synchronized TicketingPurchaseAcDoc newDocument(TicketingPurchaseAcDoc doc) {
+    public synchronized TicketingPurchaseAcDoc createNewDocument(TicketingPurchaseAcDoc doc) {
 
         if (doc.getTickets() != null && !doc.getTickets().isEmpty()) {
             AcDocUtil.initTPAcDocInTickets(doc, doc.getTickets());
@@ -45,21 +44,35 @@ public class TPurchaseAcDocService {
         doc.setStatus(Enums.AcDocStatus.ACTIVE);
         dao.save(doc);
 
-        AcDocUtil.undefineTPAcDoc(doc, doc.getTickets());
-        if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
-            AcDocUtil.undefineAddChgLine(doc, doc.getAdditionalChargeLines());
-        }
+//        AcDocUtil.undefineTPAcDoc(doc, doc.getTickets());
+//        if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
+//            AcDocUtil.undefineAddChgLine(doc, doc.getAdditionalChargeLines());
+//        }
         return doc;
     }
 
-    public TicketingPurchaseAcDoc saveorUpdate(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
-        dao.save(ticketingPurchaseAcDoc);
-        return ticketingPurchaseAcDoc;
+    public TicketingPurchaseAcDoc saveorUpdate(TicketingPurchaseAcDoc doc) {
+        if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
+            AcDocUtil.initAddChgLine(doc, doc.getAdditionalChargeLines());
+        }
+
+        if (!doc.getTickets().isEmpty() || !doc.getAdditionalChargeLines().isEmpty()) {
+            doc.setDocumentedAmount(doc.calculateDocumentedAmount());
+        }
+        dao.save(doc);
+        return undefineChildren(doc);
     }
 
     public TicketingPurchaseAcDoc getWithChildrenById(long id) {
         TicketingPurchaseAcDoc doc = dao.getWithChildrenById(id);
         validateDocumentedAmount(doc);
+        
+        doc.getParent().setAdditionalChargeLines(null);
+        doc.getParent().setPayment(null);
+        doc.getParent().setPnr(null);
+        doc.getParent().setTickets(null);
+        doc.getParent().setRelatedDocuments(null);
+        
         return undefineChildren(doc);
     }
 

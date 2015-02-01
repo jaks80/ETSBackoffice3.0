@@ -34,7 +34,7 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
                 + "left join fetch p.customer "
                 + "left join fetch p.ticketing_agent "
                 + "left join fetch t.ticketingSalesAcDoc "
-                //+ "left join fetch t.ticketingPurchaseAcDoc "
+                + "left join fetch t.ticketingPurchaseAcDoc "
                 + "where p.id = :id";
 
         Query query = getSession().createQuery(hql);
@@ -50,6 +50,11 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
                 t.getTicketingSalesAcDoc().setTickets(null);
                 t.getTicketingSalesAcDoc().setPnr(null);
                 t.getTicketingSalesAcDoc().setRelatedDocuments(null);
+                
+                t.getTicketingPurchaseAcDoc().setAdditionalChargeLines(null);
+                t.getTicketingPurchaseAcDoc().setTickets(null);
+                t.getTicketingPurchaseAcDoc().setPnr(null);
+                t.getTicketingPurchaseAcDoc().setRelatedDocuments(null);
             }
         }
         return pnr;

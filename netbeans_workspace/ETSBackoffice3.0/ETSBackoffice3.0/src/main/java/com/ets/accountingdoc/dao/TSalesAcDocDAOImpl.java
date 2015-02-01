@@ -1,13 +1,18 @@
 package com.ets.accountingdoc.dao;
 
 import com.ets.GenericDAOImpl;
+import com.ets.accountingdoc.domain.AdditionalChargeLine;
+import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
+import com.ets.pnr.dao.TicketDAO;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import org.hibernate.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("tSalesAcDocDAO")
 @Transactional
 public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long> implements TSalesAcDocDAO {
+
+    @Autowired
+    private TicketDAO ticketDAO;
+    @Autowired
+    private AdditionalChgLineDAO additionalChgLineDAO;
+    @Autowired
+    private TPurchaseAcDocDAO tPurchaseAcDocDAO;
 
     @Override
     public Long getNewAcDocRef() {
@@ -34,7 +46,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     @Transactional(readOnly = true)
     public List<TicketingSalesAcDoc> getByPnrId(Long pnrId) {
         String hql = "select distinct a from TicketingSalesAcDoc as a "
-                + "left join fetch a.additionalChargeLines as adl "                
+                + "left join fetch a.additionalChargeLines as adl "
                 + "left join fetch adl.additionalCharge "
                 + "left join fetch a.tickets as t "
                 + "left join fetch a.relatedDocuments as a1 "
@@ -57,7 +69,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     public TicketingSalesAcDoc getWithChildrenById(Long id) {
 
         String hql = "select distinct a from TicketingSalesAcDoc as a "
-                + "left join fetch a.additionalChargeLines as adl "                
+                + "left join fetch a.additionalChargeLines as adl "
                 + "left join fetch adl.additionalCharge "
                 + "left join fetch a.tickets as t "
                 + "left join fetch a.pnr as p "
@@ -67,7 +79,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + "left join fetch a.relatedDocuments as a1 "
                 + "left join fetch a1.payment as payment "
                 + "left join fetch a1.tickets as t1 "
-                + "left join fetch a1.additionalChargeLines as adl1 "               
+                + "left join fetch a1.additionalChargeLines as adl1 "
                 + "left join fetch adl1.additionalCharge "
                 + "where a.id = :id";
 
@@ -166,5 +178,34 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
 
         List<TicketingSalesAcDoc> invoice_history = query.list();
         return invoice_history;
+    }
+
+    @Override
+    public boolean voidDocument(TicketingSalesAcDoc doc) {
+        Set<Ticket> tickets = doc.getTickets();
+
+        TicketingPurchaseAcDoc purchaseDoc = tPurchaseAcDocDAO.getByTicketId(tickets.iterator().next().getId());
+        purchaseDoc.setTickets(null);
+        //getSession().evict(doc);
+        for (Ticket t : tickets) {
+            t.setTicketingSalesAcDoc(null);
+            t.setTicketingPurchaseAcDoc(null);
+        }
+
+        if (!tickets.isEmpty()) {
+            ticketDAO.saveBulk(new ArrayList(tickets));
+        }
+
+        Set<AdditionalChargeLine> additionalChargeLines = doc.getAdditionalChargeLines();
+
+        if (!additionalChargeLines.isEmpty()) {
+            additionalChgLineDAO.deleteBulk(additionalChargeLines);
+            doc.setAdditionalChargeLines(null);
+        }
+        doc.setStatus(Enums.AcDocStatus.VOID);
+        save(doc);
+        tPurchaseAcDocDAO.delete(purchaseDoc);
+
+        return true;
     }
 }

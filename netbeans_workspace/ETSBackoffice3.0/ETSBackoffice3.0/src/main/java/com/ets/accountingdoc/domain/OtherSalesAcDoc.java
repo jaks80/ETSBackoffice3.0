@@ -74,7 +74,7 @@ public class OtherSalesAcDoc extends AccountingDocument implements Serializable 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parent")
     public Set<OtherSalesAcDoc> getRelatedDocuments() {
         return relatedDocuments;
     }
@@ -83,7 +83,7 @@ public class OtherSalesAcDoc extends AccountingDocument implements Serializable 
         this.relatedDocuments = relatedDocuments;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "parent_fk")
     public OtherSalesAcDoc getParent() {
         return parent;

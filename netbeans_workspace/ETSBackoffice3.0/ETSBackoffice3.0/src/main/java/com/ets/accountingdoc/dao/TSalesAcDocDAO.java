@@ -20,6 +20,8 @@ public interface TSalesAcDocDAO extends GenericDAO<TicketingSalesAcDoc, Long> {
 
     public List<TicketingSalesAcDoc> getByGDSPnr(String GdsPnr);
     
+    public boolean voidDocument(TicketingSalesAcDoc doc);
+    
     public List<TicketingSalesAcDoc> findOutstandingDocuments(Enums.AcDocType type,Enums.ClientType clienttype,Long clientid,Date dateStart,Date dateEnd);      
     
     public List<TicketingSalesAcDoc> findInvoiceHistory(Enums.ClientType clienttype,Long clientid,Date dateStart,Date dateEnd);

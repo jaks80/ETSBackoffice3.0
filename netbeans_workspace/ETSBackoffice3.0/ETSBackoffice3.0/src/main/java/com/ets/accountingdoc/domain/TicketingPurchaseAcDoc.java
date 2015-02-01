@@ -15,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -135,7 +136,7 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
         this.vendorRef = vendorRef;
     }
 
-    @OneToMany(mappedBy = "ticketingPurchaseAcDoc", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ticketingPurchaseAcDoc",fetch = FetchType.LAZY)
     public Set<Ticket> getTickets() {
         return tickets;
     }
@@ -154,7 +155,8 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
         this.pnr = pnr;
     }
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parent")
+    @OrderBy(value = "id")
     public Set<TicketingPurchaseAcDoc> getRelatedDocuments() {
         return relatedDocuments;
     }
@@ -163,7 +165,7 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
         this.relatedDocuments = relatedDocuments;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "parent_fk")
     public TicketingPurchaseAcDoc getParent() {
         return parent;

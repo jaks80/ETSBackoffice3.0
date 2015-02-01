@@ -129,4 +129,21 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
         List<TicketingPurchaseAcDoc> dueInvoices = query.list();
         return dueInvoices;
     }
+
+    @Override
+    public TicketingPurchaseAcDoc getByTicketId(Long ticketId) {
+        String hql = "select distinct a from TicketingPurchaseAcDoc as a "
+                + "left join fetch a.additionalChargeLines as adl "
+                + "left join fetch adl.additionalCharge "
+                + "left join a.tickets as t "
+                + "left join fetch a.relatedDocuments as a1 "
+                + "left join fetch a1.payment as p "
+                + "where t.id = :ticketId";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameter("ticketId", ticketId);
+        TicketingPurchaseAcDoc result = (TicketingPurchaseAcDoc) query.uniqueResult();
+        //getSession().evict(result);
+        return result;
+    }
 }
