@@ -20,6 +20,10 @@ public class TktingInvoiceSummery implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @XmlElement
+    private Long id;
+    @XmlElement
+    private Long pnr_id;
+    @XmlElement
     private Long reference;
     @XmlElement
     private Enums.AcDocType type;
@@ -138,6 +142,22 @@ public class TktingInvoiceSummery implements Serializable {
 
     public void setLeadPsgr(String leadPsgr) {
         this.leadPsgr = leadPsgr;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getPnr_id() {
+        return pnr_id;
+    }
+
+    public void setPnr_id(Long pnr_id) {
+        this.pnr_id = pnr_id;
     }
 
 }

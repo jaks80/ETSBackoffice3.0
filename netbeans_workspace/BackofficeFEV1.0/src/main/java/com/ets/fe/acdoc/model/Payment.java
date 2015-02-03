@@ -72,8 +72,16 @@ public class Payment extends PersistentObject implements Serializable {
     public void settPurchaseAcDocuments(List<TicketingPurchaseAcDoc> tPurchaseAcDocuments) {
         this.tPurchaseAcDocuments = tPurchaseAcDocuments;
     }
-    
-    public void addTSalesDocument(TicketingSalesAcDoc  ticketingSalesAcDoc){
-     this.tSalesAcDocuments.add(ticketingSalesAcDoc);
+
+    public void addTSalesDocument(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        this.tSalesAcDocuments.add(ticketingSalesAcDoc);
+    }
+
+    public void addTPurchaseDocument(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
+        this.tPurchaseAcDocuments.add(ticketingPurchaseAcDoc);
+    }
+
+    public void addOtherDocument(OtherSalesAcDoc otherSalesAcDoc) {
+        this.oSalesAcDocuments.add(otherSalesAcDoc);
     }
 }

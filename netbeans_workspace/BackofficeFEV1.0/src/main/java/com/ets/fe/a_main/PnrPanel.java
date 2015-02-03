@@ -127,7 +127,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         Window w = SwingUtilities.getWindowAncestor(this);
         Frame owner = w instanceof Frame ? (Frame) w : null;
 
-        TicketingSalesDocDlg dlg = new TicketingSalesDocDlg(owner);
+        SalesDocDlg dlg = new SalesDocDlg(owner);
         dlg.setLocationRelativeTo(this);
         if (dlg.showDialog(acdoc)) {
             //callAccountingDocs();
@@ -170,7 +170,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         Window w = SwingUtilities.getWindowAncestor(this);
         Frame owner = w instanceof Frame ? (Frame) w : null;
 
-        TicketingPurchaseDocDlg dlg = new TicketingPurchaseDocDlg(owner);
+        PurchaseDocDlg dlg = new PurchaseDocDlg(owner);
         dlg.setLocationRelativeTo(this);
         if (dlg.showDialog(acdoc)) {
             //callAccountingDocs();

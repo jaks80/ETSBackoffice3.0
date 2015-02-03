@@ -9,29 +9,22 @@ import javax.swing.SwingWorker;
  *
  * @author Yusuf
  */
-public class PaymentTask extends SwingWorker<Payments, Integer> {
+public class PaymentTask extends SwingWorker<Payment, Integer> {
 
     private Payment payment;
-    private Long invoiceId;
-
-    public PaymentTask(Payment payment, Long invoiceId) {
+   
+    public PaymentTask(Payment payment) {
         this.payment = payment;
-        this.invoiceId = invoiceId;
     }
 
     @Override
-    protected Payments doInBackground() throws Exception {
+    protected Payment doInBackground() throws Exception {
 
         PaymentWSClient client = new PaymentWSClient();
-        Payments payments = new Payments();
-
-        if (invoiceId == null) {
-            Payment persistedPayment = client.create(payment);
-            payments.add(persistedPayment);
-        } else {
-            payments = client.paymentBySalesInvoice(invoiceId);
-        }
-        return payments;
+        //Payments payments = new Payments();
+        Payment persistedPayment = client.create(payment);
+ 
+        return payment;
     }
 
     @Override

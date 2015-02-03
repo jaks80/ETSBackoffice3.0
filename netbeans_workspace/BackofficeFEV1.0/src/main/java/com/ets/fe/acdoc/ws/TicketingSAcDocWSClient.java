@@ -89,6 +89,26 @@ public class TicketingSAcDocWSClient {
         return report;
     }
 
+    public TicketingSalesAcDocs outstandingInvoices(
+            Enums.AcDocType doctype, Enums.ClientType clienttype,
+            Long clientid, Date _dateFrom, Date _dateTo) {
+
+        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+
+        String url = APIConfig.get("ws.tsacdoc.dueinvoices") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo + "&doctype=" + doctype;
+
+        if (clienttype != null) {
+            url = url + "&clienttype=" + clienttype;
+        }
+        if (clientid != null) {
+            url = url + "&clientid=" + clientid;
+        }
+
+        TicketingSalesAcDocs invoices = RestClientUtil.getEntity(TicketingSalesAcDocs.class, url, new TicketingSalesAcDocs());
+        return invoices;
+    }
+
     public InvoiceReport documentHistoryReport(
             Enums.ClientType clienttype, Long clientid, Date _dateFrom, Date _dateTo) {
 

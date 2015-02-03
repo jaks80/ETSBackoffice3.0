@@ -288,9 +288,9 @@ public class DocumentSearchComp extends javax.swing.JPanel implements PropertyCh
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JRadioButton rdoAgent;
-    private javax.swing.JRadioButton rdoAll;
-    private javax.swing.JRadioButton rdoCustomer;
+    private static javax.swing.JRadioButton rdoAgent;
+    private static javax.swing.JRadioButton rdoAll;
+    private static javax.swing.JRadioButton rdoCustomer;
     private javax.swing.JTextArea txtClientDetails;
     // End of variables declaration//GEN-END:variables
 

@@ -363,7 +363,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 4);
         jPanel2.add(lblDue, gridBagConstraints);
 
-        tblReport.setBackground(new java.awt.Color(102, 102, 102));
+        tblReport.setBackground(new java.awt.Color(51, 51, 51));
         tblReport.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -380,6 +380,9 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
                 return canEdit [columnIndex];
             }
         });
+        tblReport.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        tblReport.setSelectionBackground(new java.awt.Color(255, 255, 153));
+        tblReport.setSortable(false);
         tblReport.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblReport);
         if (tblReport.getColumnModel().getColumnCount() > 0) {

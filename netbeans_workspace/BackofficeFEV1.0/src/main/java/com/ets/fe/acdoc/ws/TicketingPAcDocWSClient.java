@@ -69,6 +69,21 @@ public class TicketingPAcDocWSClient {
         return docs;
     }
 
+     public TicketingPurchaseAcDocs outstandingInvoices(Enums.AcDocType doctype,Long agentid, Date _dateFrom, Date _dateTo) {
+
+        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+
+        String url = APIConfig.get("ws.tpacdoc.dueinvoices") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo + "&doctype=" + doctype;
+
+        if (agentid != null) {
+            url = url + "&agentid=" + agentid;
+        }
+
+        TicketingPurchaseAcDocs report = RestClientUtil.getEntity(TicketingPurchaseAcDocs.class, url, new TicketingPurchaseAcDocs());
+        return report;
+    }
+        
     public InvoiceReport outstandingDocumentReport(Enums.AcDocType doctype,Long agentid, Date _dateFrom, Date _dateTo) {
 
         String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
@@ -89,7 +104,7 @@ public class TicketingPAcDocWSClient {
         String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
         String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
 
-        String url = APIConfig.get("ws.tsacdoc.history") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo;
+        String url = APIConfig.get("ws.tpacdoc.history") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo;
         if (agentid != null) {
             url = url + "&agentid=" + agentid;
         }

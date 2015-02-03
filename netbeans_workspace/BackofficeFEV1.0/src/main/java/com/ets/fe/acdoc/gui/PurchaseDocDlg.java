@@ -28,7 +28,7 @@ import org.jdesktop.swingx.JXTable;
  *
  * @author Yusuf
  */
-public class TicketingPurchaseDocDlg extends JDialog implements PropertyChangeListener {
+public class PurchaseDocDlg extends JDialog implements PropertyChangeListener {
        
     private Pnr pnr;
     private List<Ticket> tickets;
@@ -37,7 +37,7 @@ public class TicketingPurchaseDocDlg extends JDialog implements PropertyChangeLi
     private String taskType;
     private TktingPurchaseDocTask newTPurchaseDocumentTask;
 
-    public TicketingPurchaseDocDlg(Frame parent) {
+    public PurchaseDocDlg(Frame parent) {
         super(parent, true);
         initComponents();
     }

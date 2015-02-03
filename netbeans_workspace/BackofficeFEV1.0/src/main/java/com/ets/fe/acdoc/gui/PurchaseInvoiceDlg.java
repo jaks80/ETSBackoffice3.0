@@ -175,9 +175,9 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
         accountingDocTask.execute();
     }
 
-    public void paymentTask(Payment payment, Long invoiceId) {
+    public void paymentTask(Payment payment) {
         taskType = "PAYMENT";
-        paymentTask = new PaymentTask(payment, invoiceId);
+        paymentTask = new PaymentTask(payment);
         paymentTask.addPropertyChangeListener(this);
         paymentTask.execute();
     }
@@ -249,7 +249,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
 
             if (amount.compareTo(invoice.calculateDueAmount().abs()) <= 0) {
                 Payment payment = logic.processSinglePayment(amount, invoice, remark, type);
-                paymentTask = new PaymentTask(payment, null);
+                paymentTask = new PaymentTask(payment);
                 paymentTask.addPropertyChangeListener(this);
                 paymentTask.execute();
             } else {

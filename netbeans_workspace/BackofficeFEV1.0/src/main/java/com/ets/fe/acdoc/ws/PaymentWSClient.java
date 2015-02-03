@@ -17,12 +17,6 @@ public class PaymentWSClient {
         return ppayment;
     }
 
-    public Payments update(Payments payments) {
-        String url = APIConfig.get("ws.pay.newbulk");
-        Payments ppayment = RestClientUtil.postEntity(Payments.class, url, payments);
-        return ppayment;
-    }
-
     public Payments paymentBySalesInvoice(Long invoiceid) {
         String url = APIConfig.get("ws.pay.bysinv")+invoiceid;
         Payments ppayment = RestClientUtil.getEntity(Payments.class, url, new Payments());

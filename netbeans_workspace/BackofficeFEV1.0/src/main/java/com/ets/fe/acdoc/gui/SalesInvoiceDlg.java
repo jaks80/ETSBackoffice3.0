@@ -12,9 +12,7 @@ import com.ets.fe.acdoc.task.PaymentTask;
 import com.ets.fe.os.model.AdditionalCharge;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
-import com.ets.fe.util.CheckInput;
-import com.ets.fe.util.DateUtil;
-import com.ets.fe.util.Enums;
+import com.ets.fe.util.*;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -23,9 +21,7 @@ import java.awt.font.TextAttribute;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,8 +43,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
 
     private String taskType;
     private Pnr pnr;
-    private List<Ticket> tickets;
-    //private List<TicketingSalesAcDoc> paymentDocuments;
+    private List<Ticket> tickets;    
     private TicketingSalesAcDoc tInvoice;
     private boolean allowPayment = true;
 
@@ -175,9 +170,9 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         accountingDocTask.execute();
     }
 
-    public void paymentTask(Payment payment, Long invoiceId) {
+    public void paymentTask(Payment payment) {
         taskType = "PAYMENT";
-        paymentTask = new PaymentTask(payment, invoiceId);
+        paymentTask = new PaymentTask(payment);
         paymentTask.addPropertyChangeListener(this);
         paymentTask.execute();
     }
@@ -249,7 +244,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
 
             if (amount.compareTo(invoice.calculateDueAmount().abs()) <= 0) {
                 Payment payment = logic.processSinglePayment(amount, invoice, remark, type);
-                paymentTask = new PaymentTask(payment, null);
+                paymentTask = new PaymentTask(payment);
                 paymentTask.addPropertyChangeListener(this);
                 paymentTask.execute();
             } else {

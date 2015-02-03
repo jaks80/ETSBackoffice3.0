@@ -6,6 +6,8 @@ import com.ets.fe.APIConfig;
 import com.ets.fe.Application;
 import com.ets.fe.acdoc.gui.TPurchaseInvoiceReportingFrame;
 import com.ets.fe.acdoc.gui.TSalesInvoiceReportingFrame;
+import com.ets.fe.acdoc.gui.payment.TPurchaseBatchPayment;
+import com.ets.fe.acdoc.gui.payment.TSalesBatchPayment;
 import com.ets.fe.app.model.AppSettings;
 import com.ets.fe.client.gui.*;
 import com.ets.fe.client.model.Customer;
@@ -113,8 +115,13 @@ public class Main extends JFrame {
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
         menuDueSalesInvoice = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        menuBatchTransaction = new javax.swing.JMenuItem();
+        menuBatchTransRpt = new javax.swing.JMenuItem();
         jMenu7 = new javax.swing.JMenu();
         menuPReporting = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        menu3rdPartyBillPayment = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -244,6 +251,18 @@ public class Main extends JFrame {
             }
         });
         jMenu6.add(menuDueSalesInvoice);
+        jMenu6.add(jSeparator1);
+
+        menuBatchTransaction.setText("Batch Transaction");
+        menuBatchTransaction.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuBatchTransactionActionPerformed(evt);
+            }
+        });
+        jMenu6.add(menuBatchTransaction);
+
+        menuBatchTransRpt.setText("Batch Transaction: Report");
+        jMenu6.add(menuBatchTransRpt);
 
         jMenuBar1.add(jMenu6);
 
@@ -256,6 +275,15 @@ public class Main extends JFrame {
             }
         });
         jMenu7.add(menuPReporting);
+        jMenu7.add(jSeparator2);
+
+        menu3rdPartyBillPayment.setText("Bill Payment: 3rd Party");
+        menu3rdPartyBillPayment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu3rdPartyBillPaymentActionPerformed(evt);
+            }
+        });
+        jMenu7.add(menu3rdPartyBillPayment);
 
         jMenuBar1.add(jMenu7);
 
@@ -371,11 +399,11 @@ public class Main extends JFrame {
     private void menuAppSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAppSettingsActionPerformed
         SettingsDlg dlg = new SettingsDlg(this);
         AppSettings settings = Application.getAppSettings();
-        if(settings==null){
-        settings = new AppSettings();
+        if (settings == null) {
+            settings = new AppSettings();
         }
         if (dlg.showDialog(settings)) {
-            SettingsTask task = new SettingsTask(settings);            
+            SettingsTask task = new SettingsTask(settings);
             task.execute();
         }
     }//GEN-LAST:event_menuAppSettingsActionPerformed
@@ -383,8 +411,8 @@ public class Main extends JFrame {
     private void menuMainAgentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuMainAgentActionPerformed
         MainAgentDlg dlg = new MainAgentDlg(this);
         MainAgent agent = Application.getMainAgent();
-        if(agent == null){
-        agent = new MainAgent();
+        if (agent == null) {
+            agent = new MainAgent();
         }
         if (dlg.showDialog(agent)) {
             MainAgentTask task = new MainAgentTask(agent);
@@ -393,18 +421,22 @@ public class Main extends JFrame {
     }//GEN-LAST:event_menuMainAgentActionPerformed
 
     private void menuDueSalesInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDueSalesInvoiceActionPerformed
-        TSalesInvoiceReportingFrame frame = new TSalesInvoiceReportingFrame(desktopPane);
-        desktopPane.add(frame);
-        try {
-            frame.setSelected(true);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        frame.setVisible(true);
+        frameAction(new TSalesInvoiceReportingFrame(desktopPane));
     }//GEN-LAST:event_menuDueSalesInvoiceActionPerformed
 
     private void menuPReportingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPReportingActionPerformed
-        TPurchaseInvoiceReportingFrame frame = new TPurchaseInvoiceReportingFrame(desktopPane);
+        frameAction(new TPurchaseInvoiceReportingFrame(desktopPane));
+    }//GEN-LAST:event_menuPReportingActionPerformed
+
+    private void menuBatchTransactionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBatchTransactionActionPerformed
+        frameAction(new TSalesBatchPayment(desktopPane));
+    }//GEN-LAST:event_menuBatchTransactionActionPerformed
+
+    private void menu3rdPartyBillPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu3rdPartyBillPaymentActionPerformed
+        frameAction(new TPurchaseBatchPayment(desktopPane));
+    }//GEN-LAST:event_menu3rdPartyBillPaymentActionPerformed
+
+    private void frameAction(JInternalFrame frame) {
         desktopPane.add(frame);
         try {
             frame.setSelected(true);
@@ -412,7 +444,7 @@ public class Main extends JFrame {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         frame.setVisible(true);
-    }//GEN-LAST:event_menuPReportingActionPerformed
+    }
 
     /**
      * @param args the command line arguments
@@ -467,7 +499,12 @@ public class Main extends JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JMenuItem menu3rdPartyBillPayment;
     private javax.swing.JMenuItem menuAppSettings;
+    private javax.swing.JMenuItem menuBatchTransRpt;
+    private javax.swing.JMenuItem menuBatchTransaction;
     private javax.swing.JMenuItem menuDueSalesInvoice;
     private javax.swing.JMenuItem menuMainAgent;
     private javax.swing.JMenuItem menuPReporting;

@@ -301,8 +301,8 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane tabAcDoc;
-    private static org.jdesktop.swingx.JXTable tblPurchase;
-    private static org.jdesktop.swingx.JXTable tblSales;
+    private org.jdesktop.swingx.JXTable tblPurchase;
+    private org.jdesktop.swingx.JXTable tblSales;
     // End of variables declaration//GEN-END:variables
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

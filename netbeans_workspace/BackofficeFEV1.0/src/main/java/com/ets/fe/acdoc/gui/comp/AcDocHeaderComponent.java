@@ -45,7 +45,11 @@ public class AcDocHeaderComponent extends JPanel {
         if (doc.getReference() != null) {
             txtInvRef.setText(doc.getReference().toString());
         }
+        if(doc.getTerms()!=null){
         cmbTerms.setSelectedItem(doc.getTerms());
+        }else{
+         cmbTerms.setSelectedIndex(0);
+        }
     }
 
     public AccountingDocument getDocument() {

@@ -3,7 +3,10 @@ package com.ets.fe.acdoc.bo;
 import com.ets.fe.Application;
 import com.ets.fe.acdoc.model.AccountingDocument;
 import com.ets.fe.acdoc.model.Payment;
+import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
+import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
+import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.util.Enums;
 import java.math.BigDecimal;
 import java.util.List;
@@ -67,8 +70,8 @@ public class PaymentLogic {
      * @param type
      * @return
      */
-    public Payment processBulkPayment(BigDecimal amount, List<TicketingSalesAcDoc> invoices, String remark, Enums.PaymentType type) {
-        if (amount.compareTo(calculateTotalDueAmount(invoices)) > 0) {
+    public Payment processBulkPayment(BigDecimal amount, List<TktingInvoiceSummery> invoices, String remark, Enums.PaymentType type) {
+        if (amount.compareTo(calcDueAmountFromSummery(invoices)) > 0) {
             return null;
         } else {
             Payment payment = new Payment();
@@ -78,7 +81,7 @@ public class PaymentLogic {
             BigDecimal payableAmount;
             BigDecimal remainingAmount = amount;
 
-            for (TicketingSalesAcDoc invoice : invoices) {
+            for (TktingInvoiceSummery invoice : invoices) {
 
                 if (remainingAmount.compareTo(invoice.getDocumentedAmount()) <= 0) {
                     payableAmount = remainingAmount;
@@ -93,11 +96,15 @@ public class PaymentLogic {
                 doc.setType(Enums.AcDocType.PAYMENT);
                 doc.setStatus(Enums.AcDocStatus.ACTIVE);
                 doc.setDocIssueDate(new java.util.Date());
-                doc.setPnr(invoice.getPnr());
+                Pnr pnr = new Pnr();
+                pnr.setId(invoice.getPnr_id());
+                pnr.setGdsPnr(invoice.getGdsPnr());
+                doc.setPnr(pnr);
                 doc.setCreatedBy(Application.getLoggedOnUser());
                 doc.setDocumentedAmount(payableAmount.negate());//Payment saves as negative
-                doc.setParent(invoice);
-                //invoice.addRelatedDocument(doc);
+                TicketingSalesAcDoc parent = new TicketingSalesAcDoc();
+                parent.setId(invoice.getId());
+                doc.setParent(parent);
                 payment.addTSalesDocument(doc);
 
                 if (remainingAmount.compareTo(new BigDecimal("0.00")) <= 0) {
@@ -117,5 +124,24 @@ public class PaymentLogic {
 
         return total;
     }
+    
+    public BigDecimal calculateTotalPDueAmount(List<TicketingPurchaseAcDoc> invoices) {
 
+        BigDecimal total = new BigDecimal("0.00");
+        for (TicketingPurchaseAcDoc inv : invoices) {
+            total = total.add(inv.calculateDueAmount());
+        }
+
+        return total;
+    }
+        
+    public BigDecimal calcDueAmountFromSummery(List<TktingInvoiceSummery> invoices) {
+
+        BigDecimal total = new BigDecimal("0.00");
+        for (TktingInvoiceSummery inv : invoices) {
+            total = total.add(inv.getDue());
+        }
+
+        return total;
+    }
 }
