@@ -1,7 +1,7 @@
 package com.ets.accountingdoc.domain;
 
 import com.ets.PersistentObject;
-import com.ets.accountingdoc.collection.Payments;
+import com.ets.pnr.domain.Pnr;
 import com.ets.util.Enums.AcDocStatus;
 import com.ets.util.Enums.AcDocType;
 import java.io.Serializable;
@@ -11,8 +11,12 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -60,9 +64,7 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
     
     public abstract BigDecimal calculateTotalRefund();
 
-    public abstract BigDecimal calculateDueAmount();
-    
-    
+    public abstract BigDecimal calculateDueAmount();  
 
     @Version
     public Integer getVersion() {

@@ -34,7 +34,7 @@ public class TSalesAcDocService {
     @Autowired
     private PnrService pnrService;
     @Autowired
-    TPurchaseAcDocService purchase_service;    
+    TPurchaseAcDocService purchase_service;
 
     /**
      * If there is no accounting document in Pnr it creates an invoiced.
@@ -99,7 +99,7 @@ public class TSalesAcDocService {
     public synchronized TicketingSalesAcDoc newDocument(TicketingSalesAcDoc doc) {
         if (doc.getReference() == null && doc.getType().equals(Enums.AcDocType.INVOICE)) {
             if (doc.getReference() == null) {
-                //There will be refference from void invoice.    
+                //There will be refference from void invoice.
                 doc.setReference(AcDocUtil.generateAcDocRef(dao.getNewAcDocRef()));
             }
         }
@@ -116,15 +116,15 @@ public class TSalesAcDocService {
         if (!doc.getTickets().isEmpty() || !doc.getAdditionalChargeLines().isEmpty()) {
             doc.setDocumentedAmount(doc.calculateDocumentedAmount());
         }
-        
+
         TicketingPurchaseAcDoc p_doc = null;
-        if(!doc.getTickets().isEmpty()){
-         p_doc = autoCreatePurchaseDocuments(doc);
+        if (!doc.getTickets().isEmpty()) {
+            p_doc = autoCreatePurchaseDocuments(doc);
         }
-                
-        doc.setStatus(Enums.AcDocStatus.ACTIVE);               
+
+        doc.setStatus(Enums.AcDocStatus.ACTIVE);
         dao.save(doc);
-                
+
         AcDocUtil.undefineTSAcDoc(doc, doc.getTickets());
         AcDocUtil.undefineTPAcDoc(p_doc, doc.getTickets());
         if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
@@ -134,10 +134,12 @@ public class TSalesAcDocService {
     }
 
     /**
-     * Every time a sales document is generated, a corresponding purchase document
-     * should generate automatically. Logic is document will be generated automatically mirroring sales document
-     * but should be editable by user except ticket fields
-     * @param doc 
+     * Every time a sales document is generated, a corresponding purchase
+     * document should generate automatically. Logic is document will be
+     * generated automatically mirroring sales document but should be editable
+     * by user except ticket fields
+     *
+     * @param doc
      */
     private TicketingPurchaseAcDoc autoCreatePurchaseDocuments(TicketingSalesAcDoc doc) {
 
@@ -165,12 +167,14 @@ public class TSalesAcDocService {
     public TicketingSalesAcDoc getWithChildrenById(long id) {
         TicketingSalesAcDoc doc = dao.getWithChildrenById(id);
         validateDocumentedAmount(doc);
-        doc.getParent().setAdditionalChargeLines(null);
-        doc.getParent().setPayment(null);
-        doc.getParent().setPnr(null);
-        doc.getParent().setTickets(null);
-        doc.getParent().setRelatedDocuments(null);
-        
+        if (doc.getParent() != null) {
+            doc.getParent().setAdditionalChargeLines(null);
+            doc.getParent().setPayment(null);
+            doc.getParent().setPnr(null);
+            doc.getParent().setTickets(null);
+            doc.getParent().setRelatedDocuments(null);
+        }
+
         return undefineChildren(doc);
     }
 
@@ -243,7 +247,7 @@ public class TSalesAcDocService {
         if (doc.getType().equals(Enums.AcDocType.INVOICE) && !relatedDocs.isEmpty()) {
             return false;
         } else {
-            
+
             dao.voidDocument(undefineChildren(doc));
             return true;
         }
@@ -251,62 +255,37 @@ public class TSalesAcDocService {
 
     public InvoiceReport invoiceHistoryReport(Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
         List<TicketingSalesAcDoc> invoice_history = dao.findInvoiceHistory(clienttype, clientid, dateStart, dateEnd);
-        return objectToReport(invoice_history);
+        return TktingInvoiceSummery.serializeToSalesSummery(invoice_history);
+    }
+
+    public List<TicketingSalesAcDoc> dueInvoices(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
+        List<TicketingSalesAcDoc> dueInvoices = dao.findOutstandingDocuments(type, clienttype, clientid, dateStart, dateEnd);
+
+        for (TicketingSalesAcDoc inv : dueInvoices) {
+            for (TicketingSalesAcDoc related : inv.getRelatedDocuments()) {
+                related.setAdditionalChargeLines(null);
+                related.setPayment(null);
+                related.setPnr(null);
+                related.setTickets(null);
+                related.setRelatedDocuments(null);
+                related.setParent(null);
+            }
+            inv.setAdditionalChargeLines(null);
+            inv.setTickets(null);
+            //inv.setRelatedDocuments(null);
+            inv.getPnr().setTickets(null);
+            inv.getPnr().setRemarks(null);
+            PnrUtil.undefinePnrInSegments(inv.getPnr(), inv.getPnr().getSegments());
+            //inv.getPnr().setSegments(null);
+        }
+
+        return dueInvoices;
     }
 
     public InvoiceReport dueInvoiceReport(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
 
-        List<TicketingSalesAcDoc> dueInvoices = dao.findOutstandingDocuments(type, clienttype, clientid, dateStart, dateEnd);
-        return objectToReport(dueInvoices);
-    }
-
-    private InvoiceReport objectToReport(List<TicketingSalesAcDoc> invoices) {
-        BigDecimal totalInvAmount = new BigDecimal("0.00");
-        BigDecimal totalDMAmount = new BigDecimal("0.00");
-        BigDecimal totalCMAmount = new BigDecimal("0.00");
-        BigDecimal totalDue = new BigDecimal("0.00");
-        BigDecimal totalPayment = new BigDecimal("0.00");
-        BigDecimal totalRefund = new BigDecimal("0.00");
-
-        InvoiceReport report = new InvoiceReport();
-        for (TicketingSalesAcDoc invoice : invoices) {
-
-            Set<TicketingSalesAcDoc> relatedDocs = AcDocUtil.filterVoidRelatedDocuments(invoice.getRelatedDocuments());
-            invoice.setRelatedDocuments(relatedDocs);
-
-            TktingInvoiceSummery invSummery = new TktingInvoiceSummery();
-
-            invSummery.setId(invoice.getId());
-            invSummery.setDocIssueDate(DateUtil.dateToString(invoice.getDocIssueDate()));
-            invSummery.setGdsPnr(invoice.getPnr().getGdsPnr());
-            invSummery.setNoOfPax(invoice.getPnr().getNoOfPax());
-            invSummery.setReference(invoice.getReference());
-            invSummery.setStatus(invoice.getStatus());
-            invSummery.setType(invoice.getType());
-            invSummery.setOutBoundDetails(PnrUtil.getOutBoundFlightSummery(invoice.getPnr().getSegments()));
-            invSummery.setDocumentedAmount(invoice.getDocumentedAmount());
-            invSummery.setOtherAmount(invoice.calculateTotalDebitMemo().add(invoice.calculateTotalCreditMemo()));
-            invSummery.setPayment(invoice.calculateTotalPayment().add(invoice.calculateTotalRefund()));
-            invSummery.setDue(invoice.calculateDueAmount());
-
-            totalInvAmount = totalInvAmount.add(invoice.getDocumentedAmount());
-            totalDMAmount = totalDMAmount.add(invoice.calculateTotalDebitMemo());
-            totalCMAmount = totalCMAmount.add(invoice.calculateTotalCreditMemo());
-            totalPayment = totalPayment.add(invoice.calculateTotalPayment());
-            totalRefund = totalRefund.add(invoice.calculateTotalRefund());
-            totalDue = totalDue.add(invoice.calculateDueAmount());
-
-            report.addInvoice(invSummery);
-        }
-        String currency = Application.currency();
-        report.setTotalInvAmount(currency + totalInvAmount.toString());
-        report.setTotalCMAmount(currency + totalCMAmount.toString());
-        report.setTotalDMAmount(currency + totalDMAmount.toString());
-        report.setTotalDue(currency + totalDue.toString());
-        report.setTotalPayment(currency + totalPayment.toString());
-        report.setTotalRefund(currency + totalRefund.toString());
-
-        return report;
+        List<TicketingSalesAcDoc> dueInvoices = dueInvoices(type, clienttype, clientid, dateStart, dateEnd);
+        return TktingInvoiceSummery.serializeToSalesSummery(dueInvoices);
     }
 
     private void validateDocumentedAmount(TicketingSalesAcDoc doc) {

@@ -2,7 +2,9 @@ package com.ets.accountingdoc.service;
 
 import com.ets.Application;
 import com.ets.accountingdoc.dao.TPurchaseAcDocDAO;
+import com.ets.accountingdoc.domain.AccountingDocument;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
+import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.pnr.domain.Ticket;
 import com.ets.report.model.acdoc.InvoiceReport;
 import com.ets.report.model.acdoc.TktingInvoiceSummery;
@@ -10,6 +12,7 @@ import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import com.ets.util.PnrUtil;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -66,13 +69,14 @@ public class TPurchaseAcDocService {
     public TicketingPurchaseAcDoc getWithChildrenById(long id) {
         TicketingPurchaseAcDoc doc = dao.getWithChildrenById(id);
         validateDocumentedAmount(doc);
-        
-        doc.getParent().setAdditionalChargeLines(null);
-        doc.getParent().setPayment(null);
-        doc.getParent().setPnr(null);
-        doc.getParent().setTickets(null);
-        doc.getParent().setRelatedDocuments(null);
-        
+
+        if (doc.getParent() != null) {
+            doc.getParent().setAdditionalChargeLines(null);
+            doc.getParent().setPayment(null);
+            doc.getParent().setPnr(null);
+            doc.getParent().setTickets(null);
+            doc.getParent().setRelatedDocuments(null);
+        }
         return undefineChildren(doc);
     }
 
@@ -151,62 +155,36 @@ public class TPurchaseAcDocService {
 
     public InvoiceReport invoiceHistoryReport(Long agentid, Date dateStart, Date dateEnd) {
         List<TicketingPurchaseAcDoc> invoice_history = dao.findInvoiceHistory(agentid, dateStart, dateEnd);
-        return objectToReport(invoice_history);
+
+        return TktingInvoiceSummery.serializeToPurchaseSummery(invoice_history);
     }
 
-    public InvoiceReport dueInvoiceReport(Enums.AcDocType type, Long agentid, Date dateStart, Date dateEnd) {
+    public List<TicketingPurchaseAcDoc> dueInvoices(Enums.AcDocType type, Long agentid, Date dateStart, Date dateEnd) {
 
         List<TicketingPurchaseAcDoc> dueInvoices = dao.findOutstandingDocuments(type, agentid, dateStart, dateEnd);
-        return objectToReport(dueInvoices);
-    }
-
-    private InvoiceReport objectToReport(List<TicketingPurchaseAcDoc> invoices) {
-        BigDecimal totalInvAmount = new BigDecimal("0.00");
-        BigDecimal totalDMAmount = new BigDecimal("0.00");
-        BigDecimal totalCMAmount = new BigDecimal("0.00");
-        BigDecimal totalDue = new BigDecimal("0.00");
-        BigDecimal totalPayment = new BigDecimal("0.00");
-        BigDecimal totalRefund = new BigDecimal("0.00");
-
-        InvoiceReport report = new InvoiceReport();
-        for (TicketingPurchaseAcDoc invoice : invoices) {
-
-            Set<TicketingPurchaseAcDoc> relatedDocs = AcDocUtil.filterPVoidRelatedDocuments(invoice.getRelatedDocuments());
-            invoice.setRelatedDocuments(relatedDocs);
-
-            TktingInvoiceSummery invSummery = new TktingInvoiceSummery();
-
-            invSummery.setId(invoice.getId());
-            invSummery.setDocIssueDate(DateUtil.dateToString(invoice.getDocIssueDate()));
-            invSummery.setGdsPnr(invoice.getPnr().getGdsPnr());
-            invSummery.setNoOfPax(invoice.getPnr().getNoOfPax());
-            invSummery.setReference(invoice.getReference());
-            invSummery.setStatus(invoice.getStatus());
-            invSummery.setType(invoice.getType());
-            invSummery.setOutBoundDetails(PnrUtil.getOutBoundFlightSummery(invoice.getPnr().getSegments()));
-            invSummery.setDocumentedAmount(invoice.getDocumentedAmount());
-            invSummery.setOtherAmount(invoice.calculateTotalDebitMemo().add(invoice.calculateTotalCreditMemo()));
-            invSummery.setPayment(invoice.calculateTotalPayment().add(invoice.calculateTotalRefund()));
-            invSummery.setDue(invoice.calculateDueAmount());
-
-            totalInvAmount = totalInvAmount.add(invoice.getDocumentedAmount());
-            totalDMAmount = totalDMAmount.add(invoice.calculateTotalDebitMemo());
-            totalCMAmount = totalCMAmount.add(invoice.calculateTotalCreditMemo());
-            totalPayment = totalPayment.add(invoice.calculateTotalPayment());
-            totalRefund = totalRefund.add(invoice.calculateTotalRefund());
-            totalDue = totalDue.add(invoice.calculateDueAmount());
-
-            report.addInvoice(invSummery);
+        for (TicketingPurchaseAcDoc inv : dueInvoices) {
+            for (TicketingPurchaseAcDoc related : inv.getRelatedDocuments()) {
+                related.setAdditionalChargeLines(null);
+                related.setPayment(null);
+                related.setPnr(null);
+                related.setTickets(null);
+                related.setRelatedDocuments(null);
+                related.setParent(null);
+            }
+            inv.setAdditionalChargeLines(null);
+            inv.setTickets(null);
+            //inv.setRelatedDocuments(null);
+            inv.getPnr().setTickets(null);
+            inv.getPnr().setRemarks(null);
+            PnrUtil.undefinePnrInSegments(inv.getPnr(), inv.getPnr().getSegments());
+            //inv.getPnr().setSegments(null);
         }
-        String currency = Application.currency();
-        report.setTotalInvAmount(currency + totalInvAmount.toString());
-        report.setTotalCMAmount(currency + totalCMAmount.toString());
-        report.setTotalDMAmount(currency + totalDMAmount.toString());
-        report.setTotalDue(currency + totalDue.toString());
-        report.setTotalPayment(currency + totalPayment.toString());
-        report.setTotalRefund(currency + totalRefund.toString());
-
-        return report;
+        return dueInvoices;
     }
+        
+    public InvoiceReport dueInvoiceReport(Enums.AcDocType type, Long agentid, Date dateStart, Date dateEnd) {
 
+        List<TicketingPurchaseAcDoc> dueInvoices = dueInvoices(type, agentid, dateStart, dateEnd);
+        return TktingInvoiceSummery.serializeToPurchaseSummery(dueInvoices);
+    }
 }

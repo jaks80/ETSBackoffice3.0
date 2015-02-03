@@ -86,6 +86,25 @@ public class TicketingPurchaseAcDocWS {
         return Response.status(200).build();
     }
 
+    @GET
+    @Path("/due_invoices")
+    public TicketingPurchaseAcDocs outstandingInvoices(
+            @QueryParam("doctype") Enums.AcDocType doctype,
+            @QueryParam("agentid") Long agentid,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        List<TicketingPurchaseAcDoc> list = service.dueInvoices(doctype,
+                agentid, dateFrom, dateTo);
+
+        TicketingPurchaseAcDocs docs = new TicketingPurchaseAcDocs();
+        docs.setList(list);
+        return docs;
+    }
+    
     //*****************Reporting Methods are Bellow******************//
     @GET
     @Path("/acdoc_report")

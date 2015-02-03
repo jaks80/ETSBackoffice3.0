@@ -3,6 +3,7 @@ package com.ets.accountingdoc.domain;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums;
+import java.beans.Transient;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
@@ -70,10 +71,10 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         }
         return subtotal;
     }
-    
+
     @Override
     public BigDecimal calculateTotalDebitMemo() {
-         BigDecimal total = new BigDecimal("0.00");
+        BigDecimal total = new BigDecimal("0.00");
         for (AccountingDocument doc : this.relatedDocuments) {
             if (doc.getType().equals(Enums.AcDocType.DEBITMEMO)) {
                 total = total.add(doc.getDocumentedAmount());
@@ -84,7 +85,7 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
 
     @Override
     public BigDecimal calculateTotalCreditMemo() {
-         BigDecimal total = new BigDecimal("0.00");
+        BigDecimal total = new BigDecimal("0.00");
         for (AccountingDocument doc : this.relatedDocuments) {
             if (doc.getType().equals(Enums.AcDocType.CREDITMEMO)) {
                 total = total.add(doc.getDocumentedAmount());
@@ -114,9 +115,9 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         }
         return total;
     }
-    
+
     @Override
-    public BigDecimal calculateDueAmount() {       
+    public BigDecimal calculateDueAmount() {
         BigDecimal invoiceAmount = this.getDocumentedAmount();
 
         if (getType().equals(Enums.AcDocType.INVOICE)) {

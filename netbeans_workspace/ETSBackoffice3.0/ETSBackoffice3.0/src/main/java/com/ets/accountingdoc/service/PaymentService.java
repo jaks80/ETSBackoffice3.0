@@ -52,13 +52,7 @@ public class PaymentService {
 
         return payment;
     }
-
-    public Payments saveBulk(Payments payments) {
-        List<Payment> list = payments.getList();
-        dao.saveBulk(list);
-        return payments;
-    }
-
+    
     public Payments findPaymentBySalesInvoice(Long invoice_id) {
         List<Payment> list = dao.findPaymentBySalesInvoice(invoice_id);
         for (Payment p : list) {

@@ -1,5 +1,7 @@
 package com.ets.accountingdoc.domain;
 
+import com.ets.pnr.domain.Pnr;
+import java.beans.Transient;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
@@ -38,7 +40,7 @@ public class OtherSalesAcDoc extends AccountingDocument implements Serializable 
 
     @XmlElement
     private Payment payment;
-
+    
     @Override
     public BigDecimal calculateDocumentedAmount() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

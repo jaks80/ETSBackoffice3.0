@@ -37,12 +37,6 @@ public class PaymentWS {
     public Payment getById(@PathParam("id") Long id) {
         return service.findById(id);
     }
-    
-    @POST
-    @Path("/newbulk")
-    public Payments createBulk(Payments payments) {
-        return service.saveBulk(payments);
-    }
 
     @GET
     @Path("/paymentbysinv")

@@ -98,6 +98,26 @@ public class TicketingSalesAcDocWS {
         }
     }
 
+    @GET
+    @Path("/due_invoices")
+    public TicketingSalesAcDocs outstandingInvoices(
+            @QueryParam("doctype") Enums.AcDocType doctype,
+            @QueryParam("clienttype") Enums.ClientType clienttype,
+            @QueryParam("clientid") Long clientid,            
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        List<TicketingSalesAcDoc> list = service.dueInvoices(doctype,
+                clienttype,clientid, dateFrom, dateTo);
+
+        TicketingSalesAcDocs docs = new TicketingSalesAcDocs();
+        docs.setList(list);
+        return docs;
+    }
+    
     //*****************Reporting Methods are Bellow******************//
     @GET
     @Path("/acdoc_report")
