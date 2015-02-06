@@ -2,17 +2,21 @@ package com.ets.fe.acdoc.gui.payment;
 
 import com.ets.fe.Application;
 import com.ets.fe.acdoc.bo.PaymentLogic;
-import com.ets.fe.acdoc.gui.comp.DocumentSearchComp;
+import com.ets.fe.acdoc.gui.PurchaseInvoiceDlg;
+import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
+import com.ets.fe.acdoc.gui.comp.ClientSearchComp;
 import com.ets.fe.acdoc.model.AccountingDocument;
 import com.ets.fe.acdoc.model.Payment;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.task.AcDocBulkTask;
-import com.ets.fe.acdoc.task.PaymentTask;
+import com.ets.fe.acdoc.task.NewPaymentTask;
 import com.ets.fe.util.CheckInput;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Frame;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -27,6 +31,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -41,13 +46,12 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
 
     private JDesktopPane desktopPane;
     private AcDocBulkTask task;
-    private PaymentTask paymentTask;
+    private NewPaymentTask paymentTask;
     private List<TicketingPurchaseAcDoc> invoices;
     private String taskType;
 
     public TPurchaseBatchPayment(JDesktopPane desktopPane) {
-        this.desktopPane = desktopPane;
-        documentSearchComponent = new DocumentSearchComp(false, false, false);
+        this.desktopPane = desktopPane;        
         initComponents();
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
         dtTo.setDate(DateUtil.getEndOfMonth());
@@ -61,7 +65,7 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
     private void search() {
         taskType = "SEARCH";
         btnSearch.setEnabled(false);
-        Long client_id = DocumentSearchComp.getClient_id();
+        Long client_id = documentSearchComponent.getClient_id();
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
         task = new AcDocBulkTask(Enums.AcDocType.INVOICE, Enums.ClientType.AGENT, client_id, from, to, progressBar, "PURCHASE");
@@ -112,7 +116,7 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
                 }
 
                 if (!payment.gettPurchaseAcDocuments().isEmpty()) {
-                    paymentTask = new PaymentTask(payment);
+                    paymentTask = new NewPaymentTask(payment);
                     paymentTask.addPropertyChangeListener(this);
                     paymentTask.execute();
                 } else {
@@ -259,12 +263,12 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
         jSeparator1 = new javax.swing.JSeparator();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnViewReport = new javax.swing.JButton();
+        btnViewInvoice = new javax.swing.JButton();
+        btnEmail = new javax.swing.JButton();
+        btnPrint = new javax.swing.JButton();
         btnSearch = new javax.swing.JButton();
-        documentSearchComponent = new com.ets.fe.acdoc.gui.comp.DocumentSearchComp();
+        documentSearchComponent = new com.ets.fe.acdoc.gui.comp.ClientSearchComp(false, false, false,Enums.AgentType.TICKETING_AGT);
         jSeparator2 = new javax.swing.JSeparator();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -352,13 +356,18 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details.png"))); // NOI18N
+        btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details.png"))); // NOI18N
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Invoice24.png"))); // NOI18N
+        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Invoice24.png"))); // NOI18N
+        btnViewInvoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewInvoiceActionPerformed(evt);
+            }
+        });
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
+        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
 
         btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search24.png"))); // NOI18N
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -372,23 +381,23 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jButton2)
+                .addComponent(btnViewInvoice)
                 .addGap(2, 2, 2)
-                .addComponent(jButton1)
+                .addComponent(btnViewReport)
                 .addGap(2, 2, 2)
-                .addComponent(jButton3)
+                .addComponent(btnEmail)
                 .addGap(2, 2, 2)
-                .addComponent(jButton4)
+                .addComponent(btnPrint)
                 .addGap(2, 2, 2)
                 .addComponent(btnSearch)
                 .addGap(651, 651, 651))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnViewReport, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
@@ -738,21 +747,33 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
         processPayment();
     }//GEN-LAST:event_btnSubmitPaymentActionPerformed
 
+    private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
+        int index = tblInvoices.getSelectedRow();
+        if (index != -1) {
+            Long id = invoices.get(index).getId();
+
+            Window w = SwingUtilities.getWindowAncestor(this);
+            Frame owner = w instanceof Frame ? (Frame) w : null;
+            PurchaseInvoiceDlg dlg = new PurchaseInvoiceDlg(owner);            
+            dlg.showDialog(id);            
+        }
+    }//GEN-LAST:event_btnViewInvoiceActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEmail;
+    private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnSubmitPayment;
+    private javax.swing.JButton btnViewInvoice;
+    private javax.swing.JButton btnViewReport;
     private org.jdesktop.swingx.JXBusyLabel busyLabel;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox chkReverseEntry;
     private javax.swing.JComboBox cmbTType;
-    private com.ets.fe.acdoc.gui.comp.DocumentSearchComp documentSearchComponent;
+    private com.ets.fe.acdoc.gui.comp.ClientSearchComp documentSearchComponent;
     private org.jdesktop.swingx.JXDatePicker dtFrom;
     private org.jdesktop.swingx.JXDatePicker dtTo;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;

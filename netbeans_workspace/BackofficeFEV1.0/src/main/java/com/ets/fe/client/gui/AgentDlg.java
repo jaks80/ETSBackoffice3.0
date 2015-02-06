@@ -70,7 +70,7 @@ public class AgentDlg extends JDialog implements ActionListener{
 
     public boolean showAgentDialog(Agent agent) {
         if (agent != null) {
-            txtName.setText(agent.getName());
+            txtName.setText(agent.getFullName());
             txtContactPerson.setText(agent.getContactPerson());
             txtAddLine1.setText(agent.getAddLine1());
             txtAddLine2.setText(agent.getAddLine2());
@@ -93,7 +93,7 @@ public class AgentDlg extends JDialog implements ActionListener{
                 agent.setcLimitOverInvoicing(false);
             }
             
-            if (agent.getName()!= null) {
+            if (agent.getFullName()!= null) {
                 txtAddLine1.requestFocusInWindow();
             } else {
                 txtName.requestFocusInWindow();

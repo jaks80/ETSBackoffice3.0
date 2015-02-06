@@ -63,7 +63,7 @@ public class ClientComponent extends JPanel implements PropertyChangeListener {
                 cmbSearchResult.setEnabled(true);
                 List<String> list = new ArrayList<>();
                 for (Agent a : agentlist) {
-                    list.add(a.getName() + "-" + a.getId());
+                    list.add(a.getFullName() + "-" + a.getId());
                 }
                 setCmbSearchResult(list);
             }
@@ -78,7 +78,7 @@ public class ClientComponent extends JPanel implements PropertyChangeListener {
                 cmbSearchResult.setEnabled(true);
                 List<String> list = new ArrayList<>();
                 for (Customer a : customerlist) {
-                    list.add(a.getFullCustomerName() + "-" + a.getPostCode() + "-" + a.getId());
+                    list.add(a.getFullName() + "-" + a.getPostCode() + "-" + a.getId());
                 }
                 setCmbSearchResult(list);
             }
@@ -321,12 +321,12 @@ public class ClientComponent extends JPanel implements PropertyChangeListener {
     }
 
     private void setTxtAgentDetails(Agent agent) {
-        txtContactableDetails.setText(agent.getName());
+        txtContactableDetails.setText(agent.getFullName());
         txtContactableDetails.append(agent.getFullAddressCRSeperated());
     }
 
     private void setTxtCustomerDetails(Customer customer) {
-        txtContactableDetails.setText(customer.getFullCustomerName());
+        txtContactableDetails.setText(customer.getFullName());
         txtContactableDetails.append(customer.getFullAddressCRSeperated());
     }
 

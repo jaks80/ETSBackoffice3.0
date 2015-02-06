@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class Contactable extends PersistentObject implements Serializable{
+public abstract class Contactable extends PersistentObject implements Serializable{
     
     private static final long serialVersionUID = 1L;
     
@@ -45,6 +45,8 @@ public class Contactable extends PersistentObject implements Serializable{
     public Contactable(){
     
     }
+    
+    public abstract String getFullName();
 
     public String getAddLine1() {
         return addLine1;

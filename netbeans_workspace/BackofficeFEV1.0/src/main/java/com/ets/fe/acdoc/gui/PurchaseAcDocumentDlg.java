@@ -2,7 +2,6 @@ package com.ets.fe.acdoc.gui;
 
 import com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
-import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.acdoc.task.TktingPurchaseDocTask;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.util.CheckInput;
@@ -57,9 +56,9 @@ public class PurchaseAcDocumentDlg extends javax.swing.JDialog implements Proper
 
         controllComponent(document);
         if (pnr.getAgent() != null) {
-            txtAcDocFor.setText(pnr.getAgent().getName() + pnr.getAgent().getAddressCRSeperated());
+            txtAcDocFor.setText(pnr.getAgent().getFullName() + pnr.getAgent().getAddressCRSeperated());
         } else {
-            txtAcDocFor.setText(pnr.getCustomer().getFullCustomerName() + pnr.getCustomer().getAddressCRSeperated());
+            txtAcDocFor.setText(pnr.getCustomer().getFullName() + pnr.getCustomer().getAddressCRSeperated());
         }
         if (document.getDocumentedAmount() != null) {
             txtAmount.setText(document.getDocumentedAmount().toString());

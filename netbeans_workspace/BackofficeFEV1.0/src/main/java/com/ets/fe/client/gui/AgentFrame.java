@@ -2,6 +2,7 @@ package com.ets.fe.client.gui;
 
 import com.ets.fe.client.collection.Agents;
 import com.ets.fe.client.model.Agent;
+import com.ets.fe.util.Enums;
 import java.awt.Frame;
 import java.awt.Window;
 import java.beans.PropertyChangeEvent;
@@ -58,7 +59,7 @@ public void search() {
             officeId = null;
         }
 
-        task = new AgentSearchTask(name, postCode, officeId,progressBar);
+        task = new AgentSearchTask(name, postCode, officeId,progressBar,Enums.AgentType.ALL);
         task.addPropertyChangeListener(this);
         task.execute();
     }
@@ -71,7 +72,7 @@ public void search() {
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
                 Agent agent = list.get(i);
-                tableModel.insertRow(i, new Object[]{i + 1, agent.getName(),agent.getAddLine1(), agent.getPostCode(), agent.getTelNo(), agent.getEmail(),agent.getOfficeID()});
+                tableModel.insertRow(i, new Object[]{i + 1, agent.getFullName(),agent.getAddLine1(), agent.getPostCode(), agent.getTelNo(), agent.getEmail(),agent.getOfficeID()});
             }
         } else {
             tableModel.insertRow(0, new Object[]{});

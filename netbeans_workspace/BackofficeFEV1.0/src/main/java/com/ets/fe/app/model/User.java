@@ -82,4 +82,9 @@ public class User extends Contactable implements Serializable{
     public void setUserType(int UserType) {
         this.UserType = UserType;
     }
+    
+    @Override
+    public String getFullName() {
+      return this.surName + "/" + this.foreName;
+    }
 }

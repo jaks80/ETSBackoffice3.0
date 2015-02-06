@@ -5,6 +5,7 @@ import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.ws.TicketingPAcDocWSClient;
 import com.ets.fe.acdoc.ws.TicketingSAcDocWSClient;
+import com.ets.fe.util.Enums;
 import javax.swing.SwingWorker;
 
 /**
@@ -15,19 +16,19 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
 
     private Long id;
     private AccountingDocument accountingDocument;
-    private String docClass;
+    private Enums.SaleType saleType;
     private String taskType;
 
-    public AccountingDocTask(Long id, String docClass, String taskType) {
+    public AccountingDocTask(Long id, Enums.SaleType saleType, String taskType) {
         this.id = id;
-        this.docClass = docClass;
+        this.saleType = saleType;
         this.taskType = taskType;
     }
 
     @Override
     protected AccountingDocument doInBackground() throws Exception {
 
-        if ("SALES".equals(docClass)) {
+        if (Enums.SaleType.SALES.equals(saleType)) {
             TicketingSAcDocWSClient client = new TicketingSAcDocWSClient();
             switch (taskType) {
                 case "DETAILS":
@@ -40,7 +41,7 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
                     client.createNewPayment((TicketingSalesAcDoc) accountingDocument);
                     break;
             }
-        } else if ("PURCHASE".equals(docClass)) {
+        } else if (Enums.SaleType.PURCHASE.equals(saleType)) {
             TicketingPAcDocWSClient client = new TicketingPAcDocWSClient();
             switch (taskType) {
                 case "DETAILS":

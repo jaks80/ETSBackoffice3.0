@@ -8,7 +8,7 @@ import com.ets.fe.acdoc.model.Payment;
 import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.task.AccountingDocTask;
-import com.ets.fe.acdoc.task.PaymentTask;
+import com.ets.fe.acdoc.task.NewPaymentTask;
 import com.ets.fe.os.model.AdditionalCharge;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
@@ -39,7 +39,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
 
     private NewTSalesDocumentTask newInvoiceTask;
     private AccountingDocTask accountingDocTask;
-    private PaymentTask paymentTask;
+    private NewPaymentTask paymentTask;
 
     private String taskType;
     private Pnr pnr;
@@ -76,6 +76,12 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         return true;
     }
 
+    public void showDialog(Long id) {   
+        loadTSalesInvoice(id);    
+        setLocationRelativeTo(this);                      
+        setVisible(true);                       
+    }
+    
     private void displayInvoice(TicketingSalesAcDoc tInvoice) {
 
         this.tInvoice = tInvoice;
@@ -91,9 +97,9 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         controllComponent(tInvoice);
 
         if (pnr.getAgent() != null) {
-            txtAcDocFor.setText(pnr.getAgent().getName() + pnr.getAgent().getAddressCRSeperated());
+            txtAcDocFor.setText(pnr.getAgent().getFullName() + pnr.getAgent().getAddressCRSeperated());
         } else {
-            txtAcDocFor.setText(pnr.getCustomer().getFullCustomerName() + pnr.getCustomer().getAddressCRSeperated());
+            txtAcDocFor.setText(pnr.getCustomer().getFullName() + pnr.getCustomer().getAddressCRSeperated());
         }
     }
 
@@ -163,16 +169,16 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         }
     }
 
-    public void loadTSalesInvoice() {
+    public void loadTSalesInvoice(Long id) {
         taskType = "COMPLETE";
-        accountingDocTask = new AccountingDocTask(tInvoice.getId(), "SALES", "DETAILS");
+        accountingDocTask = new AccountingDocTask(id, Enums.SaleType.SALES, "DETAILS");
         accountingDocTask.addPropertyChangeListener(this);
         accountingDocTask.execute();
     }
 
     public void paymentTask(Payment payment) {
         taskType = "PAYMENT";
-        paymentTask = new PaymentTask(payment);
+        paymentTask = new NewPaymentTask(payment);
         paymentTask.addPropertyChangeListener(this);
         paymentTask.execute();
     }
@@ -244,7 +250,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
 
             if (amount.compareTo(invoice.calculateDueAmount().abs()) <= 0) {
                 Payment payment = logic.processSinglePayment(amount, invoice, remark, type);
-                paymentTask = new PaymentTask(payment);
+                paymentTask = new NewPaymentTask(payment);
                 paymentTask.addPropertyChangeListener(this);
                 paymentTask.execute();
             } else {
@@ -281,8 +287,14 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         tblTicket = new JXTable(){
             public Component prepareRenderer(TableCellRenderer renderer,int rowIndex, int vColIndex) 
             {
+
                 Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
-                String s = this.getModel().getValueAt(rowIndex, 1).toString();
+                Object o = this.getModel().getValueAt(rowIndex, 1);
+                String s = "";
+                if(o!=null){
+                    s = o.toString();
+                }
+
                 if (s.equalsIgnoreCase("BOOK") ) 
                 {c.setForeground(Color.yellow);
                 } else if(s.equalsIgnoreCase("ISSUE")){
@@ -1065,13 +1077,13 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
                     } else if ("PAYMENT".equals(taskType)) {
                         busyLabel.setBusy(false);
                         btnSubmitPayment.setEnabled(true);
-                        loadTSalesInvoice();
+                        loadTSalesInvoice(tInvoice.getId());
                         resetPaymentComponent();
                     } else if ("COMPLETE".equals(taskType)) {
                         tInvoice = (TicketingSalesAcDoc) accountingDocTask.get();
                         displayInvoice(tInvoice);
                         taskType = "";
-                    }
+                    } 
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(SalesInvoiceDlg.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {

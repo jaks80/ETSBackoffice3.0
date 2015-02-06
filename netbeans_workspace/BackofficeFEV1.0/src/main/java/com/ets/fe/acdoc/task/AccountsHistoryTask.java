@@ -1,7 +1,12 @@
 package com.ets.fe.acdoc.task;
 
-import com.ets.fe.acdoc.model.collection.Payments;
-import com.ets.fe.acdoc.ws.PaymentWSClient;
+import com.ets.fe.acdoc.model.AccountingDocument;
+import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
+import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
+import com.ets.fe.acdoc.model.report.AccountsReport;
+import com.ets.fe.acdoc.model.report.InvoiceReport;
+import com.ets.fe.acdoc.ws.TicketingPAcDocWSClient;
+import com.ets.fe.acdoc.ws.TicketingSAcDocWSClient;
 import com.ets.fe.client.gui.AgentSearchTask;
 import com.ets.fe.util.Enums;
 import java.util.Date;
@@ -14,39 +19,51 @@ import javax.swing.SwingWorker;
  *
  * @author Yusuf
  */
-public class PaymentTask extends SwingWorker<Payments, Integer> {
+public class AccountsHistoryTask extends SwingWorker<AccountsReport, Integer> {
 
-    private JProgressBar progressBar;    
+    private JProgressBar progressBar;
+    private Enums.SaleType saleType;   
     private Enums.ClientType clienttype = null;
     private Long clientid = null;
     private Date dateFrom = null;
     private Date dateTo = null;
-    private Enums.SaleType saleType;
 
-    public PaymentTask(Enums.ClientType clienttype,Long clientid, Date dateFrom, Date dateTo,Enums.SaleType saleType, JProgressBar progressBar) {
+    public AccountsHistoryTask(Enums.ClientType clienttype,
+            Long clientid, Date dateFrom, Date dateTo, JProgressBar progressBar, Enums.SaleType saleType) {
         
         this.clienttype = clienttype;
         this.clientid = clientid;
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
-        this.saleType = saleType;
         this.progressBar = progressBar;
+        this.saleType = saleType;
     }
 
     @Override
-    protected Payments doInBackground() throws Exception {
+    protected AccountsReport doInBackground() throws Exception {
 
         setProgress(10);
         Progress p = new Progress();
         Thread t = new Thread(p);
         t.start();
-        
-        
-        PaymentWSClient client = new PaymentWSClient();        
-        Payments payments = client.findTSPaymentHistory(clienttype, clientid, dateFrom, dateTo,saleType);
-                
+
+        AccountsReport report = null;
+
+        if (Enums.SaleType.SALES.equals(saleType)) {
+            TicketingSAcDocWSClient client = new TicketingSAcDocWSClient();
+            report = client.salesAccountsReport(clienttype, clientid, dateFrom, dateTo);
+
+        } else if (Enums.SaleType.PURCHASE.equals(saleType)) {
+            TicketingPAcDocWSClient client = new TicketingPAcDocWSClient();
+            report = client.purchaseAccountsReport(clientid, dateFrom, dateTo);
+            
+        } else if (Enums.SaleType.OTHER.equals(saleType)) {
+            
+
+        }
+
         p.cancel();
-        return payments;
+        return report;
     }
 
     @Override

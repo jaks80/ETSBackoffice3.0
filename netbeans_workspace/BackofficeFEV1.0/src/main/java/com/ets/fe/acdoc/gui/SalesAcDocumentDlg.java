@@ -2,6 +2,7 @@ package com.ets.fe.acdoc.gui;
 
 import com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
+import com.ets.fe.acdoc.task.AccountingDocTask;
 import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.util.CheckInput;
@@ -39,7 +40,7 @@ public class SalesAcDocumentDlg extends javax.swing.JDialog implements PropertyC
         setVisible(true);
         return true;
     }
-
+    
     private void displayDocument(TicketingSalesAcDoc document) {
         this.document = document;
         this.pnr = document.getPnr();
@@ -56,9 +57,9 @@ public class SalesAcDocumentDlg extends javax.swing.JDialog implements PropertyC
 
         controllComponent(document);
         if (pnr.getAgent() != null) {
-            txtAcDocFor.setText(pnr.getAgent().getName() + pnr.getAgent().getAddressCRSeperated());
+            txtAcDocFor.setText(pnr.getAgent().getFullName() + pnr.getAgent().getAddressCRSeperated());
         } else {
-            txtAcDocFor.setText(pnr.getCustomer().getFullCustomerName() + pnr.getCustomer().getAddressCRSeperated());
+            txtAcDocFor.setText(pnr.getCustomer().getFullName() + pnr.getCustomer().getAddressCRSeperated());
         }
         if (document.getDocumentedAmount() != null) {
             txtAmount.setText(document.getDocumentedAmount().toString());

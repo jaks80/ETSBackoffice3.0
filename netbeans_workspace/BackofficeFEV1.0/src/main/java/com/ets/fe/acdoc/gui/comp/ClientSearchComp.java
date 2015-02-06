@@ -6,7 +6,6 @@ import com.ets.fe.client.gui.AgentSearchTask;
 import com.ets.fe.client.gui.CustomerSearchTask;
 import com.ets.fe.client.model.Agent;
 import com.ets.fe.client.model.Customer;
-import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,98 +13,77 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.SwingUtilities;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
  * @author Yusuf
  */
-public class DocumentSearchComp extends javax.swing.JPanel implements PropertyChangeListener {
-
-    public static Long getClient_id() {
-        return client_id;
-    }
-
+public class ClientSearchComp extends javax.swing.JPanel implements PropertyChangeListener {    
+   
     private AgentSearchTask agentTask;
     private CustomerSearchTask customerTask;
 
-    private static List<Customer> customerList = new ArrayList<>();
-    private static List<Agent> agentList = new ArrayList<>();
-    private static Enums.ClientType client_type;
-    private static Long client_id;
+    private List<Customer> customerList = new ArrayList<>();
+    private List<Agent> agentList = new ArrayList<>();
+    private Enums.ClientType client_type;
+     private Enums.AgentType agentType;
+    private Long client_id;
 
-
-    public DocumentSearchComp() {
+    public ClientSearchComp() {
         initComponents();
+    }
+    
+    public ClientSearchComp(boolean _rdoAgent, boolean _rdoCustomer, boolean _rdoAll,Enums.AgentType agentType) {
+        initComponents();
+        this.agentType = agentType;
+        rdoAgent.setVisible(_rdoAgent);
+        rdoCustomer.setVisible(_rdoCustomer);
+        rdoAll.setVisible(_rdoAll);
+        rdoAgent.doClick();
+    }
         
-    }
-    public DocumentSearchComp(boolean _rdoAgent, boolean _rdoCustomer, boolean _rdoAll) {
-        initComponents();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                rdoAgent.doClick();
-                rdoAgent.setVisible(_rdoAgent);
-                rdoCustomer.setVisible(_rdoCustomer);
-                rdoAll.setVisible(_rdoAll);
-            }
-        });
-    }
-
     private void displayAgent() {
-        SwingUtilities.invokeLater(new Runnable() {
+        List cmbElement = new ArrayList();
 
-            @Override
-            public void run() {
-                List cmbElement = new ArrayList();
+        for (Agent agent : agentList) {
+            cmbElement.add(agent.getFullName() + "-" + agent.getPostCode()
+                    + "-" + agent.getId());
+        }
 
-                for (Agent agent : agentList) {
-                    cmbElement.add(agent.getName() + "-" + agent.getPostCode()
-                            + "-" + agent.getId());
-                }
-
-                Collections.sort(cmbElement);
-                DefaultComboBoxModel cmbContactableModel = new DefaultComboBoxModel(cmbElement.toArray());
-                cmbContactableModel.insertElementAt("All", 0);
-                cmbContactable.setModel(cmbContactableModel);
-                cmbContactable.setSelectedIndex(0);
-
-            }
-        });
+        Collections.sort(cmbElement);
+        DefaultComboBoxModel cmbContactableModel = new DefaultComboBoxModel(cmbElement.toArray());
+        cmbContactableModel.insertElementAt("All", 0);
+        cmbContactable.setModel(cmbContactableModel);
+        cmbContactable.setSelectedIndex(0);
+        cmbContactable.setEnabled(true);
     }
 
     private void displayCustomer() {
-        SwingUtilities.invokeLater(new Runnable() {
+        List cmbElement = new ArrayList();
 
-            @Override
-            public void run() {
-                List cmbElement = new ArrayList();
+        for (Customer customer : customerList) {
+            cmbElement.add(customer.getSurName() + "/"
+                    + customer.getForeName() + "-" + customer.getPostCode()
+                    + "-" + customer.getId());
+        }
 
-                for (Customer customer : customerList) {
-                    cmbElement.add(customer.getSurName() + "/"
-                            + customer.getForeName() + "-" + customer.getPostCode()
-                            + "-" + customer.getId());
-                }
-
-                Collections.sort(cmbElement);
-                DefaultComboBoxModel cmbContactableModel = new DefaultComboBoxModel(cmbElement.toArray());
-                cmbContactableModel.insertElementAt("All", 0);
-                cmbContactable.setModel(cmbContactableModel);
-                cmbContactable.setSelectedIndex(0);
-            }
-        });
+        Collections.sort(cmbElement);
+        DefaultComboBoxModel cmbContactableModel = new DefaultComboBoxModel(cmbElement.toArray());
+        cmbContactableModel.insertElementAt("All", 0);
+        cmbContactable.setModel(cmbContactableModel);
+        cmbContactable.setSelectedIndex(0);
+        cmbContactable.setEnabled(true);
     }
 
     public void agentTask() {
         busyLabel.setBusy(true);
-        agentTask = new AgentSearchTask();
+        agentTask = new AgentSearchTask(busyLabel,agentType);
         agentTask.addPropertyChangeListener(this);
         agentTask.execute();
     }
@@ -119,23 +97,28 @@ public class DocumentSearchComp extends javax.swing.JPanel implements PropertyCh
 
     private ActionListener radioAgentListener = new ActionListener() {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             agentTask();
             client_type = Enums.ClientType.AGENT;
+            txtClientDetails.setText("");           
         }
     };
 
     private ActionListener radioCustomerListener = new ActionListener() {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             customerTask();
             client_type = Enums.ClientType.CUSTOMER;
+            txtClientDetails.setText("");            
         }
     };
 
     private ActionListener radioAllListener = new ActionListener() {
 
         public void actionPerformed(ActionEvent e) {
+            txtClientDetails.setText("");
             cmbContactable.setSelectedIndex(-1);
             cmbContactable.setEnabled(false);
             client_type = null;
@@ -156,7 +139,7 @@ public class DocumentSearchComp extends javax.swing.JPanel implements PropertyCh
                 loop:
                 for (Agent a : agentList) {
                     if (a.getId() == id) {
-                        txtClientDetails.setText(a.getName());
+                        txtClientDetails.setText(a.getFullName());
                         txtClientDetails.append(a.getFullAddressCRSeperated());
                         break loop;
                     }
@@ -165,7 +148,7 @@ public class DocumentSearchComp extends javax.swing.JPanel implements PropertyCh
                 loop:
                 for (Customer c : customerList) {
                     if (c.getId() == id) {
-                        txtClientDetails.setText(c.getFullCustomerName());
+                        txtClientDetails.setText(c.getFullName());
                         txtClientDetails.append(c.getFullAddressCRSeperated());
                         break loop;
                     }
@@ -288,9 +271,9 @@ public class DocumentSearchComp extends javax.swing.JPanel implements PropertyCh
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private static javax.swing.JRadioButton rdoAgent;
-    private static javax.swing.JRadioButton rdoAll;
-    private static javax.swing.JRadioButton rdoCustomer;
+    private javax.swing.JRadioButton rdoAgent;
+    private javax.swing.JRadioButton rdoAll;
+    private javax.swing.JRadioButton rdoCustomer;
     private javax.swing.JTextArea txtClientDetails;
     // End of variables declaration//GEN-END:variables
 
@@ -310,7 +293,7 @@ public class DocumentSearchComp extends javax.swing.JPanel implements PropertyCh
                         displayCustomer();
                     }
                 } catch (InterruptedException | ExecutionException ex) {
-                    Logger.getLogger(DocumentSearchComp.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ClientSearchComp.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
                     busyLabel.setBusy(false);
                 }
@@ -329,7 +312,11 @@ public class DocumentSearchComp extends javax.swing.JPanel implements PropertyCh
         return id;
     }
 
-    public static Enums.ClientType getContactableType() {
+    public Enums.ClientType getContactableType() {
         return client_type;
     }
+    public Long getClient_id() {
+        return client_id;
+    }
+    
 }

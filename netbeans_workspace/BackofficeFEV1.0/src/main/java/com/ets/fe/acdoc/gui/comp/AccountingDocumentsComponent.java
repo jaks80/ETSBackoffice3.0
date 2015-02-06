@@ -34,7 +34,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
     private AcDocSummeryTask summeryTask;
     private AccountingDocTask accountingDocTask;
     private String taskType;
-    private String docClass = "SALES";
+    private String saleType = "SALES";
     private PnrPanel parent = null;
 
     private Long pnrId;
@@ -61,14 +61,14 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         int index = 0;
         Long id = null;
 
-        if (null != docClass) {
-            switch (docClass) {
+        if (null != saleType) {
+            switch (saleType) {
                 case "SALES":
                     index = tblSales.getSelectedRow();
                     id = tSAcDocList.get(index).getId();
                     if (index != -1) {
                         if (!tSAcDocList.get(index).getType().equals(Enums.AcDocType.PAYMENT)) {
-                            accountingDocTask = new AccountingDocTask(id, docClass, "DETAILS");
+                            accountingDocTask = new AccountingDocTask(id, Enums.SaleType.SALES, "DETAILS");
                             accountingDocTask.addPropertyChangeListener(this);
                             accountingDocTask.execute();
                         }
@@ -79,7 +79,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                     id = tPAcDocList.get(index).getId();
                     if (index != -1) {
                         if (!tPAcDocList.get(index).getType().equals(Enums.AcDocType.PAYMENT)) {
-                            accountingDocTask = new AccountingDocTask(id, docClass, "DETAILS");
+                            accountingDocTask = new AccountingDocTask(id, Enums.SaleType.PURCHASE, "DETAILS");
                             accountingDocTask.addPropertyChangeListener(this);
                             accountingDocTask.execute();
                         }
@@ -95,7 +95,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
             int index = tblSales.getSelectedRow();
             if (index != -1) {
                 Long id = tSAcDocList.get(index).getId();
-                accountingDocTask = new AccountingDocTask(id, "SALES", "VOID");
+                accountingDocTask = new AccountingDocTask(id, Enums.SaleType.SALES, "VOID");
                 accountingDocTask.addPropertyChangeListener(this);
                 accountingDocTask.execute();
             }
@@ -105,7 +105,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
     public void search(Long pnrId) {
         taskType = "SUMMERY";
         this.pnrId = pnrId;
-        summeryTask = new AcDocSummeryTask(pnrId, docClass);
+        summeryTask = new AcDocSummeryTask(pnrId, saleType);
         summeryTask.addPropertyChangeListener(this);
         summeryTask.execute();
     }
@@ -332,9 +332,9 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                             }
                         }
 
-                        if (docClass.equals("SALES")) {
+                        if (saleType.equals("SALES")) {
                             populateTblSales();
-                        } else if (docClass.equals("PURCHASE")) {
+                        } else if (saleType.equals("PURCHASE")) {
                             populateTblPurchase();
                         }
 
@@ -392,13 +392,13 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
 
             if (pnrId != null) {
                 if (tabAcDoc.getSelectedIndex() == 0) {
-                    docClass = "SALES";
+                    saleType = "SALES";
                     search(pnrId);
                 } else if (tabAcDoc.getSelectedIndex() == 1) {
-                    docClass = "PURCHASE";
+                    saleType = "PURCHASE";
                     search(pnrId);
                 } else {
-                    docClass = "";
+                    saleType = "";
                 }
             }
         }

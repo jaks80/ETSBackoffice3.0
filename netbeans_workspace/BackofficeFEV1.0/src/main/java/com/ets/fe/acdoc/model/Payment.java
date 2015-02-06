@@ -1,8 +1,10 @@
 package com.ets.fe.acdoc.model;
 
 import com.ets.fe.PersistentObject;
+import com.ets.fe.util.Enums;
 import com.ets.fe.util.Enums.PaymentType;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -31,6 +33,39 @@ public class Payment extends PersistentObject implements Serializable {
 
     public Payment() {
 
+    }
+
+    public BigDecimal calculateTotalSalesPayment() {
+        BigDecimal total = new BigDecimal("0.00");
+
+        for (TicketingSalesAcDoc doc : tSalesAcDocuments) {
+            if (!doc.getStatus().equals(Enums.AcDocStatus.VOID)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
+    }
+
+    public BigDecimal calculateTotalPurchasePayment() {
+        BigDecimal total = new BigDecimal("0.00");
+
+        for (TicketingPurchaseAcDoc doc : tPurchaseAcDocuments) {
+            if (!doc.getStatus().equals(Enums.AcDocStatus.VOID)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
+    }
+
+    public BigDecimal calculateTotalOtherPayment() {
+        BigDecimal total = new BigDecimal("0.00");
+
+        for (OtherSalesAcDoc doc : oSalesAcDocuments) {
+            if (!doc.getStatus().equals(Enums.AcDocStatus.VOID)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
     }
 
     public String getRemark() {

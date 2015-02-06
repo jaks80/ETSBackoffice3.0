@@ -3,6 +3,7 @@ package com.ets.fe.acdoc.ws;
 import com.ets.accountingdoc.collection.TicketingSalesAcDocs;
 import com.ets.fe.APIConfig;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
+import com.ets.fe.acdoc.model.report.AccountsReport;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
@@ -124,6 +125,24 @@ public class TicketingSAcDocWSClient {
         }
 
         InvoiceReport report = RestClientUtil.getEntity(InvoiceReport.class, url, new InvoiceReport());
+        return report;
+    }
+    
+     public AccountsReport salesAccountsReport(
+            Enums.ClientType clienttype, Long clientid, Date _dateFrom, Date _dateTo) {
+
+        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+
+        String url = APIConfig.get("ws.tsacdoc.accounts") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo;
+        if (clienttype != null) {
+            url = url + "&clienttype=" + clienttype;
+        }
+        if (clientid != null) {
+            url = url + "&clientid=" + clientid;
+        }
+
+        AccountsReport report = RestClientUtil.getEntity(AccountsReport.class, url, new AccountsReport());
         return report;
     }
 }

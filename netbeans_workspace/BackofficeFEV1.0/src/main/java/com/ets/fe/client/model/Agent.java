@@ -114,4 +114,9 @@ public class Agent extends Contactable implements Serializable{
     public void setAbta(String abta) {
         this.abta = abta;
     }   
+    
+    @Override
+    public String getFullName() {
+        return this.name;
+    }
 }

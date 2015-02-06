@@ -42,7 +42,9 @@ public class Customer extends Contactable implements Serializable{
         this.foreName = foreName;
     }
                 
-    public String getFullCustomerName() {
-        return this.surName + "/" + this.foreName;
+   
+    @Override
+    public String getFullName() {
+      return this.surName + "/" + this.foreName;
     }
 }

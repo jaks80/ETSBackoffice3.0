@@ -4,20 +4,18 @@ import com.amadeus.reader.EventSource;
 import com.amadeus.reader.ResponseHandler;
 import com.ets.fe.APIConfig;
 import com.ets.fe.Application;
+import com.ets.fe.acdoc.gui.TPurchaseAccountsFrame;
 import com.ets.fe.acdoc.gui.TPurchaseInvoiceReportingFrame;
+import com.ets.fe.acdoc.gui.TSalesAccountsFrame;
 import com.ets.fe.acdoc.gui.TSalesInvoiceReportingFrame;
-import com.ets.fe.acdoc.gui.payment.TPurchaseBatchPayment;
-import com.ets.fe.acdoc.gui.payment.TSalesBatchPayment;
+import com.ets.fe.acdoc.gui.payment.*;
 import com.ets.fe.app.model.AppSettings;
 import com.ets.fe.client.gui.*;
 import com.ets.fe.client.model.Customer;
 import com.ets.fe.client.model.MainAgent;
 import com.ets.fe.os.gui.OtherServiceFrame;
 import com.ets.fe.pnr.gui.*;
-import com.ets.fe.settings.gui.MainAgentDlg;
-import com.ets.fe.settings.gui.MainAgentTask;
-import com.ets.fe.settings.gui.SettingsDlg;
-import com.ets.fe.settings.gui.SettingsTask;
+import com.ets.fe.settings.gui.*;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.beans.PropertyVetoException;
@@ -118,10 +116,15 @@ public class Main extends JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         menuBatchTransaction = new javax.swing.JMenuItem();
         menuBatchTransRpt = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
+        menuClientAccounts = new javax.swing.JMenuItem();
         jMenu7 = new javax.swing.JMenu();
         menuPReporting = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         menu3rdPartyBillPayment = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        menuVendorAccounts = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -243,6 +246,11 @@ public class Main extends JFrame {
         jMenuBar1.add(jMenu2);
 
         jMenu6.setText("Sales");
+        jMenu6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu6ActionPerformed(evt);
+            }
+        });
 
         menuDueSalesInvoice.setText("Sales Invoice: Report");
         menuDueSalesInvoice.addActionListener(new java.awt.event.ActionListener() {
@@ -261,12 +269,31 @@ public class Main extends JFrame {
         });
         jMenu6.add(menuBatchTransaction);
 
-        menuBatchTransRpt.setText("Batch Transaction: Report");
+        menuBatchTransRpt.setText("History: Batch Transaction");
+        menuBatchTransRpt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuBatchTransRptActionPerformed(evt);
+            }
+        });
         jMenu6.add(menuBatchTransRpt);
+        jMenu6.add(jSeparator4);
+
+        menuClientAccounts.setText("History: Client Account");
+        menuClientAccounts.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuClientAccountsActionPerformed(evt);
+            }
+        });
+        jMenu6.add(menuClientAccounts);
 
         jMenuBar1.add(jMenu6);
 
         jMenu7.setText("Purchase");
+        jMenu7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu7ActionPerformed(evt);
+            }
+        });
 
         menuPReporting.setText("Purchase Invoice: Report");
         menuPReporting.addActionListener(new java.awt.event.ActionListener() {
@@ -284,6 +311,23 @@ public class Main extends JFrame {
             }
         });
         jMenu7.add(menu3rdPartyBillPayment);
+
+        jMenuItem7.setText("History: Bill Payment");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem7);
+        jMenu7.add(jSeparator3);
+
+        menuVendorAccounts.setText("History: Vendor Account");
+        menuVendorAccounts.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuVendorAccountsActionPerformed(evt);
+            }
+        });
+        jMenu7.add(menuVendorAccounts);
 
         jMenuBar1.add(jMenu7);
 
@@ -436,6 +480,30 @@ public class Main extends JFrame {
         frameAction(new TPurchaseBatchPayment(desktopPane));
     }//GEN-LAST:event_menu3rdPartyBillPaymentActionPerformed
 
+    private void menuBatchTransRptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBatchTransRptActionPerformed
+        frameAction(new TSalesBatchPaymentReport(desktopPane));
+    }//GEN-LAST:event_menuBatchTransRptActionPerformed
+
+    private void jMenu6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu6ActionPerformed
+        
+    }//GEN-LAST:event_jMenu6ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        frameAction(new TPurchaseBatchPaymentReport(desktopPane));
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void menuClientAccountsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuClientAccountsActionPerformed
+       frameAction(new TSalesAccountsFrame(desktopPane));
+    }//GEN-LAST:event_menuClientAccountsActionPerformed
+
+    private void jMenu7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu7ActionPerformed
+        
+    }//GEN-LAST:event_jMenu7ActionPerformed
+
+    private void menuVendorAccountsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuVendorAccountsActionPerformed
+       frameAction(new TPurchaseAccountsFrame(desktopPane));
+    }//GEN-LAST:event_menuVendorAccountsActionPerformed
+
     private void frameAction(JInternalFrame frame) {
         desktopPane.add(frame);
         try {
@@ -457,19 +525,19 @@ public class Main extends JFrame {
          */
 //        try {
 //            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
+//                if ("Nimbus".equals(info.getFullName())) {
 //                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
 //                    break;
 //                }
 //            }
 //        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//            java.util.logging.Logger.getLogger(Main.class.getFullName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//            java.util.logging.Logger.getLogger(Main.class.getFullName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//            java.util.logging.Logger.getLogger(Main.class.getFullName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//            java.util.logging.Logger.getLogger(Main.class.getFullName()).log(java.util.logging.Level.SEVERE, null, ex);
 //        }
         //</editor-fold>
 
@@ -498,16 +566,21 @@ public class Main extends JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JMenuItem menu3rdPartyBillPayment;
     private javax.swing.JMenuItem menuAppSettings;
     private javax.swing.JMenuItem menuBatchTransRpt;
     private javax.swing.JMenuItem menuBatchTransaction;
+    private javax.swing.JMenuItem menuClientAccounts;
     private javax.swing.JMenuItem menuDueSalesInvoice;
     private javax.swing.JMenuItem menuMainAgent;
     private javax.swing.JMenuItem menuPReporting;
     private javax.swing.JMenuItem menuPnrHistory;
+    private javax.swing.JMenuItem menuVendorAccounts;
     // End of variables declaration//GEN-END:variables
 }

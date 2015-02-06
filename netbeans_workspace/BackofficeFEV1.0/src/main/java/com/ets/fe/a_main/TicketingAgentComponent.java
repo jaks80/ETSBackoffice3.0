@@ -1,9 +1,10 @@
 package com.ets.fe.a_main;
 
 import com.ets.fe.client.collection.Agents;
+import com.ets.fe.client.gui.AgentSearchTask;
 import com.ets.fe.client.model.Agent;
-import com.ets.fe.pnr.gui.task.TicketingAgentTask;
 import com.ets.fe.pnr.model.Pnr;
+import com.ets.fe.util.Enums;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -23,7 +24,7 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  */
 public class TicketingAgentComponent extends javax.swing.JPanel implements PropertyChangeListener {
 
-    private TicketingAgentTask task;
+    private AgentSearchTask task;
     private List<Agent> agentlist;
     private Pnr pnr;
 
@@ -45,7 +46,7 @@ public class TicketingAgentComponent extends javax.swing.JPanel implements Prope
     }
         
     public void search() {
-        task = new TicketingAgentTask(busyLabel);
+        task = new AgentSearchTask(busyLabel,Enums.AgentType.TICKETING_AGT);
         task.addPropertyChangeListener(this);
         task.execute();
     }
@@ -61,13 +62,13 @@ public class TicketingAgentComponent extends javax.swing.JPanel implements Prope
         
         List<String> list = new ArrayList<>();
         for (Agent a : agentlist) {
-            list.add(a.getName());
+            list.add(a.getFullName());
         }
         setCmbVendors(list);
     }
 
     private void setTxtAgentDetails(Agent agent) {
-        txtVendorDetails.setText(agent.getName());
+        txtVendorDetails.setText(agent.getFullName());
         txtVendorDetails.append(agent.getFullAddressCRSeperated());
     }
 
@@ -76,7 +77,7 @@ public class TicketingAgentComponent extends javax.swing.JPanel implements Prope
         if(pnr.getTicketing_agent()!=null){
          DefaultComboBoxModel model = new DefaultComboBoxModel(list.toArray());
          cmbVendor.setModel(model);
-         cmbVendor.setSelectedItem(pnr.getTicketing_agent().getName());
+         cmbVendor.setSelectedItem(pnr.getTicketing_agent().getFullName());
         }else{        
          DefaultComboBoxModel model = new DefaultComboBoxModel(list.toArray());
          cmbVendor.setModel(model);

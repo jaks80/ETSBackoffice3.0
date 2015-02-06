@@ -145,6 +145,33 @@ public class Enums {
         }
     }
 
+    public enum SaleType {
+
+        SALES(0), PURCHASE(1), OTHER(2);
+        private int id;
+
+        SaleType(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static String valueOf(int id) {
+            switch (id) {
+                case 0:
+                    return SALES.toString();
+                case 1:
+                    return PURCHASE.toString();
+                case 2:
+                    return OTHER.toString();
+                default:
+                    return null;
+            }
+        }
+    }
+
     public enum AcDocStatus {
 
         ACTIVE(0), ARCHIVE(1), VOID(2);
@@ -232,4 +259,30 @@ public class Enums {
         }
     }
 
+    public enum AgentType {
+
+        TICKETING_AGT(0), SUB_AGENT(1), ALL(2);
+        private int id;
+
+        AgentType(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static String valueOf(int id) {
+            switch (id) {
+                case 0:
+                    return TICKETING_AGT.toString();
+                case 1:
+                    return SUB_AGENT.toString();
+                case 2:
+                    return ALL.toString();
+                default:
+                    return null;
+            }
+        }
+    }
 }

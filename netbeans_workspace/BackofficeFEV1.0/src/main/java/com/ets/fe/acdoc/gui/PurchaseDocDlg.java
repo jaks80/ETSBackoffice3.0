@@ -75,9 +75,9 @@ public class PurchaseDocDlg extends JDialog implements PropertyChangeListener {
         displayBalance(document);
         controllComponent(document);
         if (pnr.getAgent() != null) {
-            txtAcDocFor.setText(pnr.getAgent().getName() + pnr.getAgent().getAddressCRSeperated());
+            txtAcDocFor.setText(pnr.getAgent().getFullName() + pnr.getAgent().getAddressCRSeperated());
         } else {
-            txtAcDocFor.setText(pnr.getCustomer().getFullCustomerName() + pnr.getCustomer().getAddressCRSeperated());
+            txtAcDocFor.setText(pnr.getCustomer().getFullName() + pnr.getCustomer().getAddressCRSeperated());
         }
     }
 
