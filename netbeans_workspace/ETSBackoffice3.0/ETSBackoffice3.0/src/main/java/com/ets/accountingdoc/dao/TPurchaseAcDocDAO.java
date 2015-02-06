@@ -3,6 +3,7 @@ package com.ets.accountingdoc.dao;
 import com.ets.GenericDAO;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.util.Enums;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -23,4 +24,8 @@ public interface TPurchaseAcDocDAO extends GenericDAO<TicketingPurchaseAcDoc, Lo
     public List<TicketingPurchaseAcDoc> findOutstandingDocuments(Enums.AcDocType type,Long agentid,Date dateStart,Date dateEnd);      
     
     public List<TicketingPurchaseAcDoc> findInvoiceHistory(Long agentid,Date dateStart,Date dateEnd);
+    
+    public List<TicketingPurchaseAcDoc> findAllDocuments(Long agentid,Date dateStart,Date dateEnd);
+        
+    public BigDecimal getAccountBallanceToDate(Long agentid,Date dateEnd);
 }

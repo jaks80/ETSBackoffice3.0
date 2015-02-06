@@ -5,7 +5,7 @@ import com.ets.accountingdoc.collection.TicketingSalesAcDocs;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accountingdoc.service.TPurchaseAcDocService;
-import com.ets.report.model.acdoc.InvoiceReport;
+import com.ets.accountingdoc.model.InvoiceReport;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;

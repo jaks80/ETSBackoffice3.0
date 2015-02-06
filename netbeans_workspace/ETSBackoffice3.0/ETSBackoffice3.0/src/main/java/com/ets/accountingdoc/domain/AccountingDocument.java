@@ -1,7 +1,6 @@
 package com.ets.accountingdoc.domain;
 
 import com.ets.PersistentObject;
-import com.ets.pnr.domain.Pnr;
 import com.ets.util.Enums.AcDocStatus;
 import com.ets.util.Enums.AcDocType;
 import java.io.Serializable;
@@ -11,12 +10,8 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -49,6 +44,8 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
     private AcDocStatus status;
     @XmlElement
     private BigDecimal documentedAmount;
+    @XmlElement
+    private String remark;
     
     public abstract BigDecimal calculateTicketedSubTotal();    
 
@@ -126,5 +123,13 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
 
     public void setStatus(AcDocStatus status) {
         this.status = status;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

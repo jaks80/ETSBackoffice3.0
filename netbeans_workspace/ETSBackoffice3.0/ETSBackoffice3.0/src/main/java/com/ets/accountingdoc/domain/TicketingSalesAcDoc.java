@@ -3,7 +3,6 @@ package com.ets.accountingdoc.domain;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums;
-import java.beans.Transient;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
@@ -142,7 +141,7 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pnr_fk")
+    @JoinColumn(name = "pnr_fk",nullable=false)    
     public Pnr getPnr() {
         return pnr;
     }

@@ -165,6 +165,10 @@ public class TSalesAcDocServiceTest {
         MockPnrData mockData = new MockPnrData();
         Pnr issuedPnr = mockData.getMockPnr();
         Set<Ticket> issuedTickets = mockData.getMockTTPIssuedTickets();
+        for(Ticket t: issuedTickets){
+         t.setPnr(issuedPnr);
+        }
+        
         Set<Itinerary> issuedSegments = mockData.getMockSegments();
         issuedPnr.setTickets(issuedTickets);
         issuedPnr.setSegments(issuedSegments);

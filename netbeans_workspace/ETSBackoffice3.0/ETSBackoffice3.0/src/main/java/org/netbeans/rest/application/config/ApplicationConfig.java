@@ -29,6 +29,7 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(com.ets.accountingdoc.ws.AccountsWS.class);
         resources.add(com.ets.accountingdoc.ws.OtherSalesAcDocWS.class);
         resources.add(com.ets.accountingdoc.ws.PaymentWS.class);
         resources.add(com.ets.accountingdoc.ws.TicketingPurchaseAcDocWS.class);

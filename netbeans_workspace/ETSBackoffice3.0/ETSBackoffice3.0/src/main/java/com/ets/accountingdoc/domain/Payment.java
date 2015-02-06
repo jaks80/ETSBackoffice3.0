@@ -1,8 +1,10 @@
 package com.ets.accountingdoc.domain;
 
 import com.ets.PersistentObject;
+import com.ets.util.Enums;
 import com.ets.util.Enums.PaymentType;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.Access;
@@ -10,8 +12,6 @@ import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -43,6 +43,39 @@ public class Payment extends PersistentObject implements Serializable {
 
     }
 
+    public BigDecimal calculateTotalSalesPayment() {
+        BigDecimal total = new BigDecimal("0.00");
+
+        for (TicketingSalesAcDoc doc : tSalesAcDocuments) {
+            if (!doc.getStatus().equals(Enums.AcDocStatus.VOID)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
+    }
+
+    public BigDecimal calculateTotalPurchasePayment() {
+        BigDecimal total = new BigDecimal("0.00");
+
+        for (TicketingPurchaseAcDoc doc : tPurchaseAcDocuments) {
+            if (!doc.getStatus().equals(Enums.AcDocStatus.VOID)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
+    }
+
+    public BigDecimal calculateTotalOtherPayment() {
+        BigDecimal total = new BigDecimal("0.00");
+
+        for (OtherSalesAcDoc doc : oSalesAcDocuments) {
+            if (!doc.getStatus().equals(Enums.AcDocStatus.VOID)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
+    }
+
     public String getRemark() {
         return remark;
     }
@@ -59,7 +92,7 @@ public class Payment extends PersistentObject implements Serializable {
         this.paymentType = paymentType;
     }
 
-    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)   
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public Set<TicketingSalesAcDoc> gettSalesAcDocuments() {
         return tSalesAcDocuments;
     }
@@ -68,7 +101,7 @@ public class Payment extends PersistentObject implements Serializable {
         this.tSalesAcDocuments = tSalesAcDocuments;
     }
 
-   @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public Set<OtherSalesAcDoc> getoSalesAcDocuments() {
         return oSalesAcDocuments;
     }

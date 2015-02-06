@@ -1,5 +1,6 @@
 package com.ets;
 
+import com.ets.settings.domain.User;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -31,7 +32,11 @@ public abstract class PersistentObject implements Serializable {
     private Timestamp createdOn;
     @XmlElement
     private Timestamp lastModified;
-
+    @XmlElement
+    private User createdBy;
+    @XmlElement
+    private User lastModifiedBy;
+    
     public PersistentObject() {
 
     }
@@ -96,5 +101,21 @@ public abstract class PersistentObject implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public User getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(User lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
     }
 }

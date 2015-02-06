@@ -1,21 +1,14 @@
 package com.ets.accountingdoc.service;
 
-import com.ets.Application;
 import com.ets.accountingdoc.dao.TPurchaseAcDocDAO;
-import com.ets.accountingdoc.domain.AccountingDocument;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
-import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.pnr.domain.Ticket;
-import com.ets.report.model.acdoc.InvoiceReport;
-import com.ets.report.model.acdoc.TktingInvoiceSummery;
-import com.ets.util.DateUtil;
+import com.ets.accountingdoc.model.InvoiceReport;
+import com.ets.accountingdoc.model.TktingInvoiceSummery;
 import com.ets.util.Enums;
 import com.ets.util.PnrUtil;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -46,11 +39,6 @@ public class TPurchaseAcDocService {
 
         doc.setStatus(Enums.AcDocStatus.ACTIVE);
         dao.save(doc);
-
-//        AcDocUtil.undefineTPAcDoc(doc, doc.getTickets());
-//        if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
-//            AcDocUtil.undefineAddChgLine(doc, doc.getAdditionalChargeLines());
-//        }
         return doc;
     }
 
@@ -156,7 +144,7 @@ public class TPurchaseAcDocService {
     public InvoiceReport invoiceHistoryReport(Long agentid, Date dateStart, Date dateEnd) {
         List<TicketingPurchaseAcDoc> invoice_history = dao.findInvoiceHistory(agentid, dateStart, dateEnd);
 
-        return TktingInvoiceSummery.serializeToPurchaseSummery(invoice_history);
+        return InvoiceReport.serializeToPurchaseSummery(invoice_history);
     }
 
     public List<TicketingPurchaseAcDoc> dueInvoices(Enums.AcDocType type, Long agentid, Date dateStart, Date dateEnd) {
@@ -185,6 +173,6 @@ public class TPurchaseAcDocService {
     public InvoiceReport dueInvoiceReport(Enums.AcDocType type, Long agentid, Date dateStart, Date dateEnd) {
 
         List<TicketingPurchaseAcDoc> dueInvoices = dueInvoices(type, agentid, dateStart, dateEnd);
-        return TktingInvoiceSummery.serializeToPurchaseSummery(dueInvoices);
+        return InvoiceReport.serializeToPurchaseSummery(dueInvoices);
     }
 }

@@ -1,12 +1,11 @@
 package com.ets.accountingdoc.dao;
 
 import com.ets.GenericDAOImpl;
-import com.ets.accountingdoc.domain.AdditionalChargeLine;
-import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
-import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
+import com.ets.accountingdoc.domain.*;
 import com.ets.pnr.dao.TicketDAO;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -146,6 +145,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TicketingSalesAcDoc> findInvoiceHistory(Enums.ClientType clienttype, Long clientid, Date from, Date to) {
         String concatClient = "";
         String clientcondition = "and (:clientid is null or client.id = :clientid) ";
@@ -207,5 +207,76 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         tPurchaseAcDocDAO.delete(purchaseDoc);
 
         return true;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TicketingSalesAcDoc> findAllDocuments(Enums.ClientType clienttype, Long clientid, Date from, Date to) {
+        String concatClient = "";
+        String clientcondition = "and (:clientid is null or client.id = :clientid) ";
+
+        if (clienttype != null && clienttype.equals(Enums.ClientType.AGENT)) {
+            concatClient = "left join fetch p.agent as client ";
+        } else if (clienttype != null && clienttype.equals(Enums.ClientType.CUSTOMER)) {
+            concatClient = "left join fetch p.customer as client ";
+        } else {
+            concatClient = "left join fetch p.agent left join fetch p.customer ";
+            clientcondition = "";
+        }
+
+        String hql = "select distinct a from TicketingSalesAcDoc as a "                
+                + "left join fetch a.payment as payment "
+                + "left join fetch a.pnr as p "
+                + "left join fetch p.segments "
+                + concatClient
+                + "where a.status <> 2 "
+                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
+                + clientcondition
+                + " order by a.docIssueDate asc";
+
+        Query query = getSession().createQuery(hql);
+        if (!clientcondition.isEmpty()) {
+            query.setParameter("clientid", clientid);
+        }
+        query.setParameter("from", from);
+        query.setParameter("to", to);
+
+        List<TicketingSalesAcDoc> history = query.list();
+        return history;
+    }
+
+    @Override
+    public BigDecimal getAccountBallanceToDate(Enums.ClientType clienttype, Long clientid, Date to) {
+
+        String concatClient = "";
+        String clientcondition = "and (:clientid is null or client.id = :clientid) ";
+
+        if (clienttype != null && clienttype.equals(Enums.ClientType.AGENT)) {
+            concatClient = "inner join p.agent as client ";
+        } else if (clienttype != null && clienttype.equals(Enums.ClientType.CUSTOMER)) {
+            concatClient = "inner join p.customer as client ";
+        } else {
+            concatClient = "left join p.agent left join p.customer ";
+            clientcondition = "";
+        }
+
+        String hql = "select coalesce(sum(a.documentedAmount),0) as balance "
+                + "from TicketingSalesAcDoc a "
+                + "left join a.pnr as p "
+                + concatClient
+                + "where a.status <> 2 and "
+                + "(:clientid is null or client.id = :clientid) "
+                + "and a.docIssueDate <= :to "
+                + clientcondition;
+
+        Query query = getSession().createQuery(hql);
+        if (!clientcondition.isEmpty()) {
+            query.setParameter("clientid", clientid);
+        }
+
+        query.setParameter("to", to);
+        
+        Object balance = query.uniqueResult();       
+        return new BigDecimal(balance.toString());
     }
 }

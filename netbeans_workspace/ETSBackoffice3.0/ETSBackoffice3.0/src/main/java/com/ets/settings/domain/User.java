@@ -6,6 +6,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -87,5 +88,11 @@ public class User extends Contactable implements Serializable{
 
     public void setUserType(int UserType) {
         this.UserType = UserType;
+    }
+
+    @Override
+    @Transient
+    public String calculateFullName() {
+      return this.surName + "/" + this.foreName;
     }
 }

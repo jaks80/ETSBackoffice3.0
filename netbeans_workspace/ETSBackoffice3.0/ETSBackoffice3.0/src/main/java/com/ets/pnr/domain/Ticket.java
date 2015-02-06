@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -257,6 +258,7 @@ public class Ticket extends PersistentObject implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "pnr_fk",nullable=false) //Fails test
     @JoinColumn(name = "pnr_fk")
     public Pnr getPnr() {
         return pnr;

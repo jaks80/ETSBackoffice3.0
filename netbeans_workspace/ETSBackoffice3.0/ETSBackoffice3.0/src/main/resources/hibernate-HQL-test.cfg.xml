@@ -47,7 +47,7 @@
     <mapping class="com.ets.accountingdoc.domain.AdditionalChargeLine" package="com.ets.accountingdoc.domain"/>  
     <mapping class="com.ets.accountingdoc.domain.Payment" package="com.ets.accountingdoc.domain"/>        
     
-    <mapping class="com.ets.hqltest.TktSalesAcdoc" package="com.ets.hqltest"/>
+    <mapping class="com.ets.hqltest.TicketingSalesAcDoc1" package="com.ets.hqltest"/>
         
   </session-factory>
 </hibernate-configuration>

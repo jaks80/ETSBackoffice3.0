@@ -2,6 +2,8 @@ package com.ets.accountingdoc.dao;
 
 import com.ets.GenericDAOImpl;
 import com.ets.accountingdoc.domain.Payment;
+import com.ets.util.Enums;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.springframework.stereotype.Service;
@@ -43,4 +45,51 @@ public class PaymentDAOImpl extends GenericDAOImpl<Payment, Long> implements Pay
         return payment;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Payment> findTSPaymentHistory(Enums.ClientType clienttype, Long clientid, Date from, Date to, Enums.SaleType salesType) {
+        String concatClient = "";
+        String concatSaleType = "";
+        String clientcondition = "and (:clientid is null or client.id = :clientid) ";
+
+        if (clienttype != null && clienttype.equals(Enums.ClientType.AGENT)) {
+            concatClient = "inner join fetch p.agent as client ";
+        } else if (clienttype != null && clienttype.equals(Enums.ClientType.CUSTOMER)) {
+            concatClient = "inner join fetch p.customer as client ";
+        } else {
+            concatClient = "left join fetch p.agent left join fetch p.customer ";
+            clientcondition = "";
+        }
+
+        if (Enums.SaleType.SALES.equals(salesType)) {
+            concatSaleType = "left join fetch pay.tSalesAcDocuments as sp ";
+        } else if (Enums.SaleType.PURCHASE.equals(salesType)) {
+            concatSaleType = "left join fetch pay.tPurchaseAcDocuments as sp ";
+            concatClient = "inner join fetch p.ticketing_agent as client ";
+        } else {
+            concatSaleType = "left join fetch pay.oSalesAcDocuments as sp ";
+        }
+
+        String hql = "select distinct pay from Payment as pay "
+                //+ "left join fetch pay.createdBy as createdby "
+                //+ "left join fetch pay.lastModifiedBy as modifiedby "
+                + concatSaleType
+                + "left join fetch sp.pnr as p "
+                + "left join fetch sp.parent as invoice "
+                + concatClient
+                + "where "
+                + "(sp.docIssueDate >= :from and sp.docIssueDate <= :to) "
+                + clientcondition
+                + "order by pay.id";
+
+        Query query = getSession().createQuery(hql);
+        if (!clientcondition.isEmpty()) {
+            query.setParameter("clientid", clientid);
+        }
+        query.setParameter("from", from);
+        query.setParameter("to", to);
+
+        List<Payment> payment_history = query.list();
+        return payment_history;
+    }
 }

@@ -2,8 +2,10 @@ package com.ets.accountingdoc.dao;
 
 import com.ets.GenericDAOImpl;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
+import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -110,6 +112,7 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TicketingPurchaseAcDoc> findInvoiceHistory(Long agentid, Date from, Date to) {
 
         String hql = "select distinct a from TicketingPurchaseAcDoc as a "
@@ -117,7 +120,7 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
                 + "left join fetch a.pnr as p "
                 + "left join fetch p.segments "
                 + "inner join fetch p.ticketing_agent as tktingagent "
-                + "where a.status = 0 and a.type = 0 and "       
+                + "where a.status = 0 and a.type = 0 and "
                 + "a.docIssueDate >= :from and a.docIssueDate <= :to "
                 + "and (:agentid is null or tktingagent.id = :agentid) order by a.id";
 
@@ -131,6 +134,7 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TicketingPurchaseAcDoc getByTicketId(Long ticketId) {
         String hql = "select distinct a from TicketingPurchaseAcDoc as a "
                 + "left join fetch a.additionalChargeLines as adl "
@@ -142,8 +146,50 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
 
         Query query = getSession().createQuery(hql);
         query.setParameter("ticketId", ticketId);
-        TicketingPurchaseAcDoc result = (TicketingPurchaseAcDoc) query.uniqueResult();
-        //getSession().evict(result);
+        TicketingPurchaseAcDoc result = (TicketingPurchaseAcDoc) query.uniqueResult();      
         return result;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TicketingPurchaseAcDoc> findAllDocuments(Long agentid, Date from, Date to) {
+
+        String hql = "select distinct a from TicketingPurchaseAcDoc as a "
+                + "left join fetch a.payment as payment "
+                + "left join fetch a.pnr as p "
+                + "inner join fetch p.ticketing_agent as tktingagent "
+                + "left join fetch p.segments "
+                + "where a.status <> 2 "
+                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
+                + "and (:agentid is null or tktingagent.id = :agentid)"
+                + " order by a.docIssueDate asc";
+
+        Query query = getSession().createQuery(hql);
+
+        query.setParameter("agentid", agentid);
+        query.setParameter("from", from);
+        query.setParameter("to", to);
+
+        List<TicketingPurchaseAcDoc> history = query.list();
+        return history;
+    }
+
+    @Override
+    public BigDecimal getAccountBallanceToDate(Long agentid, Date to) {
+
+        String hql = "select coalesce(sum(a.documentedAmount),0) as balance "
+                + "from TicketingPurchaseAcDoc a "
+                + "left join a.pnr as p "
+                + "inner join p.ticketing_agent as tktingagent "
+                + "where "
+                + "(:agentid is null or tktingagent.id = :agentid)"
+                + "and a.docIssueDate <= :to ";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameter("agentid", agentid);
+        query.setParameter("to", to);
+
+        Object balance = query.uniqueResult();
+        return new BigDecimal(balance.toString());
     }
 }

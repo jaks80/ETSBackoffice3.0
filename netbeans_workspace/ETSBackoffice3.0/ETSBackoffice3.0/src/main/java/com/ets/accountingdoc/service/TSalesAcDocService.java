@@ -1,6 +1,5 @@
 package com.ets.accountingdoc.service;
 
-import com.ets.Application;
 import com.ets.accountingdoc.dao.TSalesAcDocDAO;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
@@ -8,9 +7,8 @@ import com.ets.accountingdoc.logic.TicketingAcDocBL;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.pnr.service.PnrService;
-import com.ets.report.model.acdoc.InvoiceReport;
-import com.ets.report.model.acdoc.TktingInvoiceSummery;
-import com.ets.util.DateUtil;
+import com.ets.accountingdoc.model.InvoiceReport;
+import com.ets.accountingdoc.model.TktingInvoiceSummery;
 import com.ets.util.Enums;
 import com.ets.util.Enums.AcDocType;
 import com.ets.util.PnrUtil;
@@ -166,7 +164,7 @@ public class TSalesAcDocService {
 
     public TicketingSalesAcDoc getWithChildrenById(long id) {
         TicketingSalesAcDoc doc = dao.getWithChildrenById(id);
-        validateDocumentedAmount(doc);
+        //validateDocumentedAmount(doc);
         if (doc.getParent() != null) {
             doc.getParent().setAdditionalChargeLines(null);
             doc.getParent().setPayment(null);
@@ -255,7 +253,8 @@ public class TSalesAcDocService {
 
     public InvoiceReport invoiceHistoryReport(Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
         List<TicketingSalesAcDoc> invoice_history = dao.findInvoiceHistory(clienttype, clientid, dateStart, dateEnd);
-        return TktingInvoiceSummery.serializeToSalesSummery(invoice_history);
+        
+        return InvoiceReport.serializeToSalesSummery(invoice_history);
     }
 
     public List<TicketingSalesAcDoc> dueInvoices(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
@@ -285,13 +284,14 @@ public class TSalesAcDocService {
     public InvoiceReport dueInvoiceReport(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
 
         List<TicketingSalesAcDoc> dueInvoices = dueInvoices(type, clienttype, clientid, dateStart, dateEnd);
-        return TktingInvoiceSummery.serializeToSalesSummery(dueInvoices);
+        return InvoiceReport.serializeToSalesSummery(dueInvoices);
     }
 
+    //This method making payments 0. Needs to be fixed.
     private void validateDocumentedAmount(TicketingSalesAcDoc doc) {
         if (doc.calculateDocumentedAmount().compareTo(doc.getDocumentedAmount()) != 0) {
             doc.setDocumentedAmount(doc.calculateDocumentedAmount());
             dao.save(doc);
         }
-    }
+    }        
 }
