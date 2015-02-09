@@ -65,6 +65,39 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
     }
 
     @Override
+    public BigDecimal calculateTotalRefund() {
+        BigDecimal total = new BigDecimal("0.00");
+        for (AccountingDocument doc : this.relatedDocuments) {
+            if (doc.getType().equals(Enums.AcDocType.REFUND)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
+    }
+    
+    @Override
+    public BigDecimal calculateTotalDebitMemo() {
+        BigDecimal total = new BigDecimal("0.00");
+        for (AccountingDocument doc : this.relatedDocuments) {
+            if (doc.getType().equals(Enums.AcDocType.DEBITMEMO)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
+    }
+
+    @Override
+    public BigDecimal calculateTotalCreditMemo() {
+        BigDecimal total = new BigDecimal("0.00");
+        for (AccountingDocument doc : this.relatedDocuments) {
+            if (doc.getType().equals(Enums.AcDocType.CREDITMEMO)) {
+                total = total.add(doc.getDocumentedAmount());
+            }
+        }
+        return total;
+    }
+    
+    @Override
     public BigDecimal calculateRelatedDocBalance() {
         BigDecimal relAmount = new BigDecimal("0.00");
         for (AccountingDocument doc : this.relatedDocuments) {

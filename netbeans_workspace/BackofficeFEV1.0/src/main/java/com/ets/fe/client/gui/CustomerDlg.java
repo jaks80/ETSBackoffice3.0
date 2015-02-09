@@ -62,7 +62,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         }
     }
 
-    public boolean showCustomerDialog(Customer customer) {
+    public boolean showDialog(Customer customer) {
         if (customer != null) {
             txtSurName.setText(customer.getSurName());
             txtForeName.setText(customer.getForeName());

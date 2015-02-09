@@ -22,12 +22,6 @@ public class TicketingPAcDocWSClient {
         return persistedDoc;
     }
 
-    public TicketingPurchaseAcDoc createNewPayment(TicketingPurchaseAcDoc payment) {
-        String url = APIConfig.get("ws.tsacdoc.newpayment");
-        TicketingPurchaseAcDoc persistedPayment = RestClientUtil.postEntity(TicketingPurchaseAcDoc.class, url, payment);
-        return persistedPayment;
-    }
-
     public TicketingPurchaseAcDoc update(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
         String url = APIConfig.get("ws.tpacdoc.update");
         TicketingPurchaseAcDoc persistedDoc = RestClientUtil.putEntity(TicketingPurchaseAcDoc.class, url, ticketingPurchaseAcDoc);

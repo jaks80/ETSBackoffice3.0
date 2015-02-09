@@ -1,5 +1,6 @@
-package com.ets.fe.acdoc.gui;
+package com.ets.fe.acdoc.gui.report;
 
+import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.acdoc.gui.comp.ClientSearchComp;
 import com.ets.fe.acdoc.model.report.AccountsReport;
 import com.ets.fe.acdoc.model.report.AccountsReport.AccountsLine;

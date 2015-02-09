@@ -27,7 +27,7 @@ public class AcDocHeaderComponent extends JPanel {
         } else {
             cmbTerms.setEnabled(false);
         }
-        if (doc instanceof TicketingSalesAcDoc) {
+        if (doc instanceof TicketingSalesAcDoc || doc instanceof OtherSalesAcDoc) {
             txtVendorRef.setVisible(false);
             lblVendorRef.setVisible(false);
         } else if (doc instanceof TicketingPurchaseAcDoc) {
@@ -41,7 +41,9 @@ public class AcDocHeaderComponent extends JPanel {
             lblVendorRef.setVisible(false);
         }
 
-        txtIssueDate.setText(DateUtil.dateToString(doc.getDocIssueDate()));
+        if(doc.getDocIssueDate()!=null){
+         txtIssueDate.setText(DateUtil.dateToString(doc.getDocIssueDate()));
+        }
         if (doc.getReference() != null) {
             txtInvRef.setText(doc.getReference().toString());
         }
@@ -78,9 +80,11 @@ public class AcDocHeaderComponent extends JPanel {
         lblVendorRef = new javax.swing.JLabel();
         txtVendorRef = new javax.swing.JTextField();
         txtIssueDate = new javax.swing.JTextField();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setLayout(new java.awt.GridBagLayout());
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Date");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -90,6 +94,7 @@ public class AcDocHeaderComponent extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 2, 2, 2);
         add(jLabel1, gridBagConstraints);
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText("Refference");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -99,6 +104,7 @@ public class AcDocHeaderComponent extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(jLabel2, gridBagConstraints);
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setText("Terms *");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -108,6 +114,7 @@ public class AcDocHeaderComponent extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(jLabel3, gridBagConstraints);
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setText("Issued By");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -151,17 +158,18 @@ public class AcDocHeaderComponent extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(cmbTerms, gridBagConstraints);
 
+        lblVendorRef.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblVendorRef.setText("Vendor Ref");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(lblVendorRef, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
@@ -175,6 +183,13 @@ public class AcDocHeaderComponent extends JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(txtIssueDate, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
+        add(jSeparator1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
 
@@ -184,6 +199,7 @@ public class AcDocHeaderComponent extends JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblVendorRef;
     private javax.swing.JTextField txtInvRef;
     private javax.swing.JTextField txtIssueDate;

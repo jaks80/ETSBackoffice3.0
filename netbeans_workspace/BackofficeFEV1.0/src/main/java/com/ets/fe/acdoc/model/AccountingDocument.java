@@ -46,6 +46,12 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
     public abstract BigDecimal calculateDocumentedAmount();
 
     public abstract BigDecimal calculateTotalPayment();
+    
+    public abstract BigDecimal calculateTotalRefund();
+    
+    public abstract BigDecimal calculateTotalDebitMemo();
+    
+    public abstract BigDecimal calculateTotalCreditMemo(); 
 
     public abstract BigDecimal calculateDueAmount();
     

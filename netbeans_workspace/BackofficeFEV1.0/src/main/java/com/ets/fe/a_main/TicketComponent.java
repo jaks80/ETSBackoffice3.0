@@ -96,8 +96,10 @@ public class TicketComponent extends javax.swing.JPanel {
         }
 
         model.addRow(new Object[]{"Totals", "", "", "", "", "", totalPurchase, "", "", "", totalSelling});
-
-        //tblTicket.setRowSelectionInterval(this.tickets.indexOf(this.ticket), this.tickets.indexOf(this.ticket));
+       
+        if(!this.tickets.isEmpty()){
+         tblTicket.setRowSelectionInterval(0, 0);//Select first row
+        }        
     }
     
     public void displayTicket(Ticket ticket) {
@@ -131,6 +133,7 @@ public class TicketComponent extends javax.swing.JPanel {
 
     private ListSelectionListener tblTicketListener = new ListSelectionListener() {
 
+        @Override
         public void valueChanged(ListSelectionEvent e) {
             if (e.getValueIsAdjusting()) {
                 return;

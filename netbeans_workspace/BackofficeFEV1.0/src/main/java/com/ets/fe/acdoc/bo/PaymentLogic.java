@@ -2,6 +2,7 @@ package com.ets.fe.acdoc.bo;
 
 import com.ets.fe.Application;
 import com.ets.fe.acdoc.model.AccountingDocument;
+import com.ets.fe.acdoc.model.OtherSalesAcDoc;
 import com.ets.fe.acdoc.model.Payment;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
@@ -28,7 +29,7 @@ public class PaymentLogic {
      * @param type
      * @return
      */
-    public Payment processSinglePayment(BigDecimal amount, AccountingDocument invoice, String remark, Enums.PaymentType type) {
+    public Payment processSingleTSalesPayment(BigDecimal amount, TicketingSalesAcDoc invoice, String remark, Enums.PaymentType type) {
         if (amount.compareTo(invoice.calculateDueAmount().abs()) > 0) {
             return null;
         } else {
@@ -63,6 +64,73 @@ public class PaymentLogic {
         }
     }
 
+    public Payment processSingleTPurchasePayment(BigDecimal amount, TicketingPurchaseAcDoc invoice, String remark, Enums.PaymentType type) {
+        if (amount.compareTo(invoice.calculateDueAmount().abs()) > 0) {
+            return null;
+        } else {
+            Payment payment = new Payment();
+            payment.setRemark(remark);
+            payment.setPaymentType(type);
+
+            TicketingPurchaseAcDoc doc = new TicketingPurchaseAcDoc();
+            doc.setReference(invoice.getReference());
+            doc.setStatus(Enums.AcDocStatus.ACTIVE);
+            doc.setDocIssueDate(new java.util.Date());
+            doc.setPnr(invoice.getPnr());
+            doc.setCreatedBy(Application.getLoggedOnUser());
+            doc.setParent(invoice);
+
+            if (invoice.calculateDueAmount().compareTo(new BigDecimal("0.00")) == 1) {
+                //Make payment   
+                doc.setType(Enums.AcDocType.PAYMENT);
+                doc.setDocumentedAmount(amount.negate());//Payment saves as negative
+            } else if (invoice.calculateDueAmount().compareTo(new BigDecimal("0.00")) == -1) {
+                //Make refund
+                doc.setType(Enums.AcDocType.REFUND);
+                doc.setDocumentedAmount(amount);
+            } else {
+                //Do nothing  
+                return null;
+            }
+            
+            payment.addTPurchaseDocument(doc);            
+            return payment;
+        }
+    }
+    
+    public Payment processSingleOSalesPayment(BigDecimal amount, OtherSalesAcDoc invoice, String remark, Enums.PaymentType type) {
+        if (amount.compareTo(invoice.calculateDueAmount().abs()) > 0) {
+            return null;
+        } else {
+            Payment payment = new Payment();
+            payment.setRemark(remark);
+            payment.setPaymentType(type);
+
+            OtherSalesAcDoc doc = new OtherSalesAcDoc();
+            doc.setReference(invoice.getReference());
+            doc.setStatus(Enums.AcDocStatus.ACTIVE);
+            doc.setDocIssueDate(new java.util.Date());            
+            doc.setCreatedBy(Application.getLoggedOnUser());
+            doc.setParent(invoice);
+
+            if (invoice.calculateDueAmount().compareTo(new BigDecimal("0.00")) == 1) {
+                //Make payment   
+                doc.setType(Enums.AcDocType.PAYMENT);
+                doc.setDocumentedAmount(amount.negate());//Payment saves as negative
+            } else if (invoice.calculateDueAmount().compareTo(new BigDecimal("0.00")) == -1) {
+                //Make refund
+                doc.setType(Enums.AcDocType.REFUND);
+                doc.setDocumentedAmount(amount);
+            } else {
+                //Do nothing  
+                return null;
+            }
+            
+            payment.addOtherDocument(doc);            
+            return payment;
+        }
+    }
+    
     /**
      * @param amount
      * @param invoices

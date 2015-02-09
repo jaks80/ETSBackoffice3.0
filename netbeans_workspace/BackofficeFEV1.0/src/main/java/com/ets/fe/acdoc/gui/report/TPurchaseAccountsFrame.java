@@ -1,5 +1,6 @@
-package com.ets.fe.acdoc.gui;
+package com.ets.fe.acdoc.gui.report;
 
+import com.ets.fe.acdoc.gui.PurchaseInvoiceDlg;
 import com.ets.fe.acdoc.model.report.AccountsReport;
 import com.ets.fe.acdoc.model.report.AccountsReport.AccountsLine;
 import com.ets.fe.acdoc.task.AccountsHistoryTask;

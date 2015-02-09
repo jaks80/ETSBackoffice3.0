@@ -1,8 +1,15 @@
-package com.ets.fe.acdoc.gui;
+package com.ets.fe.acdoc.gui.report;
 
-import com.ets.fe.acdoc.gui.comp.ClientSearchComp;
+import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
+import com.ets.fe.acdoc.gui.report.TSalesInvoiceReportingFrame;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
+import com.ets.fe.acdoc.model.report.InvoiceReportOther;
+import com.ets.fe.acdoc.model.report.OtherInvoiceSummery;
 import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
+import com.ets.fe.acdoc.gui.OtherInvoiceDlg;
+import com.ets.fe.acdoc.model.report.InvoiceReportOther;
+import com.ets.fe.acdoc.model.report.OtherInvoiceSummery;
+import com.ets.fe.acdoc.task.OtherAcDocReportingTask;
 import com.ets.fe.acdoc.task.SalesAcDocReportingTask;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
@@ -27,14 +34,14 @@ import org.jdesktop.swingx.JXTable;
  *
  * @author Yusuf
  */
-public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame implements PropertyChangeListener {
+public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame implements PropertyChangeListener {
 
     private JDesktopPane desktopPane;
-    private SalesAcDocReportingTask task;
-    private InvoiceReport report;
+    private OtherAcDocReportingTask task;
+    private InvoiceReportOther report;
     public static Enums.ClientType client_type;
 
-    public TSalesInvoiceReportingFrame(JDesktopPane desktopPane) {
+    public OtherInvoiceReportingFrame(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
         initComponents();
         
@@ -52,18 +59,18 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         Date to = dtTo.getDate();
 
         if (rdoDueInvoice.isSelected()) {
-            task = new SalesAcDocReportingTask(Enums.AcDocType.INVOICE, client_type, client_id, from, to, progressBar);
+            task = new OtherAcDocReportingTask(Enums.AcDocType.INVOICE, client_type, client_id, from, to, progressBar);
         } else if (rdoDueRefund.isSelected()) {
-            task = new SalesAcDocReportingTask(Enums.AcDocType.REFUND, client_type, client_id, from, to, progressBar);
+            task = new OtherAcDocReportingTask(Enums.AcDocType.REFUND, client_type, client_id, from, to, progressBar);
         } else if (rdoInvHistory.isSelected()) {
-            task = new SalesAcDocReportingTask(null, client_type, client_id, from, to, progressBar);
+            task = new OtherAcDocReportingTask(null, client_type, client_id, from, to, progressBar);
         }
 
         task.addPropertyChangeListener(this);
         task.execute();
     }
 
-    private void populateSummery(InvoiceReport r) {
+    private void populateSummery(InvoiceReportOther r) {
         lblInvAmount.setText(r.getTotalInvAmount());
         lblCMemo.setText(r.getTotalCMAmount());
         lblDMemo.setText(r.getTotalDMAmount());
@@ -73,19 +80,19 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
     }
 
     private void populateTable() {
-        List<TktingInvoiceSummery> invoices = this.report.getInvoices();
+        List<OtherInvoiceSummery> invoices = this.report.getInvoices();
         DefaultTableModel tableModel = (DefaultTableModel) tblReport.getModel();
         tableModel.getDataVector().removeAllElements();
         //tblReport.repaint();
         if (invoices.size() > 0) {
             for (int i = 0; i < invoices.size(); i++) {
-                TktingInvoiceSummery s = invoices.get(i);
+                OtherInvoiceSummery s = invoices.get(i);
                 tableModel.insertRow(i, new Object[]{i + 1, s.getDocIssueDate(), s.getReference(),
-                    s.getGdsPnr(), s.getNoOfPax(), s.getOutBoundDetails(), "",
+                    s.getNoOfItems(),s.getCategory(),s.getRemark(),
                     s.getDocumentedAmount(), s.getPayment(), s.getOtherAmount(), s.getDue()});
             }
         } else {
-            tableModel.insertRow(0, new Object[]{"","","","","","","","","","",""});
+            tableModel.insertRow(0, new Object[]{"","","","","","","","","",""});
         }
         populateSummery(report);
     }
@@ -130,7 +137,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         tblReport =         new JXTable() {
             public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex) {
                 Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
-                String s = this.getModel().getValueAt(rowIndex, 10).toString();
+                String s = this.getModel().getValueAt(rowIndex, 9).toString();
                 if (s.startsWith("-")) {
                     c.setForeground(Color.red);
                 } else {
@@ -151,7 +158,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Sales Invoice: Report");
+        setTitle("Other Sales Invoice: Report");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel3.setMaximumSize(new java.awt.Dimension(32767, 24));
@@ -384,11 +391,11 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
 
             },
             new String [] {
-                "", "Date", "Reference", "PNR", "Psgr", "Flight Details", "Lead Psgr", "Inv Amount", "Payment", "Other (+/-)", "Balance"
+                "", "Date", "Reference", "ItemQty", "Category", "Remark", "Inv Amount", "Payment", "Other (+/-)", "Due"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -407,9 +414,9 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
             tblReport.getColumnModel().getColumn(1).setMinWidth(80);
             tblReport.getColumnModel().getColumn(1).setPreferredWidth(80);
             tblReport.getColumnModel().getColumn(1).setMaxWidth(80);
-            tblReport.getColumnModel().getColumn(4).setMinWidth(40);
-            tblReport.getColumnModel().getColumn(4).setPreferredWidth(40);
-            tblReport.getColumnModel().getColumn(4).setMaxWidth(40);
+            tblReport.getColumnModel().getColumn(3).setMinWidth(65);
+            tblReport.getColumnModel().getColumn(3).setPreferredWidth(65);
+            tblReport.getColumnModel().getColumn(3).setMaxWidth(65);
             tblReport.getColumnModel().getColumn(5).setMinWidth(130);
             tblReport.getColumnModel().getColumn(5).setPreferredWidth(130);
             tblReport.getColumnModel().getColumn(5).setMaxWidth(160);
@@ -532,7 +539,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
 
             Window w = SwingUtilities.getWindowAncestor(this);
             Frame owner = w instanceof Frame ? (Frame) w : null;
-            SalesInvoiceDlg dlg = new SalesInvoiceDlg(owner);            
+            OtherInvoiceDlg dlg = new OtherInvoiceDlg(owner);            
             dlg.showDialog(id);            
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed

@@ -311,7 +311,7 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
         dlg.setLocationRelativeTo(this);
         dlg.setTitle("New Customer");
         Customer customer = new Customer();
-        if (dlg.showCustomerDialog(customer)) {
+        if (dlg.showDialog(customer)) {
             CustomerTask task = new CustomerTask(customer);
             task.execute();            
         }
@@ -329,7 +329,7 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
             int row = tblCustomer.getSelectedRow();
             customer = customers.getList().get(row);
 
-            if (dlg.showCustomerDialog(customer)) {
+            if (dlg.showDialog(customer)) {
                 CustomerTask task = new CustomerTask(customer);
                 task.execute();
             }

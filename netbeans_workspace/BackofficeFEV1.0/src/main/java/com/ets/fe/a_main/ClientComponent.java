@@ -1,11 +1,10 @@
 package com.ets.fe.a_main;
 
-import com.ets.fe.Application;
 import com.ets.fe.client.collection.Agents;
 import com.ets.fe.client.collection.Customers;
 import com.ets.fe.client.gui.*;
 import com.ets.fe.client.model.*;
-import com.ets.fe.pnr.model.Pnr;
+import com.ets.fe.util.Enums;
 import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -27,14 +26,17 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  * @author Yusuf
  */
 public class ClientComponent extends JPanel implements PropertyChangeListener {
-
-    private Pnr pnr;
+    
+    private Agent agent;
+    private Customer customer;
     private ContactableSearchTask task;
     private List<Agent> agentlist;
     private List<Customer> customerlist;
+    private String clientName;
+    private String officeId;
 
     public ClientComponent() {
-        initComponents();
+        initComponents();                     
     }
 
     public void search() {
@@ -56,9 +58,9 @@ public class ClientComponent extends JPanel implements PropertyChangeListener {
         if (rdoAgent.isSelected()) {
             if (agentlist.size() == 1) {
                 cmbSearchResult.setEnabled(false);
-                pnr.setCustomer(null);
-                pnr.setAgent(this.agentlist.get(0));                
-                setTxtAgentDetails(pnr.getAgent());
+                this.customer = null;
+                this.agent = this.agentlist.get(0);                
+                setTxtAgentDetails(this.getAgent());
             } else {
                 cmbSearchResult.setEnabled(true);
                 List<String> list = new ArrayList<>();
@@ -70,9 +72,9 @@ public class ClientComponent extends JPanel implements PropertyChangeListener {
         } else {
             if (customerlist.size() == 1) {
                 cmbSearchResult.setEnabled(false);
-                pnr.setAgent(null);
-                pnr.setCustomer(this.customerlist.get(0));
-                setTxtCustomerDetails(pnr.getCustomer());
+                this.agent = null;
+                this.customer = this.customerlist.get(0);                
+                setTxtCustomerDetails(this.getCustomer());
 
             } else {
                 cmbSearchResult.setEnabled(true);
@@ -98,38 +100,66 @@ public class ClientComponent extends JPanel implements PropertyChangeListener {
             newCustomer.setSurName(data[0].trim());
             newCustomer.setForeName(data[1].trim());
 
-            if (customerDlg.showCustomerDialog(newCustomer)) {
+            if (customerDlg.showDialog(newCustomer)) {
                 CustomerTask task = new CustomerTask(newCustomer);
                 task.execute();
             }
         }
     }
 
-    public void setPnrAllocatedTo(Pnr pnr) {
-        this.pnr = pnr;
+    public void setAllocatetClient(Contactable cont,String clientName, String officeId,boolean editable) {
+        
+        this.clientName = clientName;
+        this.officeId = officeId;
+        
         SwingUtilities.invokeLater(new Runnable() {
-
+            @Override
             public void run() {
-                if (pnr.getAgent() != null) {
-                    rdoAgent.setSelected(true);                    
-                    setTxtAgentDetails(pnr.getAgent());
+                if (cont instanceof Agent) {
+                    agent = (Agent) cont;
+                    rdoAgent.setSelected(true);  
+                    if(agent !=null){
+                     setTxtAgentDetails(agent);
+                    }
                 } else {
+                    customer = (Customer) cont;
                     rdoCustomer.setSelected(true);
-                    setTxtCustomerDetails(pnr.getCustomer());
+                    if(customer!=null){
+                    setTxtCustomerDetails(customer);
+                    }
                 }
-                txtContactableSearch.setText("");
+                txtContactableSearch.setText("");  
+                controllComponent(editable);
             }
         });
+                
     }
 
-    public void suggestPnrAllocatedTo(Pnr pnr) {
-        this.pnr = pnr;
+    private void controllComponent(boolean editable) {
+        if (!editable) {
+            rdoAgent.setEnabled(false);
+            rdoCustomer.setEnabled(false);
+            txtContactableSearch.setEditable(false);
+            cmbSearchResult.setEnabled(false);
+            btnContactableSearch.setEnabled(false);
+        } else {
+            rdoAgent.setEnabled(true);
+            rdoCustomer.setEnabled(true);
+            txtContactableSearch.setEditable(true);
+            cmbSearchResult.setEnabled(true);
+            btnContactableSearch.setEnabled(true);
+        }
+    }
+    
+    public void suggestAllocatedClient(Enums.ClientType clientType,String clientName, String officeId) {        
+        this.clientName = clientName;
+        this.officeId = officeId;
+        
         SwingUtilities.invokeLater(new Runnable() {
 
-            public void run() {
-                MainAgent mainAgent = Application.getMainAgent();
-
-                if (mainAgent.getOfficeID().contains(pnr.getBookingAgtOid())) {
+            @Override
+            public void run() {                
+                if (clientType.equals(Enums.ClientType.CUSTOMER)) {
                     rdoCustomer.doClick();
                 } else {
                     rdoAgent.doClick();
@@ -149,13 +179,13 @@ public class ClientComponent extends JPanel implements PropertyChangeListener {
                 } else {
                     if (rdoAgent.isSelected()) {
                         Agent a = agentlist.get(index);
-                        pnr.setAgent(a);
-                        pnr.setCustomer(null);
+                        agent = a;
+                        customer = null;                        
                         setTxtAgentDetails(a);
                     } else if (rdoCustomer.isSelected()) {
                         Customer c = customerlist.get(index);
-                        pnr.setAgent(null);
-                        pnr.setCustomer(c);
+                        agent = null;
+                        customer = c;                        
                         setTxtCustomerDetails(c);
                     }
                 }
@@ -166,7 +196,7 @@ public class ClientComponent extends JPanel implements PropertyChangeListener {
     private ActionListener radioAgent = new ActionListener() {
 
         public void actionPerformed(ActionEvent e) {
-            txtContactableSearch.setText(pnr.getBookingAgtOid());
+            txtContactableSearch.setText(officeId);
             btnContactableSearch.setEnabled(true);
             if (cmbSearchResult.getItemCount() > 0) {
                 cmbSearchResult.removeAllItems();
@@ -177,7 +207,7 @@ public class ClientComponent extends JPanel implements PropertyChangeListener {
     private ActionListener radioCustomer = new ActionListener() {
 
         public void actionPerformed(ActionEvent e) {
-            txtContactableSearch.setText(pnr.calculateLeadPaxName());
+            txtContactableSearch.setText(clientName);
 
             if (cmbSearchResult.getItemCount() > 0) {
                 cmbSearchResult.removeAllItems();
@@ -354,5 +384,13 @@ public class ClientComponent extends JPanel implements PropertyChangeListener {
                 }
             }
         }
+    }
+
+    public Agent getAgent() {
+        return agent;
+    }
+
+    public Customer getCustomer() {
+        return customer;
     }
 }

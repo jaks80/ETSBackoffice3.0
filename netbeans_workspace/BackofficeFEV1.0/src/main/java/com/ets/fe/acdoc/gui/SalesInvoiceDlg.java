@@ -105,7 +105,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
 
     private void displayBalance(TicketingSalesAcDoc invoice) {
 
-        lblSubTotal.setText(invoice.calculateTicketedSubTotal().add(invoice.calculateAddChargesSubTotal()).toString());
+        lblSubTotal.setText(invoice.calculateTicketedSubTotal().toString());
         lblAddCharge.setText(invoice.calculateAddChargesSubTotal().toString());
         lblInvAmount.setText(invoice.calculateDocumentedAmount().toString());
         lblTotalPayment.setText(invoice.calculateTotalPayment().abs().toString());
@@ -249,7 +249,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
             PaymentLogic logic = new PaymentLogic();
 
             if (amount.compareTo(invoice.calculateDueAmount().abs()) <= 0) {
-                Payment payment = logic.processSinglePayment(amount, invoice, remark, type);
+                Payment payment = logic.processSingleTSalesPayment(amount, invoice, remark, type);
                 paymentTask = new NewPaymentTask(payment);
                 paymentTask.addPropertyChangeListener(this);
                 paymentTask.execute();
@@ -397,8 +397,8 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
                 .addGap(2, 2, 2)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(acDocHeaderComponent, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(acDocHeaderComponent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());

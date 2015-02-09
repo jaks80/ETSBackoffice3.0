@@ -1,8 +1,7 @@
 package com.ets.fe.acdoc.task;
 
 import com.ets.fe.acdoc.model.AccountingDocument;
-import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
-import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
+import com.ets.fe.acdoc.ws.OtherSAcDocWSClient;
 import com.ets.fe.acdoc.ws.TicketingPAcDocWSClient;
 import com.ets.fe.acdoc.ws.TicketingSAcDocWSClient;
 import com.ets.fe.util.Enums;
@@ -37,9 +36,6 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
                 case "VOID":
                     client._void(id);
                     break;
-                case "PAYMENT":
-                    client.createNewPayment((TicketingSalesAcDoc) accountingDocument);
-                    break;
             }
         } else if (Enums.SaleType.PURCHASE.equals(saleType)) {
             TicketingPAcDocWSClient client = new TicketingPAcDocWSClient();
@@ -50,8 +46,15 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
                 case "VOID":
                     client._void(id);
                     break;
-                case "PAYMENT":
-                    client.createNewPayment((TicketingPurchaseAcDoc) accountingDocument);
+            }
+        } else if (Enums.SaleType.OTHER.equals(saleType)) {
+            OtherSAcDocWSClient client = new OtherSAcDocWSClient();
+            switch (taskType) {
+                case "DETAILS":
+                    accountingDocument = client.getbyId(id);
+                    break;
+                case "VOID":
+                    client._void(id);
                     break;
             }
         }

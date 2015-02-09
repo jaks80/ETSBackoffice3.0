@@ -28,12 +28,6 @@ public class TicketingSAcDocWSClient {
         return persistedDoc;
     }
 
-    public TicketingSalesAcDoc createNewPayment(TicketingSalesAcDoc payment) {
-        String url = APIConfig.get("ws.tsacdoc.newpayment");
-        TicketingSalesAcDoc persistedPayment = RestClientUtil.postEntity(TicketingSalesAcDoc.class, url, payment);
-        return persistedPayment;
-    }
-
     public Integer delete(long id) {
         String url = APIConfig.get("ws.tsacdoc.delete") + id;
         Integer status = RestClientUtil.deleteById(url);

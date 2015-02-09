@@ -1,5 +1,6 @@
 package com.ets.fe.a_main;
 
+import com.ets.fe.Application;
 import com.ets.fe.acdoc.gui.comp.AccountingDocumentsComponent;
 import com.ets.fe.a_maintask.CompletePnrTask;
 import com.ets.fe.acdoc.bo.AcDocUtil;
@@ -8,6 +9,8 @@ import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.client.gui.AgentFrame;
+import com.ets.fe.client.model.Contactable;
+import com.ets.fe.client.model.MainAgent;
 import com.ets.fe.pnr.gui.task.SavePnrTask;
 import com.ets.fe.pnr.model.*;
 import com.ets.fe.util.DocumentSizeFilter;
@@ -35,7 +38,7 @@ import javax.swing.text.AbstractDocument;
 public class PnrPanel extends JPanel implements PropertyChangeListener, ComponentListener {
 
     final DashBoardFrame parent;
-    private boolean editable;
+    private boolean editable = true;
     private Pnr pnr;
     private final Long pnrId;
     private List<Itinerary> segments;
@@ -70,6 +73,9 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
 
     private void savePnr() {
         btnSave.setEnabled(false);
+        pnr.setAgent(clientComponent.getAgent());
+        pnr.setCustomer(clientComponent.getCustomer());
+        
         if (pnr.getBookingAgtOid() != null || !pnr.getBookingAgtOid().isEmpty()) {
             this.pnr.setTickets(ticketComponent.getTickets());
             savePnrTask = new SavePnrTask(pnr, progressBar);
@@ -92,12 +98,40 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
 
     private void setPnrOwner() {
         if (pnr.getCustomer() == null && pnr.getAgent() == null) {
-            clientComponent.suggestPnrAllocatedTo(pnr);
+            MainAgent mainAgent = Application.getMainAgent();
+            if (mainAgent.getOfficeID().contains(pnr.getBookingAgtOid())) {
+                clientComponent.suggestAllocatedClient(Enums.ClientType.CUSTOMER, pnr.calculateLeadPaxName(), pnr.getBookingAgtOid());
+            } else {
+                clientComponent.suggestAllocatedClient(Enums.ClientType.AGENT, pnr.calculateLeadPaxName(), pnr.getBookingAgtOid());
+            }
+
         } else {
-            clientComponent.setPnrAllocatedTo(pnr);
-        }
+            Contactable cont = null;
+            if (pnr.getAgent() != null) {
+                cont = pnr.getAgent();
+            } else {
+                cont = pnr.getCustomer();
+            }
+            clientComponent.setAllocatetClient(cont,pnr.calculateLeadPaxName(), pnr.getBookingAgtOid(),editable);
+        }                
     }
 
+    private void editingLogic() {
+        int unInvoicedTicket = 0;
+        for (Ticket t : pnr.getTickets()) {
+            if (t.getTicketingSalesAcDoc() != null) {
+                editable = false;
+            }else{
+             unInvoicedTicket++;
+            }
+        }
+        if(unInvoicedTicket==0){
+         btnSave.setEnabled(false);
+        }else{
+         btnSave.setEnabled(true);
+        }
+    }
+    
     private void SetTicketingAgent() {
         ticketingAgentComponent.setTicketingAgent(pnr);
     }
@@ -153,14 +187,14 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             loadCompletePnr();
         }
     }
-    
+
     public void showTPurchaseInvoiceDlg(TicketingPurchaseAcDoc acdoc) {
         Window w = SwingUtilities.getWindowAncestor(this);
         Frame owner = w instanceof Frame ? (Frame) w : null;
 
         PurchaseInvoiceDlg dlg = new PurchaseInvoiceDlg(owner);
         dlg.setLocationRelativeTo(this);
-        if (dlg.showDialog(acdoc)) {           
+        if (dlg.showDialog(acdoc)) {
             //callAccountingDocs();
             loadCompletePnr();
         }
@@ -177,7 +211,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             loadCompletePnr();
         }
     }
-    
+
     public void showPurchaseAcDocDlg(TicketingPurchaseAcDoc acdoc) {
         Window w = SwingUtilities.getWindowAncestor(this);
         Frame owner = w instanceof Frame ? (Frame) w : null;
@@ -196,7 +230,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             loadCompletePnr();
         }
     }
-        
+
     public void loadCompletePnr(){
      completePnrTask = new CompletePnrTask(pnrId, progressBar);
      completePnrTask.addPropertyChangeListener(this);
@@ -759,8 +793,9 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
                     } else {
                         pnr = completePnrTask.get();
                         if (pnr != null) {
+                            editingLogic();
                             segments = pnr.getSegments();
-                            populatePnr();
+                            populatePnr();                                                        
                             ticketComponent.populateTblTicket(pnr.getTickets());
                             setPnrOwner();
                             SetTicketingAgent();
@@ -769,7 +804,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(AgentFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
-                    btnSave.setEnabled(true);
+                    //btnSave.setEnabled(true);
                     this.taskType = "";
                 }
             }

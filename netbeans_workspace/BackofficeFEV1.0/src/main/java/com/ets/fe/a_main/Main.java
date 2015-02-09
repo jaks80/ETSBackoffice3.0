@@ -4,11 +4,14 @@ import com.amadeus.reader.EventSource;
 import com.amadeus.reader.ResponseHandler;
 import com.ets.fe.APIConfig;
 import com.ets.fe.Application;
-import com.ets.fe.acdoc.gui.TPurchaseAccountsFrame;
-import com.ets.fe.acdoc.gui.TPurchaseInvoiceReportingFrame;
-import com.ets.fe.acdoc.gui.TSalesAccountsFrame;
-import com.ets.fe.acdoc.gui.TSalesInvoiceReportingFrame;
+import com.ets.fe.acdoc.gui.report.OtherInvoiceReportingFrame;
+import com.ets.fe.acdoc.gui.report.TPurchaseAccountsFrame;
+import com.ets.fe.acdoc.gui.report.TPurchaseInvoiceReportingFrame;
+import com.ets.fe.acdoc.gui.report.TSalesAccountsFrame;
+import com.ets.fe.acdoc.gui.report.TSalesInvoiceReportingFrame;
 import com.ets.fe.acdoc.gui.payment.*;
+import com.ets.fe.acdoc.gui.OtherInvoiceDlg;
+import com.ets.fe.acdoc.task.OtherAcDocReportingTask;
 import com.ets.fe.app.model.AppSettings;
 import com.ets.fe.client.gui.*;
 import com.ets.fe.client.model.Customer;
@@ -109,8 +112,6 @@ public class Main extends JFrame {
         menuPnrHistory = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItem6 = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
         menuDueSalesInvoice = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
@@ -125,6 +126,12 @@ public class Main extends JFrame {
         jMenuItem7 = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         menuVendorAccounts = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenu8 = new javax.swing.JMenu();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
+        menuDueOSalesInvoice = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -233,18 +240,6 @@ public class Main extends JFrame {
 
         jMenuBar1.add(jMenu3);
 
-        jMenu2.setText("Other Service");
-
-        jMenuItem6.setText("Service Manager");
-        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem6ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem6);
-
-        jMenuBar1.add(jMenu2);
-
         jMenu6.setText("Sales");
         jMenu6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -331,6 +326,39 @@ public class Main extends JFrame {
 
         jMenuBar1.add(jMenu7);
 
+        jMenu2.setText("Services");
+
+        jMenuItem6.setText("Service Manager");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem6);
+
+        jMenuBar1.add(jMenu2);
+
+        jMenu8.setText("Other Invoicing");
+
+        jMenuItem8.setText("New Invoice");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem8);
+        jMenu8.add(jSeparator5);
+
+        menuDueOSalesInvoice.setText("Other Invoice: Report");
+        menuDueOSalesInvoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuDueOSalesInvoiceActionPerformed(evt);
+            }
+        });
+        jMenu8.add(menuDueOSalesInvoice);
+
+        jMenuBar1.add(jMenu8);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -401,7 +429,7 @@ public class Main extends JFrame {
         CustomerDlg customerDlg = new CustomerDlg(this);
         customerDlg.setTitle("New Customer");
         Customer newCustomer = new Customer();
-        if (customerDlg.showCustomerDialog(newCustomer)) {
+        if (customerDlg.showDialog(newCustomer)) {
             CustomerTask task = new CustomerTask(newCustomer);
             task.execute();
         }
@@ -504,6 +532,15 @@ public class Main extends JFrame {
        frameAction(new TPurchaseAccountsFrame(desktopPane));
     }//GEN-LAST:event_menuVendorAccountsActionPerformed
 
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+       OtherInvoiceDlg dlg = new OtherInvoiceDlg(this);                
+        dlg.showDialog(null);
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void menuDueOSalesInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDueOSalesInvoiceActionPerformed
+        frameAction(new OtherInvoiceReportingFrame(desktopPane));
+    }//GEN-LAST:event_menuDueOSalesInvoiceActionPerformed
+
     private void frameAction(JInternalFrame frame) {
         desktopPane.add(frame);
         try {
@@ -559,6 +596,7 @@ public class Main extends JFrame {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
+    private javax.swing.JMenu jMenu8;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
@@ -567,16 +605,19 @@ public class Main extends JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JMenuItem menu3rdPartyBillPayment;
     private javax.swing.JMenuItem menuAppSettings;
     private javax.swing.JMenuItem menuBatchTransRpt;
     private javax.swing.JMenuItem menuBatchTransaction;
     private javax.swing.JMenuItem menuClientAccounts;
+    private javax.swing.JMenuItem menuDueOSalesInvoice;
     private javax.swing.JMenuItem menuDueSalesInvoice;
     private javax.swing.JMenuItem menuMainAgent;
     private javax.swing.JMenuItem menuPReporting;

@@ -21,6 +21,8 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
     @XmlElement
     private String remark;
     @XmlElement
+    private BigDecimal amount = new BigDecimal("0.00");
+    @XmlElement
     private BigDecimal discount = new BigDecimal("0.00");
     @XmlElement
     private int qty = 1;
@@ -29,20 +31,12 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
     @XmlElement
     private AdditionalCharge additionalCharge;
     @XmlElement
-    private TicketingSalesAcDoc ticketingSalesAcDoc;
-    @XmlElement
-    private TicketingPurchaseAcDoc ticketingPurchaseAcDoc;
-    @XmlElement
     private OtherSalesAcDoc otherSalesAcDoc;
 
-    public BigDecimal calculateOsNetSellingTotal() {
-        return this.getOtherService().getSellingPrice().add(this.getDiscount()).multiply(new BigDecimal(getQty()));
+    public BigDecimal calculateOServiceLineTotal() {
+        return this.amount.add(this.discount).multiply(new BigDecimal(qty));
     }
-
-    public BigDecimal calculateAcNetSellingTotal() {
-        return this.getAdditionalCharge().getCharge().add(this.getDiscount());
-    }
-
+    
     public String getRemark() {
         return remark;
     }
@@ -82,28 +76,20 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
     public void setAdditionalCharge(AdditionalCharge additionalCharge) {
         this.additionalCharge = additionalCharge;
     }
-
-    public TicketingSalesAcDoc getTicketingSalesAcDoc() {
-        return ticketingSalesAcDoc;
-    }
-
-    public void setTicketingSalesAcDoc(TicketingSalesAcDoc ticketingSalesAcDoc) {
-        this.ticketingSalesAcDoc = ticketingSalesAcDoc;
-    }
-
-    public TicketingPurchaseAcDoc getTicketingPurchaseAcDoc() {
-        return ticketingPurchaseAcDoc;
-    }
-
-    public void setTicketingPurchaseAcDoc(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
-        this.ticketingPurchaseAcDoc = ticketingPurchaseAcDoc;
-    }
-
+   
     public OtherSalesAcDoc getOtherSalesAcDoc() {
         return otherSalesAcDoc;
     }
 
     public void setOtherSalesAcDoc(OtherSalesAcDoc otherSalesAcDoc) {
         this.otherSalesAcDoc = otherSalesAcDoc;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 }

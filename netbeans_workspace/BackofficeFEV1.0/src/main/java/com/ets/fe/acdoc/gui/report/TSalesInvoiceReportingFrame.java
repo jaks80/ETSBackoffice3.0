@@ -1,8 +1,10 @@
-package com.ets.fe.acdoc.gui;
+package com.ets.fe.acdoc.gui.report;
 
+import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
+import com.ets.fe.acdoc.gui.comp.ClientSearchComp;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
-import com.ets.fe.acdoc.task.PurchaseAcDocReportingTask;
+import com.ets.fe.acdoc.task.SalesAcDocReportingTask;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.Color;
@@ -26,16 +28,17 @@ import org.jdesktop.swingx.JXTable;
  *
  * @author Yusuf
  */
-public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame implements PropertyChangeListener {
+public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame implements PropertyChangeListener {
 
     private JDesktopPane desktopPane;
-    private PurchaseAcDocReportingTask task;
+    private SalesAcDocReportingTask task;
     private InvoiceReport report;
+    public static Enums.ClientType client_type;
 
-    public TPurchaseInvoiceReportingFrame(JDesktopPane desktopPane) {
-        this.desktopPane = desktopPane;               
-        
+    public TSalesInvoiceReportingFrame(JDesktopPane desktopPane) {
+        this.desktopPane = desktopPane;
         initComponents();
+        
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
         dtTo.setDate(DateUtil.getEndOfMonth());        
     }
@@ -43,16 +46,18 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
     private void search() {
 
         btnSearch.setEnabled(false);        
+        
+        Enums.ClientType client_type = documentSearchComponent.getContactableType();
         Long client_id = documentSearchComponent.getClient_id();
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
 
         if (rdoDueInvoice.isSelected()) {
-            task = new PurchaseAcDocReportingTask(Enums.AcDocType.INVOICE, client_id, from, to, progressBar);
+            task = new SalesAcDocReportingTask(Enums.AcDocType.INVOICE, client_type, client_id, from, to, progressBar);
         } else if (rdoDueRefund.isSelected()) {
-            task = new PurchaseAcDocReportingTask(Enums.AcDocType.REFUND, client_id, from, to, progressBar);
+            task = new SalesAcDocReportingTask(Enums.AcDocType.REFUND, client_type, client_id, from, to, progressBar);
         } else if (rdoInvHistory.isSelected()) {
-            task = new PurchaseAcDocReportingTask(null, client_id, from, to, progressBar);
+            task = new SalesAcDocReportingTask(null, client_type, client_id, from, to, progressBar);
         }
 
         task.addPropertyChangeListener(this);
@@ -107,7 +112,7 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
         btnEmail = new javax.swing.JButton();
         btnPrint = new javax.swing.JButton();
         btnSearch = new javax.swing.JButton();
-        documentSearchComponent = new com.ets.fe.acdoc.gui.comp.ClientSearchComp(false,false,false,Enums.AgentType.TICKETING_AGT);
+        documentSearchComponent = new com.ets.fe.acdoc.gui.comp.ClientSearchComp(true,true,true,Enums.AgentType.ALL);
         jSeparator2 = new javax.swing.JSeparator();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -147,7 +152,7 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Purchase Invoice: Report");
+        setTitle("Sales Invoice: Report");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel3.setMaximumSize(new java.awt.Dimension(32767, 24));
@@ -191,6 +196,11 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details.png"))); // NOI18N
+        btnViewReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewReportActionPerformed(evt);
+            }
+        });
 
         btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Invoice24.png"))); // NOI18N
         btnViewInvoice.addActionListener(new java.awt.event.ActionListener() {
@@ -496,7 +506,7 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -512,6 +522,10 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
         search();
     }//GEN-LAST:event_btnSearchActionPerformed
 
+    private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
+        
+    }//GEN-LAST:event_btnViewReportActionPerformed
+
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
         int index = tblReport.getSelectedRow();
         if (index != -1) {
@@ -519,7 +533,7 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
 
             Window w = SwingUtilities.getWindowAncestor(this);
             Frame owner = w instanceof Frame ? (Frame) w : null;
-            PurchaseInvoiceDlg dlg = new PurchaseInvoiceDlg(owner);            
+            SalesInvoiceDlg dlg = new SalesInvoiceDlg(owner);            
             dlg.showDialog(id);            
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
