@@ -28,6 +28,17 @@ public class AcDocUtil {
         return filteredDocs;
     }
 
+    public static Set<OtherSalesAcDoc> filterVoidRelatedDocumentsOther(Set<OtherSalesAcDoc> relatedDocuments) {
+        Set<OtherSalesAcDoc> filteredDocs = new LinkedHashSet<>();
+
+        for (OtherSalesAcDoc d : relatedDocuments) {
+            if (!d.getStatus().equals(Enums.AcDocStatus.VOID)) {
+                filteredDocs.add(d);
+            }
+        }
+        return filteredDocs;
+    }
+        
     public static Set<TicketingPurchaseAcDoc> filterPVoidRelatedDocuments(Set<TicketingPurchaseAcDoc> relatedDocuments) {
         Set<TicketingPurchaseAcDoc> filteredDocs = new LinkedHashSet<>();
 
@@ -55,6 +66,14 @@ public class AcDocUtil {
         }
     }
 
+     public static void undefineOAcDocumentInPayment(OtherSalesAcDoc a) {
+        if (a.getPayment() != null) {
+            a.getPayment().settSalesAcDocuments(null);
+            a.getPayment().settPurchaseAcDocuments(null);
+            a.getPayment().setoSalesAcDocuments(null);
+        }
+    }
+        
     public static Long generateAcDocRef(Long lastInvRef) {
         if (lastInvRef != null) {
             return ++lastInvRef;
@@ -109,6 +128,32 @@ public class AcDocUtil {
         return tempLines;
     }
 
+    public static Set<AccountingDocumentLine> initAcDocInLine(AccountingDocument doc, Set<AccountingDocumentLine> lines) {
+        
+        Set<AccountingDocumentLine> tempLines = new LinkedHashSet<>();
+        for (AccountingDocumentLine line : lines) {
+            if (doc instanceof TicketingSalesAcDoc) {
+                line.setTicketingSalesAcDoc((TicketingSalesAcDoc) doc);
+            } else if (doc instanceof OtherSalesAcDoc) {
+                line.setOtherSalesAcDoc((OtherSalesAcDoc) doc);
+            }
+        }
+        return tempLines;
+    }
+        
+    public static Set<AccountingDocumentLine> undefineAcDocInLine(AccountingDocument doc, Set<AccountingDocumentLine> lines) {
+        
+        Set<AccountingDocumentLine> tempLines = new LinkedHashSet<>();
+        for (AccountingDocumentLine line : lines) {
+            if (doc instanceof TicketingSalesAcDoc) {
+                line.setTicketingSalesAcDoc(null);
+            } else if (doc instanceof OtherSalesAcDoc) {
+                line.setOtherSalesAcDoc(null);
+            }
+        }
+        return tempLines;
+    }
+        
     public static Set<AdditionalChargeLine> undefineAddChgLine(AccountingDocument doc, Set<AdditionalChargeLine> lines) {
         Set<AdditionalChargeLine> tempLines = new LinkedHashSet<>();
         for (AdditionalChargeLine line : lines) {

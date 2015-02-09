@@ -8,11 +8,9 @@ import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.pnr.service.PnrService;
 import com.ets.accountingdoc.model.InvoiceReport;
-import com.ets.accountingdoc.model.TktingInvoiceSummery;
 import com.ets.util.Enums;
 import com.ets.util.Enums.AcDocType;
 import com.ets.util.PnrUtil;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -95,6 +93,10 @@ public class TSalesAcDocService {
      * @return
      */
     public synchronized TicketingSalesAcDoc newDocument(TicketingSalesAcDoc doc) {
+        if (doc.getTickets() == null || doc.getTickets().isEmpty()) {
+            return null;
+        }
+
         if (doc.getReference() == null && doc.getType().equals(Enums.AcDocType.INVOICE)) {
             if (doc.getReference() == null) {
                 //There will be refference from void invoice.
@@ -102,18 +104,14 @@ public class TSalesAcDocService {
             }
         }
 
-        if (doc.getTickets() != null && !doc.getTickets().isEmpty()) {
-            AcDocUtil.initTSAcDocInTickets(doc, doc.getTickets());
-            PnrUtil.initPnrInTickets(doc.getPnr(), doc.getTickets());
-        }
+        AcDocUtil.initTSAcDocInTickets(doc, doc.getTickets());
+        PnrUtil.initPnrInTickets(doc.getPnr(), doc.getTickets());
 
         if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
             AcDocUtil.initAddChgLine(doc, doc.getAdditionalChargeLines());
         }
 
-        if (!doc.getTickets().isEmpty() || !doc.getAdditionalChargeLines().isEmpty()) {
-            doc.setDocumentedAmount(doc.calculateDocumentedAmount());
-        }
+        doc.setDocumentedAmount(doc.calculateDocumentedAmount());
 
         TicketingPurchaseAcDoc p_doc = null;
         if (!doc.getTickets().isEmpty()) {
@@ -253,7 +251,7 @@ public class TSalesAcDocService {
 
     public InvoiceReport invoiceHistoryReport(Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
         List<TicketingSalesAcDoc> invoice_history = dao.findInvoiceHistory(clienttype, clientid, dateStart, dateEnd);
-        
+
         return InvoiceReport.serializeToSalesSummery(invoice_history);
     }
 
@@ -293,5 +291,5 @@ public class TSalesAcDocService {
             doc.setDocumentedAmount(doc.calculateDocumentedAmount());
             dao.save(doc);
         }
-    }        
+    }
 }

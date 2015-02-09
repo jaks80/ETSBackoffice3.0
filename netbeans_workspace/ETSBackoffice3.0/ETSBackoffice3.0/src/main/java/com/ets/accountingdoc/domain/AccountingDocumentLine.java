@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -41,9 +42,11 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
 
     @XmlElement
     private OtherSalesAcDoc otherSalesAcDoc;
+    @XmlElement
+    private TicketingSalesAcDoc ticketingSalesAcDoc;
 
     public BigDecimal calculateOServiceLineTotal() {
-        return this.otherService.getSellingPrice().add(this.discount).multiply(new BigDecimal(qty));
+        return this.amount.add(this.discount).multiply(new BigDecimal(qty));
     }
 
     /**
@@ -77,7 +80,7 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
     public void setQty(int qty) {
         this.qty = qty;
     }
-
+    
     @OneToOne
     @JoinColumn(name = "other_service_fk")
     public OtherService getOtherService() {
@@ -88,6 +91,16 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
         this.otherService = otherService;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tsacdoc_fk")
+    public TicketingSalesAcDoc getTicketingSalesAcDoc() {
+        return ticketingSalesAcDoc;
+    }
+
+    public void setTicketingSalesAcDoc(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        this.ticketingSalesAcDoc = ticketingSalesAcDoc;
+    }
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "osacdoc_fk")
     public OtherSalesAcDoc getOtherSalesAcDoc() {

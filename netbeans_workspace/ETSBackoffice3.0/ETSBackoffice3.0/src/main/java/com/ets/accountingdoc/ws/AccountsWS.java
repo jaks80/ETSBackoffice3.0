@@ -70,7 +70,7 @@ public class AccountsWS {
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
         
-        AccountsReport report = service.generateClientStatement(clienttype, clientid, dateFrom, dateTo);
+        AccountsReport report = service.generateClientStatementOther(clienttype, clientid, dateFrom, dateTo);
 
         return report;
     }

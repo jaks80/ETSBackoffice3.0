@@ -45,8 +45,8 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     @Transactional(readOnly = true)
     public List<TicketingSalesAcDoc> getByPnrId(Long pnrId) {
         String hql = "select distinct a from TicketingSalesAcDoc as a "
-                + "left join fetch a.additionalChargeLines as adl "
-                + "left join fetch adl.additionalCharge "
+                + "left join fetch a.additionalChargeLines as acl "
+                + "left join fetch acl.additionalCharge "
                 + "left join fetch a.tickets as t "
                 + "left join fetch a.relatedDocuments as a1 "
                 + "left join fetch a1.payment as p "
@@ -68,8 +68,8 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     public TicketingSalesAcDoc getWithChildrenById(Long id) {
 
         String hql = "select distinct a from TicketingSalesAcDoc as a "
-                + "left join fetch a.additionalChargeLines as adl "
-                + "left join fetch adl.additionalCharge "
+                + "left join fetch a.additionalChargeLines as acl "
+                + "left join fetch acl.additionalCharge "
                 + "left join fetch a.tickets as t "
                 + "left join fetch a.pnr as p "
                 + "left join fetch p.segments "
@@ -78,8 +78,8 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + "left join fetch a.relatedDocuments as a1 "
                 + "left join fetch a1.payment as payment "
                 + "left join fetch a1.tickets as t1 "
-                + "left join fetch a1.additionalChargeLines as adl1 "
-                + "left join fetch adl1.additionalCharge "
+                + "left join fetch a1.additionalChargeLines as acl1 "
+                + "left join fetch acl1.additionalCharge "
                 + "where a.id = :id";
 
         Query query = getSession().createQuery(hql);
@@ -159,7 +159,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
             clientcondition = "";
         }
 
-        String hql = "select distinct a from TicketingSalesAcDoc as a "
+        String hql = "select distinct a from TicketingSalesAcDoc as a " 
                 + "left join fetch a.relatedDocuments as r "
                 + "left join fetch a.pnr as p "
                 + "left join fetch p.segments "

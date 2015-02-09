@@ -39,6 +39,8 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
     private Set<Ticket> tickets = new LinkedHashSet<>();
 
     @XmlElement
+    private Set<AccountingDocumentLine> accountingDocumentLines = new LinkedHashSet<>();
+    @XmlElement
     private Set<AdditionalChargeLine> additionalChargeLines = new LinkedHashSet<>();
     @XmlElement
     private Set<TicketingSalesAcDoc> relatedDocuments = new LinkedHashSet<>();
@@ -61,6 +63,17 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         }
         return subtotal;
     }
+    
+    public BigDecimal calculateOtherServiceSubTotal() {
+        BigDecimal subtotal = new BigDecimal("0.00");
+        for (AccountingDocumentLine l : accountingDocumentLines) {
+            if (l.getOtherService() != null) {
+                subtotal = subtotal.add(l.calculateOServiceLineTotal());
+            }
+        }
+        return subtotal;
+    }
+        
 
     @Override
     public BigDecimal calculateAddChargesSubTotal() {
@@ -184,6 +197,16 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         this.payment = payment;
     }
 
+    
+    @OneToMany(mappedBy = "ticketingSalesAcDoc", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    public Set<AccountingDocumentLine> getAccountingDocumentLines() {
+        return accountingDocumentLines;
+    }
+
+    public void setAccountingDocumentLines(Set<AccountingDocumentLine> accountingDocumentLines) {
+        this.accountingDocumentLines = accountingDocumentLines;
+    }
+    
     @OneToMany(mappedBy = "ticketingSalesAcDoc", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public Set<AdditionalChargeLine> getAdditionalChargeLines() {
         return additionalChargeLines;
