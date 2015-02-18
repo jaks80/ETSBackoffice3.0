@@ -1,8 +1,8 @@
-package com.ets.accountingdoc.ws;
+package com.ets.accounts.ws;
 
-import com.ets.accountingdoc.model.AccountsReport;
+import com.ets.accounts.domain.AccountsReport;
 import com.ets.accountingdoc.model.InvoiceReport;
-import com.ets.accountingdoc.service.AccountsService;
+import com.ets.accounts.service.AccountsService;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;

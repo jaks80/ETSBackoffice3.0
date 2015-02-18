@@ -4,7 +4,6 @@ import com.ets.accountingdoc.dao.TPurchaseAcDocDAO;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.pnr.domain.Ticket;
 import com.ets.accountingdoc.model.InvoiceReport;
-import com.ets.accountingdoc.model.TktingInvoiceSummery;
 import com.ets.util.Enums;
 import com.ets.util.PnrUtil;
 import java.util.Date;
@@ -144,7 +143,7 @@ public class TPurchaseAcDocService {
     public InvoiceReport invoiceHistoryReport(Long agentid, Date dateStart, Date dateEnd) {
         List<TicketingPurchaseAcDoc> invoice_history = dao.findInvoiceHistory(agentid, dateStart, dateEnd);
 
-        return InvoiceReport.serializeToPurchaseSummery(invoice_history);
+        return InvoiceReport.serializeToPurchaseSummery(agentid,invoice_history,dateStart,dateEnd);
     }
 
     public List<TicketingPurchaseAcDoc> dueInvoices(Enums.AcDocType type, Long agentid, Date dateStart, Date dateEnd) {
@@ -173,6 +172,6 @@ public class TPurchaseAcDocService {
     public InvoiceReport dueInvoiceReport(Enums.AcDocType type, Long agentid, Date dateStart, Date dateEnd) {
 
         List<TicketingPurchaseAcDoc> dueInvoices = dueInvoices(type, agentid, dateStart, dateEnd);
-        return InvoiceReport.serializeToPurchaseSummery(dueInvoices);
+        return InvoiceReport.serializeToPurchaseSummery(agentid,dueInvoices,dateStart,dateEnd);
     }
 }

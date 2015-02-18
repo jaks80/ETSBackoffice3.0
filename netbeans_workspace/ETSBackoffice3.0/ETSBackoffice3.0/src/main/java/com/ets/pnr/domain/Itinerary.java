@@ -2,11 +2,13 @@ package com.ets.pnr.domain;
 
 import com.ets.PersistentObject;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -33,11 +35,11 @@ public class Itinerary extends PersistentObject implements Serializable{
     @XmlElement
     private String deptTo;
     @XmlElement
-    private String deptDate;
+    private Date deptDate;
     @XmlElement
     private String deptTime;
     @XmlElement
-    private String arvDate;
+    private Date arvDate;
     @XmlElement
     private String arvTime;
     @XmlElement
@@ -100,11 +102,12 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.deptTo = deptTo;
     }
 
-    public String getDeptDate() {
+    @Temporal(javax.persistence.TemporalType.DATE)
+    public Date getDeptDate() {
         return deptDate;
     }
 
-    public void setDeptDate(String deptDate) {
+    public void setDeptDate(Date deptDate) {
         this.deptDate = deptDate;
     }
 
@@ -116,11 +119,12 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.deptTime = deptTime;
     }
 
-    public String getArvDate() {
+    @Temporal(javax.persistence.TemporalType.DATE)
+    public Date getArvDate() {
         return arvDate;
     }
 
-    public void setArvDate(String arvDate) {
+    public void setArvDate(Date arvDate) {
         this.arvDate = arvDate;
     }
 

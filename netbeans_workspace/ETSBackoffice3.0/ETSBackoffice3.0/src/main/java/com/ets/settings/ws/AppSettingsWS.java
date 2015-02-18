@@ -4,6 +4,8 @@ import com.ets.client.domain.MainAgent;
 import com.ets.settings.domain.AppSettings;
 import com.ets.settings.service.AppSettingsService;
 import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -27,7 +29,7 @@ public class AppSettingsWS {
 
     @GET
     @Path("/mainagent")
-    public MainAgent getMainAgent(){
+    public MainAgent getMainAgent(){        
      return service.getMainAgent();
     }
     
@@ -50,10 +52,4 @@ public class AppSettingsWS {
     public AppSettings update(AppSettings appSettings) {
         return service.saveorUpdate(appSettings);
     }
-
-//    @DELETE
-//    @Path("/delete/{id}")
-//    public Response delete(@PathParam("id") long id) {
-//        return Response.status(200).build();
-//    }
 }

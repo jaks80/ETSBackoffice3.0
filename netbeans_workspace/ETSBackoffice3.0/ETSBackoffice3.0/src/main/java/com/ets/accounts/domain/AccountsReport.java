@@ -1,4 +1,4 @@
-package com.ets.accountingdoc.model;
+package com.ets.accounts.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;

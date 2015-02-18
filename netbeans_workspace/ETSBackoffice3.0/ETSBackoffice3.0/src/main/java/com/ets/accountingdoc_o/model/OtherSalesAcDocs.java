@@ -1,4 +1,4 @@
-package com.ets.accountingdoc.collection;
+package com.ets.accountingdoc_o.model;
 
 import com.ets.accountingdoc.domain.OtherSalesAcDoc;
 import java.util.ArrayList;

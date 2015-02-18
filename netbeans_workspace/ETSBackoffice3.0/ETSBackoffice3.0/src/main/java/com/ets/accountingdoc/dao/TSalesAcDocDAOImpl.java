@@ -46,6 +46,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     public List<TicketingSalesAcDoc> getByPnrId(Long pnrId) {
         String hql = "select distinct a from TicketingSalesAcDoc as a "
                 + "left join fetch a.additionalChargeLines as acl "
+                + "left join fetch a.additionalChargeLines as acl "
                 + "left join fetch acl.additionalCharge "
                 + "left join fetch a.tickets as t "
                 + "left join fetch a.relatedDocuments as a1 "
@@ -122,6 +123,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
 
         String hql = "select distinct a from TicketingSalesAcDoc as a "
                 + "left join fetch a.relatedDocuments as r "
+                + "left join fetch a.tickets as t "
                 + "left join fetch a.pnr as p "
                 + "left join fetch p.segments "
                 + concatClient
@@ -160,6 +162,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         }
 
         String hql = "select distinct a from TicketingSalesAcDoc as a " 
+                + "left join fetch a.tickets as t "
                 + "left join fetch a.relatedDocuments as r "
                 + "left join fetch a.pnr as p "
                 + "left join fetch p.segments "

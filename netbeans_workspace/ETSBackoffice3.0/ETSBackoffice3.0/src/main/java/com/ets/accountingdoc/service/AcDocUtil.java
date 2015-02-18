@@ -133,7 +133,7 @@ public class AcDocUtil {
         Set<AccountingDocumentLine> tempLines = new LinkedHashSet<>();
         for (AccountingDocumentLine line : lines) {
             if (doc instanceof TicketingSalesAcDoc) {
-                line.setTicketingSalesAcDoc((TicketingSalesAcDoc) doc);
+                //line.setTicketingSalesAcDoc((TicketingSalesAcDoc) doc);
             } else if (doc instanceof OtherSalesAcDoc) {
                 line.setOtherSalesAcDoc((OtherSalesAcDoc) doc);
             }
@@ -146,7 +146,7 @@ public class AcDocUtil {
         Set<AccountingDocumentLine> tempLines = new LinkedHashSet<>();
         for (AccountingDocumentLine line : lines) {
             if (doc instanceof TicketingSalesAcDoc) {
-                line.setTicketingSalesAcDoc(null);
+                //line.setTicketingSalesAcDoc(null);
             } else if (doc instanceof OtherSalesAcDoc) {
                 line.setOtherSalesAcDoc(null);
             }

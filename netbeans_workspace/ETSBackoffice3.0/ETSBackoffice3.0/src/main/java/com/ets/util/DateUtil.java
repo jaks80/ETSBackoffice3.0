@@ -32,9 +32,22 @@ public class DateUtil {
         return date;
     }
 
+    /**
+     * If current month is less then provided month then provided month is
+     * actually in next year.
+     * @param ddmm
+     * @return 
+     */
     public static Date ddmmToDate(String ddmm) {
-        String year = String.valueOf(cal.get(Calendar.YEAR));
-        String tempDate = ddmm.concat(year);
+        Integer current_year = cal.get(Calendar.YEAR);
+        Integer current_month = cal.get(Calendar.MONTH);
+        Integer provided_month = stringToMonthValue(ddmm.substring(2));
+        
+        if(provided_month < current_month){
+         current_year++;
+        }
+        
+        String tempDate = ddmm.concat(current_year.toString());
         SimpleDateFormat dfIn = new SimpleDateFormat("ddMMMyyyy");
         SimpleDateFormat dfOut = new SimpleDateFormat("yyyy-MM-dd");
         String finalDate = null;
@@ -48,6 +61,11 @@ public class DateUtil {
         return date;
     }
 
+    public static String dateTOddmm(Date date){
+     String _date = dateToString(date, "ddMMMyyyy");     
+     return _date.substring(0,5).toUpperCase();
+    }
+    
     public static Date refundDate(String dateString) {
 
         Date date = null;
@@ -78,19 +96,51 @@ public class DateUtil {
         }
         return date;
     }
-    
-    public static String dateToString(Date date){
-     return dateToString(date,Application.get("dateformat"));
+
+    public static String dateToString(Date date) {
+        return dateToString(date, Application.get("dateformat"));
     }
-    
-    public static Date stringToDate(String dateString){
-     return stringToDate(dateString,Application.get("dateformat"));
+
+    public static Date stringToDate(String dateString) {
+        return stringToDate(dateString, Application.get("dateformat"));
     }
-    
+
     public static Integer getYY() {
-        SimpleDateFormat dfYear = new SimpleDateFormat("yy");        
+        SimpleDateFormat dfYear = new SimpleDateFormat("yy");
         String year = dfYear.format(cal.getTime());
         Integer currentYear = Integer.valueOf(year);
         return currentYear;
+    }
+
+    public static int stringToMonthValue(String mm) {
+
+        switch (mm) {
+            case "JAN":
+                return 0; 
+            case "FEB":
+                return 1;
+            case "MAR":
+                return 2;
+            case "APR":
+                return 3;
+            case "MAY":
+                return 4;
+            case "JUN":
+                return 5;
+            case "JUL":
+                return 6;
+            case "AUG":
+                return 7;
+            case "SEP":
+                return 8;
+            case "OCT":
+                return 9;
+            case "NOV":
+                return 10;
+            case "DEC":
+                return 11;
+            default:
+                return -1;
+        }
     }
 }

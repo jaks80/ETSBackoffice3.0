@@ -1,10 +1,11 @@
-package com.ets.pnr.model.collection;
+package com.ets.accounts.model;
 
-import com.ets.pnr.domain.Remark;
+import com.ets.accounts.model.Payment;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,15 +14,16 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
-public class PnrRemarks {
+public class Payments {
+    
+    @XmlElement
+    private List<Payment> list = new ArrayList<>();
 
-    private List<Remark> list = new ArrayList<>();
-
-    public List<Remark> getList() {
+    public List<Payment> getList() {
         return list;
     }
 
-    public void setList(List<Remark> list) {
+    public void setList(List<Payment> list) {
         this.list = list;
-    }
+    }        
 }

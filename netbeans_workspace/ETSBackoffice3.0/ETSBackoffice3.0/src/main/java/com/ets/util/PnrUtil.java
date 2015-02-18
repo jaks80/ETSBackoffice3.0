@@ -8,6 +8,7 @@ import com.ets.util.Enums.TicketStatus;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -256,5 +257,28 @@ public class PnrUtil {
 
         }
         return firstSegment;
+    }
+    
+    public static String calculateLeadPaxName(Set<Ticket> ticket_list) {
+        Ticket leadPax = null;
+        int paxNo = 99;
+
+        for (Ticket t : ticket_list) {
+            if (t.getPassengerNo() <= paxNo && (!t.isChild() && !t.isInfant())) {
+                leadPax = t;
+                paxNo = t.getPassengerNo();
+            }
+        }
+        if (leadPax != null) {
+            return leadPax.getFullPaxName();
+        } else {
+            Iterator<Ticket> iterator = ticket_list.iterator();
+            Ticket setElement = new Ticket();
+            while (iterator.hasNext()) {
+                setElement = iterator.next();
+                break;
+            }
+            return setElement.getFullPaxName();
+        }
     }
 }

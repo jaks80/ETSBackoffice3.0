@@ -42,8 +42,8 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
 
     @XmlElement
     private OtherSalesAcDoc otherSalesAcDoc;
-    @XmlElement
-    private TicketingSalesAcDoc ticketingSalesAcDoc;
+//    @XmlElement
+//    private TicketingSalesAcDoc ticketingSalesAcDoc;
 
     public BigDecimal calculateOServiceLineTotal() {
         return this.amount.add(this.discount).multiply(new BigDecimal(qty));
@@ -91,15 +91,15 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
         this.otherService = otherService;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tsacdoc_fk")
-    public TicketingSalesAcDoc getTicketingSalesAcDoc() {
-        return ticketingSalesAcDoc;
-    }
-
-    public void setTicketingSalesAcDoc(TicketingSalesAcDoc ticketingSalesAcDoc) {
-        this.ticketingSalesAcDoc = ticketingSalesAcDoc;
-    }
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "tsacdoc_fk")
+//    public TicketingSalesAcDoc getTicketingSalesAcDoc() {
+//        return ticketingSalesAcDoc;
+//    }
+//
+//    public void setTicketingSalesAcDoc(TicketingSalesAcDoc ticketingSalesAcDoc) {
+//        this.ticketingSalesAcDoc = ticketingSalesAcDoc;
+//    }
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "osacdoc_fk")

@@ -1,13 +1,16 @@
-package com.ets.accountingdoc.model;
+package com.ets.accountingdoc_o.model;
 
 import com.ets.Application;
 import com.ets.accountingdoc.domain.OtherSalesAcDoc;
 import com.ets.accountingdoc.service.AcDocUtil;
 import com.ets.client.domain.Contactable;
+import com.ets.report.model.Letterhead;
+import com.ets.settings.service.AppSettingsService;
 import com.ets.util.DateUtil;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -24,7 +27,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class InvoiceReportOther implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
+    @XmlElement
+    private String title;
+    @XmlElement
+    private String totalInvoice;
+    @XmlElement
+    private Letterhead letterhead = AppSettingsService.letterhead;
     @XmlElement
     private String totalInvAmount = new String("0.00");
     @XmlElement
@@ -52,8 +61,14 @@ public class InvoiceReportOther implements Serializable {
     private String email;
     @XmlElement
     private String fax;
+    
+    @XmlElement
+    private String dateFrom;
+    @XmlElement
+    private String dateTo;
 
-    public static InvoiceReportOther serializeToSalesSummery(List<OtherSalesAcDoc> invoices) {
+    public static InvoiceReportOther serializeToSalesSummery(Long clientid,List<OtherSalesAcDoc> invoices,Date from, Date to) {        
+                
         BigDecimal totalInvAmount = new BigDecimal("0.00");
         BigDecimal totalDMAmount = new BigDecimal("0.00");
         BigDecimal totalCMAmount = new BigDecimal("0.00");
@@ -71,6 +86,12 @@ public class InvoiceReportOther implements Serializable {
 
             OtherInvoiceSummery invSummery = new OtherInvoiceSummery();
 
+            if (invoice.getAgent() != null) {
+                invSummery.setClientName(invoice.getAgent().getName());
+            } else {
+                invSummery.setClientName(invoice.getCustomer().calculateFullName());
+            }
+            
             invSummery.setId(invoice.getId());
             invSummery.setDocIssueDate(DateUtil.dateToString(invoice.getDocIssueDate()));
             invSummery.setRemark(invoice.getRemark());
@@ -85,6 +106,9 @@ public class InvoiceReportOther implements Serializable {
             invSummery.setPayment(invoice.calculateTotalPayment().add(invoice.calculateTotalRefund()));
             invSummery.setDue(invoice.calculateDueAmount());
 
+            invSummery.setAgent(invoice.getAgent());
+            invSummery.setCustomer(invoice.getCustomer());
+            
             totalInvAmount = totalInvAmount.add(invoice.getDocumentedAmount());
             totalDMAmount = totalDMAmount.add(invoice.calculateTotalDebitMemo());
             totalCMAmount = totalCMAmount.add(invoice.calculateTotalCreditMemo());
@@ -94,6 +118,10 @@ public class InvoiceReportOther implements Serializable {
 
             report.addInvoice(invSummery);
         }
+        
+        report.setDateFrom(DateUtil.dateToString(from));
+        report.setDateTo(DateUtil.dateToString(to));
+        
         String currency = Application.currency();
         report.setTotalInvAmount(currency + totalInvAmount.toString());
         report.setTotalCMAmount(currency + totalCMAmount.toString());
@@ -102,7 +130,7 @@ public class InvoiceReportOther implements Serializable {
         report.setTotalPayment(currency + totalPayment.toString());
         report.setTotalRefund(currency + totalRefund.toString());
 
-        if (!invoices.isEmpty()){
+        if (clientid!=null && !invoices.isEmpty()){
            
             Contactable cont = null;
 
@@ -118,6 +146,7 @@ public class InvoiceReportOther implements Serializable {
             report.setTelNo(cont.getMobile());
             report.setAddressCRSeperated(cont.getAddressCRSeperated());
         }
+        report.setTotalInvoice(String.valueOf(report.getInvoices().size()));
         return report;
     }
 
@@ -227,5 +256,45 @@ public class InvoiceReportOther implements Serializable {
 
     public void setAddressCRSeperated(String addressCRSeperated) {
         this.addressCRSeperated = addressCRSeperated;
+    }
+
+    public String getDateFrom() {
+        return dateFrom;
+    }
+
+    public void setDateFrom(String dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public String getDateTo() {
+        return dateTo;
+    }
+
+    public void setDateTo(String dateTo) {
+        this.dateTo = dateTo;
+    }
+
+    public Letterhead getLetterhead() {
+        return letterhead;
+    }
+
+    public void setLetterhead(Letterhead letterhead) {
+        this.letterhead = letterhead;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getTotalInvoice() {
+        return totalInvoice;
+    }
+
+    public void setTotalInvoice(String totalInvoice) {
+        this.totalInvoice = totalInvoice;
     }
 }

@@ -1,12 +1,13 @@
-package com.ets.accountingdoc.service;
+package com.ets.accountingdoc_o.service;
 
-import com.ets.accountingdoc.dao.OtherSalesAcDocDAO;
+import com.ets.accountingdoc.domain.AccountingDocumentLine;
+import com.ets.accountingdoc_o.dao.OtherSalesAcDocDAO;
 import com.ets.accountingdoc.domain.OtherSalesAcDoc;
-import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accountingdoc.model.InvoiceReport;
-import com.ets.accountingdoc.model.InvoiceReportOther;
+import com.ets.accountingdoc_o.model.InvoiceReportOther;
+import com.ets.accountingdoc.service.AcDocUtil;
+import com.ets.accountingdoc_o.model.OtherInvoiceModel;
 import com.ets.util.Enums;
-import com.ets.util.PnrUtil;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -25,10 +26,6 @@ public class OSalesAcDocService {
 
     public synchronized OtherSalesAcDoc newDocument(OtherSalesAcDoc doc) {
 
-        if (doc.getAccountingDocumentLines() == null || doc.getAccountingDocumentLines().isEmpty()) {
-            return null;
-        }
-
         if (doc.getReference() == null && doc.getType().equals(Enums.AcDocType.INVOICE)) {
             if (doc.getReference() == null) {
                 doc.setReference(AcDocUtil.generateAcDocRef(dao.getNewAcDocRef()));
@@ -40,8 +37,17 @@ public class OSalesAcDocService {
         }
 
         AcDocUtil.initAcDocInLine(doc, doc.getAccountingDocumentLines());
-        doc.setStatus(Enums.AcDocStatus.ACTIVE);
-        doc.setDocumentedAmount(doc.calculateDocumentedAmount());
+        doc.setStatus(Enums.AcDocStatus.ACTIVE);        
+        
+        if(doc.getParent()!=null){
+         OtherSalesAcDoc parent = getWithChildrenById(doc.getParent().getId());
+         doc.setParent(parent);
+        }
+        
+        if (!doc.getAccountingDocumentLines().isEmpty() || !doc.getAdditionalChargeLines().isEmpty()) {
+            doc.setDocumentedAmount(doc.calculateDocumentedAmount());
+        }
+        
         dao.save(doc);
 
         if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
@@ -67,27 +73,49 @@ public class OSalesAcDocService {
         return undefineChildren(doc);
     }
 
+    
     public List<OtherSalesAcDoc> getByReffference(int refNo) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void delete(OtherSalesAcDoc otherSalesAcDoc) {
-        dao.delete(otherSalesAcDoc);
+    public boolean delete(Long id) {
+        OtherSalesAcDoc doc = dao.getWithChildrenById(id);
+        dao.delete(doc);
+        return true;
     }
 
+     public boolean _void(Long id) {
+        OtherSalesAcDoc doc = dao.getWithChildrenById(id);
+        Set<OtherSalesAcDoc> relatedDocs = doc.getRelatedDocuments();
+        if (doc.getType().equals(Enums.AcDocType.INVOICE) && !relatedDocs.isEmpty()) {
+            return false;
+        } else {
+
+            dao.voidDocument(undefineChildren(doc));
+            return true;
+        }
+    }
+        
     public InvoiceReportOther invoiceHistoryReport(Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
         List<OtherSalesAcDoc> invoice_history = dao.findInvoiceHistory(clienttype, clientid, dateStart, dateEnd);
-
-        return InvoiceReportOther.serializeToSalesSummery(invoice_history);
+        
+        InvoiceReportOther report = InvoiceReportOther.serializeToSalesSummery(clientid,invoice_history,dateStart,dateEnd);
+        report.setTitle("Invoice History Report");
+        return report;                
     }
 
     public List<OtherSalesAcDoc> dueInvoices(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
         List<OtherSalesAcDoc> dueInvoices = dao.findOutstandingDocuments(type, clienttype, clientid, dateStart, dateEnd);
 
         for (OtherSalesAcDoc inv : dueInvoices) {
+            for(AccountingDocumentLine l: inv.getAccountingDocumentLines()){
+             l.setOtherSalesAcDoc(null);             
+            }
+            
             for (OtherSalesAcDoc related : inv.getRelatedDocuments()) {
+                related.setAccountingDocumentLines(null);
                 related.setAdditionalChargeLines(null);
-                related.setPayment(null);
+                //related.setPayment(null);
                 related.setRelatedDocuments(null);
                 related.setParent(null);
             }
@@ -100,10 +128,12 @@ public class OSalesAcDocService {
     public InvoiceReportOther dueInvoiceReport(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
 
         List<OtherSalesAcDoc> dueInvoices = dueInvoices(type, clienttype, clientid, dateStart, dateEnd);
-        return InvoiceReportOther.serializeToSalesSummery(dueInvoices);
+        InvoiceReportOther report = InvoiceReportOther.serializeToSalesSummery(clientid,dueInvoices,dateStart,dateEnd);
+        report.setTitle("Outstanding Hostory Report");
+        return report;   
     }
 
-        private OtherSalesAcDoc undefineChildren(OtherSalesAcDoc doc) {
+    private OtherSalesAcDoc undefineChildren(OtherSalesAcDoc doc) {
 
         Set<OtherSalesAcDoc> relatedDocs = AcDocUtil.filterVoidRelatedDocumentsOther(doc.getRelatedDocuments());
         
@@ -111,7 +141,9 @@ public class OSalesAcDocService {
             if (r.getType().equals(Enums.AcDocType.PAYMENT) || r.getType().equals(Enums.AcDocType.REFUND)) {
                 AcDocUtil.undefineOAcDocumentInPayment(r);
             }
-            AcDocUtil.undefineAddChgLine(r, r.getAdditionalChargeLines());
+            if(r.getAdditionalChargeLines()!=null){
+             AcDocUtil.undefineAddChgLine(r, r.getAdditionalChargeLines());
+            }
         }
         doc.setRelatedDocuments(relatedDocs);
         
@@ -126,4 +158,8 @@ public class OSalesAcDocService {
         return doc;
     }
 
+    public OtherInvoiceModel getModelbyId(long id) {
+        OtherSalesAcDoc doc = getWithChildrenById(id);                      
+        return OtherInvoiceModel.createModel(undefineChildren(doc));
+    }
 }

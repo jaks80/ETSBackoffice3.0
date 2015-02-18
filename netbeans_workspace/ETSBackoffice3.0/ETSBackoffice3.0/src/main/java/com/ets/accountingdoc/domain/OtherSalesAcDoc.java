@@ -1,5 +1,6 @@
 package com.ets.accountingdoc.domain;
 
+import com.ets.accounts.model.Payment;
 import com.ets.client.domain.Agent;
 import com.ets.client.domain.Customer;
 import com.ets.util.Enums;

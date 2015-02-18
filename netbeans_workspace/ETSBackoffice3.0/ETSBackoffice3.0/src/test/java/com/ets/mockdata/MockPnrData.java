@@ -257,36 +257,36 @@ public class MockPnrData {
         Itinerary seg1 = new Itinerary();
         seg1.setAirLineID("AI");
         seg1.setDeptFrom("LONDON LHR");
-        seg1.setDeptDate("05JUL");
+        seg1.setDeptDate(DateUtil.ddmmToDate("05JUL"));
         seg1.setDeptTime("0945");
-        seg1.setArvDate("05JUL");
+        seg1.setArvDate(DateUtil.ddmmToDate("05JUL"));
         seg1.setArvTime("2330");
         seg1.setDeptTo("MUMBAI");
 
         Itinerary seg2 = new Itinerary();
         seg2.setAirLineID("AI");
         seg2.setDeptFrom("MUMBAI");
-        seg2.setDeptDate("06JUL");
+        seg2.setDeptDate(DateUtil.ddmmToDate("06JUL"));
         seg2.setDeptTime("0115");
-        seg2.setArvDate("06JUL");
+        seg2.setArvDate(DateUtil.ddmmToDate("06JUL"));
         seg2.setArvTime("0430");
         seg2.setDeptTo("DHAKA");
 
         Itinerary seg3 = new Itinerary();
         seg3.setAirLineID("AI");
         seg3.setDeptFrom("DHAKA");
-        seg3.setDeptDate("24AUG");
+        seg3.setDeptDate(DateUtil.ddmmToDate("24AUG"));
         seg3.setDeptTime("2010");
-        seg3.setArvDate("06JUL");
+        seg3.setArvDate(DateUtil.ddmmToDate("06JUL"));
         seg3.setArvTime("2230");
         seg3.setDeptTo("MUMBAI");
 
         Itinerary seg4 = new Itinerary();
         seg4.setAirLineID("AI");
         seg4.setDeptFrom("MUMBAI");
-        seg4.setDeptDate("25AUG");
+        seg4.setDeptDate(DateUtil.ddmmToDate("25AUG"));
         seg4.setDeptTime("0220");
-        seg4.setArvDate("25AUG");
+        seg4.setArvDate(DateUtil.ddmmToDate("25AUG"));
         seg4.setArvTime("0730");
         seg4.setDeptTo("LONDON LHR");
 

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -29,6 +30,10 @@ public class AppSettings  extends PersistentObject implements Serializable{
     private String emailHost;
     @XmlElement
     private int port;
+    @XmlElement
+    private String smtp_auth;
+    @XmlElement
+    private String starttls_enable;
     
     @XmlElement
     private String tInvTAndC;
@@ -49,6 +54,7 @@ public class AppSettings  extends PersistentObject implements Serializable{
 
     }
 
+    @Column(length = 700)
     public String gettInvTAndC() {
         return tInvTAndC;
     }
@@ -57,6 +63,7 @@ public class AppSettings  extends PersistentObject implements Serializable{
         this.tInvTAndC = tInvTAndC;
     }
 
+    @Column(length = 700)
     public String getoInvTAndC() {
         return oInvTAndC;
     }
@@ -136,4 +143,21 @@ public class AppSettings  extends PersistentObject implements Serializable{
     public void setVersion(Integer version) {
         this.version = version;
     }
+
+    public String getSmtp_auth() {
+        return smtp_auth;
+    }
+
+    public void setSmtp_auth(String smtp_auth) {
+        this.smtp_auth = smtp_auth;
+    }
+
+    public String getStarttls_enable() {
+        return starttls_enable;
+    }
+
+    public void setStarttls_enable(String starttls_enable) {
+        this.starttls_enable = starttls_enable;
+    }
+
 }

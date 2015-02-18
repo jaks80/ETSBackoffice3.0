@@ -1,5 +1,6 @@
 package com.ets.accountingdoc.domain;
 
+import com.ets.accounts.model.Payment;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums;

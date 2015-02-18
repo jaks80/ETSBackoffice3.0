@@ -4,6 +4,7 @@ import com.ets.accountingdoc.dao.TSalesAcDocDAO;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accountingdoc.logic.TicketingAcDocBL;
+import com.ets.accountingdoc.model.InvoiceModel;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.pnr.service.PnrService;
@@ -88,15 +89,13 @@ public class TSalesAcDocService {
 
     /**
      * Synchronize this to avoid acdoc ref duplication
-     *
+     * This method uses to create every single accounting document with/without
+     * tickets
      * @param doc
      * @return
      */
     public synchronized TicketingSalesAcDoc newDocument(TicketingSalesAcDoc doc) {
-        if (doc.getTickets() == null || doc.getTickets().isEmpty()) {
-            return null;
-        }
-
+        
         if (doc.getReference() == null && doc.getType().equals(Enums.AcDocType.INVOICE)) {
             if (doc.getReference() == null) {
                 //There will be refference from void invoice.
@@ -111,7 +110,9 @@ public class TSalesAcDocService {
             AcDocUtil.initAddChgLine(doc, doc.getAdditionalChargeLines());
         }
 
-        doc.setDocumentedAmount(doc.calculateDocumentedAmount());
+        if (!doc.getTickets().isEmpty() || !doc.getAdditionalChargeLines().isEmpty()) {
+            doc.setDocumentedAmount(doc.calculateDocumentedAmount());
+        }
 
         TicketingPurchaseAcDoc p_doc = null;
         if (!doc.getTickets().isEmpty()) {
@@ -238,8 +239,9 @@ public class TSalesAcDocService {
      */
     public boolean _void(Long id) {
         TicketingSalesAcDoc doc = dao.getWithChildrenById(id);
-        Set<TicketingSalesAcDoc> relatedDocs = AcDocUtil.filterVoidRelatedDocuments(doc.getRelatedDocuments());
-
+        //Set<TicketingSalesAcDoc> relatedDocs = AcDocUtil.filterVoidRelatedDocuments(doc.getRelatedDocuments());
+        //Whats the point filturing void children
+        Set<TicketingSalesAcDoc> relatedDocs = doc.getRelatedDocuments();
         if (doc.getType().equals(Enums.AcDocType.INVOICE) && !relatedDocs.isEmpty()) {
             return false;
         } else {
@@ -252,7 +254,9 @@ public class TSalesAcDocService {
     public InvoiceReport invoiceHistoryReport(Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
         List<TicketingSalesAcDoc> invoice_history = dao.findInvoiceHistory(clienttype, clientid, dateStart, dateEnd);
 
-        return InvoiceReport.serializeToSalesSummery(invoice_history);
+        InvoiceReport report = InvoiceReport.serializeToSalesSummery(clientid,invoice_history,dateStart,dateEnd);
+        report.setTitle("Invoice History Report");
+        return report;        
     }
 
     public List<TicketingSalesAcDoc> dueInvoices(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
@@ -268,7 +272,7 @@ public class TSalesAcDocService {
                 related.setParent(null);
             }
             inv.setAdditionalChargeLines(null);
-            inv.setTickets(null);
+            //inv.setTickets(null);
             //inv.setRelatedDocuments(null);
             inv.getPnr().setTickets(null);
             inv.getPnr().setRemarks(null);
@@ -282,7 +286,9 @@ public class TSalesAcDocService {
     public InvoiceReport dueInvoiceReport(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
 
         List<TicketingSalesAcDoc> dueInvoices = dueInvoices(type, clienttype, clientid, dateStart, dateEnd);
-        return InvoiceReport.serializeToSalesSummery(dueInvoices);
+        InvoiceReport report = InvoiceReport.serializeToSalesSummery(clientid,dueInvoices,dateStart,dateEnd);
+        report.setTitle("Outstanding Invoice Report");
+        return report;
     }
 
     //This method making payments 0. Needs to be fixed.
@@ -291,5 +297,10 @@ public class TSalesAcDocService {
             doc.setDocumentedAmount(doc.calculateDocumentedAmount());
             dao.save(doc);
         }
+    }
+    
+    public InvoiceModel getModelbyId(long id) {
+        TicketingSalesAcDoc doc = getWithChildrenById(id);                      
+        return InvoiceModel.createModel(undefineChildren(doc));
     }
 }

@@ -1,6 +1,7 @@
-package com.ets.accountingdoc.dao;
+package com.ets.accountingdoc_o.dao;
 
 import com.ets.GenericDAOImpl;
+import com.ets.accountingdoc.dao.AdditionalChgLineDAO;
 import com.ets.accountingdoc.domain.AccountingDocumentLine;
 import com.ets.accountingdoc.domain.AdditionalChargeLine;
 import com.ets.accountingdoc.domain.OtherSalesAcDoc;
@@ -27,7 +28,7 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
     private AdditionalChgLineDAO additionalChgLineDAO;
     
     @Autowired
-    private AccountingDocumentLineDAOImpl accountingDocLineDAO;
+    private AccountingDocumentLineDAO accountingDocumentLineDAO;
     
     @Override
     public Long getNewAcDocRef() {
@@ -71,7 +72,7 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
             Set<AccountingDocumentLine> lines = rd.getAccountingDocumentLines();
             for (AccountingDocumentLine l : lines) {
                 l.setOtherSalesAcDoc(null);
-                l.setTicketingSalesAcDoc(null);                
+                //l.setTicketingSalesAcDoc(null);                
             }
         }
         return doc;
@@ -81,7 +82,7 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
     public boolean voidDocument(OtherSalesAcDoc doc) {
         
         Set<AccountingDocumentLine> lines = doc.getAccountingDocumentLines();
-        accountingDocLineDAO.deleteBulk(lines);
+        accountingDocumentLineDAO.deleteBulk(lines);
         doc.setAccountingDocumentLines(null);
         Set<AdditionalChargeLine> additionalChargeLines = doc.getAdditionalChargeLines();
 
@@ -162,7 +163,7 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
                 + "left join fetch os.category "
                 + "left join fetch a.relatedDocuments as r "
                 + concatClient
-                + "where a.status = 0 and a.type = 0 "
+                + "where a.type = 0 "
                 + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
                 + clientcondition
                 + " order by a.id";
@@ -220,23 +221,21 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
         String clientcondition = "and (:clientid is null or client.id = :clientid) ";
 
         if (clienttype != null && clienttype.equals(Enums.ClientType.AGENT)) {
-            concatClient = "inner join fetch a.agent as client ";
+            concatClient = "inner join a.agent as client ";
         } else if (clienttype != null && clienttype.equals(Enums.ClientType.CUSTOMER)) {
-            concatClient = "inner join fetch a.customer as client ";
+            concatClient = "inner join a.customer as client ";
         } else {
-            concatClient = "left join fetch a.agent left join fetch a.customer ";
+            concatClient = "left join a.agent left join a.customer ";
             clientcondition = "";
         }
 
         String hql = "select coalesce(sum(a.documentedAmount),0) as balance "
                 + "from OtherSalesAcDoc as a "
-                + "left join fetch a.accountingDocumentLines as adl "
-                + "left join fetch a.relatedDocuments as r "
                 + concatClient
-                + "where a.status <> 2 "
-                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
-                + clientcondition
-                + " order by a.id";
+                + "where a.status <> 2 and "
+                + "(:clientid is null or client.id = :clientid) "
+                + "and a.docIssueDate <= :to "
+                + clientcondition;
 
         Query query = getSession().createQuery(hql);
         if (!clientcondition.isEmpty()) {

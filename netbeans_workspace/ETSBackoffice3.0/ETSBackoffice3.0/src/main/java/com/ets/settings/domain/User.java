@@ -1,6 +1,7 @@
 package com.ets.settings.domain;
 
 import com.ets.client.domain.Contactable;
+import com.ets.util.Enums;
 import java.io.Serializable;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -34,7 +35,7 @@ public class User extends Contactable implements Serializable{
     @XmlElement
     private String foreName;
     @XmlElement
-    private int UserType;//1. Manager 3. Supervisor 4. Sales
+    private Enums.UserType userType;
     @XmlElement
     private boolean isActive;
     
@@ -82,17 +83,17 @@ public class User extends Contactable implements Serializable{
         this.isActive = isActive;
     }
 
-    public int getUserType() {
-        return UserType;
-    }
 
-    public void setUserType(int UserType) {
-        this.UserType = UserType;
-    }
-
-    @Override
-    @Transient
+    @Override    
     public String calculateFullName() {
       return this.surName + "/" + this.foreName;
+    }
+
+    public Enums.UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Enums.UserType userType) {
+        this.userType = userType;
     }
 }

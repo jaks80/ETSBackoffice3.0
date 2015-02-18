@@ -1,12 +1,13 @@
-package com.ets.accountingdoc.service;
+package com.ets.accounts.service;
 
-import com.ets.accountingdoc.collection.Payments;
-import com.ets.accountingdoc.dao.PaymentDAO;
+import com.ets.accounts.model.Payments;
+import com.ets.accounts.dao.PaymentDAO;
 import com.ets.accountingdoc.domain.OtherSalesAcDoc;
-import com.ets.accountingdoc.domain.Payment;
+import com.ets.accounts.model.Payment;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.util.Enums;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -19,50 +20,50 @@ import org.springframework.stereotype.Service;
  */
 @Service("paymentService")
 public class PaymentService {
-
+    
     @Resource(name = "paymentDAO")
     private PaymentDAO dao;
-
+    
     public Payment save(Payment payment) {
         Set<TicketingSalesAcDoc> sdocs = payment.gettSalesAcDocuments();
         Set<TicketingPurchaseAcDoc> pdocs = payment.gettPurchaseAcDocuments();
         Set<OtherSalesAcDoc> odocs = payment.getoSalesAcDocuments();
-
+        
         for (TicketingSalesAcDoc d : sdocs) {
             d.setPayment(payment);
         }
-
+        
         for (TicketingPurchaseAcDoc d : pdocs) {
             d.setPayment(payment);
         }
-
+        
         for (OtherSalesAcDoc d : odocs) {
             d.setPayment(payment);
         }
-
+        
         dao.save(payment);
-
+        
         sdocs = payment.gettSalesAcDocuments();
         pdocs = payment.gettPurchaseAcDocuments();
         odocs = payment.getoSalesAcDocuments();
-
+        
         for (TicketingSalesAcDoc d : sdocs) {
             d.setPayment(null);
         }
-
+        
         for (TicketingPurchaseAcDoc d : pdocs) {
             d.setPayment(null);
         }
-
+        
         for (OtherSalesAcDoc d : odocs) {
             d.setPayment(null);
         }
         return payment;
     }
-
+    
     public Payment findById(Long id) {
         Payment payment = dao.findById(id);
-
+        
         Set<TicketingSalesAcDoc> paydocs = payment.gettSalesAcDocuments();
         for (TicketingSalesAcDoc d : paydocs) {
             d.setTickets(null);
@@ -74,10 +75,10 @@ public class PaymentService {
         }
         payment.settPurchaseAcDocuments(null);
         payment.setoSalesAcDocuments(null);
-
+        
         return payment;
     }
-
+    
     public Payments findPaymentBySalesInvoice(Long invoice_id) {
         List<Payment> list = dao.findPaymentBySalesInvoice(invoice_id);
         for (Payment p : list) {
@@ -97,12 +98,12 @@ public class PaymentService {
         payments.setList(list);
         return payments;
     }
-
-    public synchronized List<Payment> findPaymentHistory(Enums.ClientType clienttype, Long clientid, Date from, Date to, Enums.SaleType saleType) {
-        List<Payment> payment_list = dao.findTSPaymentHistory(clienttype, clientid, from, to, saleType);
-
+    
+    public synchronized List<Payment> findTicketingPaymentHistory(Enums.ClientType clienttype, Long clientid, Date from, Date to, Enums.SaleType saleType) {
+        List<Payment> payment_list = dao.findTicketingPaymentHistory(clienttype, clientid, from, to, saleType);        
+        
         for (Payment pay : payment_list) {
-
+            
             if (Enums.SaleType.SALES.equals(saleType)) {
                 pay.setoSalesAcDocuments(null);
                 pay.settPurchaseAcDocuments(null);
@@ -115,13 +116,13 @@ public class PaymentService {
                     doc.getPnr().setRemarks(null);
                     doc.getPnr().setSegments(null);
                     
-                    if(doc.getParent()!=null){
-                    doc.getParent().setAdditionalChargeLines(null);
-                    doc.getParent().setPnr(null);
-                    doc.getParent().setTickets(null);
-                    doc.getParent().setRelatedDocuments(null);
-                    doc.getParent().setPayment(null);
-                    doc.getParent().setParent(null);
+                    if (doc.getParent() != null) {
+                        doc.getParent().setAdditionalChargeLines(null);
+                        doc.getParent().setPnr(null);
+                        doc.getParent().setTickets(null);
+                        doc.getParent().setRelatedDocuments(null);
+                        doc.getParent().setPayment(null);
+                        doc.getParent().setParent(null);
                     }
                 }
             } else if (Enums.SaleType.PURCHASE.equals(saleType)) {
@@ -136,31 +137,40 @@ public class PaymentService {
                     doc.getPnr().setRemarks(null);
                     doc.getPnr().setSegments(null);
                     
-                    if(doc.getParent()!=null){
-                    doc.getParent().setAdditionalChargeLines(null);
-                    doc.getParent().setPnr(null);
-                    doc.getParent().setTickets(null);
-                    doc.getParent().setRelatedDocuments(null);
-                    doc.getParent().setPayment(null);
-                    doc.getParent().setParent(null);
+                    if (doc.getParent() != null) {
+                        doc.getParent().setAdditionalChargeLines(null);
+                        doc.getParent().setPnr(null);
+                        doc.getParent().setTickets(null);
+                        doc.getParent().setRelatedDocuments(null);
+                        doc.getParent().setPayment(null);
+                        doc.getParent().setParent(null);
                     }
                 }
-            } else {
-                pay.settSalesAcDocuments(null);
-                pay.settPurchaseAcDocuments(null);
-                for (OtherSalesAcDoc doc : pay.getoSalesAcDocuments()) {
-                    //doc.setAdditionalChargeLines(null);
-                    doc.setPayment(null);
-                    //doc.setTickets(null);
-                    doc.setRelatedDocuments(null);                    
-                    //doc.getParent().setAdditionalChargeLines(null);
-                    
-                    doc.getParent().setRelatedDocuments(null);
-                    doc.getParent().setPayment(null);
-                    doc.getParent().setParent(null);
-                }
+            }            
+        }
+        return payment_list;
+    }
+    
+    public synchronized List<Payment> findOtherPaymentHistory(Enums.ClientType clienttype, Long clientid, Date from, Date to, Enums.SaleType saleType) {
+        List<Payment> payment_list = dao.findOtherPaymentHistory(clienttype, clientid, from, to, saleType);
+        
+        for (Payment pay : payment_list) {            
+            pay.settSalesAcDocuments(null);
+            pay.settPurchaseAcDocuments(null);
+            for (OtherSalesAcDoc doc : pay.getoSalesAcDocuments()) {
+                doc.setAdditionalChargeLines(null);
+                doc.setAccountingDocumentLines(null);
+                doc.setPayment(null);                
+                doc.setRelatedDocuments(null);    
+                
+                doc.getParent().setAccountingDocumentLines(null);
+                doc.getParent().setAdditionalChargeLines(null);
+                doc.getParent().setRelatedDocuments(null);
+                doc.getParent().setPayment(null);
+                doc.getParent().setParent(null);                
             }
         }
         return payment_list;
     }
+    
 }

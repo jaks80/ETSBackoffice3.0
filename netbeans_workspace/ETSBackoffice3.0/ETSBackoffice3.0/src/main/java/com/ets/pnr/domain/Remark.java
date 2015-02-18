@@ -3,6 +3,7 @@ package com.ets.pnr.domain;
 import com.ets.PersistentObject;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
@@ -26,7 +27,7 @@ public class Remark extends PersistentObject implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @XmlElement
-    private Timestamp dateTime;
+    private Date dateTime;
     @XmlElement
     private String text;    
     @XmlElement
@@ -36,11 +37,11 @@ public class Remark extends PersistentObject implements Serializable {
 
     }
 
-    public Timestamp getDateTime() {
+    public Date getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(Timestamp dateTime) {
+    public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
     }
 

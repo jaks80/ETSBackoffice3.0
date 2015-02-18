@@ -2,6 +2,7 @@ package com.ets.accountingdoc.ws;
 
 import com.ets.accountingdoc.collection.TicketingSalesAcDocs;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
+import com.ets.accountingdoc.model.InvoiceModel;
 import com.ets.accountingdoc.service.TSalesAcDocService;
 import com.ets.accountingdoc.model.InvoiceReport;
 import com.ets.util.DateUtil;
@@ -119,6 +120,14 @@ public class TicketingSalesAcDocWS {
     }
     
     //*****************Reporting Methods are Bellow******************//
+    
+    @GET
+    @Path("/model/byid/{id}")
+    public InvoiceModel getModelbyId(@PathParam("id") long id) {
+        InvoiceModel model = service.getModelbyId(id);
+        return model;
+    }
+    
     @GET
     @Path("/acdoc_report")
     public InvoiceReport outstandingDocumentReport(
@@ -132,8 +141,7 @@ public class TicketingSalesAcDocWS {
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
 
         InvoiceReport report = service.dueInvoiceReport(doctype,
-                clienttype,clientid, dateFrom, dateTo);
-
+                clienttype,clientid, dateFrom, dateTo);        
         return report;
     }
 

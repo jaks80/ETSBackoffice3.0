@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -35,7 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Access(AccessType.PROPERTY)
 public class Ticket extends PersistentObject implements Serializable {
 
-    private static long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     @XmlElement
     private Integer passengerNo;
     @XmlElement

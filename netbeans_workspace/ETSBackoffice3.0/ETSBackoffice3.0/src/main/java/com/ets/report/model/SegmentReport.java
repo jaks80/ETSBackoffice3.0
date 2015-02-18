@@ -3,8 +3,10 @@ package com.ets.report.model;
 import com.ets.pnr.domain.Itinerary;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
+import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import com.ets.util.Enums.TicketStatus;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -18,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class SegmentReport {
+public class SegmentReport implements Serializable{
 
     @XmlElement
     private List<Segment> list = new ArrayList<>();
@@ -131,7 +133,7 @@ public class SegmentReport {
             this.tktStatus = ticket.getTktStatusString();
             this.ticketClass = itinerary.getTicketClass();
             this.airLine = itinerary.getAirLineID();
-            this.travelDate = itinerary.getDeptDate();
+            this.travelDate = DateUtil.dateTOddmm(itinerary.getDeptDate());
             this.inCity = itinerary.getDeptFrom();
             this.outCity = itinerary.getDeptTo();
 

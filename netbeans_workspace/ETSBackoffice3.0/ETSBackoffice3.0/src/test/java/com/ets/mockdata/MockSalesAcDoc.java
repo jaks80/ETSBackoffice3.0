@@ -1,6 +1,6 @@
 package com.ets.mockdata;
 
-import com.ets.accountingdoc.domain.Payment;
+import com.ets.accounts.model.Payment;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.util.Enums;
 import java.math.BigDecimal;

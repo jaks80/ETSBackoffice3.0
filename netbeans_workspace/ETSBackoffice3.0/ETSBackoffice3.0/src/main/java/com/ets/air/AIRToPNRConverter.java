@@ -360,13 +360,13 @@ public class AIRToPNRConverter {
             segment.setTicketClass(temp[5]);
         }
         if (temp.length > 7) {
-            segment.setDeptDate(temp[7].substring(0, 5));
+            segment.setDeptDate(DateUtil.ddmmToDate(temp[7].substring(0, 5)));
         }
         if (temp.length > 7) {
             segment.setDeptTime(temp[7].substring(5, 9));
         }
         if (temp.length > 9) {
-            segment.setArvDate(temp[9]);
+            segment.setArvDate(DateUtil.ddmmToDate(temp[9]));
         }
         if (temp.length > 8) {
             segment.setArvTime(temp[8]);

@@ -29,11 +29,11 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(com.ets.accountingdoc.ws.AccountsWS.class);
-        resources.add(com.ets.accountingdoc.ws.OtherSalesAcDocWS.class);
-        resources.add(com.ets.accountingdoc.ws.PaymentWS.class);
         resources.add(com.ets.accountingdoc.ws.TicketingPurchaseAcDocWS.class);
         resources.add(com.ets.accountingdoc.ws.TicketingSalesAcDocWS.class);
+        resources.add(com.ets.accountingdoc_o.ws.OtherSalesAcDocWS.class);
+        resources.add(com.ets.accounts.ws.AccountsWS.class);
+        resources.add(com.ets.accounts.ws.PaymentWS.class);
         resources.add(com.ets.air.ws.AirWS.class);
         resources.add(com.ets.client.ws.AgentWS.class);
         resources.add(com.ets.client.ws.CustomerWS.class);
@@ -43,6 +43,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.ets.pnr.ws.AirlineWS.class);
         resources.add(com.ets.pnr.ws.ItineraryWS.class);
         resources.add(com.ets.pnr.ws.PnrWS.class);
+        resources.add(com.ets.pnr.ws.RemarkWS.class);
         resources.add(com.ets.pnr.ws.TicketWS.class);
         resources.add(com.ets.settings.ws.AppSettingsWS.class);
         resources.add(com.ets.settings.ws.UserWS.class);

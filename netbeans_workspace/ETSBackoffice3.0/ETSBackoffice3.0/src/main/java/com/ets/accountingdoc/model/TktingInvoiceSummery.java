@@ -29,6 +29,10 @@ public class TktingInvoiceSummery implements Serializable {
     @XmlElement
     private Enums.AcDocStatus status;
     @XmlElement
+    private Enums.ClientType clientType;
+    @XmlElement
+    private String clientName;
+    @XmlElement
     private BigDecimal documentedAmount;
     @XmlElement
     private BigDecimal payment;
@@ -46,6 +50,8 @@ public class TktingInvoiceSummery implements Serializable {
     private String outBoundDetails;
     @XmlElement
     private String leadPsgr;   
+    @XmlElement
+    private String airLine;  
 
     public Long getReference() {
         return reference;
@@ -157,6 +163,30 @@ public class TktingInvoiceSummery implements Serializable {
 
     public void setPnr_id(Long pnr_id) {
         this.pnr_id = pnr_id;
+    }
+
+    public String getAirLine() {
+        return airLine;
+    }
+
+    public void setAirLine(String airLine) {
+        this.airLine = airLine;
+    }
+
+    public Enums.ClientType getClientType() {
+        return clientType;
+    }
+
+    public void setClientType(Enums.ClientType clientType) {
+        this.clientType = clientType;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 
 }

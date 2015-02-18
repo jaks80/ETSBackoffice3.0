@@ -1,9 +1,11 @@
-package com.ets.accountingdoc.ws;
+package com.ets.accountingdoc_o.ws;
 
-import com.ets.accountingdoc.collection.OtherSalesAcDocs;
+import com.ets.accountingdoc_o.model.OtherSalesAcDocs;
 import com.ets.accountingdoc.domain.OtherSalesAcDoc;
-import com.ets.accountingdoc.model.InvoiceReportOther;
-import com.ets.accountingdoc.service.OSalesAcDocService;
+import com.ets.accountingdoc.model.InvoiceModel;
+import com.ets.accountingdoc_o.model.InvoiceReportOther;
+import com.ets.accountingdoc_o.model.OtherInvoiceModel;
+import com.ets.accountingdoc_o.service.OSalesAcDocService;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
@@ -58,16 +60,54 @@ public class OtherSalesAcDocWS {
     @DELETE
     @Path("/delete/{id}")
     public Response delete(@PathParam("id") long id) {
-        return Response.status(200).build();
+        boolean success = service.delete(id);
+        if (success) {
+            return Response.status(200).build();
+        } else {
+            return Response.status(400).build();
+        }
     }
 
     @DELETE
     @Path("/void/{id}")
     public Response _void(@PathParam("id") long id) {
-        return Response.status(200).build();
+        boolean success = service._void(id);
+        if (success) {
+            return Response.status(200).build();
+        } else {
+            return Response.status(400).build();
+        }
     }
 
+    @GET
+    @Path("/due_invoices")
+    public OtherSalesAcDocs outstandingInvoices(
+            @QueryParam("doctype") Enums.AcDocType doctype,
+            @QueryParam("clienttype") Enums.ClientType clienttype,
+            @QueryParam("clientid") Long clientid,            
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        List<OtherSalesAcDoc> list = service.dueInvoices(doctype,
+                clienttype,clientid, dateFrom, dateTo);
+
+        OtherSalesAcDocs docs = new OtherSalesAcDocs();
+        docs.setList(list);
+        return docs;
+    }
+    
     //*****************Reporting Methods are Bellow******************//
+    
+    @GET
+    @Path("/model/byid/{id}")
+    public OtherInvoiceModel getModelbyId(@PathParam("id") long id) {
+        OtherInvoiceModel model = service.getModelbyId(id);
+        return model;
+    }
+    
     @GET
     @Path("/acdoc_report")
     public InvoiceReportOther outstandingDocumentReport(

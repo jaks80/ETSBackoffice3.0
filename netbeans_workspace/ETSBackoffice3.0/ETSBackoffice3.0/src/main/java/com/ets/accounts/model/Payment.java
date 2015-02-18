@@ -1,6 +1,9 @@
-package com.ets.accountingdoc.domain;
+package com.ets.accounts.model;
 
 import com.ets.PersistentObject;
+import com.ets.accountingdoc.domain.OtherSalesAcDoc;
+import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
+import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.util.Enums;
 import com.ets.util.Enums.PaymentType;
 import java.io.Serializable;

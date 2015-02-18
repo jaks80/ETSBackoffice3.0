@@ -1,5 +1,7 @@
-package com.ets.accountingdoc.model;
+package com.ets.accountingdoc_o.model;
 
+import com.ets.client.domain.Agent;
+import com.ets.client.domain.Customer;
 import com.ets.util.Enums;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -42,7 +44,12 @@ public class OtherInvoiceSummery implements Serializable {
     private Integer category;
     @XmlElement
     private String remark;
-
+    @XmlElement
+    private Agent agent;
+    @XmlElement
+    private Customer customer;
+    @XmlElement
+    private String clientName;
 
     public Long getReference() {
         return reference;
@@ -139,5 +146,29 @@ public class OtherInvoiceSummery implements Serializable {
 
     public void setNoOfItems(Integer noOfItems) {
         this.noOfItems = noOfItems;
+    }
+
+    public Agent getAgent() {
+        return agent;
+    }
+
+    public void setAgent(Agent agent) {
+        this.agent = agent;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 }

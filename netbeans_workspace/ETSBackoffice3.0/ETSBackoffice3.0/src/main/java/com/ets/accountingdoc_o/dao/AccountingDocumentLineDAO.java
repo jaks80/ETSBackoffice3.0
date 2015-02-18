@@ -1,4 +1,4 @@
-package com.ets.accountingdoc.dao;
+package com.ets.accountingdoc_o.dao;
 
 import com.ets.GenericDAO;
 import com.ets.accountingdoc.domain.AccountingDocumentLine;
