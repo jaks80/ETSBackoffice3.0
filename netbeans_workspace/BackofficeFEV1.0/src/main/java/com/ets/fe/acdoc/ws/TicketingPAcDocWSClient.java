@@ -3,7 +3,7 @@ package com.ets.fe.acdoc.ws;
 import com.ets.accountingdoc.collection.TicketingPurchaseAcDocs;
 import com.ets.fe.APIConfig;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
-import com.ets.fe.acdoc.model.report.AccountsReport;
+import com.ets.fe.accounts.model.AccountsReport;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;

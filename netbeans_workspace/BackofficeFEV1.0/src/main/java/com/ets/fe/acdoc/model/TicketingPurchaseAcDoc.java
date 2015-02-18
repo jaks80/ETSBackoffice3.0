@@ -1,5 +1,7 @@
 package com.ets.fe.acdoc.model;
 
+import com.ets.fe.acdoc_o.model.AdditionalChargeLine;
+import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.util.Enums;

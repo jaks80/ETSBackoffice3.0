@@ -3,7 +3,7 @@ package com.ets.fe.acdoc.ws;
 import com.ets.accountingdoc.collection.TicketingSalesAcDocs;
 import com.ets.fe.APIConfig;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
-import com.ets.fe.acdoc.model.report.AccountsReport;
+import com.ets.fe.accounts.model.AccountsReport;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
@@ -64,6 +64,15 @@ public class TicketingSAcDocWSClient {
         return docs;
     }
 
+    /**
+     * This method returns summery of invoices, not actual invoice object collection.
+     * @param doctype
+     * @param clienttype
+     * @param clientid
+     * @param _dateFrom
+     * @param _dateTo
+     * @return 
+     */
     public InvoiceReport outstandingDocumentReport(
             Enums.AcDocType doctype, Enums.ClientType clienttype,
             Long clientid, Date _dateFrom, Date _dateTo) {
@@ -84,6 +93,15 @@ public class TicketingSAcDocWSClient {
         return report;
     }
 
+    /**
+     * This method is for getting collection of invoice ojbect. It is used for batch payment.
+     * @param doctype
+     * @param clienttype
+     * @param clientid
+     * @param _dateFrom
+     * @param _dateTo
+     * @return 
+     */
     public TicketingSalesAcDocs outstandingInvoices(
             Enums.AcDocType doctype, Enums.ClientType clienttype,
             Long clientid, Date _dateFrom, Date _dateTo) {

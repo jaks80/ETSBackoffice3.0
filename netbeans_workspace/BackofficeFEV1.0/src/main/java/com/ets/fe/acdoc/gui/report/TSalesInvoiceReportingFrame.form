@@ -206,6 +206,9 @@
               <Image iconType="3" name="/icons/email24.png"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEmailActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnPrint">
           <Properties>
@@ -213,6 +216,9 @@
               <Image iconType="3" name="/icons/print24.png"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnSearch">
           <Properties>
@@ -405,10 +411,11 @@
               <Color blue="33" green="33" red="33" type="rgb"/>
             </Property>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="11" rowCount="0">
+              <Table columnCount="12" rowCount="0">
                 <Column editable="false" title="" type="java.lang.Object"/>
                 <Column editable="false" title="Date" type="java.lang.Object"/>
                 <Column editable="false" title="Reference" type="java.lang.Object"/>
+                <Column editable="false" title="Invoicee" type="java.lang.Object"/>
                 <Column editable="false" title="PNR" type="java.lang.Object"/>
                 <Column editable="false" title="Psgr" type="java.lang.Object"/>
                 <Column editable="false" title="Flight Details" type="java.lang.Object"/>
@@ -427,6 +434,11 @@
                   <Renderer/>
                 </Column>
                 <Column maxWidth="80" minWidth="80" prefWidth="80" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                   <Title/>
                   <Editor/>
                   <Renderer/>
@@ -490,7 +502,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="        new JXTable() {&#xa;            public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex) {&#xa;                Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);                &#xa;                String s = this.getModel().getValueAt(rowIndex, 10).toString();&#xa;                if (s.startsWith(&quot;-&quot;)) {&#xa;                    c.setForeground(Color.red);&#xa;                } else {&#xa;                    c.setForeground(Color.GREEN);&#xa;                }&#xa;                return c;&#xa;            }&#xa;        }"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="        new JXTable() {&#xa;            public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex) {&#xa;                Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);                &#xa;                String s = this.getModel().getValueAt(rowIndex, 11).toString();&#xa;                if (s.startsWith(&quot;-&quot;)) {&#xa;                    c.setForeground(Color.red);&#xa;                } else {&#xa;                    c.setForeground(Color.GREEN);&#xa;                }&#xa;                return c;&#xa;            }&#xa;        }"/>
           </AuxValues>
         </Component>
       </SubComponents>

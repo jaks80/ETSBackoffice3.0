@@ -1,7 +1,7 @@
 package com.ets.fe.acdoc.gui.comp;
 
 import com.ets.fe.Application;
-import com.ets.fe.acdoc.model.AdditionalChargeLine;
+import com.ets.fe.acdoc_o.model.AdditionalChargeLine;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.os.model.AdditionalCharge;
 import com.ets.fe.util.CheckInput;

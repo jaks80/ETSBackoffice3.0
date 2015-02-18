@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2015-02-15T16:50:44 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatedDocs" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c2e01921-f7a3-433c-bbeb-5dafa9b9fc89">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TSalesInvoice Data Adapter "/>
+	<queryString language="xpath2">
+		<![CDATA[/invoiceModel/relateddocs]]>
+	</queryString>
+	<field name="amount_1" class="java.lang.String">
+		<fieldDescription><![CDATA[amount]]></fieldDescription>
+	</field>
+	<field name="date_1" class="java.lang.String">
+		<fieldDescription><![CDATA[date]]></fieldDescription>
+	</field>
+	<field name="remark_1" class="java.lang.String">
+		<fieldDescription><![CDATA[remark]]></fieldDescription>
+	</field>
+	<field name="type_1" class="java.lang.String">
+		<fieldDescription><![CDATA[type]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="62" splitType="Stretch">
+			<componentElement>
+				<reportElement key="table 7" x="10" y="-10" width="270" height="72" isRemoveLineWhenBlank="true" uuid="5f041d85-ce16-4c21-a8d0-97c2d38e121c"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="relateddocs" uuid="d3e616ff-d5c2-4f0c-aa55-a52db3b915b9">
+						<datasetParameter name="XML_DATA_DOCUMENT">
+							<datasetParameterExpression><![CDATA[$P{XML_DATA_DOCUMENT}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="XML_DATE_PATTERN">
+							<datasetParameterExpression><![CDATA[$P{XML_DATE_PATTERN}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="XML_NUMBER_PATTERN">
+							<datasetParameterExpression><![CDATA[$P{XML_NUMBER_PATTERN}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="XML_LOCALE">
+							<datasetParameterExpression><![CDATA[$P{XML_LOCALE}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="XML_TIME_ZONE">
+							<datasetParameterExpression><![CDATA[$P{XML_TIME_ZONE}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="XML_URL">
+							<datasetParameterExpression><![CDATA[$P{XML_URL}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="XML_USERNAME">
+							<datasetParameterExpression><![CDATA[$P{XML_USERNAME}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="XML_PASSWORD">
+							<datasetParameterExpression><![CDATA[$P{XML_PASSWORD}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="79" uuid="c77b98e9-ee8e-4b97-81ac-2003f1ef9b53">
+						<jr:tableHeader height="17" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<staticText>
+								<reportElement x="2" y="0" width="76" height="16" uuid="8cc954b8-c342-401b-936d-4a4c406e6e73"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Related Documents]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:columnHeader height="15" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<staticText>
+								<reportElement x="3" y="0" width="76" height="14" uuid="61ad95e2-8e77-4ec5-9282-6073c7bdd5a3"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Date]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textField pattern="dd.MM.yyyy" isBlankWhenNull="true">
+								<reportElement x="3" y="0" width="76" height="14" uuid="7f48fbbb-2af1-4351-9416-bdbbd7086b51"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{date_1}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="65" uuid="738b5003-eea6-4a3a-a36c-ff8355b43933">
+						<jr:columnHeader height="15" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<staticText>
+								<reportElement x="3" y="0" width="60" height="14" uuid="09de7fdb-6d21-46fc-95ae-ba9c380fe4c6"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Type]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textField isBlankWhenNull="true">
+								<reportElement x="3" y="0" width="60" height="14" uuid="6554c125-96b2-47bd-85d5-a6721e8eb717"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{type_1}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="76" uuid="21f819f4-18c7-46a1-b183-28f42b1ec683">
+						<jr:columnHeader height="15" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="72" height="14" uuid="26997f82-798e-4e2e-b176-3b1f3fcae6b8"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Amount]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textField pattern="£ #,##0.00" isBlankWhenNull="true">
+								<reportElement x="3" y="0" width="70" height="14" uuid="150d1cc7-1564-445d-a2bf-ed49299e497d"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{amount_1}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="132" uuid="f119f7c9-680f-4cb4-b749-f8d89a2e5aa6">
+						<jr:columnHeader height="15" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.2"/>
+								<leftPen lineWidth="0.2"/>
+								<bottomPen lineWidth="0.2"/>
+								<rightPen lineWidth="0.2"/>
+							</box>
+							<staticText>
+								<reportElement x="2" y="0" width="80" height="14" uuid="e91a71be-dd6a-4acd-a53e-d0bb9841b210"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Remark]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="14" rowSpan="1">
+							<box>
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+								<reportElement x="1" y="0" width="131" height="14" uuid="246e858d-5298-4a7c-a053-713391ada696"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{remark_1}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</pageHeader>
+</jasperReport>

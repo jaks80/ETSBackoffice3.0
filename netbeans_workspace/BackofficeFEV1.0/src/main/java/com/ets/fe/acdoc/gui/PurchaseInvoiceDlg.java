@@ -1,14 +1,14 @@
 package com.ets.fe.acdoc.gui;
 
 import com.ets.fe.Application;
-import com.ets.fe.acdoc.bo.PaymentLogic;
+import com.ets.fe.accounts.gui.logic.PaymentLogic;
 import com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent;
-import com.ets.fe.acdoc.model.AdditionalChargeLine;
-import com.ets.fe.acdoc.model.Payment;
+import com.ets.fe.acdoc_o.model.AdditionalChargeLine;
+import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.task.AccountingDocTask;
 import com.ets.fe.acdoc.task.TktingPurchaseDocTask;
-import com.ets.fe.acdoc.task.NewPaymentTask;
+import com.ets.fe.accounts.task.NewPaymentTask;
 import com.ets.fe.os.model.AdditionalCharge;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;

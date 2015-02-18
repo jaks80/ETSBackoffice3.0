@@ -1,7 +1,7 @@
 package com.ets.fe.acdoc.gui.comp;
 
 import com.ets.fe.acdoc.model.AccountingDocument;
-import com.ets.fe.acdoc.model.OtherSalesAcDoc;
+import com.ets.fe.acdoc_o.model.OtherSalesAcDoc;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.util.DateUtil;

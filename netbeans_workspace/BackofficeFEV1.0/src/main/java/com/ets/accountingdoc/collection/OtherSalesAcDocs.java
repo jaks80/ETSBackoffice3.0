@@ -1,6 +1,6 @@
 package com.ets.accountingdoc.collection;
 
-import com.ets.fe.acdoc.model.OtherSalesAcDoc;
+import com.ets.fe.acdoc_o.model.OtherSalesAcDoc;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;

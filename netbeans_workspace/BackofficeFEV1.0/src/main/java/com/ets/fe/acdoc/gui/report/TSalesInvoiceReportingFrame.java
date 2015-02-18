@@ -1,10 +1,11 @@
 package com.ets.fe.acdoc.gui.report;
 
+import com.ets.fe.Application;
 import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
-import com.ets.fe.acdoc.gui.comp.ClientSearchComp;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
 import com.ets.fe.acdoc.task.SalesAcDocReportingTask;
+import com.ets.fe.report.MyJasperReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.Color;
@@ -19,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -34,30 +36,37 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
     private SalesAcDocReportingTask task;
     private InvoiceReport report;
     public static Enums.ClientType client_type;
+    private Long client_id;
+    private Date from;
+    private Date to;
+    private Enums.AcDocType doc_type;
 
     public TSalesInvoiceReportingFrame(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
         initComponents();
-        
+
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
-        dtTo.setDate(DateUtil.getEndOfMonth());        
+        dtTo.setDate(DateUtil.getEndOfMonth());
     }
 
     private void search() {
 
-        btnSearch.setEnabled(false);        
-        
-        Enums.ClientType client_type = documentSearchComponent.getContactableType();
-        Long client_id = documentSearchComponent.getClient_id();
-        Date from = dtFrom.getDate();
-        Date to = dtTo.getDate();
+        btnSearch.setEnabled(false);
+
+        client_type = documentSearchComponent.getContactableType();
+        client_id = documentSearchComponent.getClient_id();
+        from = dtFrom.getDate();
+        to = dtTo.getDate();
 
         if (rdoDueInvoice.isSelected()) {
-            task = new SalesAcDocReportingTask(Enums.AcDocType.INVOICE, client_type, client_id, from, to, progressBar);
+            doc_type = Enums.AcDocType.INVOICE;
+            task = new SalesAcDocReportingTask(doc_type, client_type, client_id, from, to, progressBar);
         } else if (rdoDueRefund.isSelected()) {
-            task = new SalesAcDocReportingTask(Enums.AcDocType.REFUND, client_type, client_id, from, to, progressBar);
+            doc_type = Enums.AcDocType.REFUND;
+            task = new SalesAcDocReportingTask(doc_type, client_type, client_id, from, to, progressBar);
         } else if (rdoInvHistory.isSelected()) {
-            task = new SalesAcDocReportingTask(null, client_type, client_id, from, to, progressBar);
+            doc_type = null;
+            task = new SalesAcDocReportingTask(doc_type, client_type, client_id, from, to, progressBar);
         }
 
         task.addPropertyChangeListener(this);
@@ -70,7 +79,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         lblDMemo.setText(r.getTotalDMAmount());
         lblPayment.setText(r.getTotalPayment());
         lblRefund.setText(r.getTotalRefund());
-        lblDue.setText(r.getTotalDue());        
+        lblDue.setText(r.getTotalDue());
     }
 
     private void populateTable() {
@@ -81,12 +90,12 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         if (invoices.size() > 0) {
             for (int i = 0; i < invoices.size(); i++) {
                 TktingInvoiceSummery s = invoices.get(i);
-                tableModel.insertRow(i, new Object[]{i + 1, s.getDocIssueDate(), s.getReference(),
-                    s.getGdsPnr(), s.getNoOfPax(), s.getOutBoundDetails(), "",
+                tableModel.insertRow(i, new Object[]{i + 1, s.getDocIssueDate(), s.getReference(), s.getClientName(),
+                    s.getGdsPnr(), s.getNoOfPax(), s.getOutBoundDetails(), s.getLeadPsgr(),
                     s.getDocumentedAmount(), s.getPayment(), s.getOtherAmount(), s.getDue()});
             }
         } else {
-            tableModel.insertRow(0, new Object[]{"","","","","","","","","","",""});
+            tableModel.insertRow(0, new Object[]{"", "", "", "", "", "", "", "", "", "", "",""});
         }
         populateSummery(report);
     }
@@ -131,7 +140,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         tblReport =         new JXTable() {
             public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex) {
                 Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
-                String s = this.getModel().getValueAt(rowIndex, 10).toString();
+                String s = this.getModel().getValueAt(rowIndex, 11).toString();
                 if (s.startsWith("-")) {
                     c.setForeground(Color.red);
                 } else {
@@ -210,8 +219,18 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         });
 
         btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
+        btnEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmailActionPerformed(evt);
+            }
+        });
 
         btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintActionPerformed(evt);
+            }
+        });
 
         btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search24.png"))); // NOI18N
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -385,11 +404,11 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
 
             },
             new String [] {
-                "", "Date", "Reference", "PNR", "Psgr", "Flight Details", "Lead Psgr", "Inv Amount", "Payment", "Other (+/-)", "Balance"
+                "", "Date", "Reference", "Invoicee", "PNR", "Psgr", "Flight Details", "Lead Psgr", "Inv Amount", "Payment", "Other (+/-)", "Balance"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -408,12 +427,12 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
             tblReport.getColumnModel().getColumn(1).setMinWidth(80);
             tblReport.getColumnModel().getColumn(1).setPreferredWidth(80);
             tblReport.getColumnModel().getColumn(1).setMaxWidth(80);
-            tblReport.getColumnModel().getColumn(4).setMinWidth(40);
-            tblReport.getColumnModel().getColumn(4).setPreferredWidth(40);
-            tblReport.getColumnModel().getColumn(4).setMaxWidth(40);
-            tblReport.getColumnModel().getColumn(5).setMinWidth(130);
-            tblReport.getColumnModel().getColumn(5).setPreferredWidth(130);
-            tblReport.getColumnModel().getColumn(5).setMaxWidth(160);
+            tblReport.getColumnModel().getColumn(5).setMinWidth(40);
+            tblReport.getColumnModel().getColumn(5).setPreferredWidth(40);
+            tblReport.getColumnModel().getColumn(5).setMaxWidth(40);
+            tblReport.getColumnModel().getColumn(6).setMinWidth(130);
+            tblReport.getColumnModel().getColumn(6).setPreferredWidth(130);
+            tblReport.getColumnModel().getColumn(6).setMaxWidth(160);
         }
 
         jLabel6.setText("Date From");
@@ -523,7 +542,8 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
-        
+        MyJasperReport report = new MyJasperReport();
+        report.ticketingInvoiceReport(Enums.SaleType.SALES, doc_type, client_type, client_id, from, to,"VIEW");
     }//GEN-LAST:event_btnViewReportActionPerformed
 
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
@@ -533,10 +553,28 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
 
             Window w = SwingUtilities.getWindowAncestor(this);
             Frame owner = w instanceof Frame ? (Frame) w : null;
-            SalesInvoiceDlg dlg = new SalesInvoiceDlg(owner);            
-            dlg.showDialog(id);            
+            SalesInvoiceDlg dlg = new SalesInvoiceDlg(owner);
+            dlg.showDialog(id);
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
+
+    private void btnEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmailActionPerformed
+        String receipent = report.getEmail();
+        String subject = report.getTitle().concat(" From").concat(Application.getMainAgent().getName());
+        String body = report.getTitle().concat(" From").concat(Application.getMainAgent().getName());
+        String refference = "report";
+         if(receipent!=null){
+        MyJasperReport report = new MyJasperReport(receipent,subject,body,refference);
+        report.ticketingInvoiceReport(Enums.SaleType.SALES, doc_type, client_type, client_id, from, to,"EMAIL");
+        }else{
+        JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEmailActionPerformed
+
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+        MyJasperReport report = new MyJasperReport();
+        report.ticketingInvoiceReport(Enums.SaleType.SALES, doc_type, client_type, client_id, from, to,"PRINT");
+    }//GEN-LAST:event_btnPrintActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

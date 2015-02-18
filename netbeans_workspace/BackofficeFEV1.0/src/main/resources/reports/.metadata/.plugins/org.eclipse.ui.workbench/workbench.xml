@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workbench progressCount="13" version="2.0">
+<workbenchAdvisor/>
+<window height="728" maximized="true" width="1024" x="104" y="0">
+<fastViewData fastViewLocation="1024">
+<orientation position="512" view="org.eclipse.pde.runtime.LogView"/>
+<orientation position="512" view="com.jaspersoft.studio.editor.preview.reportstate"/>
+</fastViewData>
+<perspectiveBar>
+<itemSize x="160"/>
+</perspectiveBar>
+<coolbarLayout>
+<coolItem id="group.file" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="195" y="30"/>
+<coolItem id="additions" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.debug.ui.launch.toolbar" itemType="typeToolBarContribution" x="-1" y="-1"/>
+<coolItem id="org.eclipse.debug.ui.launchActionSet" itemType="typeToolBarContribution" x="53" y="30"/>
+<coolItem id="org.eclipse.debug.ui.main.toolbar" itemType="typeToolBarContribution" x="-1" y="-1"/>
+<coolItem id="com.jaspersoft.studio.server.toolbar" itemType="typeToolBarContribution" x="38" y="30"/>
+<coolItem id="com.jaspersoft.studio.rcp.jssToolbar" itemType="typeToolBarContribution" x="-1" y="-1"/>
+<coolItem id="com.jaspersoft.studio.community.toolbar" itemType="typeToolBarContribution" x="38" y="30"/>
+<coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="53" y="30"/>
+<coolItem id="group.nav" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="190" y="30"/>
+<coolItem id="group.editor" itemType="typeGroupMarker"/>
+<coolItem id="com.jaspersoft.studio.editor.JrxmlEditor.jasper" itemType="typePlaceholder" x="61" y="30"/>
+<coolItem id="com.jaspersoft.studio.editor.JrxmlEditor" itemType="typePlaceholder" x="61" y="30"/>
+<coolItem id="com.jaspersoft.studio.graphic.text" itemType="typeToolBarContribution" x="574" y="22"/>
+<coolItem id="com.jaspersoft.studio.graphic.size" itemType="typeToolBarContribution" x="84" y="22"/>
+<coolItem id="com.jaspersoft.studio.components.tableactions" itemType="typeToolBarContribution" x="61" y="30"/>
+<coolItem id="com.jaspersoft.studio.graphic.image" itemType="typeToolBarContribution" x="38" y="30"/>
+<coolItem id="group.help" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.workbench.help" itemType="typeToolBarContribution" x="-1" y="-1"/>
+</coolbarLayout>
+<page aggregateWorkingSetId="Aggregate for window 1423917271395" focus="true" label="Workspace - Resource">
+<editors>
+<editorArea activeWorkbook="DefaultEditorWorkbook">
+<info part="DefaultEditorWorkbook">
+<folder appearance="1" expanded="2">
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
+</editorArea>
+</editors>
+<views>
+<view id="com.jaspersoft.studio.FormattingToolsView" partName="Formatting Tools">
+<viewState/>
+</view>
+<view id="org.eclipse.ui.navigator.ProjectExplorer" partName="Project Explorer">
+<viewState CommonNavigator.LINKING_ENABLED="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0"/>
+</view>
+<view id="com.jaspersoft.studio.Repository" partName="Repository Explorer">
+<viewState/>
+</view>
+<view id="org.eclipse.ui.views.PropertySheet" partName="Properties">
+<viewState/>
+</view>
+<view id="org.eclipse.pde.runtime.LogView" partName="Error Log">
+<viewState activate="true" allSessions="true" column2="300" column3="150" column4="150" error="true" groupBy="0" info="true" limit="50" ok="true" orderType="2" orderValue="-1" show_filter_text="true" useLimit="true" warning="true"/>
+</view>
+<view id="org.eclipse.ui.views.TaskList" partName="Tasks">
+<viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.completionField" categoryGroup="none" markerContentGenerator="org.eclipse.ui.ide.tasksGenerator" partName="Tasks">
+<columnWidths org.eclipse.ui.ide.completionField="40" org.eclipse.ui.ide.descriptionField="300" org.eclipse.ui.ide.locationField="90" org.eclipse.ui.ide.markerType="90" org.eclipse.ui.ide.pathField="120" org.eclipse.ui.ide.priorityField="30" org.eclipse.ui.ide.resourceField="90"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.completionField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.priorityField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.descriptionField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.resourceField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.pathField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.locationField"/>
+<visible IMemento.internal.id="org.eclipse.ui.ide.markerType"/>
+</viewState>
+</view>
+<view id="com.jaspersoft.studio.editor.preview.reportstate" partName="Report State">
+<viewState/>
+</view>
+<view id="org.eclipse.ui.views.ContentOutline" partName="Outline">
+<viewState/>
+</view>
+</views>
+<perspectives activePart="org.eclipse.ui.navigator.ProjectExplorer" activePerspective="org.eclipse.ui.resourcePerspective">
+<perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
+<descriptor class="com.jaspersoft.studio.ReportDesignPerspective" id="com.jaspersoft.studio.ReportDesignPerspective" label="Report Design"/>
+<alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
+<alwaysOnActionSet id="org.eclipse.search.searchActionSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.annotationNavigation"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.navigation"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"/>
+<alwaysOnActionSet id="org.eclipse.ui.externaltools.ExternalToolsSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.actionSet.keyBindings"/>
+<alwaysOnActionSet id="org.eclipse.ui.actionSet.openFiles"/>
+<hide_menu_item_id id="org.eclipse.ui.run"/>
+<hide_menu_item_id id="org.eclipse.search.menu"/>
+<hide_toolbar_item_id id="org.eclipse.debug.ui.commands.RunToLine"/>
+<hide_toolbar_item_id id="org.eclipse.ui.workbench.navigate"/>
+<hide_toolbar_item_id id="org.eclipse.jdt.ui.actions.OpenProjectWizard"/>
+<hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
+<view id="org.eclipse.ui.navigator.ProjectExplorer"/>
+<view id="com.jaspersoft.studio.Repository"/>
+<view id="com.jaspersoft.studio.FormattingToolsView"/>
+<fastViewBars>&#x0A;<fastViewBar fastViewLocation="131072" id="org.eclipse.ui.internal.ViewStack@5b10ac1e" orientation="512" selectedTabId="org.eclipse.ui.views.PropertySheet" style="0">&#x0A;<fastViews>&#x0A;<view id="org.eclipse.ui.views.PropertySheet" ratio="0.3"/>
+<view id="org.eclipse.ui.views.ProblemView" ratio="0.3"/>
+<view id="org.eclipse.gef.ui.palette_view" ratio="0.3"/>
+</fastViews>
+</fastViewBar>
+<fastViewBar fastViewLocation="1024" id="org.eclipse.ui.internal.ViewStack@7434b15e" orientation="256" selectedTabId="com.jaspersoft.studio.editor.preview.reportstate" style="0">&#x0A;<fastViews>&#x0A;<view id="com.jaspersoft.studio.editor.preview.reportstate" ratio="0.28664497"/>
+</fastViews>
+</fastViewBar>
+</fastViewBars>
+<layout>&#x0A;<mainWindow>&#x0A;<info folder="true" part="org.eclipse.ui.internal.ViewStack@1ec77d1e">&#x0A;<folder activePageID="org.eclipse.ui.navigator.ProjectExplorer" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.navigator.ProjectExplorer" label="Project Explorer"/>
+<page content="com.jaspersoft.studio.Repository" label="Repository Explorer"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
+<part id="1"/>
+</presentation>
+</folder>
+</info>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@11fdb5fc" ratio="0.22966868" ratioLeft="305" ratioRight="1023" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1ec77d1e">&#x0A;<folder appearance="2" expanded="0">&#x0A;<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@760d8e70" ratio="0.75" ratioLeft="750" ratioRight="250" relationship="2" relative="org.eclipse.ui.internal.ViewStack@11fdb5fc">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
+<page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
+<info part="org.eclipse.ui.editorss" ratio="0.25" ratioLeft="250" ratioRight="750" relationship="2" relative="org.eclipse.ui.internal.ViewStack@11fdb5fc"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@4e193d70" ratio="0.66061705" ratioLeft="728" ratioRight="374" relationship="2" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@5b10ac1e" ratio="0.39933994" ratioLeft="242" ratioRight="364" relationship="4" relative="org.eclipse.ui.internal.ViewStack@4e193d70">&#x0A;<folder appearance="2" expanded="0">&#x0A;<page content="org.eclipse.ui.views.PropertySheet" label="LabelNotFound"/>
+<page content="org.eclipse.ui.views.ProblemView" label="LabelNotFound"/>
+<page content="org.eclipse.gef.ui.palette_view" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@7434b15e" ratio="0.7491749" ratioLeft="454" ratioRight="152" relationship="4" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="com.jaspersoft.studio.editor.preview.reportstate" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@3aae92fb" ratio="0.7754902" ratioLeft="791" ratioRight="229" relationship="2" relative="org.eclipse.ui.editorss">&#x0A;<folder activePageID="com.jaspersoft.studio.FormattingToolsView" appearance="2" expanded="2">&#x0A;<page content="com.jaspersoft.studio.FormattingToolsView" label="Formatting Tools"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
+</presentation>
+</folder>
+</info>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@27b6bc9e" ratio="0.5008183" ratioLeft="306" ratioRight="305" relationship="4" relative="org.eclipse.ui.internal.ViewStack@11fdb5fc">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
+</mainWindow>
+</layout>
+</perspective>
+<perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
+<descriptor class="org.eclipse.ui.internal.ide.application.ResourcePerspective" id="org.eclipse.ui.resourcePerspective" label="Resource"/>
+<alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
+<alwaysOnActionSet id="org.eclipse.search.searchActionSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.annotationNavigation"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.navigation"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"/>
+<alwaysOnActionSet id="org.eclipse.ui.externaltools.ExternalToolsSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.actionSet.keyBindings"/>
+<alwaysOnActionSet id="org.eclipse.ui.actionSet.openFiles"/>
+<alwaysOnActionSet id="org.eclipse.ui.NavigateActionSet"/>
+<show_view_action id="org.eclipse.ui.navigator.ProjectExplorer"/>
+<show_view_action id="org.eclipse.ui.views.BookmarkView"/>
+<show_view_action id="org.eclipse.ui.views.ContentOutline"/>
+<show_view_action id="org.eclipse.ui.views.PropertySheet"/>
+<show_view_action id="org.eclipse.ui.views.ProblemView"/>
+<show_view_action id="org.eclipse.ui.views.ProgressView"/>
+<show_view_action id="org.eclipse.ui.views.TaskList"/>
+<show_view_action id="org.eclipse.ant.ui.views.AntView"/>
+<show_view_action id="org.eclipse.pde.runtime.LogView"/>
+<new_wizard_action id="org.eclipse.ui.wizards.new.folder"/>
+<new_wizard_action id="org.eclipse.ui.wizards.new.file"/>
+<new_wizard_action id="org.eclipse.ui.editors.wizards.UntitledTextFileWizard"/>
+<perspective_action id="org.eclipse.jdt.ui.JavaPerspective"/>
+<perspective_action id="org.eclipse.jdt.ui.JavaBrowsingPerspective"/>
+<perspective_action id="org.eclipse.team.cvs.ui.cvsPerspective"/>
+<perspective_action id="org.eclipse.team.ui.TeamSynchronizingPerspective"/>
+<perspective_action id="org.tigris.subversion.subclipse.ui.svnPerspective"/>
+<hide_toolbar_item_id id="org.eclipse.debug.ui.commands.RunToLine"/>
+<hide_toolbar_item_id id="org.eclipse.jdt.ui.actions.OpenProjectWizard"/>
+<hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
+<view id="org.eclipse.ui.navigator.ProjectExplorer"/>
+<fastViews>
+<view id="org.eclipse.pde.runtime.LogView" ratio="0.29984662"/>
+</fastViews>
+<fastViewBars>
+<fastViewBar fastViewLocation="16384" id="bottomLeft" orientation="512" selectedTabId="org.eclipse.ui.views.ContentOutline" style="0">
+<fastViews>
+<view id="org.eclipse.ui.views.ContentOutline" ratio="0.29984662"/>
+</fastViews>
+</fastViewBar>
+<fastViewBar fastViewLocation="1024" id="bottomRight" orientation="256" selectedTabId="org.eclipse.ui.views.TaskList" style="0">
+<fastViews>
+<view id="org.eclipse.ui.views.TaskList" ratio="0.3"/>
+</fastViews>
+</fastViewBar>
+<fastViewBar fastViewLocation="1024" id="org.eclipse.ui.internal.ViewStack@473d1d69" orientation="256" selectedTabId="com.jaspersoft.studio.editor.preview.reportstate" style="0">
+<fastViews>
+<view id="com.jaspersoft.studio.editor.preview.reportstate" ratio="0.29967427"/>
+</fastViews>
+</fastViewBar>
+<fastViewBar fastViewLocation="131072" id="org.eclipse.ui.internal.ViewStack@4e224f5d" orientation="512" selectedTabId="com.jaspersoft.studio.Repository" style="0">
+<fastViews>
+<view id="org.eclipse.ui.views.PropertySheet" ratio="0.29984662"/>
+<view id="com.jaspersoft.studio.Repository" ratio="0.29984662"/>
+</fastViews>
+</fastViewBar>
+</fastViewBars>
+<layout>
+<mainWindow>
+<info folder="true" part="topLeft">
+<folder activePageID="org.eclipse.ui.navigator.ProjectExplorer" appearance="2" expanded="2">
+<page content="org.eclipse.ui.navigator.ProjectExplorer" label="Project Explorer"/>
+<page content="org.eclipse.ui.views.BookmarkView" label="LabelNotFound"/>
+<page content="org.eclipse.ui.views.ResourceNavigator" label="LabelNotFound"/>
+<page content="org.eclipse.team.ccvs.ui.RepositoriesView" label="LabelNotFound"/>
+<page content="org.tigris.subversion.subclipse.ui.repository.RepositoriesView" label="LabelNotFound"/>
+<page content="org.tigris.subversion.subclipse.ui.annotations.AnnotateView" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
+</folder>
+</info>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@473d1d69" ratio="0.7491857" ratioLeft="460" ratioRight="154" relationship="4" relative="topLeft">
+<folder appearance="2" expanded="2">
+<page content="com.jaspersoft.studio.editor.preview.reportstate" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
+<info folder="true" part="stickyFolderRight" ratio="0.7498122" ratioLeft="998" ratioRight="333" relationship="2" relative="topLeft">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
+<page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
+</folder>
+</info>
+<info part="org.eclipse.gef.ui.palette_view" ratio="0.19114392" ratioLeft="259" ratioRight="1096" relationship="2" relative="topLeft"/>
+<info folder="true" part="bottomRight" ratio="0.65960914" ratioLeft="405" ratioRight="209" relationship="4" relative="org.eclipse.gef.ui.palette_view">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.TaskList" label="LabelNotFound"/>
+<page content="org.eclipse.team.ui.GenericHistoryView" label="LabelNotFound"/>
+<page content="org.tigris.subversion.subclipse.ui.history.HistoryView" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
+<info part="org.eclipse.ui.editorss" ratio="0.15939087" ratioLeft="157" ratioRight="828" relationship="2" relative="org.eclipse.gef.ui.palette_view"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@4e224f5d" ratio="0.76506025" ratioLeft="1016" ratioRight="312" relationship="2" relative="org.eclipse.ui.editorss">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.PropertySheet" label="LabelNotFound"/>
+<page content="com.jaspersoft.studio.Repository" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
+<info folder="true" part="bottomLeft" ratio="0.5" ratioLeft="307" ratioRight="307" relationship="4" relative="topLeft">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
+<page content="org.eclipse.ant.ui.views.AntView" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
+</mainWindow>
+</layout>
+</perspective>
+</perspectives>
+<workingSets/>
+<navigationHistory/>
+<input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
+</page>
+<workbenchWindowAdvisor/>
+<actionBarAdvisor/>
+<trimLayout>
+<trimArea IMemento.internal.id="16384">
+<trimItem IMemento.internal.id="bottomLeft"/>
+</trimArea>
+<trimArea IMemento.internal.id="131072">
+<trimItem IMemento.internal.id="org.eclipse.ui.internal.ViewStack@4e224f5d"/>
+</trimArea>
+<trimArea IMemento.internal.id="128">
+<trimItem IMemento.internal.id="org.eclipse.ui.internal.WorkbenchWindow.topBar"/>
+</trimArea>
+<trimArea IMemento.internal.id="1024">
+<trimItem IMemento.internal.id="org.eclise.ui.internal.FastViewBar"/>
+<trimItem IMemento.internal.id="org.eclipse.jface.action.StatusLineManager"/>
+<trimItem IMemento.internal.id="org.eclipse.ui.internal.progress.ProgressRegion"/>
+<trimItem IMemento.internal.id="bottomRight"/>
+<trimItem IMemento.internal.id="org.eclipse.ui.internal.ViewStack@473d1d69"/>
+</trimArea>
+</trimLayout>
+</window>
+<mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor.jasper" name="TAcDocReport.jasper" tooltip="MyReports/TAcDocReport.jasper">
+<persistable path="/MyReports/TAcDocReport.jasper"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="OtherInvoice.jrxml" tooltip="MyReports/OtherInvoice.jrxml">
+<persistable path="/MyReports/OtherInvoice.jrxml"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="OtherAcDocReport.jrxml" tooltip="MyReports/OtherAcDocReport.jrxml">
+<persistable path="/MyReports/OtherAcDocReport.jrxml"/>
+</file>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="acDoc.jrxml" tooltip="E:\Development\netbeans_workspace\ETSBackofficeV2.1\src\etsbackoffice\report\acDoc.jrxml">
+<persistable uri="file:/E:/Development/netbeans_workspace/ETSBackofficeV2.1/src/etsbackoffice/report/acDoc.jrxml"/>
+</file>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="rptAcDocHistory.jrxml" tooltip="E:\Development\netbeans_workspace\ETSBackofficeV2.1\src\etsbackoffice\report\rptAcDocHistory.jrxml">
+<persistable uri="file:/E:/Development/netbeans_workspace/ETSBackofficeV2.1/src/etsbackoffice/report/rptAcDocHistory.jrxml"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="TAcDocReport1.jrxml" tooltip="MyReports/TAcDocReport1.jrxml">
+<persistable path="/MyReports/TAcDocReport1.jrxml"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="TAcDocReport.jrxml" tooltip="MyReports/TAcDocReport.jrxml">
+<persistable path="/MyReports/TAcDocReport.jrxml"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="Invoice.jrxml" tooltip="MyReports/Invoice.jrxml">
+<persistable path="/MyReports/Invoice.jrxml"/>
+</file>
+<file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="oAcDoc.jrxml" tooltip="E:\Development\netbeans_workspace\ETSBackofficeV2.1\src\etsbackoffice\report\oAcDoc.jrxml">
+<persistable uri="file:/E:/Development/netbeans_workspace/ETSBackofficeV2.1/src/etsbackoffice/report/oAcDoc.jrxml"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="relatedDocs.jrxml" tooltip="ETSBAckoffice/relatedDocs.jrxml">
+<persistable path="/ETSBAckoffice/relatedDocs.jrxml"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="Blank_A5.jrxml" tooltip="MyReports/bin/Blank_A5.jrxml">
+<persistable path="/MyReports/bin/Blank_A5.jrxml"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="Blank_A4.jrxml" tooltip="MyReports/Blank_A4.jrxml">
+<persistable path="/MyReports/Blank_A4.jrxml"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="Invoice_1.jrxml" tooltip="MyReports/Invoice_1.jrxml">
+<persistable path="/MyReports/Invoice_1.jrxml"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="Invoice_2.jrxml" tooltip="MyReports/Invoice_2.jrxml">
+<persistable path="/MyReports/Invoice_2.jrxml"/>
+</file>
+</mruList>
+</workbench>

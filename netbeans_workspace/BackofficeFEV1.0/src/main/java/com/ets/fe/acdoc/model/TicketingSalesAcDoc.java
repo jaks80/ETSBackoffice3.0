@@ -1,5 +1,7 @@
 package com.ets.fe.acdoc.model;
 
+import com.ets.fe.acdoc_o.model.AdditionalChargeLine;
+import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.util.Enums;
@@ -29,7 +31,7 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
     @XmlElement
     private List<AdditionalChargeLine> additionalChargeLines = new ArrayList<>();
     @XmlElement
-    private Set<TicketingSalesAcDoc> relatedDocuments = new LinkedHashSet<>();
+    private List<TicketingSalesAcDoc> relatedDocuments = new ArrayList<>();
     @XmlElement
     private TicketingSalesAcDoc parent;
     @XmlElement
@@ -154,11 +156,11 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         this.pnr = pnr;
     }
 
-    public Set<TicketingSalesAcDoc> getRelatedDocuments() {
+    public List<TicketingSalesAcDoc> getRelatedDocuments() {
         return relatedDocuments;
     }
 
-    public void setRelatedDocuments(Set<TicketingSalesAcDoc> relatedDocuments) {
+    public void setRelatedDocuments(List<TicketingSalesAcDoc> relatedDocuments) {
         this.relatedDocuments = relatedDocuments;
     }
 

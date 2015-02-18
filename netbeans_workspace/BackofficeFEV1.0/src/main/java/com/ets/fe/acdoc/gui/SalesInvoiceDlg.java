@@ -1,17 +1,20 @@
 package com.ets.fe.acdoc.gui;
 
 import com.ets.fe.Application;
-import com.ets.fe.acdoc.bo.PaymentLogic;
+import com.ets.fe.accounts.gui.logic.PaymentLogic;
 import com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent;
-import com.ets.fe.acdoc.model.AdditionalChargeLine;
-import com.ets.fe.acdoc.model.Payment;
+import com.ets.fe.acdoc_o.model.AdditionalChargeLine;
+import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.task.AccountingDocTask;
-import com.ets.fe.acdoc.task.NewPaymentTask;
+import com.ets.fe.accounts.task.NewPaymentTask;
+import static com.ets.fe.acdoc.gui.report.TSalesInvoiceReportingFrame.client_type;
+import com.ets.fe.client.model.Contactable;
 import com.ets.fe.os.model.AdditionalCharge;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
+import com.ets.fe.report.MyJasperReport;
 import com.ets.fe.util.*;
 import java.awt.Color;
 import java.awt.Component;
@@ -27,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import org.jdesktop.swingx.JXTable;
@@ -41,6 +45,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     private AccountingDocTask accountingDocTask;
     private NewPaymentTask paymentTask;
 
+    private Contactable client;
     private String taskType;
     private Pnr pnr;
     private List<Ticket> tickets;    
@@ -97,8 +102,10 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         controllComponent(tInvoice);
 
         if (pnr.getAgent() != null) {
+            client = pnr.getAgent();
             txtAcDocFor.setText(pnr.getAgent().getFullName() + pnr.getAgent().getAddressCRSeperated());
         } else {
+            client = pnr.getCustomer();
             txtAcDocFor.setText(pnr.getCustomer().getFullName() + pnr.getCustomer().getAddressCRSeperated());
         }
     }
@@ -195,12 +202,12 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         BigDecimal totalNetPayable = new BigDecimal("0.00");
 
         for (Ticket t : this.tickets) {
-            boolean invoiced = true;
-            if (t.getTicketingSalesAcDoc() == null) {
-                invoiced = false;
-            } else {
-                invoiced = true;
-            }
+//            boolean invoiced = true;
+//            if (t.getTicketingSalesAcDoc() == null) {
+//                invoiced = false;
+//            } else {
+//                invoiced = true;
+//            }
             totalGF = totalGF.add(t.getGrossFare());
             totalDisc = totalDisc.add(t.getDiscount());
             totalAtol = totalAtol.add(t.getAtolChg());
@@ -894,12 +901,22 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         btnPrint.setFocusable(false);
         btnPrint.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnPrint.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintActionPerformed(evt);
+            }
+        });
 
         btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
         btnEmail.setToolTipText("Email Invoice");
         btnEmail.setFocusable(false);
         btnEmail.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnEmail.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmailActionPerformed(evt);
+            }
+        });
 
         btnOfficeCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
         btnOfficeCopy.setToolTipText("Print Office Copy");
@@ -993,6 +1010,24 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     private void txtOtherFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtOtherFocusGained
         txtOther.selectAll();
     }//GEN-LAST:event_txtOtherFocusGained
+
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+        MyJasperReport report = new MyJasperReport();
+       report.reportInvoice(tInvoice.getId(),Enums.SaleType.SALES,"PRINT");     
+    }//GEN-LAST:event_btnPrintActionPerformed
+
+    private void btnEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmailActionPerformed
+        String receipent = client.getEmail();
+        String subject = "Invoice".concat(" From ").concat(Application.getMainAgent().getName());
+        String body = "Invoice".concat(" From ").concat(Application.getMainAgent().getName());
+        String refference = this.tInvoice.getReference().toString();
+        if(receipent!=null){
+        MyJasperReport report = new MyJasperReport(receipent,subject,body,refference);
+        report.reportInvoice(tInvoice.getId(),Enums.SaleType.SALES,"EMAIL");
+        }else{
+        JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEmailActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

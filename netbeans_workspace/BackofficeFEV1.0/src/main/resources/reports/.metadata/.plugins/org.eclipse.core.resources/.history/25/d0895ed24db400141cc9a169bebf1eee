@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2015-02-14T13:31:05 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Invoice" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4c9c4bc6-60fe-4601-be7a-05ceb7905c25">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TSalesInvoice Data Adapter "/>
+	<queryString language="xpath2">
+		<![CDATA[/invoiceModel/title]]>
+	</queryString>
+	<field name="title" class="java.lang.String">
+		<fieldDescription><![CDATA[child::text()]]></fieldDescription>
+	</field>
+	<field name="clientName" class="java.lang.String">
+		<fieldDescription><![CDATA[/invoiceModel/clientName]]></fieldDescription>
+	</field>
+	<field name="clientAddress" class="java.lang.String">
+		<fieldDescription><![CDATA[/invoiceModel/clientAddress]]></fieldDescription>
+	</field>
+	<field name="refference" class="java.lang.String">
+		<fieldDescription><![CDATA[/invoiceModel/refference]]></fieldDescription>
+	</field>
+	<field name="date" class="java.lang.String">
+		<fieldDescription><![CDATA[/invoiceModel/date]]></fieldDescription>
+	</field>
+	<field name="terms" class="java.lang.String">
+		<fieldDescription><![CDATA[/invoiceModel/terms]]></fieldDescription>
+	</field>
+	<field name="pnr" class="java.lang.String">
+		<fieldDescription><![CDATA[/invoiceModel/pnr]]></fieldDescription>
+	</field>
+	<field name="vendorPnr" class="java.lang.String">
+		<fieldDescription><![CDATA[/invoiceModel/vendorPnr]]></fieldDescription>
+	</field>
+	<field name="airLine" class="java.lang.String">
+		<fieldDescription><![CDATA[/invoiceModel/airLine]]></fieldDescription>
+	</field>
+	<field name="bookingDate" class="java.lang.String">
+		<fieldDescription><![CDATA[/invoiceModel/bookingDate]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<detail>
+		<band height="71" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="2" width="180" height="14" uuid="d4be381e-662d-4baa-9836-aa9084216f50"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clientName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="33" width="180" height="38" uuid="8cd735d2-cc93-414d-8918-766f6a867d89"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clientAddress}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="196" y="2" width="60" height="14" uuid="87f8f224-7f9b-4806-9b2e-64af14c6213a"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice Ref]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="256" y="2" width="119" height="14" uuid="3cc3eae8-583e-4ee2-af7d-2ab2c5a56151"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": "+$F{refference}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="387" y="3" width="64" height="14" uuid="f3d57a8b-2d93-4c33-8236-87ef8958845d"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GDS PNR]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="451" y="3" width="120" height="14" uuid="17a0355b-e3b1-49b4-88ce-aac44aecbcad"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": "+$F{pnr}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="451" y="18" width="120" height="14" uuid="c720b94c-72dc-4f0b-938d-fdd83bbdda70"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": "+$F{vendorPnr}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="387" y="18" width="64" height="14" uuid="860dff86-d943-421e-afd3-6c84052df1ff"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VendorPNR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="17" width="60" height="14" uuid="d9b24d56-72e8-4b0d-98bc-2ea30ba3c5dd"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="32" width="60" height="14" uuid="0ad6da75-68a0-4443-801d-3961d78bef52"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice Terms]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="47" width="60" height="14" uuid="204b2d15-12e7-4d33-ba4d-e728b8bbc3d2"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice By]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="256" y="47" width="119" height="14" uuid="665f850b-4a15-4897-a134-17a0cfdea9fc"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": "]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="256" y="32" width="119" height="14" isRemoveLineWhenBlank="true" uuid="7fd29377-369e-4a94-a0b5-b69bc7d8cfbb"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": "+$F{terms}]]></textFieldExpression>
+			</textField>
+			<textField pattern=": dd.MM.yyyy" isBlankWhenNull="true">
+				<reportElement x="256" y="17" width="119" height="14" uuid="8a1e4866-fc5b-4e99-8eec-8bbda7d49de6"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": "+$F{date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="387" y="33" width="64" height="14" uuid="91f5b204-a360-4761-8646-f3f6f187b24c"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Airline]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="387" y="48" width="64" height="14" uuid="8b7cf41a-0b85-4705-93e9-5600ebbcc3a0"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Booking Date]]></text>
+			</staticText>
+			<textField pattern=": dd.MM.yyyy" isBlankWhenNull="true">
+				<reportElement x="451" y="48" width="120" height="14" uuid="9640f56b-6c5d-4867-8950-8a95b7652bdf"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": "+$F{bookingDate}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="451" y="33" width="120" height="14" uuid="bff732a2-db70-452b-b4ea-95ec3abf4ff8"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": "+$F{airLine}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="18" width="180" height="14" uuid="f667c53d-92a4-4d6f-808c-111688a91f46"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{title} +"For"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="50"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+</jasperReport>

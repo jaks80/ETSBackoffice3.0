@@ -1,6 +1,6 @@
 package com.ets.fe.acdoc.bo;
 
-import com.ets.fe.acdoc.model.Payment;
+import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.util.Enums;
 import java.math.BigDecimal;

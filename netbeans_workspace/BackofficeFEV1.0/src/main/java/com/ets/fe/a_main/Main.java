@@ -1,26 +1,26 @@
 package com.ets.fe.a_main;
 
+import com.ets.fe.accounts.gui.payment.*;
 import com.amadeus.reader.EventSource;
 import com.amadeus.reader.ResponseHandler;
 import com.ets.fe.APIConfig;
 import com.ets.fe.Application;
-import com.ets.fe.acdoc.gui.report.OtherInvoiceReportingFrame;
-import com.ets.fe.acdoc.gui.report.TPurchaseAccountsFrame;
-import com.ets.fe.acdoc.gui.report.TPurchaseInvoiceReportingFrame;
-import com.ets.fe.acdoc.gui.report.TSalesAccountsFrame;
-import com.ets.fe.acdoc.gui.report.TSalesInvoiceReportingFrame;
-import com.ets.fe.acdoc.gui.payment.*;
-import com.ets.fe.acdoc.gui.OtherInvoiceDlg;
-import com.ets.fe.acdoc.task.OtherAcDocReportingTask;
+import com.ets.fe.accounts.gui.report.*;
+import com.ets.fe.acdoc.gui.report.*;
+import com.ets.fe.acdoc_o.gui.OtherInvoiceDlg;
+import com.ets.fe.acdoc_o.gui.OtherInvoiceReportingFrame;
+import com.ets.fe.accounts.gui.payment.OtherSalesBatchPayment;
+import com.ets.fe.acdoc_o.gui.OtherSalesBatchPaymentReport;
 import com.ets.fe.app.model.AppSettings;
 import com.ets.fe.client.gui.*;
-import com.ets.fe.client.model.Customer;
-import com.ets.fe.client.model.MainAgent;
+import com.ets.fe.client.model.*;
 import com.ets.fe.os.gui.OtherServiceFrame;
 import com.ets.fe.pnr.gui.*;
 import com.ets.fe.settings.gui.*;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +35,13 @@ import javax.swing.SwingUtilities;
  *
  * @author Yusuf
  */
-public class Main extends JFrame {
+public class Main extends JFrame implements PropertyChangeListener{
 
     private List<JInternalFrame> internalFrames = new ArrayList<>();
     private Application appSettings;
     private APIConfig aPIConfig;
-
+    private String taskType="";
+    
     public Main() {
         initComponents();
         aPIConfig = new APIConfig();
@@ -132,6 +133,10 @@ public class Main extends JFrame {
         jMenuItem8 = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         menuDueOSalesInvoice = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
+        jSeparator6 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem11 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -357,6 +362,31 @@ public class Main extends JFrame {
         });
         jMenu8.add(menuDueOSalesInvoice);
 
+        jMenuItem9.setText("Batch Transaction");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem9);
+
+        jMenuItem10.setText("History: Batch Transaction");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem10);
+        jMenu8.add(jSeparator6);
+
+        jMenuItem11.setText("History: Client Account");
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem11ActionPerformed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem11);
+
         jMenuBar1.add(jMenu8);
 
         setJMenuBar(jMenuBar1);
@@ -476,7 +506,9 @@ public class Main extends JFrame {
         }
         if (dlg.showDialog(settings)) {
             SettingsTask task = new SettingsTask(settings);
+            task.addPropertyChangeListener(this);
             task.execute();
+            taskType = "SETTINGS";
         }
     }//GEN-LAST:event_menuAppSettingsActionPerformed
 
@@ -488,7 +520,9 @@ public class Main extends JFrame {
         }
         if (dlg.showDialog(agent)) {
             MainAgentTask task = new MainAgentTask(agent);
+            task.addPropertyChangeListener(this);
             task.execute();
+            taskType = "SETTINGS";
         }
     }//GEN-LAST:event_menuMainAgentActionPerformed
 
@@ -540,6 +574,18 @@ public class Main extends JFrame {
     private void menuDueOSalesInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDueOSalesInvoiceActionPerformed
         frameAction(new OtherInvoiceReportingFrame(desktopPane));
     }//GEN-LAST:event_menuDueOSalesInvoiceActionPerformed
+
+    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+       frameAction(new OtherSalesAccountsFrame(desktopPane));
+    }//GEN-LAST:event_jMenuItem11ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        frameAction(new OtherSalesBatchPayment(desktopPane));
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        frameAction(new OtherSalesBatchPaymentReport(desktopPane));
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void frameAction(JInternalFrame frame) {
         desktopPane.add(frame);
@@ -599,6 +645,8 @@ public class Main extends JFrame {
     private javax.swing.JMenu jMenu8;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -606,12 +654,14 @@ public class Main extends JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
+    private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JMenuItem menu3rdPartyBillPayment;
     private javax.swing.JMenuItem menuAppSettings;
     private javax.swing.JMenuItem menuBatchTransRpt;
@@ -624,4 +674,17 @@ public class Main extends JFrame {
     private javax.swing.JMenuItem menuPnrHistory;
     private javax.swing.JMenuItem menuVendorAccounts;
     // End of variables declaration//GEN-END:variables
+@Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("progress".equals(evt.getPropertyName())) {
+            int progress = (Integer) evt.getNewValue();
+            //progressBar.setValue(progress);
+            if (progress == 100) {
+                if ("SETTINGS".equals(taskType)) {
+                    Application.loadSettings();
+                }
+            }
+        }
+    }
+
 }

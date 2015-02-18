@@ -23,7 +23,9 @@ import java.util.logging.Logger;
 public class SalesAcDocumentDlg extends javax.swing.JDialog implements PropertyChangeListener {
 
     private NewTSalesDocumentTask newTSalesDocumentTask;
+    private AccountingDocTask accountingDocTask;
     private Pnr pnr;
+    private String taskType;
     private TicketingSalesAcDoc document;
 
     public SalesAcDocumentDlg(Frame parent) {
@@ -41,6 +43,12 @@ public class SalesAcDocumentDlg extends javax.swing.JDialog implements PropertyC
         return true;
     }
     
+    public void showDialog(Long id) {   
+        loadDocument(id);    
+        setLocationRelativeTo(this);                      
+        setVisible(true);                       
+    }
+        
     private void displayDocument(TicketingSalesAcDoc document) {
         this.document = document;
         this.pnr = document.getPnr();
@@ -68,6 +76,7 @@ public class SalesAcDocumentDlg extends javax.swing.JDialog implements PropertyC
     }
 
     public void createDocument() {
+        taskType = "CREATE";
         BigDecimal amount = new BigDecimal(txtAmount.getText());
         String remark = txtRemark.getText();
         int cmbIndex = cmbAdditionalCharge.getSelectedIndex();
@@ -110,6 +119,12 @@ public class SalesAcDocumentDlg extends javax.swing.JDialog implements PropertyC
         }
     }
 
+    public void loadDocument(Long id) {
+        taskType = "COMPLETE";
+        accountingDocTask = new AccountingDocTask(id, Enums.SaleType.SALES, "DETAILS");
+        accountingDocTask.addPropertyChangeListener(this);
+        accountingDocTask.execute();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -384,8 +399,14 @@ public class SalesAcDocumentDlg extends javax.swing.JDialog implements PropertyC
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    document = newTSalesDocumentTask.get();
-                    displayDocument(document);
+                    if ("CREATE".equals(taskType)) {
+                     document = newTSalesDocumentTask.get();
+                     displayDocument(document);
+                    }else if ("COMPLETE".equals(taskType)) {
+                        document = (TicketingSalesAcDoc) accountingDocTask.get();
+                        displayDocument(document);
+                        taskType = "";
+                    } 
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(SalesInvoiceDlg.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {

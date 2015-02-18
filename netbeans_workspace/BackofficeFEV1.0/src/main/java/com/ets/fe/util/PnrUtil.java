@@ -2,7 +2,7 @@ package com.ets.fe.util;
 
 import com.ets.fe.pnr.model.Itinerary;
 import com.ets.fe.pnr.model.Pnr;
-import com.ets.fe.pnr.model.PnrRemark;
+import com.ets.fe.pnr.model.Remark;
 import com.ets.fe.pnr.model.Ticket;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,9 +30,9 @@ public class PnrUtil {
         return names;
     }
 
-    public static List<PnrRemark> initPnrInRemark(Pnr pnr, List<PnrRemark> remarks) {
+    public static List<Remark> initPnrInRemark(Pnr pnr, List<Remark> remarks) {
 
-        for (PnrRemark rm : remarks) {
+        for (Remark rm : remarks) {
             rm.setPnr(pnr);
         }
         return remarks;

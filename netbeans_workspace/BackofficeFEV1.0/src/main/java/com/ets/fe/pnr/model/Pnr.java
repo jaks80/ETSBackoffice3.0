@@ -47,7 +47,7 @@ public class Pnr extends PersistentObject implements Serializable {
     @XmlElement
     private List<Itinerary> segments = new ArrayList<>();
     @XmlElement
-    private List<PnrRemark> remarks = new ArrayList<>();
+    private List<Remark> remarks = new ArrayList<>();
 
     @XmlElement
     private Agent agent;
@@ -148,11 +148,11 @@ public class Pnr extends PersistentObject implements Serializable {
         this.gdsPnr = gdsPnr;
     }
 
-    public List<PnrRemark> getRemarks() {
+    public List<Remark> getRemarks() {
         return remarks;
     }
 
-    public void setRemarks(List<PnrRemark> remarks) {
+    public void setRemarks(List<Remark> remarks) {
         this.remarks = remarks;
     }
 

@@ -32,7 +32,7 @@ public class TicketingAgentComponent extends javax.swing.JPanel implements Prope
         initComponents();
     }
 
-    public void setTicketingAgent(Pnr pnr) {
+    public void setTicketingAgent(final Pnr pnr) {
         this.pnr = pnr;                
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
