@@ -3,7 +3,6 @@ package com.ets.fe.pnr.ws;
 import com.ets.fe.APIConfig;
 import com.ets.fe.pnr.collection.Remarks;
 import com.ets.fe.util.RestClientUtil;
-import javax.ws.rs.QueryParam;
 
 /**
  *
@@ -17,7 +16,7 @@ public class RemarkWSClient {
         return remarks;
     }
 
-    public Remarks getByPnrId(@QueryParam("pnrId") Long pnrId) {
+    public Remarks getByPnrId(Long pnrId) {
         String url = APIConfig.get("ws.remark.bypnrid") + "?pnrId=" + pnrId;
         Remarks remarks = RestClientUtil.getEntity(Remarks.class, url, new Remarks());
         return remarks;

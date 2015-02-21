@@ -122,7 +122,10 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         int index = tblReport.getSelectedRow();
         if (index != -1) {
             Long id = this.invoices.get(index).getId();
-            accountingDocTask = new AccountingDocTaskOther(id, Enums.SaleType.OTHER, "VOID");
+            OtherSalesAcDoc doc = new OtherSalesAcDoc();
+            doc.setId(id);
+            doc.recordUpdateBy();
+            accountingDocTask = new AccountingDocTaskOther(doc, Enums.SaleType.OTHER, "VOID");
             accountingDocTask.addPropertyChangeListener(this);
             accountingDocTask.execute();
         }

@@ -50,6 +50,7 @@ public class AgentWSClient {
     }
     
     public Agent update(Agent agent) {
+        agent.recordUpdateBy();
         String url = APIConfig.get("ws.agent.update");
         Agent persistedAgent = RestClientUtil.putEntity(Agent.class, url, agent);
        return persistedAgent;

@@ -86,6 +86,7 @@ public class GlobalSearchTask extends SwingWorker< Void, Integer> {
         } else {
             tableModel.insertRow(0, new Object[]{});
         }
+        table.setRowSelectionInterval(0, 0);
     }
 
     public List<Pnr> getPnrs() {

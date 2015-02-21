@@ -34,10 +34,10 @@ public class TicketingSAcDocWSClient {
         return status;
     }
 
-    public Integer _void(long id) {
-        String url = APIConfig.get("ws.tsacdoc.void") + id;
-        Integer status = RestClientUtil.deleteById(url);
-        return status;
+    public TicketingSalesAcDoc _void(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        String url = APIConfig.get("ws.tsacdoc.void");
+        ticketingSalesAcDoc = RestClientUtil.putEntity(TicketingSalesAcDoc.class, url, ticketingSalesAcDoc);
+        return ticketingSalesAcDoc;
     }
 
     public TicketingSalesAcDoc getbyId(long id) {

@@ -25,6 +25,7 @@ public class UserWSClient {
     }
 
     public User update(User user) {
+        user.recordUpdateBy();
         String url = APIConfig.get("ws.user.update");
         User persistedUser = RestClientUtil.putEntity(User.class, url, user);
         return persistedUser;

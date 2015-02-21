@@ -1,6 +1,7 @@
 package com.ets.fe.acdoc_o.task;
 
 import com.ets.fe.acdoc.model.AccountingDocument;
+import com.ets.fe.acdoc_o.model.OtherSalesAcDoc;
 import com.ets.fe.acdoc_o.ws.OtherSAcDocWSClient;
 import com.ets.fe.util.Enums;
 import javax.swing.SwingWorker;
@@ -12,7 +13,7 @@ import javax.swing.SwingWorker;
 public class AccountingDocTaskOther extends SwingWorker<AccountingDocument, Integer> {
 
     private Long id;
-    private AccountingDocument accountingDocument;
+    private OtherSalesAcDoc accountingDocument;
     private Enums.SaleType saleType;
     private String taskType;
 
@@ -22,6 +23,18 @@ public class AccountingDocTaskOther extends SwingWorker<AccountingDocument, Inte
         this.taskType = taskType;
     }
 
+    /**
+     * Use it to void document
+     * @param accountingDocument
+     * @param saleType
+     * @param taskType 
+     */
+    public AccountingDocTaskOther(OtherSalesAcDoc accountingDocument, Enums.SaleType saleType, String taskType) {
+        this.accountingDocument = accountingDocument;
+        this.saleType = saleType;
+        this.taskType = taskType;
+    }
+    
     @Override
     protected AccountingDocument doInBackground() throws Exception {
 
@@ -31,8 +44,8 @@ public class AccountingDocTaskOther extends SwingWorker<AccountingDocument, Inte
                 case "DETAILS":
                     accountingDocument = client.getbyId(id);
                     break;
-                case "VOID":
-                    client._void(id);
+                case "VOID":                   
+                    client._void(accountingDocument);
                     break;
             }
         }

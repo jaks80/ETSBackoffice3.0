@@ -2,6 +2,7 @@ package com.ets.fe.app.model;
 
 
 import com.ets.fe.client.model.Contactable;
+import com.ets.fe.util.Enums;
 import java.io.Serializable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,9 +28,11 @@ public class User extends Contactable implements Serializable{
     @XmlElement
     private String foreName;
     @XmlElement
-    private int UserType;//1. Manager 3. Supervisor 4. Sales
+    private Enums.UserType userType;
     @XmlElement
     private boolean isActive;
+    @XmlElement
+    private String sessionId;
     
     public User(){
     
@@ -74,17 +77,25 @@ public class User extends Contactable implements Serializable{
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
-
-    public int getUserType() {
-        return UserType;
-    }
-
-    public void setUserType(int UserType) {
-        this.UserType = UserType;
-    }
     
     @Override
     public String getFullName() {
-      return this.surName + "/" + this.foreName;
+      return this.getSurName() + "/" + this.getForeName();
+    }
+
+    public Enums.UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Enums.UserType userType) {
+        this.userType = userType;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }

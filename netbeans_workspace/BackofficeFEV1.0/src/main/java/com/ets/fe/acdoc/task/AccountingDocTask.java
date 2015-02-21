@@ -1,6 +1,8 @@
 package com.ets.fe.acdoc.task;
 
 import com.ets.fe.acdoc.model.AccountingDocument;
+import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
+import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.ws.TicketingPAcDocWSClient;
 import com.ets.fe.acdoc.ws.TicketingSAcDocWSClient;
 import com.ets.fe.util.Enums;
@@ -22,6 +24,18 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
         this.saleType = saleType;
         this.taskType = taskType;
     }
+    
+    /**
+     * Use it to void Document
+     * @param accountingDocument
+     * @param saleType
+     * @param taskType 
+     */
+    public AccountingDocTask(AccountingDocument accountingDocument, Enums.SaleType saleType, String taskType) {
+        this.accountingDocument = accountingDocument;
+        this.saleType = saleType;
+        this.taskType = taskType;
+    }
 
     @Override
     protected AccountingDocument doInBackground() throws Exception {
@@ -33,7 +47,8 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
                     accountingDocument = client.getbyId(id);
                     break;
                 case "VOID":
-                    client._void(id);
+                    TicketingSalesAcDoc doc = (TicketingSalesAcDoc) accountingDocument;
+                    client._void(doc);
                     break;
             }
         } else if (Enums.SaleType.PURCHASE.equals(saleType)) {
@@ -43,7 +58,8 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
                     accountingDocument = client.getbyId(id);
                     break;
                 case "VOID":
-                    client._void(id);
+                    TicketingPurchaseAcDoc doc = (TicketingPurchaseAcDoc) accountingDocument;
+                    client._void(doc);
                     break;
             }
         }

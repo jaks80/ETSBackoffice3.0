@@ -35,13 +35,14 @@ import javax.swing.SwingUtilities;
  *
  * @author Yusuf
  */
-public class Main extends JFrame implements PropertyChangeListener{
+public class Main extends JFrame implements PropertyChangeListener {
 
+    private static boolean loginSuccess = false;
     private List<JInternalFrame> internalFrames = new ArrayList<>();
-    private Application appSettings;
+    //private Application appSettings;
     private APIConfig aPIConfig;
-    private String taskType="";
-    
+    private String taskType = "";
+
     public Main() {
         initComponents();
         aPIConfig = new APIConfig();
@@ -57,8 +58,9 @@ public class Main extends JFrame implements PropertyChangeListener{
 
         //Make dragging a little faster but perhaps uglier.
         desktopPane.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
+        
     }
-
+    
     private void callDashBoard() {
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -547,7 +549,7 @@ public class Main extends JFrame implements PropertyChangeListener{
     }//GEN-LAST:event_menuBatchTransRptActionPerformed
 
     private void jMenu6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu6ActionPerformed
-        
+
     }//GEN-LAST:event_jMenu6ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
@@ -555,19 +557,19 @@ public class Main extends JFrame implements PropertyChangeListener{
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void menuClientAccountsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuClientAccountsActionPerformed
-       frameAction(new TSalesAccountsFrame(desktopPane));
+        frameAction(new TSalesAccountsFrame(desktopPane));
     }//GEN-LAST:event_menuClientAccountsActionPerformed
 
     private void jMenu7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu7ActionPerformed
-        
+
     }//GEN-LAST:event_jMenu7ActionPerformed
 
     private void menuVendorAccountsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuVendorAccountsActionPerformed
-       frameAction(new TPurchaseAccountsFrame(desktopPane));
+        frameAction(new TPurchaseAccountsFrame(desktopPane));
     }//GEN-LAST:event_menuVendorAccountsActionPerformed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-       OtherInvoiceDlg dlg = new OtherInvoiceDlg(this);                
+        OtherInvoiceDlg dlg = new OtherInvoiceDlg(this);
         dlg.showDialog(null);
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
@@ -576,7 +578,7 @@ public class Main extends JFrame implements PropertyChangeListener{
     }//GEN-LAST:event_menuDueOSalesInvoiceActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-       frameAction(new OtherSalesAccountsFrame(desktopPane));
+        frameAction(new OtherSalesAccountsFrame(desktopPane));
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
@@ -624,12 +626,14 @@ public class Main extends JFrame implements PropertyChangeListener{
 //        }
         //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Main().setVisible(true);
-            }
-        });
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    if(Application.getLoggedOnUser()!=null){
+                        System.out.println("Accessed>>>>>");
+                     new Main().setVisible(true);
+                    }
+                }
+            });        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

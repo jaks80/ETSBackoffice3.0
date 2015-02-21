@@ -23,6 +23,7 @@ public class TicketingPAcDocWSClient {
     }
 
     public TicketingPurchaseAcDoc update(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
+        ticketingPurchaseAcDoc.recordUpdateBy();
         String url = APIConfig.get("ws.tpacdoc.update");
         TicketingPurchaseAcDoc persistedDoc = RestClientUtil.putEntity(TicketingPurchaseAcDoc.class, url, ticketingPurchaseAcDoc);
         return persistedDoc;
@@ -34,10 +35,10 @@ public class TicketingPAcDocWSClient {
         return status;
     }
 
-    public Integer _void(long id) {
-        String url = APIConfig.get("ws.tpacdoc.void") + id;
-        Integer status = RestClientUtil.deleteById(url);
-        return status;
+    public TicketingPurchaseAcDoc _void(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
+        String url = APIConfig.get("ws.tpacdoc.void");
+        ticketingPurchaseAcDoc = RestClientUtil.putEntity(TicketingPurchaseAcDoc.class, url, ticketingPurchaseAcDoc);
+        return ticketingPurchaseAcDoc;
     }
 
     public TicketingPurchaseAcDoc getbyId(long id) {

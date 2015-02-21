@@ -2,6 +2,7 @@ package com.ets.fe.settings.ws;
 
 import com.ets.fe.APIConfig;
 import com.ets.fe.app.model.AppSettings;
+import com.ets.fe.app.model.User;
 import com.ets.fe.client.model.MainAgent;
 import com.ets.fe.os.model.AdditionalCharges;
 import com.ets.fe.util.RestClientUtil;
@@ -12,6 +13,21 @@ import com.ets.fe.util.RestClientUtil;
  */
 public class ApplicationWSClient {
 
+    public User login(String loginId, String password, String newPassword) {
+        String url = APIConfig.get("ws.user.login") + "?loginId=" + loginId + "&password=" + password;
+
+        if (newPassword != null && !newPassword.isEmpty()) {
+            url = url + "&newPassword=" + newPassword;
+        }
+        User user = RestClientUtil.getEntity(User.class, url, new User());
+        return user;
+    }
+
+    public void logout(User user) {
+        String url = APIConfig.get("ws.user.logout");    
+        RestClientUtil.postEntity(User.class, url, user);        
+    }
+    
     public MainAgent getMainAgent(MainAgent agent) {
         String url = APIConfig.get("ws.aps.mainagent");
         MainAgent persistedAgent = RestClientUtil.getEntity(MainAgent.class, url, agent);
@@ -20,6 +36,7 @@ public class ApplicationWSClient {
 
     public MainAgent updateMainAgent(MainAgent agent) {
         String url = APIConfig.get("ws.aps.updatemainagent");
+        agent.recordUpdateBy();        
         MainAgent persistedAgent = RestClientUtil.putEntity(MainAgent.class, url, agent);
         return persistedAgent;
     }
@@ -40,6 +57,7 @@ public class ApplicationWSClient {
 
     public AppSettings update(AppSettings appSettings) {
         String url = APIConfig.get("ws.aps.update");
+        appSettings.recordUpdateBy();
         AppSettings persistedSettings = RestClientUtil.putEntity(AppSettings.class, url, appSettings);
         return persistedSettings;
     }

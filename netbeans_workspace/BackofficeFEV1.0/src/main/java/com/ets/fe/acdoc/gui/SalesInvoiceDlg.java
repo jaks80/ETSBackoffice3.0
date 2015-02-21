@@ -9,7 +9,6 @@ import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.task.AccountingDocTask;
 import com.ets.fe.accounts.task.NewPaymentTask;
-import static com.ets.fe.acdoc.gui.report.TSalesInvoiceReportingFrame.client_type;
 import com.ets.fe.client.model.Contactable;
 import com.ets.fe.os.model.AdditionalCharge;
 import com.ets.fe.pnr.model.Pnr;
@@ -237,7 +236,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
                     remark = remark + " / " + doc.getPayment().getRemark();
                 }
             }
-            model.insertRow(row, new Object[]{doc.getType(), remark, doc.getDocumentedAmount(), DateUtil.dateToString(doc.getDocIssueDate())});
+            model.insertRow(row, new Object[]{doc.getType(), remark, doc.getDocumentedAmount().abs(), DateUtil.dateToString(doc.getDocIssueDate())});
             row++;
         }
     }

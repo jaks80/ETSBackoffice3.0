@@ -2,7 +2,6 @@ package com.ets.fe;
 
 import com.ets.fe.app.model.User;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -22,11 +21,11 @@ public abstract class PersistentObject implements Serializable {
     @XmlElement
     private Long id;
     @XmlElement
-    private Date createdOn;
+    private Date createdOn = new java.util.Date();
     @XmlElement
     private Date lastModified;
     @XmlElement
-    private User createdBy;
+    private User createdBy = Application.getLoggedOnUser();
     @XmlElement
     private User lastModifiedBy;
 
@@ -75,13 +74,9 @@ public abstract class PersistentObject implements Serializable {
         return hash;
     }
 
-    protected void updateObjectProperties() {
-        Date date = new Date();
-        if (createdOn == null) {
-            createdOn = new Timestamp(date.getTime());
-        }
-
-        setLastModified(new Timestamp(date.getTime()));
+    public void recordUpdateBy() {
+        setLastModified(new java.util.Date());
+        setLastModifiedBy(Application.getLoggedOnUser());
     }
 
     public Date getCreatedOn() {

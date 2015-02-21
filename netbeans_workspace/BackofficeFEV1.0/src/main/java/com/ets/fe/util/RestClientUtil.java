@@ -2,11 +2,24 @@ package com.ets.fe.util;
 
 import com.amadeus.air.AIR;
 import com.ets.fe.APIConfig;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Response;
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 /**
  *
@@ -16,58 +29,137 @@ public class RestClientUtil {
 
     private static final String domain = APIConfig.get("ws.domain");
 
-    public synchronized static ResteasyWebTarget getWebTarget(String destUrl) {
-        String url = domain + destUrl;
-        ResteasyClient client = new ResteasyClientBuilder().build();
-        ResteasyWebTarget target = client.target(url);
-        System.out.println("URL: " + url);
-        return target;
-    }
-
     public synchronized static <T> T getEntity(final Class<T> type, String destUrl, T entity) {
-
-        Response response = getWebTarget(destUrl).request().get();
+        HttpClient httpClient = HttpClientBuilder.create().build();
         try {
-            entity = (T) response.readEntity(type);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            HttpGet httpget = new HttpGet(buildURL(destUrl));
+            httpget.addHeader("accept", "application/xml");
+            HttpResponse response = httpClient.execute(httpget);
+            HttpEntity httpEntity = response.getEntity();
+            String apiOutput = EntityUtils.toString(httpEntity);
 
-        response.close();
+            entity = xmlToObject(type, entity, apiOutput);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+
+        }
         return entity;
     }
 
     public synchronized static Integer postAIR(String destUrl, AIR air) {
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        int status = 0;
 
-        Response response = getWebTarget(destUrl).request().post(Entity.entity(air, "application/xml"));
-        response.close();
-        return response.getStatus();
+        try {
+            HttpPost httppost = new HttpPost(buildURL(destUrl));
+            httppost.setEntity(objectToXML(AIR.class, air));
+            httppost.addHeader("content-type", "application/xml");
+
+            HttpResponse response = httpClient.execute(httppost);
+            status = response.getStatusLine().getStatusCode();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+
+        }
+        return status;
     }
 
     public synchronized static Integer deleteById(String destUrl) {
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        Integer status = 0;
+        try {
+            HttpDelete httpDelete = new HttpDelete(buildURL(destUrl));
+            httpDelete.addHeader("accept", "application/xml");
 
-        Response response = getWebTarget(destUrl).request().delete();
-        response.close();
-        return response.getStatus();
+            HttpResponse response = httpClient.execute(httpDelete);
+            status = response.getStatusLine().getStatusCode();
+            return status;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return status;
     }
 
     public synchronized static <T> T postEntity(final Class<T> type, String destUrl, T entity) {
         T persistentEntity = null;
+        HttpClient httpClient = HttpClientBuilder.create().build();
         try {
-            Response response = getWebTarget(destUrl).request().post(Entity.entity(entity, "application/xml"));
-            persistentEntity = response.readEntity(type);            
-            response.close();
-        } catch (Exception e) {
+            HttpPost httppost = new HttpPost(buildURL(destUrl));
+            httppost.setEntity(objectToXML(type, entity));
+            httppost.addHeader("content-type", "application/xml");
+            httppost.addHeader("accept", "application/xml");
+            HttpResponse response = httpClient.execute(httppost);
+            HttpEntity httpEntity = response.getEntity();
+            String apiOutput = EntityUtils.toString(httpEntity);
+
+            persistentEntity = xmlToObject(type, entity, apiOutput);
+        } catch (IOException e) {
             e.printStackTrace();
+        } finally {
         }
+
         return persistentEntity;
     }
 
-    public synchronized static <T> T putEntity(final Class<T> type, String path, T entity) {
+    public synchronized static <T> T putEntity(final Class<T> type, String destUrl, T entity) {
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        T persistentEntity = null;
 
-        Response response = getWebTarget(path).request().put(Entity.entity(entity, "application/xml"));
-        T persistentEntity = response.readEntity(type);
-        response.close();
+        try {
+            HttpPut httpPut = new HttpPut(buildURL(destUrl));
+            httpPut.setEntity(objectToXML(type, entity));
+            httpPut.addHeader("content-type", "application/xml");
+            httpPut.addHeader("accept", "application/xml");
+            HttpResponse response = httpClient.execute(httpPut);
+            HttpEntity httpEntity = response.getEntity();
+            String apiOutput = EntityUtils.toString(httpEntity);
+
+            persistentEntity = xmlToObject(type, entity, apiOutput);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+        }
+
         return persistentEntity;
+    }
+
+    public synchronized static String buildURL(String destUrl) {
+        String url = domain + destUrl;
+        System.out.println("URL: " + url);
+        return url;
+    }
+
+    private static <T> T xmlToObject(Class<T> type, T entity, String xml) {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(type);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            entity = (T) jaxbUnmarshaller.unmarshal(new StringReader(xml));
+
+        } catch (JAXBException ex) {
+            ex.printStackTrace();
+        }
+        return entity;
+    }
+
+    private static <T> StringEntity objectToXML(Class<T> type, T entity) {
+        StringEntity stringEntity = null;
+
+        try {
+            StringWriter writer = new StringWriter();
+            JAXBContext jaxbContext = JAXBContext.newInstance(type);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.marshal(entity, writer);
+
+            stringEntity = new StringEntity(writer.getBuffer().toString(), "UTF-8");
+
+        } catch (JAXBException ex) {
+            ex.printStackTrace();
+        }
+
+        return stringEntity;
     }
 }

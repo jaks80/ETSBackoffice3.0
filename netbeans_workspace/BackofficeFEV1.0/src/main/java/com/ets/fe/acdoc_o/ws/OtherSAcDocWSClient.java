@@ -23,6 +23,7 @@ public class OtherSAcDocWSClient {
     }
 
     public OtherSalesAcDoc update(OtherSalesAcDoc otherSalesAcDoc) {
+        otherSalesAcDoc.recordUpdateBy();
         String url = APIConfig.get("ws.osacdoc.update");
         OtherSalesAcDoc persistedDoc = RestClientUtil.postEntity(OtherSalesAcDoc.class, url, otherSalesAcDoc);
         return persistedDoc;
@@ -34,10 +35,10 @@ public class OtherSAcDocWSClient {
         return status;
     }
 
-    public Integer _void(long id) {
-        String url = APIConfig.get("ws.osacdoc.void") + id;
-        Integer status = RestClientUtil.deleteById(url);
-        return status;
+    public OtherSalesAcDoc _void(OtherSalesAcDoc otherSalesAcDoc) {
+        String url = APIConfig.get("ws.osacdoc.void");
+        otherSalesAcDoc = RestClientUtil.putEntity(OtherSalesAcDoc.class, url, otherSalesAcDoc);
+        return otherSalesAcDoc;
     }
 
     public OtherSalesAcDoc getbyId(long id) {

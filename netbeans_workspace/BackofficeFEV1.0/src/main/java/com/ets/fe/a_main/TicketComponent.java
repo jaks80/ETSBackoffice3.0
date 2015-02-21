@@ -241,6 +241,8 @@ public class TicketComponent extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblTicket.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        tblTicket.setSelectionBackground(new java.awt.Color(255, 255, 153));
         tblTicket.setSortable(false);
         tblTicket.getTableHeader().setReorderingAllowed(false);
         tblTicket.getSelectionModel().addListSelectionListener(tblTicketListener);

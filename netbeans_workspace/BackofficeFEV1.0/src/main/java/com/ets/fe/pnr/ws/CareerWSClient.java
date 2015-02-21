@@ -23,7 +23,7 @@ public class CareerWSClient {
         return RestClientUtil.getEntity(Careers.class, url, new Careers());
     }
 
-    public void save(Airline career) {
+    public void save(Airline career) {        
         String url = APIConfig.get("ws.career.save");
         RestClientUtil.putEntity(Airline.class, url, new Airline());
     }

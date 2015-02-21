@@ -91,11 +91,22 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
 
     private void _voidDocument() {
         taskType = "VOID";
+        AccountingDocument doc = null;
+        int index = -1;
         if (tabAcDoc.getSelectedIndex() == 0) {
-            int index = tblSales.getSelectedRow();
-            if (index != -1) {
+            if (tabAcDoc.getSelectedIndex() == 0) {
+                index = tblSales.getSelectedRow();
+                doc = new TicketingSalesAcDoc();
+            } else if (tabAcDoc.getSelectedIndex() == 1) {
+                index = tblPurchase.getSelectedRow();
+                doc = new TicketingPurchaseAcDoc();
+            }
+
+            if (index != -1 && doc != null) {
                 Long id = tSAcDocList.get(index).getId();
-                accountingDocTask = new AccountingDocTask(id, Enums.SaleType.SALES, "VOID");
+                doc.setId(id);
+                doc.recordUpdateBy();
+                accountingDocTask = new AccountingDocTask(doc, Enums.SaleType.SALES, "VOID");
                 accountingDocTask.addPropertyChangeListener(this);
                 accountingDocTask.execute();
             }
