@@ -9,10 +9,10 @@ public class Enums {
     public enum UserType {
 
         /**
-         * VD - Vendor IT, SU - Super User, SM - Sales Manager, GS - General
+         * SU - Super User Only Software Vendor,AD - Admin, SM - Sales Manager, GS - General
          * Sales
          */
-        SU(0), SM(1), GS(2), VD(3);
+        GS(0), SM(1), AD(2),SU(3);
         private int id;
 
         UserType(int id) {
@@ -26,13 +26,13 @@ public class Enums {
         public static String valueOf(int id) {
             switch (id) {
                 case 0:
-                    return SU.toString();
+                    return GS.toString();
                 case 1:
                     return SM.toString();
                 case 2:
-                    return GS.toString();
+                    return AD.toString();
                 case 3:
-                    return VD.toString();
+                    return SU.toString();
                 default:
                     return null;
             }

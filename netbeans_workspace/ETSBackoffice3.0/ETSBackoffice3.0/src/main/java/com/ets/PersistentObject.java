@@ -2,7 +2,6 @@ package com.ets;
 
 import com.ets.settings.domain.User;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -10,7 +9,10 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -26,12 +28,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Access(AccessType.PROPERTY)
 public abstract class PersistentObject implements Serializable {
 
+    private static final long serialVersionUID = 1L;  
+    
     @XmlElement
     private Long id;
     @XmlElement
-    private Timestamp createdOn;
+    private Date createdOn;
     @XmlElement
-    private Timestamp lastModified;
+    private Date lastModified;
     @XmlElement
     private User createdBy;
     @XmlElement
@@ -67,28 +71,21 @@ public abstract class PersistentObject implements Serializable {
         return true;
     }
 
-    protected void updateObjectProperties() {
-        Date date = new Date();
-        if (createdOn == null) {
-            createdOn = new Timestamp(date.getTime());
-        }
-
-        lastModified = new Timestamp(date.getTime());
-    }
-
-    public Timestamp getCreatedOn() {
+    @Temporal(javax.persistence.TemporalType.DATE)
+    public Date getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(Timestamp createdOn) {
+    public void setCreatedOn(Date createdOn) {
         this.createdOn = createdOn;
     }
 
-    public Timestamp getLastModified() {
+    @Temporal(javax.persistence.TemporalType.DATE)
+    public Date getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Timestamp lastModified) {
+    public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
     }
 
@@ -103,6 +100,8 @@ public abstract class PersistentObject implements Serializable {
         this.id = id;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "created_by")
     public User getCreatedBy() {
         return createdBy;
     }
@@ -111,6 +110,8 @@ public abstract class PersistentObject implements Serializable {
         this.createdBy = createdBy;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "lastmodified_by")
     public User getLastModifiedBy() {
         return lastModifiedBy;
     }

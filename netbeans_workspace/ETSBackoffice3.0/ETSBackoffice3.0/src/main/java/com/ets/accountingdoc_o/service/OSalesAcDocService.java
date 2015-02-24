@@ -84,15 +84,19 @@ public class OSalesAcDocService {
         return true;
     }
 
-     public boolean _void(Long id) {
-        OtherSalesAcDoc doc = dao.getWithChildrenById(id);
+     public OtherSalesAcDoc _void(OtherSalesAcDoc other_doc) {
+        OtherSalesAcDoc doc = dao.getWithChildrenById(other_doc.getId());
+        
+        doc.setLastModified(other_doc.getLastModified());
+        doc.setLastModifiedBy(other_doc.getLastModifiedBy());
+        
         Set<OtherSalesAcDoc> relatedDocs = doc.getRelatedDocuments();
         if (doc.getType().equals(Enums.AcDocType.INVOICE) && !relatedDocs.isEmpty()) {
-            return false;
+            return doc;
         } else {
 
             dao.voidDocument(undefineChildren(doc));
-            return true;
+            return doc;
         }
     }
         

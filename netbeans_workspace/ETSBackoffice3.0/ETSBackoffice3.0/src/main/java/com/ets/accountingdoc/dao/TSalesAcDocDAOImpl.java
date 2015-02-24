@@ -45,8 +45,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     @Transactional(readOnly = true)
     public List<TicketingSalesAcDoc> getByPnrId(Long pnrId) {
         String hql = "select distinct a from TicketingSalesAcDoc as a "
-                + "left join fetch a.additionalChargeLines as acl "
-                + "left join fetch a.additionalChargeLines as acl "
+                + "left join fetch a.additionalChargeLines as acl "                
                 + "left join fetch acl.additionalCharge "
                 + "left join fetch a.tickets as t "
                 + "left join fetch a.relatedDocuments as a1 "
@@ -86,8 +85,9 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         Query query = getSession().createQuery(hql);
         query.setParameter("id", id);
         TicketingSalesAcDoc doc = (TicketingSalesAcDoc) query.uniqueResult();
-
-        for (TicketingSalesAcDoc rd : doc.getRelatedDocuments()) {
+        Set<TicketingSalesAcDoc> related_docs = doc.getRelatedDocuments();
+        
+        for (TicketingSalesAcDoc rd : related_docs) {
             rd.setRelatedDocuments(null);
             rd.setParent(null);
             Set<Ticket> tickets = rd.getTickets();

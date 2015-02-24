@@ -3,18 +3,12 @@ package com.ets.accounts.ws;
 import com.ets.accounts.model.Payments;
 import com.ets.accounts.model.Payment;
 import com.ets.accounts.service.PaymentService;
-import com.ets.accountingdoc.model.InvoiceReport;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
 import java.util.List;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -33,24 +27,28 @@ public class PaymentWS {
 
     @POST
     @Path("/new")
+    @RolesAllowed("GS")
     public Payment create(Payment payment) {
         return service.save(payment);
     }
 
     @GET
     @Path("/byid/{id}")
+    @RolesAllowed("GS")
     public Payment getById(@PathParam("id") Long id) {
         return service.findById(id);
     }
 
     @GET
     @Path("/paymentbysinv")
+    @RolesAllowed("GS")
     public Payments getPaymentBySalesInvoice(@QueryParam("invoiceid") Long invoiceid) {
         return service.findPaymentBySalesInvoice(invoiceid);
     }
 
     @GET
     @Path("/tpayment_history")
+    @RolesAllowed("SM")
     public Payments ticketingPaymentHistory(
             @QueryParam("clienttype") Enums.ClientType clienttype,
             @QueryParam("clientid") Long clientid,
@@ -69,6 +67,7 @@ public class PaymentWS {
     
     @GET
     @Path("/opayment_history")
+    @RolesAllowed("SM")
     public Payments otherPaymentHistory(
             @QueryParam("clienttype") Enums.ClientType clienttype,
             @QueryParam("clientid") Long clientid,

@@ -17,6 +17,8 @@ public interface TPurchaseAcDocDAO extends GenericDAO<TicketingPurchaseAcDoc, Lo
 
     public List<TicketingPurchaseAcDoc> getByPnrId(Long pnrId);
     
+    public boolean voidDocument(TicketingPurchaseAcDoc doc);
+    
     public TicketingPurchaseAcDoc getByTicketId(Long ticketId);
 
     public List<TicketingPurchaseAcDoc> getByGDSPnr(String GdsPnr);

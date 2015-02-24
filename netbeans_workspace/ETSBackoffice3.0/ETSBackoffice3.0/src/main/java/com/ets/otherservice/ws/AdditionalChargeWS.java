@@ -4,6 +4,7 @@ import com.ets.otherservice.domain.AdditionalCharge;
 import com.ets.otherservice.domain.AdditionalCharges;
 import com.ets.otherservice.service.AdditionalChargeService;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -31,6 +32,7 @@ public class AdditionalChargeWS {
 
     @GET
     @Path("/additionalcharges")
+    @RolesAllowed("GS")
     public AdditionalCharges findAll() {
 
         List<AdditionalCharge> list = service.findAll();
@@ -41,18 +43,21 @@ public class AdditionalChargeWS {
 
     @POST
     @Path("/new")
+    @RolesAllowed("SU")
     public AdditionalCharge create(AdditionalCharge additionalCharge) {
         return service.saveorUpdate(additionalCharge);
     }
 
     @PUT
     @Path("/update")
+    @RolesAllowed("SM")
     public AdditionalCharge update(AdditionalCharge additionalCharge) {
         return service.saveorUpdate(additionalCharge);
     }
 
     @DELETE
     @Path("/delete/{id}")
+    @RolesAllowed("SU")
     public Response delete(@PathParam("id") long id) {
         return Response.status(200).build();
     }

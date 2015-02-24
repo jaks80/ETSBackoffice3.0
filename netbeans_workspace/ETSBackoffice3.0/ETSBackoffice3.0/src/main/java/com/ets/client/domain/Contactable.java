@@ -4,8 +4,6 @@ import com.ets.PersistentObject;
 import java.io.Serializable;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;

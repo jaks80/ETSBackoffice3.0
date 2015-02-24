@@ -2,7 +2,7 @@ package com.ets.pnr.ws;
 
 import com.ets.report.model.TicketSaleReport;
 import com.ets.pnr.service.TicketService;
-import com.ets.util.Enums;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -24,6 +24,7 @@ public class TicketWS {
     @GET
     @Produces("application/xml")
     @Path("/gds-salereport")
+    @RolesAllowed("AD")
     public TicketSaleReport saleReport(@QueryParam("ticketStatus") String ticketStatus, 
                               @QueryParam("airLineCode") String airLineCode, 
                               @QueryParam("dateStart") String dateStart, 

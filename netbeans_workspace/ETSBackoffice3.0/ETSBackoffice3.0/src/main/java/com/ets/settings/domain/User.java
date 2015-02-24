@@ -1,13 +1,13 @@
 package com.ets.settings.domain;
 
-import com.ets.client.domain.Contactable;
+import com.ets.PersistentObject;
 import com.ets.util.Enums;
 import java.io.Serializable;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -22,9 +22,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.NONE)
 @Table(name = "bo_user")
 @Access(AccessType.PROPERTY)
-public class User extends Contactable implements Serializable{
+public class User extends PersistentObject implements Serializable{
     
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;    
     
     @XmlElement
     private String loginID;
@@ -43,6 +43,7 @@ public class User extends Contactable implements Serializable{
     
     }
 
+    @Column(unique = true)
     public String getLoginID() {
         return loginID;
     }
@@ -82,9 +83,7 @@ public class User extends Contactable implements Serializable{
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
-
-
-    @Override    
+   
     public String calculateFullName() {
       return this.surName + "/" + this.foreName;
     }

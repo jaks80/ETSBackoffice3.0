@@ -3,6 +3,7 @@ package com.ets.air.ws;
 import com.ets.air.AIR;
 import com.ets.air.AIRReader;
 import javax.annotation.Resource;
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -25,6 +26,7 @@ public class AirWS {
     
     @POST
     @Path("/new")
+    @PermitAll
     public Response newAir(AIR air){
         reader.setAir(air);
         reader.startReading();

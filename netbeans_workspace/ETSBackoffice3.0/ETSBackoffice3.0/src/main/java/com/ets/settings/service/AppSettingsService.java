@@ -23,7 +23,7 @@ public class AppSettingsService {
     AgentService agentService;
 
     public static Letterhead letterhead;
-    
+
     public MainAgent getMainAgent() {
         return agentService.getMainAgent();
     }
@@ -33,30 +33,35 @@ public class AppSettingsService {
     }
 
     public AppSettings getSettings() {
-        
+
         AppSettings settings = dao.findByID(AppSettings.class, Long.parseLong("1"));
+        if(settings == null){
+         return null;
+        }
         
         MainAgent agent = getMainAgent();
-        letterhead = new Letterhead();
-        letterhead.setCompanyName(agent.getName());
-        letterhead.setAddress(agent.getFullAddressCRSeperated());
+        if (agent != null) {
+            letterhead = new Letterhead();
+            letterhead.setCompanyName(agent.getName());
+            letterhead.setAddress(agent.getFullAddressCRSeperated());
 
-        StringBuilder sb = new StringBuilder();
-        if (agent.getAtol() != null) {
-            sb.append("ATOL: ").append(agent.getAtol()).append(" ");
-        }
+            StringBuilder sb = new StringBuilder();
+            if (agent.getAtol() != null) {
+                sb.append("ATOL: ").append(agent.getAtol()).append(" ");
+            }
 
-        if (agent.getIata() != null) {
-            sb.append("IATA: ").append(agent.getIata()).append(" ");
-        }
+            if (agent.getIata() != null) {
+                sb.append("IATA: ").append(agent.getIata()).append(" ");
+            }
 
-        if (agent.getAbta() != null) {
-            sb.append("ABTA: ").append(agent.getAbta()).append(" ");
-        }
-
-        letterhead.setFooter(sb.toString());    
-        letterhead.settInvTAndC(settings.gettInvTAndC());
-        letterhead.setoInvTAndC(settings.getoInvTAndC());
+            if (agent.getAbta() != null) {
+                sb.append("ABTA: ").append(agent.getAbta()).append(" ");
+            }
+            letterhead.setFooter(sb.toString());
+            letterhead.settInvTAndC(settings.gettInvTAndC());
+            letterhead.setoInvTAndC(settings.getoInvTAndC());
+        }        
+        
         return settings;
     }
 

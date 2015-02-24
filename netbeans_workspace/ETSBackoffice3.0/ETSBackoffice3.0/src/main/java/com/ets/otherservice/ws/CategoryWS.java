@@ -4,6 +4,7 @@ import com.ets.otherservice.domain.Categories;
 import com.ets.otherservice.domain.Category;
 import com.ets.otherservice.service.CategoryService;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -31,6 +32,7 @@ public class CategoryWS {
 
     @GET
     @Path("/categories")
+    @RolesAllowed("GS")
     public Categories findAll() {
 
         List<Category> list = service.findAll();
@@ -41,18 +43,21 @@ public class CategoryWS {
 
     @POST
     @Path("/new")
+    @RolesAllowed("SM")
     public Category create(Category category) {
         return service.saveorUpdate(category);
     }
 
     @PUT
     @Path("/update")
+    @RolesAllowed("SM")
     public Category update(Category category) {
         return service.saveorUpdate(category);
     }
 
     @DELETE
     @Path("/delete/{id}")
+    @RolesAllowed("SU") 
     public Response delete(@PathParam("id") long id) {
         return Response.status(200).build();
     }

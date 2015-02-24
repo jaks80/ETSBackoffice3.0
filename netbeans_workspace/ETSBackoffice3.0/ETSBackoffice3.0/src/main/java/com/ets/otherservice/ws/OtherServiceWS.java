@@ -4,6 +4,7 @@ import com.ets.otherservice.domain.OtherService;
 import com.ets.otherservice.domain.OtherServices;
 import com.ets.otherservice.service.OtherServiceService;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -31,6 +32,7 @@ public class OtherServiceWS {
 
     @GET
     @Path("/otherservices")
+    @RolesAllowed("GS")
     public OtherServices find() {
 
         List<OtherService> list = service.findAll();
@@ -41,18 +43,21 @@ public class OtherServiceWS {
 
     @POST
     @Path("/new")
+    @RolesAllowed("SM")
     public OtherService create(OtherService otherService) {
         return service.saveorUpdate(otherService);
     }
 
     @PUT
     @Path("/update")
+    @RolesAllowed("SM")
     public OtherService update(OtherService otherService) {
         return service.saveorUpdate(otherService);
     }
 
     @DELETE
     @Path("/delete/{id}")
+    @RolesAllowed("AD")
     public Response delete(@PathParam("id") long id) {
         return Response.status(200).build();
     }

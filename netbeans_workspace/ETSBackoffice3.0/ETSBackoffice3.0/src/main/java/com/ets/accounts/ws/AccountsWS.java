@@ -1,11 +1,11 @@
 package com.ets.accounts.ws;
 
 import com.ets.accounts.domain.AccountsReport;
-import com.ets.accountingdoc.model.InvoiceReport;
 import com.ets.accounts.service.AccountsService;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -29,6 +29,7 @@ public class AccountsWS {
     
     @GET
     @Path("/saccounts_history")
+    @RolesAllowed("SM")
     public AccountsReport salesAccountsHistory(
             @QueryParam("clienttype") Enums.ClientType clienttype,
             @QueryParam("clientid") Long clientid,
@@ -45,6 +46,7 @@ public class AccountsWS {
     
     @GET
     @Path("/paccounts_history")
+    @RolesAllowed("SM")
     public AccountsReport purchaseAccountsHistory(
             @QueryParam("clienttype") Enums.ClientType clienttype,
             @QueryParam("clientid") Long clientid,
@@ -61,6 +63,7 @@ public class AccountsWS {
     
     @GET
     @Path("/oaccounts_history")
+    @RolesAllowed("SM")
     public AccountsReport otherAccountsHistory(
             @QueryParam("clienttype") Enums.ClientType clienttype,
             @QueryParam("clientid") Long clientid,

@@ -9,10 +9,12 @@ import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -36,6 +38,7 @@ public class TicketingSalesAcDocWS {
 
     @GET
     @Path("/byid/{id}")
+    @RolesAllowed("GS")
     public TicketingSalesAcDoc getbyId(@PathParam("id") long id) {
         TicketingSalesAcDoc doc = service.getWithChildrenById(id);
         return doc;
@@ -43,6 +46,7 @@ public class TicketingSalesAcDocWS {
 
     @GET
     @Path("/byref/{refference}")
+    @RolesAllowed("GS")
     public TicketingSalesAcDocs getByRefNo(@PathParam("refference") Integer refference) {
         List<TicketingSalesAcDoc> list = service.getByReffference(refference);
         TicketingSalesAcDocs docs = new TicketingSalesAcDocs();
@@ -52,6 +56,7 @@ public class TicketingSalesAcDocWS {
 
     @GET
     @Path("/bypnr/{pnr}")
+    @RolesAllowed("GS")
     public TicketingSalesAcDocs getByGDSPnr(@PathParam("pnr") String pnr) {
         List<TicketingSalesAcDoc> list = service.getByGDSPnr(pnr);
         TicketingSalesAcDocs docs = new TicketingSalesAcDocs();
@@ -61,6 +66,7 @@ public class TicketingSalesAcDocWS {
 
     @GET
     @Path("/bypnrid")
+    @RolesAllowed("GS")
     public TicketingSalesAcDocs getByPnrId(@QueryParam("pnrId") Long pnrId) {
         List<TicketingSalesAcDoc> list = service.getByPnrId(pnrId);
         TicketingSalesAcDocs docs = new TicketingSalesAcDocs();
@@ -70,6 +76,7 @@ public class TicketingSalesAcDocWS {
 
     @GET
     @Path("/draftdoc")
+    @RolesAllowed("GS")
     public TicketingSalesAcDoc newDraftDocument(@QueryParam("pnrid") Long pnrid) {
         TicketingSalesAcDoc doc = service.newDraftDocument(pnrid);
         return doc;
@@ -77,6 +84,7 @@ public class TicketingSalesAcDocWS {
 
     @POST
     @Path("/newdoc")
+    @RolesAllowed("GS")
     public TicketingSalesAcDoc createNewDocument(TicketingSalesAcDoc ticketingSalesAcDoc) {
         TicketingSalesAcDoc doc = service.newDocument(ticketingSalesAcDoc);
         return doc;
@@ -84,23 +92,22 @@ public class TicketingSalesAcDocWS {
 
     @DELETE
     @Path("/delete/{id}")
+    @RolesAllowed("SM")
     public Response delete(@PathParam("id") long id) {
         return Response.status(200).build();
     }
 
-    @DELETE
-    @Path("/void/{id}")
-    public Response _void(@PathParam("id") long id) {
-        boolean success = service._void(id);
-        if (success) {
-            return Response.status(200).build();
-        } else {
-            return Response.status(400).build();
-        }
+    @PUT
+    @Path("/void")
+    @RolesAllowed("SM")
+    public TicketingSalesAcDoc _void(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        ticketingSalesAcDoc = service._void(ticketingSalesAcDoc);
+        return ticketingSalesAcDoc;
     }
 
     @GET
     @Path("/due_invoices")
+    @RolesAllowed("SM")
     public TicketingSalesAcDocs outstandingInvoices(
             @QueryParam("doctype") Enums.AcDocType doctype,
             @QueryParam("clienttype") Enums.ClientType clienttype,
@@ -121,8 +128,14 @@ public class TicketingSalesAcDocWS {
     
     //*****************Reporting Methods are Bellow******************//
     
+    /**
+     * This web service is to print invoice.
+     * @param id
+     * @return 
+     */
     @GET
     @Path("/model/byid/{id}")
+    @RolesAllowed("GS")
     public InvoiceModel getModelbyId(@PathParam("id") long id) {
         InvoiceModel model = service.getModelbyId(id);
         return model;
@@ -130,6 +143,7 @@ public class TicketingSalesAcDocWS {
     
     @GET
     @Path("/acdoc_report")
+    @RolesAllowed("SM")
     public InvoiceReport outstandingDocumentReport(
             @QueryParam("doctype") Enums.AcDocType doctype,
             @QueryParam("clienttype") Enums.ClientType clienttype,
@@ -147,6 +161,7 @@ public class TicketingSalesAcDocWS {
 
     @GET
     @Path("/acdoc_history")
+    @RolesAllowed("SM")
     public InvoiceReport documentHistoryReport(
             @QueryParam("clienttype") Enums.ClientType clienttype,
             @QueryParam("clientid") Long clientid,

@@ -4,6 +4,7 @@ import com.ets.client.collection.Agents;
 import com.ets.client.domain.Agent;
 import com.ets.client.service.AgentService;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -32,6 +33,7 @@ public class AgentWS {
 
     @GET
     @Path("/agents")
+    @RolesAllowed("SM")
     public Agents find(@QueryParam("name") String name,
             @QueryParam("postCode") String postCode,
             @QueryParam("officeID") String officeID) {
@@ -44,6 +46,7 @@ public class AgentWS {
 
     @GET
     @Path("/ticketingagents")
+    @RolesAllowed("GS")
     public Agents findTicketingAgents() {
 
         List<Agent> list = service.findTicketingAgents();
@@ -54,6 +57,7 @@ public class AgentWS {
     
     @GET
     @Path("/agents/kw")
+    @RolesAllowed("GS")
     public Agents find(@QueryParam("keyword") String keyword) {
 
         List<Agent> list = service.findAll(null, null, keyword);
@@ -68,18 +72,21 @@ public class AgentWS {
     
     @POST
     @Path("/new")
+    @RolesAllowed("SM")
     public Agent create(Agent agent) {
         return service.saveorUpdate(agent);
     }
 
     @PUT
     @Path("/update")
+    @RolesAllowed("SM")
     public Agent update(Agent agent) {
         return service.saveorUpdate(agent);
     }
 
     @DELETE
     @Path("/delete/{id}")
+    @RolesAllowed("SM")
     public Response delete(@PathParam("id") long id) {
         return Response.status(200).build();
     }

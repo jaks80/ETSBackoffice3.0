@@ -234,20 +234,21 @@ public class TSalesAcDocService {
      * If invoice has related documents it is not possible to void invoice while
      * it has children. Children needs to be VOID first.
      *
-     * @param id
+     * @param ticketingSalesAcDoc
      * @return
      */
-    public boolean _void(Long id) {
-        TicketingSalesAcDoc doc = dao.getWithChildrenById(id);
-        //Set<TicketingSalesAcDoc> relatedDocs = AcDocUtil.filterVoidRelatedDocuments(doc.getRelatedDocuments());
-        //Whats the point filturing void children
+    public TicketingSalesAcDoc _void(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        TicketingSalesAcDoc doc = dao.getWithChildrenById(ticketingSalesAcDoc.getId());
+        doc.setLastModified(ticketingSalesAcDoc.getLastModified());
+        doc.setLastModifiedBy(ticketingSalesAcDoc.getLastModifiedBy());
+        
         Set<TicketingSalesAcDoc> relatedDocs = doc.getRelatedDocuments();
         if (doc.getType().equals(Enums.AcDocType.INVOICE) && !relatedDocs.isEmpty()) {
-            return false;
+            return doc;
         } else {
 
             dao.voidDocument(undefineChildren(doc));
-            return true;
+            return doc;
         }
     }
 
@@ -272,7 +273,7 @@ public class TSalesAcDocService {
                 related.setParent(null);
             }
             inv.setAdditionalChargeLines(null);
-            //inv.setTickets(null);
+            AcDocUtil.undefineTSAcDoc(inv, inv.getTickets());            
             //inv.setRelatedDocuments(null);
             inv.getPnr().setTickets(null);
             inv.getPnr().setRemarks(null);

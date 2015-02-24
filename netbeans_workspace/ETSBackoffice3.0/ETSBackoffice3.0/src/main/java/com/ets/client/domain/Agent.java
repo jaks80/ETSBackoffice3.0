@@ -121,8 +121,7 @@ public class Agent extends Contactable implements Serializable{
         this.contactPerson = contactPerson;
     }
 
-    @Override
-    @Transient
+    @Override    
     public String calculateFullName() {
         return this.name;
     }

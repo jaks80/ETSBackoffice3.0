@@ -2,7 +2,6 @@ package com.ets.accountingdoc.dao;
 
 import com.ets.GenericDAOImpl;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
-import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums;
 import java.math.BigDecimal;
@@ -191,5 +190,10 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
 
         Object balance = query.uniqueResult();
         return new BigDecimal(balance.toString());
+    }
+
+    @Override
+    public boolean voidDocument(TicketingPurchaseAcDoc doc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

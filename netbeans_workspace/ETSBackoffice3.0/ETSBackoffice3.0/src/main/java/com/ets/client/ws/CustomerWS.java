@@ -4,6 +4,7 @@ import com.ets.client.collection.Customers;
 import com.ets.client.domain.Customer;
 import com.ets.client.service.CustomerService;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -32,6 +33,7 @@ public class CustomerWS {
 
     @GET
     @Path("/customers")
+    @RolesAllowed("SM")
     public Customers find(@QueryParam("surName") String surName,
             @QueryParam("foreName") String foreName,
             @QueryParam("postCode") String postCode,
@@ -45,19 +47,21 @@ public class CustomerWS {
 
     @POST
     @Path("/new")
+    @RolesAllowed("GS")
     public Customer create(Customer customer) {
-
         return service.saveorUpdate(customer);
     }
 
     @PUT
     @Path("/update")
+    @RolesAllowed("GS")
     public Customer update(Customer customer) {
         return service.saveorUpdate(customer);
     }
 
     @DELETE
     @Path("/delete/{id}")
+    @RolesAllowed("SM")
     public Response delete(@PathParam("id") long id) {
         return Response.status(200).build();
     }

@@ -2,7 +2,6 @@ package com.ets.accountingdoc_o.ws;
 
 import com.ets.accountingdoc_o.model.OtherSalesAcDocs;
 import com.ets.accountingdoc.domain.OtherSalesAcDoc;
-import com.ets.accountingdoc.model.InvoiceModel;
 import com.ets.accountingdoc_o.model.InvoiceReportOther;
 import com.ets.accountingdoc_o.model.OtherInvoiceModel;
 import com.ets.accountingdoc_o.service.OSalesAcDocService;
@@ -10,14 +9,8 @@ import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
 import java.util.List;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,12 +30,14 @@ public class OtherSalesAcDocWS {
 
     @POST
     @Path("/new")
+    @RolesAllowed("GS")
     public OtherSalesAcDoc create(OtherSalesAcDoc doc) {
         return service.newDocument(doc);
     }
 
     @GET
     @Path("/byid/{id}")
+    @RolesAllowed("GS")
     public OtherSalesAcDoc getbyId(@PathParam("id") long id) {
         OtherSalesAcDoc doc = service.getWithChildrenById(id);
         return doc;
@@ -50,6 +45,7 @@ public class OtherSalesAcDocWS {
 
     @GET
     @Path("/byref/{refference}")
+    @RolesAllowed("GS")
     public OtherSalesAcDocs getByRefNo(@PathParam("refference") Integer refference) {
         List<OtherSalesAcDoc> list = service.getByReffference(refference);
         OtherSalesAcDocs docs = new OtherSalesAcDocs();
@@ -59,6 +55,7 @@ public class OtherSalesAcDocWS {
 
     @DELETE
     @Path("/delete/{id}")
+    @RolesAllowed("SM")
     public Response delete(@PathParam("id") long id) {
         boolean success = service.delete(id);
         if (success) {
@@ -68,19 +65,17 @@ public class OtherSalesAcDocWS {
         }
     }
 
-    @DELETE
-    @Path("/void/{id}")
-    public Response _void(@PathParam("id") long id) {
-        boolean success = service._void(id);
-        if (success) {
-            return Response.status(200).build();
-        } else {
-            return Response.status(400).build();
-        }
+    @PUT
+    @Path("/void")
+    @RolesAllowed("SM")
+    public OtherSalesAcDoc _void(OtherSalesAcDoc doc) {
+        doc = service._void(doc);
+        return doc;
     }
 
     @GET
     @Path("/due_invoices")
+    @RolesAllowed("SM")
     public OtherSalesAcDocs outstandingInvoices(
             @QueryParam("doctype") Enums.AcDocType doctype,
             @QueryParam("clienttype") Enums.ClientType clienttype,
@@ -103,6 +98,7 @@ public class OtherSalesAcDocWS {
     
     @GET
     @Path("/model/byid/{id}")
+    @RolesAllowed("GS")
     public OtherInvoiceModel getModelbyId(@PathParam("id") long id) {
         OtherInvoiceModel model = service.getModelbyId(id);
         return model;
@@ -110,6 +106,7 @@ public class OtherSalesAcDocWS {
     
     @GET
     @Path("/acdoc_report")
+    @RolesAllowed("SM")
     public InvoiceReportOther outstandingDocumentReport(
             @QueryParam("doctype") Enums.AcDocType doctype,
             @QueryParam("clienttype") Enums.ClientType clienttype,
@@ -128,6 +125,7 @@ public class OtherSalesAcDocWS {
 
     @GET
     @Path("/acdoc_history")
+    @RolesAllowed("SM")
     public InvoiceReportOther documentHistoryReport(
             @QueryParam("clienttype") Enums.ClientType clienttype,
             @QueryParam("clientid") Long clientid,

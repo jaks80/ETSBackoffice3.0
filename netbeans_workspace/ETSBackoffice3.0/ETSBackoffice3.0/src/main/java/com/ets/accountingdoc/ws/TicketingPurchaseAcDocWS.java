@@ -1,15 +1,14 @@
 package com.ets.accountingdoc.ws;
 
 import com.ets.accountingdoc.collection.TicketingPurchaseAcDocs;
-import com.ets.accountingdoc.collection.TicketingSalesAcDocs;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
-import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accountingdoc.service.TPurchaseAcDocService;
 import com.ets.accountingdoc.model.InvoiceReport;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,7 @@ public class TicketingPurchaseAcDocWS {
 
     @GET
     @Path("/byid/{id}")
+    @RolesAllowed("GS")
     public TicketingPurchaseAcDoc getbyId(@PathParam("id") long id) {
         TicketingPurchaseAcDoc doc = service.getWithChildrenById(id);
         return doc;
@@ -37,6 +37,7 @@ public class TicketingPurchaseAcDocWS {
 
     @GET
     @Path("/bypnr/{pnr}")
+    @RolesAllowed("GS")
     public TicketingPurchaseAcDocs getByGDSPnr(@PathParam("pnr") String pnr) {
         List<TicketingPurchaseAcDoc> list = service.getByGDSPnr(pnr);
         TicketingPurchaseAcDocs docs = new TicketingPurchaseAcDocs();
@@ -46,6 +47,7 @@ public class TicketingPurchaseAcDocWS {
 
     @GET
     @Path("/bypnrid")
+    @RolesAllowed("GS")
     public TicketingPurchaseAcDocs getByPnrId(@QueryParam("pnrId") Long pnrId) {
         List<TicketingPurchaseAcDoc> list = service.getByPnrId(pnrId);
         TicketingPurchaseAcDocs docs = new TicketingPurchaseAcDocs();
@@ -55,6 +57,7 @@ public class TicketingPurchaseAcDocWS {
 
     @GET
     @Path("/byref/{refference}")
+    @RolesAllowed("GS")
     public TicketingPurchaseAcDocs getByRefNo(@PathParam("refference") Integer refference) {
         List<TicketingPurchaseAcDoc> list = service.getByReffference(refference);
         TicketingPurchaseAcDocs docs = new TicketingPurchaseAcDocs();
@@ -64,30 +67,36 @@ public class TicketingPurchaseAcDocWS {
 
     @POST
     @Path("/new")
+    @RolesAllowed("GS")
     public TicketingPurchaseAcDoc create(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
         return service.saveorUpdate(ticketingPurchaseAcDoc);
     }
 
     @PUT
     @Path("/update")
+    @RolesAllowed("GS")
     public TicketingPurchaseAcDoc update(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
         return service.saveorUpdate(ticketingPurchaseAcDoc);
     }
 
+    @PUT
+    @Path("/void")
+    @RolesAllowed("SM")
+    public TicketingPurchaseAcDoc _void(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
+        ticketingPurchaseAcDoc = service._void(ticketingPurchaseAcDoc);
+        return ticketingPurchaseAcDoc;
+    }
+    
     @DELETE
     @Path("/delete/{id}")
+    @RolesAllowed("SM")
     public Response delete(@PathParam("id") long id) {
-        return Response.status(200).build();
-    }
-
-    @DELETE
-    @Path("/void/{id}")
-    public Response _void(@PathParam("id") long id) {
         return Response.status(200).build();
     }
 
     @GET
     @Path("/due_invoices")
+    @RolesAllowed("SM")
     public TicketingPurchaseAcDocs outstandingInvoices(
             @QueryParam("doctype") Enums.AcDocType doctype,
             @QueryParam("agentid") Long agentid,
@@ -108,6 +117,7 @@ public class TicketingPurchaseAcDocWS {
     //*****************Reporting Methods are Bellow******************//
     @GET
     @Path("/acdoc_report")
+    @RolesAllowed("SM")
     public InvoiceReport outstandingDocumentReport(
             @QueryParam("doctype") Enums.AcDocType doctype,
             @QueryParam("agentid") Long agentid,
@@ -125,6 +135,7 @@ public class TicketingPurchaseAcDocWS {
 
     @GET
     @Path("/acdoc_history")
+    @RolesAllowed("SM")
     public InvoiceReport documentHistoryReport(
             @QueryParam("agentid") Long agentid,
             @QueryParam("dateStart") String dateStart,

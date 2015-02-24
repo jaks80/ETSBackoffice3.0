@@ -4,6 +4,7 @@ import com.ets.pnr.domain.Remark;
 import com.ets.pnr.model.collection.Remarks;
 import com.ets.pnr.service.RemarkService;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 @Path("/remark-management")
+@Consumes("application/xml")
+@Produces("application/xml")
 public class RemarkWS {
 
     @Autowired
@@ -27,8 +30,7 @@ public class RemarkWS {
 
     @POST
     @Path("/new")
-    @Consumes("application/xml")
-    @Produces("application/xml")
+    @RolesAllowed("GS")
     public Remarks create(Remarks remarks) {
 
         if (remarks.getList().size() == 1) {
@@ -47,6 +49,7 @@ public class RemarkWS {
     @Path("/bypnrid")
     @Consumes("application/xml")
     @Produces("application/xml")
+    @RolesAllowed("GS")
     public Remarks getByPnrId(@QueryParam("pnrId") Long pnrId) {
         List<Remark> list = service.getByPnrId(pnrId);
         Remarks remarks = new Remarks();

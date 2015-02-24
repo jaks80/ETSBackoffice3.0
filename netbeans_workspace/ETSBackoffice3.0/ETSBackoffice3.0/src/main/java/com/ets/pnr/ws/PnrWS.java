@@ -4,9 +4,9 @@ import com.ets.pnr.model.collection.Pnrs;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.service.PnrService;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -24,6 +24,8 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 @Path("/pnr-management")
+@Consumes("application/xml")
+@Produces("application/xml")
 public class PnrWS {
 
     @Autowired
@@ -31,8 +33,7 @@ public class PnrWS {
 
     @POST
     @Path("/new")
-    @Consumes("application/xml")
-    @Produces("application/xml")
+    @RolesAllowed("GS")
     public Pnr create(Pnr pnr) {
         service.save(pnr);
         return pnr;
@@ -40,8 +41,7 @@ public class PnrWS {
 
     @PUT
     @Path("/update")
-    @Consumes("application/xml")
-    @Produces("application/xml")
+    @RolesAllowed("GS")
     public Pnr update(Pnr pnr) {
         service.save(pnr);
         return pnr;
@@ -49,6 +49,7 @@ public class PnrWS {
 
     @DELETE
     @Path("/delete/{id}")
+    @RolesAllowed("SM")
     public Response delete(@PathParam("id") long id) {
 
         if (service.delete(id)) {
@@ -61,6 +62,7 @@ public class PnrWS {
     @GET
     @Produces("application/xml")
     @Path("/history")
+    @RolesAllowed("SM")
     public Pnrs getHistory(@QueryParam("bookingAgtOid") String bookingAgtOid,
             @QueryParam("ticketingAgtOid") String ticketingAgtOid,
             @QueryParam("dateStart") String dateStart,
@@ -72,6 +74,7 @@ public class PnrWS {
     @GET
     @Produces("application/xml")
     @Path("/byid/{id}")
+    @RolesAllowed("GS")
     public Pnr getById(@PathParam("id") long id) {
         return service.getByIdWithChildren(id);
     }
@@ -79,6 +82,7 @@ public class PnrWS {
     @GET
     @Produces("application/xml")
     @Path("/withchildren/{id}")
+    @RolesAllowed("GS")
     public Pnr getByIdWithChildren(@PathParam("id") long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -86,6 +90,7 @@ public class PnrWS {
     @GET
     @Produces("application/xml")
     @Path("/bytkt/{tktNo}/{surName}")
+    @RolesAllowed("GS")
     public Pnrs getPnrByTktNo(@QueryParam("tktNo") String tktNo, @QueryParam("surName") String surName) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -93,6 +98,7 @@ public class PnrWS {
     @GET
     @Produces("application/xml")
     @Path("/bypaxname")
+    @RolesAllowed("GS")
     public Pnrs getPnrByName(@QueryParam("surName") String surName, @QueryParam("foreName") String foreName) {
         List<Pnr> list = service.getPnrByName(surName, foreName);
         Pnrs pnrs = new Pnrs();
@@ -103,6 +109,7 @@ public class PnrWS {
     @GET
     @Produces("application/xml")
     @Path("/bygdsPnr")
+    @RolesAllowed("GS")
     public Pnrs getPnrBygdsPnr(@QueryParam("gdsPnr") String gdsPnr) {
         List<Pnr> list = service.getByGDSPnr(gdsPnr);
         Pnrs pnrs = new Pnrs();
@@ -113,6 +120,7 @@ public class PnrWS {
     @GET
     @Produces("application/xml")
     @Path("/uninvoicedpnr")
+    @RolesAllowed("GS")
     public Pnrs getUninvoicedPnr() {
 
         List<Pnr> list = service.searchUninvoicedPnr();
@@ -125,6 +133,7 @@ public class PnrWS {
     @GET
     @Produces("application/xml")
     @Path("/pnrtoday")
+    @RolesAllowed("GS")
     public Pnrs getPnrsToday(@QueryParam("date") String date) {
 
         List<Pnr> list = service.searchPnrsToday(date);

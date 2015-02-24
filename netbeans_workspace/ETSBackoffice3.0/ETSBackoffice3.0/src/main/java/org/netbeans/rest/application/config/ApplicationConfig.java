@@ -45,6 +45,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.ets.pnr.ws.PnrWS.class);
         resources.add(com.ets.pnr.ws.RemarkWS.class);
         resources.add(com.ets.pnr.ws.TicketWS.class);
+        resources.add(com.ets.security.SecurityInterceptor.class);
         resources.add(com.ets.settings.ws.AppSettingsWS.class);
         resources.add(com.ets.settings.ws.UserWS.class);
     }

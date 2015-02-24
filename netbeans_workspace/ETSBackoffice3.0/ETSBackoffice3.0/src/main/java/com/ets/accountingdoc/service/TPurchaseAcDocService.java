@@ -8,6 +8,7 @@ import com.ets.util.Enums;
 import com.ets.util.PnrUtil;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +52,21 @@ public class TPurchaseAcDocService {
         }
         dao.save(doc);
         return undefineChildren(doc);
+    }
+    
+    public TicketingPurchaseAcDoc _void(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
+        TicketingPurchaseAcDoc doc = dao.getWithChildrenById(ticketingPurchaseAcDoc.getId());
+        doc.setLastModified(ticketingPurchaseAcDoc.getLastModified());
+        doc.setLastModifiedBy(ticketingPurchaseAcDoc.getLastModifiedBy());
+        
+        Set<TicketingPurchaseAcDoc> relatedDocs = doc.getRelatedDocuments();
+        if (doc.getType().equals(Enums.AcDocType.INVOICE) && !relatedDocs.isEmpty()) {
+            return doc;
+        } else {
+
+            dao.voidDocument(undefineChildren(doc));
+            return doc;
+        }
     }
 
     public TicketingPurchaseAcDoc getWithChildrenById(long id) {

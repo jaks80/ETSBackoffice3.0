@@ -4,3 +4,5 @@ http://blog.patouchas.net/technology/hibernate-dao-java-tutorial/
 https://github.com/resteasy/Resteasy/tree/master/jaxrs/examples
 
 http://blogs.sourceallies.com/2011/08/spring-injection-with-resource-and-autowired/
+
+http://howtodoinjava.com/category/frameworks/rest/
