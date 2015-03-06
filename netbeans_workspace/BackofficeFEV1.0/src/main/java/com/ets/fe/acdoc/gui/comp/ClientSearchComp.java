@@ -222,7 +222,9 @@ public class ClientSearchComp extends javax.swing.JPanel implements PropertyChan
         add(jLabel1, gridBagConstraints);
 
         cmbContactable.setEditable(true);
-        cmbContactable.setPreferredSize(new java.awt.Dimension(28, 20));
+        cmbContactable.setMaximumSize(new java.awt.Dimension(28, 19));
+        cmbContactable.setMinimumSize(new java.awt.Dimension(28, 19));
+        cmbContactable.setPreferredSize(new java.awt.Dimension(28, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -235,20 +237,23 @@ public class ClientSearchComp extends javax.swing.JPanel implements PropertyChan
         jLabel4.setText("Client Details");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 0, 0, 0);
         add(jLabel4, gridBagConstraints);
 
-        txtClientDetails.setColumns(20);
+        txtClientDetails.setEditable(false);
+        txtClientDetails.setColumns(16);
+        txtClientDetails.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        txtClientDetails.setLineWrap(true);
         txtClientDetails.setRows(5);
         jScrollPane1.setViewportView(txtClientDetails);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;

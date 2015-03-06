@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="13" version="2.0">
+<workbench progressCount="14" version="2.0">
 <workbenchAdvisor/>
 <window height="728" maximized="true" width="1024" x="104" y="0">
 <fastViewData fastViewLocation="1024">
@@ -24,7 +24,7 @@
 <coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="190" y="30"/>
 <coolItem id="group.editor" itemType="typeGroupMarker"/>
 <coolItem id="com.jaspersoft.studio.editor.JrxmlEditor.jasper" itemType="typePlaceholder" x="61" y="30"/>
-<coolItem id="com.jaspersoft.studio.editor.JrxmlEditor" itemType="typePlaceholder" x="61" y="30"/>
+<coolItem id="com.jaspersoft.studio.editor.JrxmlEditor" itemType="typeToolBarContribution" x="61" y="30"/>
 <coolItem id="com.jaspersoft.studio.graphic.text" itemType="typeToolBarContribution" x="574" y="22"/>
 <coolItem id="com.jaspersoft.studio.graphic.size" itemType="typeToolBarContribution" x="84" y="22"/>
 <coolItem id="com.jaspersoft.studio.components.tableactions" itemType="typeToolBarContribution" x="61" y="30"/>
@@ -37,10 +37,15 @@
 <editorArea activeWorkbook="DefaultEditorWorkbook">
 <info part="DefaultEditorWorkbook">
 <folder appearance="1" expanded="2">
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
 </folder>
 </info>
 </editorArea>
+<editor activePart="true" focus="true" id="com.jaspersoft.studio.editor.JrxmlEditor" name="Invoice.jrxml" partName="Invoice.jrxml" path="E:/Development/netbeans_workspace/BackofficeFEV1.0/src/main/resources/reports/MyReports/Invoice.jrxml" title="Invoice.jrxml" tooltip="MyReports/Invoice.jrxml" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/MyReports/Invoice.jrxml"/>
+</editor>
 </editors>
 <views>
 <view id="com.jaspersoft.studio.FormattingToolsView" partName="Formatting Tools">
@@ -77,7 +82,7 @@
 <viewState/>
 </view>
 </views>
-<perspectives activePart="org.eclipse.ui.navigator.ProjectExplorer" activePerspective="org.eclipse.ui.resourcePerspective">
+<perspectives activePart="org.eclipse.ui.views.ContentOutline" activePerspective="org.eclipse.ui.resourcePerspective">
 <perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
 <descriptor class="com.jaspersoft.studio.ReportDesignPerspective" id="com.jaspersoft.studio.ReportDesignPerspective" label="Report Design"/>
 <alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
@@ -180,15 +185,11 @@
 <hide_toolbar_item_id id="org.eclipse.jdt.ui.actions.OpenProjectWizard"/>
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
 <view id="org.eclipse.ui.navigator.ProjectExplorer"/>
+<view id="org.eclipse.ui.views.ContentOutline"/>
 <fastViews>
 <view id="org.eclipse.pde.runtime.LogView" ratio="0.29984662"/>
 </fastViews>
 <fastViewBars>
-<fastViewBar fastViewLocation="16384" id="bottomLeft" orientation="512" selectedTabId="org.eclipse.ui.views.ContentOutline" style="0">
-<fastViews>
-<view id="org.eclipse.ui.views.ContentOutline" ratio="0.29984662"/>
-</fastViews>
-</fastViewBar>
 <fastViewBar fastViewLocation="1024" id="bottomRight" orientation="256" selectedTabId="org.eclipse.ui.views.TaskList" style="0">
 <fastViews>
 <view id="org.eclipse.ui.views.TaskList" ratio="0.3"/>
@@ -199,9 +200,9 @@
 <view id="com.jaspersoft.studio.editor.preview.reportstate" ratio="0.29967427"/>
 </fastViews>
 </fastViewBar>
-<fastViewBar fastViewLocation="131072" id="org.eclipse.ui.internal.ViewStack@4e224f5d" orientation="512" selectedTabId="com.jaspersoft.studio.Repository" style="0">
+<fastViewBar fastViewLocation="131072" id="org.eclipse.ui.internal.ViewStack@4e224f5d" orientation="512" selectedTabId="org.eclipse.ui.views.PropertySheet" style="0">
 <fastViews>
-<view id="org.eclipse.ui.views.PropertySheet" ratio="0.29984662"/>
+<view id="org.eclipse.ui.views.PropertySheet" ratio="0.29977462"/>
 <view id="com.jaspersoft.studio.Repository" ratio="0.29984662"/>
 </fastViews>
 </fastViewBar>
@@ -252,10 +253,12 @@
 </folder>
 </info>
 <info folder="true" part="bottomLeft" ratio="0.5" ratioLeft="307" ratioRight="307" relationship="4" relative="topLeft">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
+<folder activePageID="org.eclipse.ui.views.ContentOutline" appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
 <page content="org.eclipse.ant.ui.views.AntView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
 </folder>
 </info>
 </mainWindow>
@@ -263,7 +266,12 @@
 </perspective>
 </perspectives>
 <workingSets/>
-<navigationHistory/>
+<navigationHistory>
+<editors>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" path="/MyReports/Invoice.jrxml"/>
+</editors>
+<item active="true" historyLabel="Invoice.jrxml" index="0"/>
+</navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>
 <workbenchWindowAdvisor/>
@@ -288,6 +296,9 @@
 </trimLayout>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="Invoice.jrxml" tooltip="MyReports/Invoice.jrxml">
+<persistable path="/MyReports/Invoice.jrxml"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor.jasper" name="TAcDocReport.jasper" tooltip="MyReports/TAcDocReport.jasper">
 <persistable path="/MyReports/TAcDocReport.jasper"/>
 </file>
@@ -308,9 +319,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="TAcDocReport.jrxml" tooltip="MyReports/TAcDocReport.jrxml">
 <persistable path="/MyReports/TAcDocReport.jrxml"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="Invoice.jrxml" tooltip="MyReports/Invoice.jrxml">
-<persistable path="/MyReports/Invoice.jrxml"/>
 </file>
 <file factoryID="org.eclipse.ui.ide.FileStoreEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="oAcDoc.jrxml" tooltip="E:\Development\netbeans_workspace\ETSBackofficeV2.1\src\etsbackoffice\report\oAcDoc.jrxml">
 <persistable uri="file:/E:/Development/netbeans_workspace/ETSBackofficeV2.1/src/etsbackoffice/report/oAcDoc.jrxml"/>

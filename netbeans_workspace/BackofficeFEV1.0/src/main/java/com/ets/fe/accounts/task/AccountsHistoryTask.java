@@ -46,15 +46,15 @@ public class AccountsHistoryTask extends SwingWorker<AccountsReport, Integer> {
 
         AccountsReport report = null;
 
-        if (Enums.SaleType.SALES.equals(saleType)) {
+        if (Enums.SaleType.TKTSALES.equals(saleType)) {
             TicketingSAcDocWSClient client = new TicketingSAcDocWSClient();
             report = client.salesAccountsReport(clienttype, clientid, dateFrom, dateTo);
 
-        } else if (Enums.SaleType.PURCHASE.equals(saleType)) {
+        } else if (Enums.SaleType.TKTPURCHASE.equals(saleType)) {
             TicketingPAcDocWSClient client = new TicketingPAcDocWSClient();
             report = client.purchaseAccountsReport(clientid, dateFrom, dateTo);
             
-        } else if (Enums.SaleType.OTHER.equals(saleType)) {
+        } else if (Enums.SaleType.OTHERSALES.equals(saleType)) {
             OtherSAcDocWSClient client = new OtherSAcDocWSClient();
             report = client.salesAccountsReport(clienttype, clientid, dateFrom, dateTo);
         }

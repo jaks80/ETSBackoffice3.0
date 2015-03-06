@@ -121,7 +121,7 @@ public class SalesAcDocumentDlg extends javax.swing.JDialog implements PropertyC
 
     public void loadDocument(Long id) {
         taskType = "COMPLETE";
-        accountingDocTask = new AccountingDocTask(id, Enums.SaleType.SALES, "DETAILS");
+        accountingDocTask = new AccountingDocTask(id, Enums.SaleType.TKTSALES, "DETAILS");
         accountingDocTask.addPropertyChangeListener(this);
         accountingDocTask.execute();
     }

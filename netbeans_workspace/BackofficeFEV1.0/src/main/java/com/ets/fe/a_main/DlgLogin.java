@@ -3,7 +3,7 @@ package com.ets.fe.a_main;
 import com.ets.fe.APIConfig;
 import com.ets.fe.Application;
 import com.ets.fe.a_maintask.LoginTask;
-import com.ets.fe.app.model.User;
+import com.ets.fe.settings.model.User;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -32,6 +32,7 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
     }
 
     private void loginTask() {
+        btnLogin.setEnabled(false);
         if (txtUserName.getText().isEmpty() || txtPWord.getPassword().length == 0) {
             JOptionPane.showMessageDialog(null, "Enter UserName & Password...", "ETSBackoffice login....", JOptionPane.WARNING_MESSAGE);
         } else {
@@ -104,6 +105,7 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        progressBar = new javax.swing.JProgressBar();
         jPanel1 = new javax.swing.JPanel();
         btnLogin = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
@@ -113,12 +115,21 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
         jLabel2 = new javax.swing.JLabel();
         txtPWord = new javax.swing.JPasswordField();
         txtNewPassword = new javax.swing.JPasswordField();
-        progressBar = new javax.swing.JProgressBar();
         lblBanner = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
         setResizable(false);
+        getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        progressBar.setPreferredSize(new java.awt.Dimension(146, 16));
+        progressBar.setStringPainted(true);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(18, 350, 0, 0);
+        getContentPane().add(progressBar, gridBagConstraints);
 
         jPanel1.setOpaque(false);
         jPanel1.setLayout(new java.awt.GridBagLayout());
@@ -218,31 +229,24 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
         gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 0);
         jPanel1.add(txtNewPassword, gridBagConstraints);
 
-        progressBar.setStringPainted(true);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 75;
+        gridBagConstraints.ipady = 31;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(30, 190, 0, 0);
+        getContentPane().add(jPanel1, gridBagConstraints);
 
         lblBanner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/banner.png"))); // NOI18N
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(190, 190, 190)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(350, 350, 350)
-                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(lblBanner)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(lblBanner)
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        getContentPane().add(lblBanner, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -298,12 +302,12 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
                         setVisible(false);  
                         Main main = new Main();
                         main.setVisible(true);
-                        
+                        Application.loadSettings();
+                    }else{
+                     btnLogin.setEnabled(true);
                     }
-                } catch (InterruptedException ex) {
+                } catch (InterruptedException | ExecutionException ex) {
                     
-                } catch (ExecutionException ex) {
-                  
                 }
             }
         }

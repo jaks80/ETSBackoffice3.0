@@ -68,7 +68,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                     id = tSAcDocList.get(index).getId();
                     if (index != -1) {
                         if (!tSAcDocList.get(index).getType().equals(Enums.AcDocType.PAYMENT)) {
-                            accountingDocTask = new AccountingDocTask(id, Enums.SaleType.SALES, "DETAILS");
+                            accountingDocTask = new AccountingDocTask(id, Enums.SaleType.TKTSALES, "DETAILS");
                             accountingDocTask.addPropertyChangeListener(this);
                             accountingDocTask.execute();
                         }
@@ -79,7 +79,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                     id = tPAcDocList.get(index).getId();
                     if (index != -1) {
                         if (!tPAcDocList.get(index).getType().equals(Enums.AcDocType.PAYMENT)) {
-                            accountingDocTask = new AccountingDocTask(id, Enums.SaleType.PURCHASE, "DETAILS");
+                            accountingDocTask = new AccountingDocTask(id, Enums.SaleType.TKTPURCHASE, "DETAILS");
                             accountingDocTask.addPropertyChangeListener(this);
                             accountingDocTask.execute();
                         }
@@ -106,7 +106,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                 Long id = tSAcDocList.get(index).getId();
                 doc.setId(id);
                 doc.recordUpdateBy();
-                accountingDocTask = new AccountingDocTask(doc, Enums.SaleType.SALES, "VOID");
+                accountingDocTask = new AccountingDocTask(doc, Enums.SaleType.TKTSALES, "VOID");
                 accountingDocTask.addPropertyChangeListener(this);
                 accountingDocTask.execute();
             }

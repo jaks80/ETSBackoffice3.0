@@ -2,7 +2,7 @@ package com.ets.fe.a_main;
 
 import com.ets.fe.Application;
 import com.ets.fe.a_maintask.GlobalSearchTask;
-import com.ets.fe.pnr.gui.task.DeletePnrTask;
+import com.ets.fe.pnr.task.DeletePnrTask;
 import com.ets.fe.pnr.model.Pnr;
 import java.util.ArrayList;
 import java.util.List;

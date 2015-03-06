@@ -47,7 +47,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     private Contactable client;
     private String taskType;
     private Pnr pnr;
-    private List<Ticket> tickets;    
+    private List<Ticket> tickets;
     private TicketingSalesAcDoc tInvoice;
     private boolean allowPayment = true;
 
@@ -80,12 +80,12 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         return true;
     }
 
-    public void showDialog(Long id) {   
-        loadTSalesInvoice(id);    
-        setLocationRelativeTo(this);                      
-        setVisible(true);                       
+    public void showDialog(Long id) {
+        loadTSalesInvoice(id);
+        setLocationRelativeTo(this);
+        setVisible(true);
     }
-    
+
     private void displayInvoice(TicketingSalesAcDoc tInvoice) {
 
         this.tInvoice = tInvoice;
@@ -136,48 +136,49 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     private void createOtherChargeLine() {
         String chFee = txtCHFee.getText();
         String postage = txtPostage.getText();
-        String other = txtOther.getText();        
+        String other = txtOther.getText();
 
         if (chFee != null && !chFee.isEmpty()) {
             AdditionalChargeLine line = new AdditionalChargeLine();
             line.setAmount(new BigDecimal(chFee));
             line.setAdditionalCharge(Application.getCardHandlingFee());
             chargeLines.add(line);
-        } 
-        
+        }
+
         if (postage != null && !postage.isEmpty()) {
             AdditionalChargeLine line = new AdditionalChargeLine();
             line.setAmount(new BigDecimal(postage));
             line.setAdditionalCharge(Application.getPostage());
             chargeLines.add(line);
-        } 
-        
+        }
+
         if (other != null && !other.isEmpty()) {
             AdditionalChargeLine line = new AdditionalChargeLine();
             line.setAmount(new BigDecimal(other));
-            line.setAdditionalCharge(Application.getOther());            
+            line.setAdditionalCharge(Application.getOther());
             chargeLines.add(line);
         }
     }
 
     public void createInvoice() {
+        btnCreateDocument.setEnabled(false);
         createOtherChargeLine();
         tInvoice.setAdditionalChargeLines(chargeLines);
-        
+
         String terms = (String) AcDocHeaderComponent.cmbTerms.getSelectedItem();
-        
-        if(!"Select".equals(terms)){
-         tInvoice.setTerms(terms);        
-        taskType = "CREATE";
-        newInvoiceTask = new NewTSalesDocumentTask(tInvoice, progressBar);
-        newInvoiceTask.addPropertyChangeListener(this);
-        newInvoiceTask.execute();
+
+        if (!"Select".equals(terms)) {
+            tInvoice.setTerms(terms);
+            taskType = "CREATE";
+            newInvoiceTask = new NewTSalesDocumentTask(tInvoice, progressBar);
+            newInvoiceTask.addPropertyChangeListener(this);
+            newInvoiceTask.execute();
         }
     }
 
     public void loadTSalesInvoice(Long id) {
         taskType = "COMPLETE";
-        accountingDocTask = new AccountingDocTask(id, Enums.SaleType.SALES, "DETAILS");
+        accountingDocTask = new AccountingDocTask(id, Enums.SaleType.TKTSALES, "DETAILS");
         accountingDocTask.addPropertyChangeListener(this);
         accountingDocTask.execute();
     }
@@ -1012,7 +1013,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
         MyJasperReport report = new MyJasperReport();
-       report.reportInvoice(tInvoice.getId(),Enums.SaleType.SALES,"PRINT");     
+        report.reportInvoice(tInvoice.getId(), Enums.SaleType.TKTSALES, "PRINT");
     }//GEN-LAST:event_btnPrintActionPerformed
 
     private void btnEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmailActionPerformed
@@ -1020,11 +1021,11 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         String subject = "Invoice".concat(" From ").concat(Application.getMainAgent().getName());
         String body = "Invoice".concat(" From ").concat(Application.getMainAgent().getName());
         String refference = this.tInvoice.getReference().toString();
-        if(receipent!=null){
-        MyJasperReport report = new MyJasperReport(receipent,subject,body,refference);
-        report.reportInvoice(tInvoice.getId(),Enums.SaleType.SALES,"EMAIL");
-        }else{
-        JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
+        if (receipent != null) {
+            MyJasperReport report = new MyJasperReport(receipent, subject, body, refference);
+            report.reportInvoice(tInvoice.getId(), Enums.SaleType.TKTSALES, "EMAIL");
+        } else {
+            JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnEmailActionPerformed
 
@@ -1117,7 +1118,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
                         tInvoice = (TicketingSalesAcDoc) accountingDocTask.get();
                         displayInvoice(tInvoice);
                         taskType = "";
-                    } 
+                    }
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(SalesInvoiceDlg.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
@@ -1128,7 +1129,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     }
 
     private void controllComponent(TicketingSalesAcDoc tInvoice) {
-        if (tInvoice.getId()== null || tInvoice.getStatus().equals(Enums.AcDocStatus.VOID)) {
+        if (tInvoice.getId() == null || tInvoice.getStatus().equals(Enums.AcDocStatus.VOID)) {
             btnCreateDocument.setEnabled(true);
             btnEmail.setEnabled(false);
             btnPrint.setEnabled(false);

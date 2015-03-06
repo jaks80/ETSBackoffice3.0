@@ -1,6 +1,6 @@
 package com.ets.fe;
 
-import com.ets.fe.app.model.User;
+import com.ets.fe.settings.model.User;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;

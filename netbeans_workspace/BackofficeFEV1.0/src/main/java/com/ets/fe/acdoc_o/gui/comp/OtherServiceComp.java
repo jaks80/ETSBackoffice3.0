@@ -3,7 +3,7 @@ package com.ets.fe.acdoc_o.gui.comp;
 import com.ets.fe.acdoc_o.gui.OtherInvoiceDlg;
 import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.acdoc_o.model.AccountingDocumentLine;
-import com.ets.fe.os.gui.OtherServiceTask;
+import com.ets.fe.os.task.OtherServiceTask;
 import com.ets.fe.os.model.OtherService;
 import com.ets.fe.os.model.OtherServices;
 import com.ets.fe.util.CheckInput;
@@ -49,7 +49,7 @@ public class OtherServiceComp extends javax.swing.JPanel implements PropertyChan
     }
     
     public void loadOtherService() {
-        task = new OtherServiceTask();
+        task = new OtherServiceTask(null);
         task.addPropertyChangeListener(this);
         task.execute();
     }

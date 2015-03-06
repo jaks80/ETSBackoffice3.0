@@ -1,5 +1,6 @@
 package com.ets.fe.pnr.gui;
 
+import com.ets.fe.pnr.task.SegmentReportTask;
 import com.ets.fe.report.model.SegmentReport;
 import com.ets.fe.report.model.SegmentReport.Segment;
 import com.ets.fe.util.DateUtil;

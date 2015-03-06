@@ -27,6 +27,8 @@ public class AcDocHeaderComponent extends JPanel {
         } else {
             cmbTerms.setEnabled(false);
         }
+        
+        txtUser.setText(doc.getCreatedByName());
         if (doc instanceof TicketingSalesAcDoc || doc instanceof OtherSalesAcDoc) {
             txtVendorRef.setVisible(false);
             lblVendorRef.setVisible(false);

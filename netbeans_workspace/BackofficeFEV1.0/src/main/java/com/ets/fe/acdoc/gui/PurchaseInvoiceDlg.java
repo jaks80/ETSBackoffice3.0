@@ -176,7 +176,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
 
     public void loadTPurchaseInvoice(Long id) {
         taskType = "COMPLETE";
-        accountingDocTask = new AccountingDocTask(id, Enums.SaleType.PURCHASE, "DETAILS");
+        accountingDocTask = new AccountingDocTask(id, Enums.SaleType.TKTPURCHASE, "DETAILS");
         accountingDocTask.addPropertyChangeListener(this);
         accountingDocTask.execute();
     }

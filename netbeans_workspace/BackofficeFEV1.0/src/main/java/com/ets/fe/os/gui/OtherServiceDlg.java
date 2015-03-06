@@ -2,7 +2,7 @@ package com.ets.fe.os.gui;
 
 import com.ets.fe.os.model.Category;
 import com.ets.fe.os.model.OtherService;
-import com.ets.fe.os.model.ws.CategoryWSClient;
+import com.ets.fe.os.ws.CategoryWSClient;
 import com.ets.fe.util.CheckInput;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

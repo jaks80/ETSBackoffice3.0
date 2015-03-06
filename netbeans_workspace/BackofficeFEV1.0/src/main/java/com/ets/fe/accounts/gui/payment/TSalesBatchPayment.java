@@ -89,7 +89,7 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
 
             Payment payment = new Payment();
             payment.setPaymentType(type);
-            payment.setRemark(remark);
+            payment.setRemark(remark+"("+amount.toString()+")");
             payment.setCreatedBy(Application.getLoggedOnUser());
 
             int noOfRow = tblInvoices.getRowCount();

@@ -1,5 +1,6 @@
 package com.ets.fe.pnr.gui;
 
+import com.ets.fe.pnr.task.PnrHistoryTask;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.util.DateUtil;
 import java.awt.event.ActionEvent;

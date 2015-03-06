@@ -65,13 +65,15 @@ public class TicketingSAcDocWSClient {
     }
 
     /**
-     * This method returns summery of invoices, not actual invoice object collection.
+     * This method returns summery of invoices, not actual invoice object
+     * collection.
+     *
      * @param doctype
      * @param clienttype
      * @param clientid
      * @param _dateFrom
      * @param _dateTo
-     * @return 
+     * @return
      */
     public InvoiceReport outstandingDocumentReport(
             Enums.AcDocType doctype, Enums.ClientType clienttype,
@@ -94,13 +96,15 @@ public class TicketingSAcDocWSClient {
     }
 
     /**
-     * This method is for getting collection of invoice ojbect. It is used for batch payment.
+     * This method is for getting collection of invoice ojbect. It is used for
+     * batch payment.
+     *
      * @param doctype
      * @param clienttype
      * @param clientid
      * @param _dateFrom
      * @param _dateTo
-     * @return 
+     * @return
      */
     public TicketingSalesAcDocs outstandingInvoices(
             Enums.AcDocType doctype, Enums.ClientType clienttype,
@@ -139,8 +143,26 @@ public class TicketingSAcDocWSClient {
         InvoiceReport report = RestClientUtil.getEntity(InvoiceReport.class, url, new InvoiceReport());
         return report;
     }
-    
-     public AccountsReport salesAccountsReport(
+
+    public String documentHistoryReportXML(
+            Enums.ClientType clienttype, Long clientid, Date _dateFrom, Date _dateTo) {
+
+        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+
+        String url = APIConfig.get("ws.tsacdoc.history") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo;
+        if (clienttype != null) {
+            url = url + "&clienttype=" + clienttype;
+        }
+        if (clientid != null) {
+            url = url + "&clientid=" + clientid;
+        }
+
+        String report = RestClientUtil.getXML(url);
+        return report;
+    }
+
+    public AccountsReport salesAccountsReport(
             Enums.ClientType clienttype, Long clientid, Date _dateFrom, Date _dateTo) {
 
         String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");

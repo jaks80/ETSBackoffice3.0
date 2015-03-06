@@ -1,7 +1,7 @@
 package com.ets.fe.settings.gui;
 
 import com.ets.fe.Application;
-import com.ets.fe.app.model.AppSettings;
+import com.ets.fe.settings.model.AppSettings;
 import com.ets.fe.settings.ws.ApplicationWSClient;
 import javax.swing.SwingWorker;
 

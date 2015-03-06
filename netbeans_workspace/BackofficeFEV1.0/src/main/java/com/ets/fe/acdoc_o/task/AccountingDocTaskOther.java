@@ -38,7 +38,7 @@ public class AccountingDocTaskOther extends SwingWorker<AccountingDocument, Inte
     @Override
     protected AccountingDocument doInBackground() throws Exception {
 
-        if (Enums.SaleType.OTHER.equals(saleType)) {
+        if (Enums.SaleType.OTHERSALES.equals(saleType)) {
             OtherSAcDocWSClient client = new OtherSAcDocWSClient();
             switch (taskType) {
                 case "DETAILS":

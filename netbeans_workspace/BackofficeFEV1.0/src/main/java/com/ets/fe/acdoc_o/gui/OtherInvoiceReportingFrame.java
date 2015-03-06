@@ -2,10 +2,7 @@ package com.ets.fe.acdoc_o.gui;
 
 import com.ets.fe.Application;
 import com.ets.fe.acdoc.gui.report.TSalesInvoiceReportingFrame;
-import static com.ets.fe.acdoc.gui.report.TSalesInvoiceReportingFrame.client_type;
-import com.ets.fe.acdoc_o.model.OtherSalesAcDoc;
-import com.ets.fe.acdoc_o.model.InvoiceReportOther;
-import com.ets.fe.acdoc_o.model.OtherInvoiceSummery;
+import com.ets.fe.acdoc_o.model.*;
 import com.ets.fe.acdoc_o.task.AccountingDocTaskOther;
 import com.ets.fe.acdoc_o.task.OtherAcDocReportingTask;
 import com.ets.fe.report.MyJasperReport;
@@ -125,7 +122,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
             OtherSalesAcDoc doc = new OtherSalesAcDoc();
             doc.setId(id);
             doc.recordUpdateBy();
-            accountingDocTask = new AccountingDocTaskOther(doc, Enums.SaleType.OTHER, "VOID");
+            accountingDocTask = new AccountingDocTaskOther(doc, Enums.SaleType.OTHERSALES, "VOID");
             accountingDocTask.addPropertyChangeListener(this);
             accountingDocTask.execute();
         }

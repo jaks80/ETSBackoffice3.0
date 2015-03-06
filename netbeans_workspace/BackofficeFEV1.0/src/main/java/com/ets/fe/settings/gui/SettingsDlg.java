@@ -1,6 +1,6 @@
 package com.ets.fe.settings.gui;
 
-import com.ets.fe.app.model.AppSettings;
+import com.ets.fe.settings.model.AppSettings;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

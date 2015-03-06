@@ -52,7 +52,7 @@ public class OtherSalesAccountsFrame extends javax.swing.JInternalFrame implemen
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
        
-        task = new AccountsHistoryTask(client_type, client_id, from, to, progressBar,Enums.SaleType.OTHER);        
+        task = new AccountsHistoryTask(client_type, client_id, from, to, progressBar,Enums.SaleType.OTHERSALES);        
         task.addPropertyChangeListener(this);
         task.execute();
     }

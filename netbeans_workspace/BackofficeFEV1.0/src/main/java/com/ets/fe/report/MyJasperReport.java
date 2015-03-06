@@ -2,24 +2,20 @@ package com.ets.fe.report;
 
 import com.ets.fe.APIConfig;
 import com.ets.fe.report.gui.ReportViewerFrame;
-import com.ets.fe.util.DateUtil;
-import com.ets.fe.util.EmailService;
-import com.ets.fe.util.Enums;
+import com.ets.fe.util.*;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.StringReader;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.stream.StreamSource;
+import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.query.JRXPathQueryExecuterFactory;
-import net.sf.jasperreports.engine.util.JRXmlUtils;
 import org.w3c.dom.Document;
 
 /**
@@ -28,7 +24,7 @@ import org.w3c.dom.Document;
  */
 public class MyJasperReport {
 
-    public static final String domain = APIConfig.get("ws.domain");
+    //public static final String domain = APIConfig.get("ws.domain");
 
     private String recepeintAddress;
     private String subject;
@@ -67,17 +63,17 @@ public class MyJasperReport {
             Long clientid, Date _dateFrom, Date _dateTo, String actionType) {
 
         InputStream template = template = MyJasperReport.class.getResourceAsStream("/reports/MyReports/TAcDocReport.jasper");;
-        String url = domain;
+        String url = "";
         String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
         String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
 
-        if (saletype.equals(Enums.SaleType.SALES)) {
+        if (saletype.equals(Enums.SaleType.TKTSALES)) {
             if (doctype != null) {
                 url = url + APIConfig.get("ws.tsacdoc.report") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo + "&doctype=" + doctype;
             } else {
                 url = url + APIConfig.get("ws.tsacdoc.history") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo;
             }
-        } else if (saletype.equals(Enums.SaleType.SALES)) {
+        } else if (saletype.equals(Enums.SaleType.TKTSALES)) {
             url = url + APIConfig.get("ws.tpacdoc.report") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo + "&doctype=" + doctype;
         }
 
@@ -87,8 +83,7 @@ public class MyJasperReport {
         if (clientid != null) {
             url = url + "&clientid=" + clientid;
         }
-
-        System.out.println("URL: " + url);
+        
         JasperPrint jasperPrint = prepareReport(template, url);
         takeAction(actionType, jasperPrint);
     }
@@ -97,7 +92,7 @@ public class MyJasperReport {
             Long clientid, Date _dateFrom, Date _dateTo, String actionType) {
 
         InputStream template = template = MyJasperReport.class.getResourceAsStream("/reports/MyReports/os/OtherAcDocReport.jasper");;
-        String url = domain;
+        String url = "";
         String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
         String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
 
@@ -121,16 +116,16 @@ public class MyJasperReport {
 
     public void reportInvoice(Long id, Enums.SaleType sale_type, String actionType) {
 
-        String url = domain;
+        String url = "";
         InputStream template = null;
 
-        if (sale_type.equals(Enums.SaleType.SALES)) {
+        if (sale_type.equals(Enums.SaleType.TKTSALES)) {
             url = url + APIConfig.get("ws.tsacdoc.model") + id;
             template = MyJasperReport.class.getResourceAsStream("/reports/MyReports/Invoice.jasper");
-        } else if (sale_type.equals(Enums.SaleType.PURCHASE)) {
+        } else if (sale_type.equals(Enums.SaleType.TKTPURCHASE)) {
             url = url + APIConfig.get("ws.tpacdoc.model") + id;
             template = MyJasperReport.class.getResourceAsStream("/reports/MyReports/Invoice.jasper");
-        } else if (sale_type.equals(Enums.SaleType.OTHER)) {
+        } else if (sale_type.equals(Enums.SaleType.OTHERSALES)) {
             url = url + APIConfig.get("ws.osacdoc.model") + id;
             template = MyJasperReport.class.getResourceAsStream("/reports/MyReports/os/OtherInvoice.jasper");
         }
@@ -149,20 +144,20 @@ public class MyJasperReport {
             printReport(jasperPrint);
         }
     }
-    
+
     private void viewReport(JasperPrint jasperPrint) {
         ReportViewerFrame rptViewer = new ReportViewerFrame();
         rptViewer.viewReport(jasperPrint, "Report Viewer");
     }
 
-    private void printReport(JasperPrint jasperPrint){
+    private void printReport(JasperPrint jasperPrint) {
         try {
             JasperPrintManager.printReport(jasperPrint, true);
-        } catch (JRException ex) {            
+        } catch (JRException ex) {
             ex.printStackTrace();
         }
     }
-    
+
     private void emailReport(String recipientAddress, String subject, String body,
             String attachmentName, JasperPrint jasperPrint) {
 
@@ -188,23 +183,39 @@ public class MyJasperReport {
 
         return jasperPrint;
     }
+//
+//    private Document remoteXMLToDocument(String path) {
+//
+//        URL url = null;
+//        try {
+//            url = new URL(path);
+//        } catch (MalformedURLException ex) {
+//            Logger.getLogger(MyJasperReport.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        Document document = null;
+//        try {
+//            document = JRXmlUtils.parse(url, false);
+//        } catch (JRException ex) {
+//            ex.printStackTrace();
+//        }
+//        System.out.println(document);
+//        return document;
+//    }
 
-    private Document remoteXMLToDocument(String path) {
-
-        URL url = null;
-        try {
-            url = new URL(path);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(MyJasperReport.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+    public Document remoteXMLToDocument(String path) {
         Document document = null;
         try {
-            document = JRXmlUtils.parse(url, false);
-        } catch (JRException ex) {
+            StringReader reader = new StringReader(RestClientUtil.getXML(path));
+            Source source = new StreamSource(reader);
+            DOMResult result = new DOMResult();
+            TransformerFactory.newInstance().newTransformer().transform(source, result);
+            document = (Document) result.getNode();
+        } catch (TransformerConfigurationException ex) {
+            ex.printStackTrace();
+        } catch (TransformerException ex) {
             ex.printStackTrace();
         }
-        System.out.println(document);
         return document;
     }
 }

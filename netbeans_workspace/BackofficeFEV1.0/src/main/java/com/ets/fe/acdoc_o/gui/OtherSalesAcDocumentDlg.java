@@ -135,7 +135,7 @@ public class OtherSalesAcDocumentDlg extends javax.swing.JDialog implements Prop
 
     public void loadDocument(Long id) {
         taskType = "COMPLETE";
-        accountingDocTask = new AccountingDocTaskOther(id, Enums.SaleType.SALES, "DETAILS");
+        accountingDocTask = new AccountingDocTaskOther(id, Enums.SaleType.TKTSALES, "DETAILS");
         accountingDocTask.addPropertyChangeListener(this);
         accountingDocTask.execute();
     }

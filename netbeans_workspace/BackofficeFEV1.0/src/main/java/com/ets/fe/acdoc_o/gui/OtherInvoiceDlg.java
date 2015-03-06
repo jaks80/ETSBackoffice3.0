@@ -1,24 +1,18 @@
 package com.ets.fe.acdoc_o.gui;
 
-import com.ets.fe.acdoc_o.model.AdditionalChargeLine;
+import com.ets.fe.acdoc_o.model.*;
 import com.ets.fe.accounts.model.Payment;
-import com.ets.fe.acdoc_o.model.AccountingDocumentLine;
-import com.ets.fe.acdoc_o.model.OtherSalesAcDoc;
 import com.ets.fe.acdoc_o.task.NewOSalesDocumentTask;
 import com.ets.fe.Application;
 import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent;
-import com.ets.fe.acdoc.model.*;
-import com.ets.fe.acdoc.task.AccountingDocTask;
 import com.ets.fe.accounts.task.NewPaymentTask;
 import com.ets.fe.accounts.gui.logic.PaymentLogicOther;
 import com.ets.fe.acdoc_o.task.AccountingDocTaskOther;
 import com.ets.fe.client.model.Contactable;
 import com.ets.fe.os.model.*;
 import com.ets.fe.report.MyJasperReport;
-import com.ets.fe.util.CheckInput;
-import com.ets.fe.util.DateUtil;
-import com.ets.fe.util.Enums;
+import com.ets.fe.util.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
@@ -27,8 +21,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -149,7 +142,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
 
     public void loadInvoice(Long id) {
         taskType = "COMPLETE";
-        accountingDocTask = new AccountingDocTaskOther(id, Enums.SaleType.OTHER, "DETAILS");
+        accountingDocTask = new AccountingDocTaskOther(id, Enums.SaleType.OTHERSALES, "DETAILS");
         accountingDocTask.addPropertyChangeListener(this);
         accountingDocTask.execute();
     }
@@ -254,7 +247,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         jLabel2 = new javax.swing.JLabel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel4 = new javax.swing.JPanel();
-        clientComponent = new com.ets.fe.a_main.ClientComponent();
+        clientComponent = new com.ets.fe.a_main.ClientSearchComponent();
         acDocHeaderComponent = new com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent();
         jPanel5 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -526,10 +519,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
 
         tblPayment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Type", "Remark", "Amount", "Date"
@@ -936,7 +926,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
         MyJasperReport report = new MyJasperReport();
-        report.reportInvoice(invoice.getId(), Enums.SaleType.OTHER, "PRINT");
+        report.reportInvoice(invoice.getId(), Enums.SaleType.OTHERSALES, "PRINT");
     }//GEN-LAST:event_btnPrintActionPerformed
 
     private void btnEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmailActionPerformed
@@ -946,7 +936,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         String refference = this.invoice.getReference().toString();
         if (receipent != null) {
             MyJasperReport report = new MyJasperReport(receipent, subject, body, refference);
-            report.reportInvoice(invoice.getId(), Enums.SaleType.SALES, "EMAIL");
+            report.reportInvoice(invoice.getId(), Enums.SaleType.TKTSALES, "EMAIL");
         } else {
             JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
         }
@@ -961,7 +951,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
     private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSubmitPayment;
     private org.jdesktop.swingx.JXBusyLabel busyLabel;
-    private com.ets.fe.a_main.ClientComponent clientComponent;
+    private com.ets.fe.a_main.ClientSearchComponent clientComponent;
     private javax.swing.JComboBox cmbTType;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;

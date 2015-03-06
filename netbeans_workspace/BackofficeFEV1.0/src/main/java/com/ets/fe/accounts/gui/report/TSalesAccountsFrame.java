@@ -52,7 +52,7 @@ public class TSalesAccountsFrame extends javax.swing.JInternalFrame implements P
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
        
-        task = new AccountsHistoryTask(client_type, client_id, from, to, progressBar,Enums.SaleType.SALES);        
+        task = new AccountsHistoryTask(client_type, client_id, from, to, progressBar,Enums.SaleType.TKTSALES);        
         task.addPropertyChangeListener(this);
         task.execute();
     }
@@ -246,10 +246,12 @@ public class TSalesAccountsFrame extends javax.swing.JInternalFrame implements P
     jSplitPane1.setDividerLocation(200);
     jSplitPane1.setDividerSize(4);
 
+    jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel6.setText("Date From");
 
     dtFrom.setPreferredSize(new java.awt.Dimension(110, 20));
 
+    jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel8.setText("Date To");
 
     dtTo.setPreferredSize(new java.awt.Dimension(110, 20));

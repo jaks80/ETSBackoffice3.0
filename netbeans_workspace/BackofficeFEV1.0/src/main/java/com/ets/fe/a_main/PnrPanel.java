@@ -11,7 +11,7 @@ import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.client.gui.AgentFrame;
 import com.ets.fe.client.model.Contactable;
 import com.ets.fe.client.model.MainAgent;
-import com.ets.fe.pnr.gui.task.SavePnrTask;
+import com.ets.fe.pnr.task.SavePnrTask;
 import com.ets.fe.pnr.model.*;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.DocumentSizeFilter;
@@ -79,7 +79,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         btnSave.setEnabled(false);
         pnr.setAgent(clientComponent.getAgent());
         pnr.setCustomer(clientComponent.getCustomer());
-        
+
         if (pnr.getBookingAgtOid() != null || !pnr.getBookingAgtOid().isEmpty()) {
             this.pnr.setTickets(ticketComponent.getTickets());
             savePnrTask = new SavePnrTask(pnr, progressBar);
@@ -103,18 +103,18 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
     private void populateTblItinerary() {
         DefaultTableModel itineraryModel = (DefaultTableModel) tblItinerrary.getModel();
         itineraryModel.getDataVector().removeAllElements();
-        
-        int row = 0;        
-        for(Itinerary s: segments) {
-           
-            itineraryModel.insertRow(row, new Object[]{s.getSegmentNo(),s.getDeptFrom(),s.getDeptTo(), DateUtil.dateTOddmm(s.getDeptDate()),
-                        s.getDeptTime(), DateUtil.dateTOddmm(s.getArvDate()),s.getArvTime(), s.getAirLineID(),
-                        s.getFlightNo(), s.getTicketClass(),s.getTktStatus(),s.getBaggage(),s.getCheckInTerminal(),s.getCheckInTime(),s.getMealCode(),
-            s.getFlightDuration(),s.getMileage()});
+
+        int row = 0;
+        for (Itinerary s : segments) {
+
+            itineraryModel.insertRow(row, new Object[]{s.getSegmentNo(), s.getDeptFrom(), s.getDeptTo(), DateUtil.dateTOddmm(s.getDeptDate()),
+                s.getDeptTime(), DateUtil.dateTOddmm(s.getArvDate()), s.getArvTime(), s.getAirLineID(),
+                s.getFlightNo(), s.getTicketClass(), s.getTktStatus(), s.getBaggage(), s.getCheckInTerminal(), s.getCheckInTime(), s.getMealCode(),
+                s.getFlightDuration(), s.getMileage()});
             row++;
         }
     }
-        
+
     private void setPnrOwner() {
         if (pnr.getCustomer() == null && pnr.getAgent() == null) {
             MainAgent mainAgent = Application.getMainAgent();
@@ -131,8 +131,8 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             } else {
                 cont = pnr.getCustomer();
             }
-            clientComponent.setAllocatetClient(cont,pnr.calculateLeadPaxName(), pnr.getBookingAgtOid(),editable);
-        }                
+            clientComponent.setAllocatetClient(cont, pnr.calculateLeadPaxName(), pnr.getBookingAgtOid(), editable);
+        }
     }
 
     private void editingLogic() {
@@ -140,22 +140,25 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         for (Ticket t : pnr.getTickets()) {
             if (t.getTicketingSalesAcDoc() != null) {
                 editable = false;
-            }else{
-             unInvoicedTicket++;
+            } else {
+                unInvoicedTicket++;
             }
         }
-        if(unInvoicedTicket==0){
-         btnSave.setEnabled(false);
-        }else{
-         btnSave.setEnabled(true);
+        if (unInvoicedTicket == 0) {
+            btnCreateInvoice.setEnabled(false);
+            btnSave.setEnabled(false);
+        } else {
+            btnCreateInvoice.setEnabled(true);
+            btnSave.setEnabled(true);
         }
     }
-    
+
     private void SetTicketingAgent() {
         ticketingAgentComponent.setTicketingAgent(pnr);
     }
 
     public void newTSalesAcDocumentTask() {
+        btnCreateInvoice.setEnabled(false);
         if (AcDocUtil.validateSellingFare(pnr.getTickets()) && AcDocUtil.validateContactable(pnr)) {
             this.taskType = "AC_DOCUMENT";
             newTSalesDocumentTask = new NewTSalesDocumentTask(pnrId, progressBar);
@@ -250,12 +253,13 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         }
     }
 
-    public void loadCompletePnr(){
-     completePnrTask = new CompletePnrTask(pnrId, progressBar);
-     completePnrTask.addPropertyChangeListener(this);
-     completePnrTask.execute();
-     callAccountingDocs();
+    public void loadCompletePnr() {
+        completePnrTask = new CompletePnrTask(pnrId, progressBar);
+        completePnrTask.addPropertyChangeListener(this);
+        completePnrTask.execute();
+        callAccountingDocs();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -311,7 +315,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        clientComponent = new com.ets.fe.a_main.ClientComponent();
+        clientComponent = new com.ets.fe.a_main.ClientSearchComponent();
         ticketingAgentComponent = new com.ets.fe.a_main.TicketingAgentComponent();
         progressBar = new javax.swing.JProgressBar();
 
@@ -762,7 +766,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-       loadCompletePnr();
+        loadCompletePnr();
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void btnCreateInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateInvoiceActionPerformed
@@ -804,7 +808,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
     private javax.swing.JButton btnCreateInvoice;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSave;
-    private com.ets.fe.a_main.ClientComponent clientComponent;
+    private com.ets.fe.a_main.ClientSearchComponent clientComponent;
     private org.jdesktop.swingx.JXDatePicker dtBookingDate;
     private javax.swing.JSplitPane innerSplitPane;
     private javax.swing.JButton jButton1;
@@ -867,7 +871,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
                         if (pnr != null) {
                             editingLogic();
                             segments = pnr.getSegments();
-                            populatePnr();                              
+                            populatePnr();
                             ticketComponent.populateTblTicket(pnr.getTickets());
                             setPnrOwner();
                             SetTicketingAgent();
@@ -902,15 +906,15 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
 
             if (pnr != null) {
                 if (tabsTicket.getSelectedIndex() == 1) {
-                   populateTblItinerary();
-                }else if (tabsTicket.getSelectedIndex() == 2) {
-                   remarkComponent.setPnr(pnr);
-                   remarkComponent.load();
-                } 
+                    populateTblItinerary();
+                } else if (tabsTicket.getSelectedIndex() == 2) {
+                    remarkComponent.setPnr(pnr);
+                    remarkComponent.load();
+                }
             }
         }
     };
-       
+
     @Override
     public void componentResized(ComponentEvent e) {
         int width = getWidth();

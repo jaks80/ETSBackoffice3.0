@@ -26,6 +26,8 @@ public class PaymentLogicOther {
             doc.setDocIssueDate(new java.util.Date());
             doc.setCreatedBy(Application.getLoggedOnUser());
             doc.setParent(invoice);
+            doc.setAgent(invoice.getAgent());
+            doc.setCustomer(invoice.getCustomer());
 
             if (invoice.calculateDueAmount().compareTo(new BigDecimal("0.00")) == 1) {
                 //Make payment   

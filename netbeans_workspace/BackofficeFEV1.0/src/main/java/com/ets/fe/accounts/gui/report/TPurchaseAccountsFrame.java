@@ -51,7 +51,7 @@ public class TPurchaseAccountsFrame extends javax.swing.JInternalFrame implement
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
        
-        task = new AccountsHistoryTask(client_type, client_id, from, to, progressBar,Enums.SaleType.PURCHASE);        
+        task = new AccountsHistoryTask(client_type, client_id, from, to, progressBar,Enums.SaleType.TKTPURCHASE);        
         task.addPropertyChangeListener(this);
         task.execute();
     }

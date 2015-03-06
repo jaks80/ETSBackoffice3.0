@@ -12,7 +12,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Yusuf
  */
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 public class AppSettings  extends PersistentObject implements Serializable{
@@ -30,12 +29,14 @@ public class AppSettings  extends PersistentObject implements Serializable{
     @XmlElement
     private String starttls_enable;
     
-    
     @XmlElement
     private String tInvTAndC;
     @XmlElement
     private String oInvTAndC;
-    
+    @XmlElement
+    private String tInvFooter;
+    @XmlElement
+    private String oInvFooter;
     @XmlElement
     private String mainAgentCode;
     @XmlElement
@@ -61,6 +62,22 @@ public class AppSettings  extends PersistentObject implements Serializable{
 
     public void setoInvTAndC(String oInvTAndC) {
         this.oInvTAndC = oInvTAndC;
+    }
+
+    public String gettInvFooter() {
+        return tInvFooter;
+    }
+
+    public void settInvFooter(String tInvFooter) {
+        this.tInvFooter = tInvFooter;
+    }
+
+    public String getoInvFooter() {
+        return oInvFooter;
+    }
+
+    public void setoInvFooter(String oInvFooter) {
+        this.oInvFooter = oInvFooter;
     }
 
     public String getMainAgentCode() {

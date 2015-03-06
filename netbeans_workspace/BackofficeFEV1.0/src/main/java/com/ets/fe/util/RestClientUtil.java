@@ -2,21 +2,15 @@ package com.ets.fe.util;
 
 import com.amadeus.air.AIR;
 import com.ets.fe.APIConfig;
+import com.ets.fe.Application;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
@@ -28,24 +22,37 @@ import org.apache.http.util.EntityUtils;
 public class RestClientUtil {
 
     private static final String domain = APIConfig.get("ws.domain");
+    private static final String AUTHORIZATION_PROPERTY = "Authorization";
 
     public synchronized static <T> T getEntity(final Class<T> type, String destUrl, T entity) {
+
+        String apiOutput = getXML(destUrl);
+        if (apiOutput != null && !apiOutput.isEmpty()) {
+            entity = xmlToObject(type, entity, apiOutput);
+        }
+        return entity;
+    }
+
+    public synchronized static String getXML(String destUrl) {
         HttpClient httpClient = HttpClientBuilder.create().build();
+        int status = 0;
+        String apiOutput = "";
         try {
             HttpGet httpget = new HttpGet(buildURL(destUrl));
             httpget.addHeader("accept", "application/xml");
+            httpget.addHeader(AUTHORIZATION_PROPERTY, Application.getUserPassowrdEncoded());
             HttpResponse response = httpClient.execute(httpget);
+            status = response.getStatusLine().getStatusCode();
+            System.out.println("HTTP Status:>>"+status);
             HttpEntity httpEntity = response.getEntity();
-            String apiOutput = EntityUtils.toString(httpEntity);
-
-            entity = xmlToObject(type, entity, apiOutput);
-
+            if (httpEntity != null) {
+                apiOutput = EntityUtils.toString(httpEntity,"UTF-8");
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-
-        }
-        return entity;
+        } finally {}
+        
+        return apiOutput;
     }
 
     public synchronized static Integer postAIR(String destUrl, AIR air) {
@@ -56,7 +63,7 @@ public class RestClientUtil {
             HttpPost httppost = new HttpPost(buildURL(destUrl));
             httppost.setEntity(objectToXML(AIR.class, air));
             httppost.addHeader("content-type", "application/xml");
-
+            httppost.addHeader(AUTHORIZATION_PROPERTY, Application.getUserPassowrdEncoded());
             HttpResponse response = httpClient.execute(httppost);
             status = response.getStatusLine().getStatusCode();
         } catch (IOException e) {
@@ -73,7 +80,7 @@ public class RestClientUtil {
         try {
             HttpDelete httpDelete = new HttpDelete(buildURL(destUrl));
             httpDelete.addHeader("accept", "application/xml");
-
+            httpDelete.addHeader(AUTHORIZATION_PROPERTY, Application.getUserPassowrdEncoded());
             HttpResponse response = httpClient.execute(httpDelete);
             status = response.getStatusLine().getStatusCode();
             return status;
@@ -92,11 +99,15 @@ public class RestClientUtil {
             httppost.setEntity(objectToXML(type, entity));
             httppost.addHeader("content-type", "application/xml");
             httppost.addHeader("accept", "application/xml");
+            httppost.addHeader(AUTHORIZATION_PROPERTY, Application.getUserPassowrdEncoded());
+
             HttpResponse response = httpClient.execute(httppost);
             HttpEntity httpEntity = response.getEntity();
-            String apiOutput = EntityUtils.toString(httpEntity);
 
-            persistentEntity = xmlToObject(type, entity, apiOutput);
+            if (httpEntity != null) {
+                String apiOutput = EntityUtils.toString(httpEntity);
+                persistentEntity = xmlToObject(type, entity, apiOutput);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -114,11 +125,15 @@ public class RestClientUtil {
             httpPut.setEntity(objectToXML(type, entity));
             httpPut.addHeader("content-type", "application/xml");
             httpPut.addHeader("accept", "application/xml");
+            httpPut.addHeader(AUTHORIZATION_PROPERTY, Application.getUserPassowrdEncoded());
+
             HttpResponse response = httpClient.execute(httpPut);
             HttpEntity httpEntity = response.getEntity();
-            String apiOutput = EntityUtils.toString(httpEntity);
 
-            persistentEntity = xmlToObject(type, entity, apiOutput);
+            if (httpEntity != null) {
+                String apiOutput = EntityUtils.toString(httpEntity);
+                persistentEntity = xmlToObject(type, entity, apiOutput);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

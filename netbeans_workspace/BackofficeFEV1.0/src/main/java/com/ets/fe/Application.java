@@ -1,11 +1,12 @@
 package com.ets.fe;
 
-import com.ets.fe.app.model.AppSettings;
-import com.ets.fe.app.model.User;
+import com.ets.fe.settings.model.AppSettings;
+import com.ets.fe.settings.model.User;
 import com.ets.fe.client.model.MainAgent;
 import com.ets.fe.os.model.AdditionalCharge;
 import com.ets.fe.os.model.AdditionalCharges;
 import com.ets.fe.settings.ws.ApplicationWSClient;
+import com.itextpdf.xmp.impl.Base64;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -81,6 +82,19 @@ public class Application {
         mainAgent = aMainAgent;
     }
 
+    public static String getUserPassowrdEncoded() {
+        String userpassword = "";
+        if (loggedOnUser != null) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(loggedOnUser.getLoginID());
+            sb.append(":");
+            sb.append(loggedOnUser.getPassword());
+            userpassword = sb.toString();
+        }
+        String encodedString = Base64.encode(userpassword);
+        return encodedString;
+    }
+
     public static AdditionalCharge getCardHandlingFee() {
         AdditionalCharge charge = null;
         for (AdditionalCharge c : additionalCharges) {
@@ -102,7 +116,7 @@ public class Application {
         }
         return charge;
     }
-    
+
     public static AdditionalCharge getOther() {
         AdditionalCharge charge = null;
         for (AdditionalCharge c : additionalCharges) {
@@ -113,7 +127,7 @@ public class Application {
         }
         return charge;
     }
-        
+
     public static List<AdditionalCharge> getAdditionalCharges() {
         return additionalCharges;
     }

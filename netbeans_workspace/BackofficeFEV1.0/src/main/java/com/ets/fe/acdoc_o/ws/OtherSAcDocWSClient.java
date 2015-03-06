@@ -5,6 +5,7 @@ import com.ets.fe.APIConfig;
 import com.ets.fe.acdoc_o.model.OtherSalesAcDoc;
 import com.ets.fe.accounts.model.AccountsReport;
 import com.ets.fe.acdoc_o.model.InvoiceReportOther;
+import com.ets.fe.acdoc_o.model.ServicesSaleReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import com.ets.fe.util.RestClientUtil;
@@ -129,4 +130,30 @@ public class OtherSAcDocWSClient {
         return report;
     }
 
+    public ServicesSaleReport servicesSaleReport(
+            Enums.ClientType clienttype, Long clientid, Date _dateFrom, Date _dateTo,Long categoryId, 
+            Long itemId) {
+
+        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+
+        String url = APIConfig.get("ws.osacdoc.servicessalereport") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo;
+        if (clienttype != null) {
+            url = url + "&clienttype=" + clienttype;
+        }
+        if (clientid != null) {
+            url = url + "&clientid=" + clientid;
+        }
+        
+        if(categoryId !=null){
+         url = url + "&categoryId=" + categoryId;
+        }
+        
+        if(itemId !=null){
+         url = url + "&itemId=" + itemId;
+        }
+        
+        ServicesSaleReport report = RestClientUtil.getEntity(ServicesSaleReport.class, url, new ServicesSaleReport());
+        return report;
+    }
 }

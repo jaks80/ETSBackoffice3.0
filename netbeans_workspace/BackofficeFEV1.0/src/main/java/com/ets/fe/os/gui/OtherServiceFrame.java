@@ -1,5 +1,7 @@
 package com.ets.fe.os.gui;
 
+import com.ets.fe.os.task.OtherServiceUpdateTask;
+import com.ets.fe.os.task.OtherServiceTask;
 import com.ets.fe.os.model.OtherService;
 import com.ets.fe.os.model.OtherServices;
 import java.awt.Frame;
@@ -31,7 +33,7 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
 
     public void search() {
         action="search";
-        task = new OtherServiceTask();
+        task = new OtherServiceTask(null);
         task.addPropertyChangeListener(this);
         task.execute();
     }

@@ -40,7 +40,7 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
     @Override
     protected AccountingDocument doInBackground() throws Exception {
 
-        if (Enums.SaleType.SALES.equals(saleType)) {
+        if (Enums.SaleType.TKTSALES.equals(saleType)) {
             TicketingSAcDocWSClient client = new TicketingSAcDocWSClient();
             switch (taskType) {
                 case "DETAILS":
@@ -51,7 +51,7 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
                     client._void(doc);
                     break;
             }
-        } else if (Enums.SaleType.PURCHASE.equals(saleType)) {
+        } else if (Enums.SaleType.TKTPURCHASE.equals(saleType)) {
             TicketingPAcDocWSClient client = new TicketingPAcDocWSClient();
             switch (taskType) {
                 case "DETAILS":

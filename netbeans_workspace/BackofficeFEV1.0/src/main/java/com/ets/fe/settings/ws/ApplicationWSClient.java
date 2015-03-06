@@ -1,8 +1,8 @@
 package com.ets.fe.settings.ws;
 
 import com.ets.fe.APIConfig;
-import com.ets.fe.app.model.AppSettings;
-import com.ets.fe.app.model.User;
+import com.ets.fe.settings.model.AppSettings;
+import com.ets.fe.settings.model.User;
 import com.ets.fe.client.model.MainAgent;
 import com.ets.fe.os.model.AdditionalCharges;
 import com.ets.fe.util.RestClientUtil;

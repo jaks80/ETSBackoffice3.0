@@ -46,7 +46,7 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
 
-        task = new PaymentTask(Enums.ClientType.AGENT, client_id, from, to, Enums.SaleType.OTHER, progressBar);
+        task = new PaymentTask(Enums.ClientType.AGENT, client_id, from, to, Enums.SaleType.OTHERSALES, progressBar);
         task.addPropertyChangeListener(this);
         task.execute();
     }
