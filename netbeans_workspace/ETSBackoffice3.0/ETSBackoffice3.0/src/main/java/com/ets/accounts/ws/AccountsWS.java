@@ -1,6 +1,6 @@
 package com.ets.accounts.ws;
 
-import com.ets.accounts.domain.AccountsReport;
+import com.ets.accounts.model.AccountsReport;
 import com.ets.accounts.service.AccountsService;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;

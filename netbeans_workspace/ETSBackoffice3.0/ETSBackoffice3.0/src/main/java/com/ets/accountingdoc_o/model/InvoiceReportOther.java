@@ -33,7 +33,7 @@ public class InvoiceReportOther implements Serializable {
     @XmlElement
     private String totalInvoice;
     @XmlElement
-    private Letterhead letterhead = AppSettingsService.letterhead;
+    private Letterhead letterhead = AppSettingsService.getLetterhead();
     @XmlElement
     private String totalInvAmount = new String("0.00");
     @XmlElement

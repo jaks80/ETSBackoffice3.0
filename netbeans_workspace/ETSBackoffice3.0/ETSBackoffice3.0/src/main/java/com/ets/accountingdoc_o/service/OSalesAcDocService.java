@@ -6,7 +6,9 @@ import com.ets.accountingdoc.domain.OtherSalesAcDoc;
 import com.ets.accountingdoc.model.InvoiceReport;
 import com.ets.accountingdoc_o.model.InvoiceReportOther;
 import com.ets.accountingdoc.service.AcDocUtil;
+import com.ets.accountingdoc_o.dao.AccountingDocumentLineDAO;
 import com.ets.accountingdoc_o.model.OtherInvoiceModel;
+import com.ets.accountingdoc_o.model.ServicesSaleReport;
 import com.ets.util.Enums;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +25,9 @@ public class OSalesAcDocService {
 
     @Resource(name = "otherSalesAcDocDAO")
     private OtherSalesAcDocDAO dao;
+    
+    @Resource(name = "accountingDocumentLineDAO")
+    private AccountingDocumentLineDAO lineDao;
 
     public synchronized OtherSalesAcDoc newDocument(OtherSalesAcDoc doc) {
 
@@ -166,4 +171,17 @@ public class OSalesAcDocService {
         OtherSalesAcDoc doc = getWithChildrenById(id);                      
         return OtherInvoiceModel.createModel(undefineChildren(doc));
     }
+    
+    public ServicesSaleReport servicesSaleReport(Date from, Date to, Long categoryId, 
+            Long itemId,Enums.ClientType clienttype, Long clientid) {
+    
+        List<AccountingDocumentLine> line_items = lineDao.findLineItems(from, to, categoryId, 
+                itemId, clienttype, clientid);
+        ServicesSaleReport sale_report = new ServicesSaleReport();
+        sale_report.setReportTitle("Sale Report: Services");
+        sale_report = ServicesSaleReport.serializeToSalesSummery(line_items, from, to);
+        
+        return sale_report;
+    }
+    
 }

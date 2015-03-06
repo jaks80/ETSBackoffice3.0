@@ -2,6 +2,8 @@ package com.ets.otherservice.dao;
 
 import com.ets.GenericDAOImpl;
 import com.ets.otherservice.domain.OtherService;
+import java.util.List;
+import org.hibernate.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +13,18 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("otherServiceDAO")
 @Transactional
-public class OtherServiceDAOImpl extends GenericDAOImpl<OtherService, Long> implements OtherServiceDAO{
-    
+public class OtherServiceDAOImpl extends GenericDAOImpl<OtherService, Long> implements OtherServiceDAO {
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OtherService> findItemsByCategory(Long categoryId) {
+        String hql = "from OtherService os "
+                + "left join fetch os.category as cat "
+                + "where os.isActive = 0 and "
+                + "(:categoryId is null or cat.id = :categoryId)";
+        Query query = getSession().createQuery(hql);
+        query.setParameter("categoryId", categoryId);
+        return query.list();
+    }
+
 }

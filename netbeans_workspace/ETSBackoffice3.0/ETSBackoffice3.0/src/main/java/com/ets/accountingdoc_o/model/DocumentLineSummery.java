@@ -1,9 +1,6 @@
 package com.ets.accountingdoc_o.model;
 
 import com.ets.accountingdoc.domain.AccountingDocumentLine;
-import com.ets.pnr.domain.Ticket;
-import com.ets.pnr.model.collection.TicketModel;
-import com.ets.util.DateUtil;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;

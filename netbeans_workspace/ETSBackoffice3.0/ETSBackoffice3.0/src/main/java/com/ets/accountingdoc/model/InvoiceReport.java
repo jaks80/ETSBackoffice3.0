@@ -33,7 +33,7 @@ public class InvoiceReport implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @XmlElement
-    private Letterhead letterhead = AppSettingsService.letterhead;
+    private Letterhead letterhead = AppSettingsService.getLetterhead();
     @XmlElement
     private String title;
     @XmlElement

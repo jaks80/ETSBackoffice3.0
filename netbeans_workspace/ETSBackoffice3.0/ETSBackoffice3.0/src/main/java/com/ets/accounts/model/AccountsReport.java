@@ -1,4 +1,4 @@
-package com.ets.accounts.domain;
+package com.ets.accounts.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;

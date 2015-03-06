@@ -4,7 +4,7 @@ import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.pnr.domain.Itinerary;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
-import com.ets.pnr.model.collection.TicketModel;
+import com.ets.pnr.model.TicketModel;
 import com.ets.report.model.Letterhead;
 import com.ets.settings.service.AppSettingsService;
 import com.ets.util.DateUtil;
@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class InvoiceModel implements Serializable{
 
     @XmlElement
-    private Letterhead letterhead = AppSettingsService.letterhead;
+    private Letterhead letterhead = AppSettingsService.getLetterhead();
     @XmlElement
     private String title;
     @XmlElement

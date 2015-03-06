@@ -1,6 +1,6 @@
 package com.ets.accounts.model;
 
-import com.ets.accounts.model.Payment;
+import com.ets.accounts.domain.Payment;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;

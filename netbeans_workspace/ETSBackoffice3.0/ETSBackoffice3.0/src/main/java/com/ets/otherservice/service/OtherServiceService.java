@@ -17,11 +17,23 @@ public class OtherServiceService {
     private OtherServiceDAO dao;
 
     public List<OtherService> findAll() {
-        
-        String hql="from OtherService as o left join fetch o.category";
-        
+
+        String hql = "from OtherService os "
+                + "left join fetch os.category as cat "
+                + "where os.isActive = 0 ";
         return dao.findMany(hql);
-    } 
+    }
+
+    public List<OtherService> findItemsByCategory(Long categoryId) {
+        
+        List<OtherService> services = dao.findItemsByCategory(categoryId); 
+        for(OtherService os:services){
+         os.setCreatedBy(null);
+         os.setLastModified(null);
+        }
+        
+        return services;
+    }
 
     public OtherService saveorUpdate(OtherService otherService) {
         dao.save(otherService);

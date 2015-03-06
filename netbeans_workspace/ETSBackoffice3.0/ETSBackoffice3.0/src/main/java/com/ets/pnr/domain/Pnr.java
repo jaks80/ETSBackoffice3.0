@@ -3,6 +3,7 @@ package com.ets.pnr.domain;
 import com.ets.PersistentObject;
 import com.ets.client.domain.Agent;
 import com.ets.client.domain.Customer;
+import com.ets.settings.service.AppSettingsService;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Iterator;
@@ -220,5 +221,9 @@ public class Pnr extends PersistentObject implements Serializable {
 
     public void setTicketing_agent(Agent ticketing_agent) {
         this.ticketing_agent = ticketing_agent;
+    }
+
+    public boolean selfTicketing() {
+        return this.ticketingAgtOid.equals(AppSettingsService.mainAgent.getOfficeID());
     }
 }

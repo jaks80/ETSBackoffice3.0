@@ -1,9 +1,10 @@
-package com.ets.accounts.model;
+package com.ets.accounts.domain;
 
 import com.ets.PersistentObject;
 import com.ets.accountingdoc.domain.OtherSalesAcDoc;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
+import com.ets.pnr.domain.Pnr;
 import com.ets.util.Enums;
 import com.ets.util.Enums.PaymentType;
 import java.io.Serializable;
@@ -46,6 +47,34 @@ public class Payment extends PersistentObject implements Serializable {
 
     }
 
+    public String calculateClientName() {
+        String clientName = "";
+
+        if (this.tSalesAcDocuments != null && !this.tSalesAcDocuments.isEmpty()) {
+            Pnr pnr = tSalesAcDocuments.iterator().next().getPnr();
+            if (pnr.getAgent() != null) {
+                clientName = pnr.getAgent().getName();
+            } else {
+                clientName = pnr.getCustomer().calculateFullName();
+            }
+        } else if (this.tPurchaseAcDocuments != null && !this.tPurchaseAcDocuments.isEmpty()) {
+            Pnr pnr = tPurchaseAcDocuments.iterator().next().getPnr();
+            if (pnr.getAgent() != null) {
+                clientName = pnr.getAgent().getName();
+            } else {
+                clientName = pnr.getCustomer().calculateFullName();
+            }
+        } else if (this.oSalesAcDocuments != null && !this.oSalesAcDocuments.isEmpty()) {
+            OtherSalesAcDoc doc = oSalesAcDocuments.iterator().next();
+            if (doc.getAgent() != null) {
+                clientName = doc.getAgent().getName();
+            } else {
+                clientName = doc.getCustomer().calculateFullName();
+            }
+        }
+        return clientName;
+    }
+
     public BigDecimal calculateTotalSalesPayment() {
         BigDecimal total = new BigDecimal("0.00");
 
@@ -77,6 +106,51 @@ public class Payment extends PersistentObject implements Serializable {
             }
         }
         return total;
+    }
+
+    public String calculateTSalesDocumentRefferences() {
+        StringBuilder sb = new StringBuilder();
+        for (TicketingSalesAcDoc doc : this.tSalesAcDocuments) {
+            sb.append(doc.getReference());
+            sb.append(",");
+        }
+        return sb.toString();
+    }
+
+    public String calculateTPurchaseDocumentRefferences() {
+        StringBuilder sb = new StringBuilder();
+        for (TicketingPurchaseAcDoc doc : this.tPurchaseAcDocuments) {
+            sb.append(doc.getReference());
+            sb.append(",");
+        }
+        return sb.toString();
+    }
+
+    public String calculateTSalesDocumentPnrs() {
+        StringBuilder sb = new StringBuilder();
+        for (TicketingSalesAcDoc doc : this.tSalesAcDocuments) {
+            sb.append(doc.getPnr().getGdsPnr());
+            sb.append(",");
+        }
+        return sb.toString();
+    }
+
+    public String calculateTPurchaseDocumentPnrs() {
+        StringBuilder sb = new StringBuilder();
+        for (TicketingPurchaseAcDoc doc : this.tPurchaseAcDocuments) {
+            sb.append(doc.getPnr().getGdsPnr());
+            sb.append(",");
+        }
+        return sb.toString();
+    }
+
+    public String calculateOSalesDocumentRefferences() {
+        StringBuilder sb = new StringBuilder();
+        for (OtherSalesAcDoc doc : this.oSalesAcDocuments) {
+            sb.append(doc.getReference());
+            sb.append(",");
+        }
+        return sb.toString();
     }
 
     public String getRemark() {

@@ -1,7 +1,6 @@
-package com.ets.report.model;
+package com.ets.pnr.model;
 
 import com.ets.pnr.domain.Ticket;
-import com.ets.util.Enums;
 import com.ets.util.Enums.TicketStatus;
 import com.ets.util.PnrUtil;
 import java.math.BigDecimal;
@@ -18,7 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class TicketSaleReport {
+public class GDSSaleReport {
 
     @XmlElement
     private List<Ticket> list = new ArrayList<>();
@@ -48,11 +47,11 @@ public class TicketSaleReport {
     @XmlElement
     private String summery;
 
-    public TicketSaleReport() {
+    public GDSSaleReport() {
 
     }
 
-    public TicketSaleReport(List<Ticket> list) {
+    public GDSSaleReport(List<Ticket> list) {
         this.saleBalance = new BigDecimal("0.00");
         this.totalBSPComRefund = new BigDecimal("0.00");
         this.totalBSPCom = new BigDecimal("0.00");
@@ -64,6 +63,8 @@ public class TicketSaleReport {
         this.comBalance = new BigDecimal("0.00");
 
         for (Ticket t : list) {
+            t.setCreatedBy(null);
+            t.setLastModified(null);
             PnrUtil.undefineChildrenInPnr(t.getPnr());
         }
 

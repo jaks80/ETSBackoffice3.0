@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class OtherInvoiceModel implements Serializable {
 
     @XmlElement
-    private Letterhead letterhead = AppSettingsService.letterhead;
+    private Letterhead letterhead = AppSettingsService.getLetterhead();
     @XmlElement
     private String title;
     @XmlElement

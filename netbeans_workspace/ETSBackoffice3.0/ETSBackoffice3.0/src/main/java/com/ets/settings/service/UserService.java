@@ -3,6 +3,8 @@ package com.ets.settings.service;
 import com.ets.security.LoginManager;
 import com.ets.settings.dao.UserDAO;
 import com.ets.settings.domain.User;
+import com.ets.util.Enums;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -19,7 +21,17 @@ public class UserService {
     private UserDAO dao;
 
     public List<User> findAll() {
-        return dao.findAll(User.class);
+
+        List<User> users = dao.findAll(User.class);
+        List<User> operational_users = new ArrayList<>();
+
+        for (User u : users) {
+            if (!u.getUserType().equals(Enums.UserType.SU)) {
+                operational_users.add(u);
+            }
+        }
+
+        return operational_users;
     }
 
     public User login(String loginId, String password, String newPassword) {
@@ -29,18 +41,18 @@ public class UserService {
 
         for (User user : dbUsers) {
             if (user.getLoginID().equals(loginId) && user.getPassword().equals(password)) {
-                authenticatedUser = user;                
+                authenticatedUser = user;
                 break;
             }
         }
 
         LoginManager.addLogin(authenticatedUser);
-        
+
         if (authenticatedUser != null && newPassword != null) {
             authenticatedUser.setPassword(newPassword);
             dao.save(authenticatedUser);
         }
-        
+
         return authenticatedUser;
     }
 

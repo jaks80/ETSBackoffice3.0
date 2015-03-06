@@ -1,7 +1,12 @@
 package com.ets.pnr.ws;
 
-import com.ets.report.model.TicketSaleReport;
+import com.ets.pnr.model.GDSSaleReport;
+import com.ets.pnr.model.TicketSaleReport;
 import com.ets.pnr.service.TicketService;
+import com.ets.util.DateUtil;
+import com.ets.util.Enums;
+import java.util.Date;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -17,21 +22,41 @@ import org.springframework.stereotype.Controller;
 @Controller
 @Path("/ticket-management")
 public class TicketWS {
-    
+
     @Autowired
     TicketService service;
-    
+
     @GET
     @Produces("application/xml")
     @Path("/gds-salereport")
-    @RolesAllowed("AD")
-    public TicketSaleReport saleReport(@QueryParam("ticketStatus") String ticketStatus, 
-                              @QueryParam("airLineCode") String airLineCode, 
-                              @QueryParam("dateStart") String dateStart, 
-                              @QueryParam("dateEnd") String dateEnd,
-                              @QueryParam("ticketingAgtOid") String ticketingAgtOid){
-    
-        TicketSaleReport report = service.saleReport(ticketStatus, airLineCode, dateStart, dateEnd, ticketingAgtOid);
+    @RolesAllowed("SM")
+    public GDSSaleReport gdsSaleReport(@QueryParam("ticketStatus") Enums.TicketStatus ticketStatus,
+            @QueryParam("airLineCode") String airLineCode,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd,
+            @QueryParam("ticketingAgtOid") String ticketingAgtOid) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        GDSSaleReport report = service.saleReport(ticketStatus, airLineCode, dateFrom, dateTo, ticketingAgtOid);
+        return report;
+    }
+
+    @GET
+    @Produces("application/xml")
+    @Path("/salereport")
+    @RolesAllowed("SM")    
+    public TicketSaleReport saleReport(@QueryParam("ticketStatus") Enums.TicketStatus ticketStatus,
+            @QueryParam("airLineCode") String airLineCode,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd,
+            @QueryParam("ticketingAgtOid") String ticketingAgtOid) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        TicketSaleReport report = service.saleRevenueReport(ticketStatus, airLineCode, dateFrom, dateTo, ticketingAgtOid);
         return report;
     }
 }

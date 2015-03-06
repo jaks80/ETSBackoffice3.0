@@ -46,9 +46,8 @@ public class Customer extends Contactable implements Serializable{
     public void setForeName(String foreName) {
         this.foreName = foreName;
     }    
-
+        
     @Override
-    @Transient
     public String calculateFullName() {
       return this.surName + "/" + this.foreName;
     }

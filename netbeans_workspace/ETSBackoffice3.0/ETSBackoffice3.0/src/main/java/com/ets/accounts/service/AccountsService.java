@@ -6,7 +6,7 @@ import com.ets.accountingdoc.dao.TSalesAcDocDAO;
 import com.ets.accountingdoc.domain.OtherSalesAcDoc;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
-import com.ets.accounts.domain.AccountsReport;
+import com.ets.accounts.model.AccountsReport;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.math.BigDecimal;

@@ -31,6 +31,8 @@ public class PnrUtil {
         pnr.setTickets(null);
         pnr.setSegments(null);
         pnr.setRemarks(null);
+        pnr.setCreatedBy(null);
+        pnr.setLastModifiedBy(null);
     }
 
     public static void undefinePnrChildren(Pnr pnr) {

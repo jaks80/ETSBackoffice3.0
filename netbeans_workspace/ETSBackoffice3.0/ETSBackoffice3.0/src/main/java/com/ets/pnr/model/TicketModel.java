@@ -1,4 +1,4 @@
-package com.ets.pnr.model.collection;
+package com.ets.pnr.model;
 
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.DateUtil;

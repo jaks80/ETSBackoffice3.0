@@ -1,28 +1,14 @@
 package com.ets.pnr.domain;
 
 import com.ets.PersistentObject;
-import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
-import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
+import com.ets.accountingdoc.domain.*;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums.TicketStatus;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.*;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -150,6 +136,10 @@ public class Ticket extends PersistentObject implements Serializable {
         return this.baseFare.add(this.tax).add(this.commission).add(this.fee);
     }
 
+    public BigDecimal calculateRevenue() {
+        return this.grossFare.add(this.discount).subtract(this.calculateNetPurchaseFare());
+    }
+    
     public Integer getPassengerNo() {
         return passengerNo;
     }

@@ -16,20 +16,25 @@ import org.springframework.stereotype.Service;
 @Service("appSettingsService")
 public class AppSettingsService {
 
+    public static Letterhead getLetterhead() {
+        return letterhead;
+    }
+
     @Resource(name = "appSettingsDAO")
     private AppSettingsDAO dao;
 
     @Autowired
-    AgentService agentService;
+    private AgentService agentService;
 
-    public static Letterhead letterhead;
+    private static Letterhead letterhead;
+    public static MainAgent mainAgent;
 
     public MainAgent getMainAgent() {
-        return agentService.getMainAgent();
+        return getAgentService().getMainAgent();
     }
 
     public MainAgent saveorUpdateMainAgent(MainAgent agent) {
-        return agentService.saveorUpdate(agent);
+        return getAgentService().saveorUpdate(agent);
     }
 
     public AppSettings getSettings() {
@@ -39,27 +44,27 @@ public class AppSettingsService {
          return null;
         }
         
-        MainAgent agent = getMainAgent();
-        if (agent != null) {
+        mainAgent = getMainAgent();
+        if (mainAgent != null) {
             letterhead = new Letterhead();
-            letterhead.setCompanyName(agent.getName());
-            letterhead.setAddress(agent.getFullAddressCRSeperated());
+            getLetterhead().setCompanyName(mainAgent.getName());
+            getLetterhead().setAddress(mainAgent.getFullAddressCRSeperated());
 
             StringBuilder sb = new StringBuilder();
-            if (agent.getAtol() != null) {
-                sb.append("ATOL: ").append(agent.getAtol()).append(" ");
+            if (mainAgent.getAtol() != null) {
+                sb.append("ATOL: ").append(mainAgent.getAtol()).append(" ");
             }
 
-            if (agent.getIata() != null) {
-                sb.append("IATA: ").append(agent.getIata()).append(" ");
+            if (mainAgent.getIata() != null) {
+                sb.append("IATA: ").append(mainAgent.getIata()).append(" ");
             }
 
-            if (agent.getAbta() != null) {
-                sb.append("ABTA: ").append(agent.getAbta()).append(" ");
+            if (mainAgent.getAbta() != null) {
+                sb.append("ABTA: ").append(mainAgent.getAbta()).append(" ");
             }
-            letterhead.setFooter(sb.toString());
-            letterhead.settInvTAndC(settings.gettInvTAndC());
-            letterhead.setoInvTAndC(settings.getoInvTAndC());
+            getLetterhead().setFooter(sb.toString());
+            getLetterhead().settInvTAndC(settings.gettInvTAndC());
+            getLetterhead().setoInvTAndC(settings.getoInvTAndC());
         }        
         
         return settings;
@@ -72,5 +77,9 @@ public class AppSettingsService {
 
     public void delete(AppSettings appSettings) {
         dao.delete(appSettings);
+    }
+
+    public AgentService getAgentService() {
+        return agentService;
     }
 }

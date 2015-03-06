@@ -49,6 +49,13 @@ public class AccountingDocumentLine extends PersistentObject implements Serializ
         return this.amount.add(this.discount).multiply(new BigDecimal(qty));
     }
 
+    public BigDecimal calculateOServiceCostTotal() {
+        return this.otherService.getPurchaseCost().multiply(new BigDecimal(qty));
+    }
+    
+    public BigDecimal calculateRevenue() {
+        return calculateOServiceLineTotal().subtract(calculateOServiceCostTotal());
+    }
     /**
      * Additional charge has no discount nor quantity
      * @return 

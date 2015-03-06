@@ -26,10 +26,10 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
 
     @Autowired
     private AdditionalChgLineDAO additionalChgLineDAO;
-    
+
     @Autowired
     private AccountingDocumentLineDAO accountingDocumentLineDAO;
-    
+
     @Override
     public Long getNewAcDocRef() {
         String hql = "select max(acDoc.reference) from OtherSalesAcDoc acDoc";
@@ -65,14 +65,14 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
         OtherSalesAcDoc doc = (OtherSalesAcDoc) query.uniqueResult();
 
         Set<OtherSalesAcDoc> related_docs = doc.getRelatedDocuments();
-        
+
         for (OtherSalesAcDoc rd : related_docs) {
             rd.setRelatedDocuments(null);
             rd.setParent(null);
             Set<AccountingDocumentLine> lines = rd.getAccountingDocumentLines();
             for (AccountingDocumentLine l : lines) {
                 l.setOtherSalesAcDoc(null);
-                //l.setTicketingSalesAcDoc(null);                
+                //l.setTicketingSalesAcDoc(null);
             }
         }
         return doc;
@@ -80,7 +80,7 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
 
     @Override
     public boolean voidDocument(OtherSalesAcDoc doc) {
-        
+
         Set<AccountingDocumentLine> lines = doc.getAccountingDocumentLines();
         accountingDocumentLineDAO.deleteBulk(lines);
         doc.setAccountingDocumentLines(null);
@@ -91,12 +91,13 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
             doc.setAdditionalChargeLines(null);
         }
         doc.setStatus(Enums.AcDocStatus.VOID);
-        save(doc);        
+        save(doc);
 
         return true;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OtherSalesAcDoc> findOutstandingDocuments(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date from, Date to) {
         String concatClient = "";
         String clientcondition = "and (:clientid is null or client.id = :clientid) ";
@@ -180,6 +181,7 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OtherSalesAcDoc> findAllDocuments(Enums.ClientType clienttype, Long clientid, Date from, Date to) {
         String concatClient = "";
         String clientcondition = "and (:clientid is null or client.id = :clientid) ";

@@ -4,11 +4,13 @@ import com.ets.accountingdoc_o.model.OtherSalesAcDocs;
 import com.ets.accountingdoc.domain.OtherSalesAcDoc;
 import com.ets.accountingdoc_o.model.InvoiceReportOther;
 import com.ets.accountingdoc_o.model.OtherInvoiceModel;
+import com.ets.accountingdoc_o.model.ServicesSaleReport;
 import com.ets.accountingdoc_o.service.OSalesAcDocService;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -137,6 +139,26 @@ public class OtherSalesAcDocWS {
 
         InvoiceReportOther report = service.invoiceHistoryReport(clienttype,
                 clientid, dateFrom, dateTo);
+
+        return report;
+    }
+    
+    @GET
+    @Path("/services_salereport")
+    //@RolesAllowed("SM")
+    @PermitAll
+    public ServicesSaleReport servicesSaleReport(
+            @QueryParam("clienttype") Enums.ClientType clienttype,
+            @QueryParam("clientid") Long clientid,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd,
+            @QueryParam("categoryId") Long categoryId, 
+            @QueryParam("itemId") Long itemId) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        ServicesSaleReport report = service.servicesSaleReport(dateFrom, dateTo, categoryId, itemId, clienttype, clientid);
 
         return report;
     }

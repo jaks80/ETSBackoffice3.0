@@ -9,10 +9,10 @@ public class Enums {
     public enum UserType {
 
         /**
-         * SU - Super User Only Software Vendor,AD - Admin, SM - Sales Manager, GS - General
-         * Sales
+         * SU - Super User Only Software Vendor,AD - Admin, SM - Sales Manager,
+         * GS - General Sales
          */
-        GS(0), SM(1), AD(2),SU(3);
+        GS(0), SM(1), AD(2), SU(3);
         private int id;
 
         UserType(int id) {
@@ -153,7 +153,7 @@ public class Enums {
 
     public enum SaleType {
 
-        SALES(0), PURCHASE(1), OTHER(2);
+        TKTSALES(0), TKTPURCHASE(1), OTHERSALES(2);
         private int id;
 
         SaleType(int id) {
@@ -167,11 +167,11 @@ public class Enums {
         public static String valueOf(int id) {
             switch (id) {
                 case 0:
-                    return SALES.toString();
+                    return TKTSALES.toString();
                 case 1:
-                    return PURCHASE.toString();
+                    return TKTPURCHASE.toString();
                 case 2:
-                    return OTHER.toString();
+                    return OTHERSALES.toString();
                 default:
                     return null;
             }
@@ -234,7 +234,7 @@ public class Enums {
 
     public enum PaymentType {
 
-        CASH(0), CHEQUE(1), CREDIT_CARD(2), DEBIT_CARD(3), BANKT_RANSFER(4), OTHER(5);
+        CASH(0), CHEQUE(1), CREDIT_CARD(2), DEBIT_CARD(3), BANKT_TANSFER(4), OTHER(5), CREDIT_TRANSFER(6);
         private int id;
 
         PaymentType(int id) {
@@ -256,9 +256,11 @@ public class Enums {
                 case 3:
                     return DEBIT_CARD.toString();
                 case 4:
-                    return BANKT_RANSFER.toString();
+                    return BANKT_TANSFER.toString();
                 case 5:
                     return OTHER.toString();
+                case 6:
+                    return CREDIT_TRANSFER.toString();
                 default:
                     return null;
             }
