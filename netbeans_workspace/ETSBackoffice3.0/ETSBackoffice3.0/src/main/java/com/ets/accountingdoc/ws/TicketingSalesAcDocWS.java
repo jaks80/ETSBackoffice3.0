@@ -3,22 +3,17 @@ package com.ets.accountingdoc.ws;
 import com.ets.accountingdoc.collection.TicketingSalesAcDocs;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accountingdoc.model.InvoiceModel;
-import com.ets.accountingdoc.service.TSalesAcDocService;
 import com.ets.accountingdoc.model.InvoiceReport;
+import com.ets.accountingdoc.service.TSalesAcDocService;
+import com.ets.productivity.model.ProductivityReport;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -111,7 +106,7 @@ public class TicketingSalesAcDocWS {
     public TicketingSalesAcDocs outstandingInvoices(
             @QueryParam("doctype") Enums.AcDocType doctype,
             @QueryParam("clienttype") Enums.ClientType clienttype,
-            @QueryParam("clientid") Long clientid,            
+            @QueryParam("clientid") Long clientid,
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd) {
 
@@ -119,19 +114,19 @@ public class TicketingSalesAcDocWS {
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
 
         List<TicketingSalesAcDoc> list = service.dueInvoices(doctype,
-                clienttype,clientid, dateFrom, dateTo);
+                clienttype, clientid, dateFrom, dateTo);
 
         TicketingSalesAcDocs docs = new TicketingSalesAcDocs();
         docs.setList(list);
         return docs;
     }
-    
+
     //*****************Reporting Methods are Bellow******************//
-    
     /**
      * This web service is to print invoice.
+     *
      * @param id
-     * @return 
+     * @return
      */
     @GET
     @Path("/model/byid/{id}")
@@ -140,22 +135,46 @@ public class TicketingSalesAcDocWS {
         InvoiceModel model = service.getModelbyId(id);
         return model;
     }
-    
+
     @GET
     @Path("/acdoc_report")
     @RolesAllowed("SM")
     public InvoiceReport outstandingDocumentReport(
             @QueryParam("doctype") Enums.AcDocType doctype,
             @QueryParam("clienttype") Enums.ClientType clienttype,
-            @QueryParam("clientid") Long clientid,            
+            @QueryParam("clientid") Long clientid,
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd) {
 
-        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
-        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+        Date dateFrom = null;
+        Date dateTo = null;
+
+        if (dateStart != null && dateEnd != null) {
+            dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+            dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+        }
 
         InvoiceReport report = service.dueInvoiceReport(doctype,
-                clienttype,clientid, dateFrom, dateTo);        
+                clienttype, clientid, dateFrom, dateTo);
+        return report;
+    }
+
+    @GET
+    @Path("/paymentdue_flight")
+    //@RolesAllowed("SM")
+    @PermitAll
+    public InvoiceReport outstandingFlightReport(            
+            @QueryParam("clienttype") Enums.ClientType clienttype,
+            @QueryParam("clientid") Long clientid,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+        
+        Date dateTo = null;
+        if (dateEnd != null) {           
+            dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+        }
+        
+        InvoiceReport report = service.outstandingFlightReport(clienttype, clientid, dateTo);
         return report;
     }
 
@@ -170,9 +189,40 @@ public class TicketingSalesAcDocWS {
 
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
-        
+
         InvoiceReport report = service.invoiceHistoryReport(clienttype,
                 clientid, dateFrom, dateTo);
+
+        return report;
+    }
+
+    @GET
+    @Path("/user_productivity")
+    @RolesAllowed("SM")
+    public ProductivityReport userProducivityReport(
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        ProductivityReport report = service.userProductivityReport(dateFrom, dateTo);
+
+        return report;
+    }
+
+    @GET
+    @Path("/agentduereport")
+    //@RolesAllowed("SM")
+    @PermitAll
+    public ProductivityReport agentDueReport(
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        ProductivityReport report = service.agentOutstandingReport(dateFrom, dateTo);
 
         return report;
     }

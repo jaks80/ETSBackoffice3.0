@@ -6,7 +6,6 @@ import com.ets.client.domain.Customer;
 import com.ets.settings.service.AppSettingsService;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.Access;
@@ -81,6 +80,7 @@ public class Pnr extends PersistentObject implements Serializable {
     public void setGdsPnr(String gdsPnr) {
         this.gdsPnr = gdsPnr;
     }
+    
 
     public Integer getNoOfPax() {
         return noOfPax;

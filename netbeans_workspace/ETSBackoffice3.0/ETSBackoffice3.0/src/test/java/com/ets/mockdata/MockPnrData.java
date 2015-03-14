@@ -255,7 +255,7 @@ public class MockPnrData {
         Set<Itinerary> segments = new LinkedHashSet<>();
 
         Itinerary seg1 = new Itinerary();
-        seg1.setAirLineID("AI");
+        seg1.setAirLineCode("AI");
         seg1.setDeptFrom("LONDON LHR");
         seg1.setDeptDate(DateUtil.ddmmToDate("05JUL"));
         seg1.setDeptTime("0945");
@@ -264,7 +264,7 @@ public class MockPnrData {
         seg1.setDeptTo("MUMBAI");
 
         Itinerary seg2 = new Itinerary();
-        seg2.setAirLineID("AI");
+        seg2.setAirLineCode("AI");
         seg2.setDeptFrom("MUMBAI");
         seg2.setDeptDate(DateUtil.ddmmToDate("06JUL"));
         seg2.setDeptTime("0115");
@@ -273,7 +273,7 @@ public class MockPnrData {
         seg2.setDeptTo("DHAKA");
 
         Itinerary seg3 = new Itinerary();
-        seg3.setAirLineID("AI");
+        seg3.setAirLineCode("AI");
         seg3.setDeptFrom("DHAKA");
         seg3.setDeptDate(DateUtil.ddmmToDate("24AUG"));
         seg3.setDeptTime("2010");
@@ -282,7 +282,7 @@ public class MockPnrData {
         seg3.setDeptTo("MUMBAI");
 
         Itinerary seg4 = new Itinerary();
-        seg4.setAirLineID("AI");
+        seg4.setAirLineCode("AI");
         seg4.setDeptFrom("MUMBAI");
         seg4.setDeptDate(DateUtil.ddmmToDate("25AUG"));
         seg4.setDeptTime("0220");

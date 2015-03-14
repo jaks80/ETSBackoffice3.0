@@ -1,9 +1,7 @@
 package com.ets.accounts.domain;
 
 import com.ets.PersistentObject;
-import com.ets.accountingdoc.domain.OtherSalesAcDoc;
-import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
-import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
+import com.ets.accountingdoc.domain.*;
 import com.ets.pnr.domain.Pnr;
 import com.ets.util.Enums;
 import com.ets.util.Enums.PaymentType;
@@ -11,16 +9,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.*;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -194,5 +184,17 @@ public class Payment extends PersistentObject implements Serializable {
 
     public void settPurchaseAcDocuments(Set<TicketingPurchaseAcDoc> tPurchaseAcDocuments) {
         this.tPurchaseAcDocuments = tPurchaseAcDocuments;
+    }
+
+    public void addTSalesDocument(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        this.tSalesAcDocuments.add(ticketingSalesAcDoc);
+    }
+    
+    public void addTPurchaseDocument(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
+        this.tPurchaseAcDocuments.add(ticketingPurchaseAcDoc);
+    }
+
+    public void addOtherDocument(OtherSalesAcDoc otherSalesAcDoc) {
+        this.oSalesAcDocuments.add(otherSalesAcDoc);
     }
 }

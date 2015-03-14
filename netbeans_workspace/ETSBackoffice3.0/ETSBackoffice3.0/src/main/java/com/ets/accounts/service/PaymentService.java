@@ -6,13 +6,16 @@ import com.ets.accountingdoc.domain.OtherSalesAcDoc;
 import com.ets.accounts.domain.Payment;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
+import com.ets.accountingdoc.service.TSalesAcDocService;
+import com.ets.accountingdoc_o.service.OSalesAcDocService;
+import com.ets.accounts.logic.PaymentLogic;
 import com.ets.accounts.model.CashBookReport;
+import com.ets.accounts.model.CreditTransfer;
 import com.ets.util.Enums;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
 import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,6 +27,10 @@ public class PaymentService {
 
     @Resource(name = "paymentDAO")
     private PaymentDAO dao;
+    @Autowired
+    private TSalesAcDocService tSalesAcDocService;
+    @Autowired
+    private OSalesAcDocService oSalesAcDocService;
 
     public Payment save(Payment payment) {
         Set<TicketingSalesAcDoc> sdocs = payment.gettSalesAcDocuments();
@@ -78,6 +85,57 @@ public class PaymentService {
         payment.setoSalesAcDocuments(null);
 
         return payment;
+    }
+
+    /**
+     * Make a individual refund from invoices to refund. And then pay same
+     * amount to the invoice to pay. This is credit transfer. Refund map
+     * contains "invoice id to refund" and amount to refund.
+     *
+     * @param creditTransfer
+     */
+    public void createCreditTransfer(CreditTransfer creditTransfer) {
+
+        LinkedHashMap<Long, BigDecimal> refundMap = creditTransfer.getRefundMap();
+        Long[] ids = refundMap.keySet().toArray(new Long[refundMap.size()]);
+        List<Payment> newTransactions = new ArrayList<>();
+
+        if (creditTransfer.getSaleType().equals(Enums.SaleType.TKTSALES)) {
+            List<TicketingSalesAcDoc> invoiceToRefund = tSalesAcDocService.findAllById(ids);
+            TicketingSalesAcDoc invoiceToPay = tSalesAcDocService.getWithChildrenById(creditTransfer.getInvoiceId());
+
+            for (TicketingSalesAcDoc rfd_doc : invoiceToRefund) {
+                BigDecimal amount = refundMap.get(rfd_doc.getId());
+                String remark = "Credit Transfer from: " + rfd_doc.getReference() + " to " + invoiceToPay.getReference();
+
+                Payment refund = PaymentLogic.processSingleTSalesPayment(amount, rfd_doc, remark,
+                        Enums.PaymentType.CREDIT_TRANSFER, creditTransfer.getUser());
+
+                newTransactions.add(refund);
+                Payment payment = PaymentLogic.processSingleTSalesPayment(amount, invoiceToPay, remark,
+                        Enums.PaymentType.CREDIT_TRANSFER, creditTransfer.getUser());
+                newTransactions.add(payment);
+            }
+        } else if (creditTransfer.getSaleType().equals(Enums.SaleType.OTHERSALES)) {
+            List<OtherSalesAcDoc> invoiceToRefund = oSalesAcDocService.findAllById(ids);
+            OtherSalesAcDoc invoiceToPay = oSalesAcDocService.getWithChildrenById(creditTransfer.getInvoiceId());
+
+            for (OtherSalesAcDoc rfd_doc : invoiceToRefund) {
+                BigDecimal amount = refundMap.get(rfd_doc.getId());
+                String remark = "Credit Transfer from: " + rfd_doc.getReference() + " to " + invoiceToPay.getReference();
+
+                Payment refund = PaymentLogic.processSingleOSalesPayment(amount, rfd_doc, remark,
+                        Enums.PaymentType.CREDIT_TRANSFER, creditTransfer.getUser());
+
+                newTransactions.add(refund);
+                Payment payment = PaymentLogic.processSingleOSalesPayment(amount, invoiceToPay, remark,
+                        Enums.PaymentType.CREDIT_TRANSFER, creditTransfer.getUser());
+                newTransactions.add(payment);
+            }
+        }
+        if (newTransactions.size() > 0) {
+            dao.saveBulk(newTransactions);
+        }
     }
 
     public Payments findPaymentBySalesInvoice(Long invoice_id) {

@@ -2,14 +2,11 @@ package com.ets.accountingdoc_o.dao;
 
 import com.ets.GenericDAOImpl;
 import com.ets.accountingdoc.dao.AdditionalChgLineDAO;
-import com.ets.accountingdoc.domain.AccountingDocumentLine;
-import com.ets.accountingdoc.domain.AdditionalChargeLine;
-import com.ets.accountingdoc.domain.OtherSalesAcDoc;
+import com.ets.accountingdoc.domain.*;
+import com.ets.settings.domain.User;
 import com.ets.util.Enums;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
@@ -79,6 +76,22 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
     }
 
     @Override
+    public List<OtherSalesAcDoc> findAllById(Long... id) {
+        String hql = "select distinct a from OtherSalesAcDoc as a "
+                + "left join fetch a.accountingDocumentLines as adl "
+                + "left join fetch a.additionalChargeLines as acl "
+                + "left join fetch a.relatedDocuments as a1 "
+                + "left join fetch a1.accountingDocumentLines as adl1 "
+                + "left join fetch a1.additionalChargeLines as acl1 "
+                + "where a.type = 0 and a.id in (:id)";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameterList("id", id);
+        List<OtherSalesAcDoc> result = query.list();
+        return result;
+    }
+
+    @Override
     public boolean voidDocument(OtherSalesAcDoc doc) {
 
         Set<AccountingDocumentLine> lines = doc.getAccountingDocumentLines();
@@ -100,8 +113,13 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
     @Transactional(readOnly = true)
     public List<OtherSalesAcDoc> findOutstandingDocuments(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date from, Date to) {
         String concatClient = "";
+        String dateCondition = "";
         String clientcondition = "and (:clientid is null or client.id = :clientid) ";
         char operator = '>';
+
+        if (from != null && to != null) {
+            dateCondition = "and a.docIssueDate >= :from and a.docIssueDate <= :to ";
+        }
 
         if (type.equals(Enums.AcDocType.REFUND)) {
             operator = '<';//To get outstanding refund
@@ -128,7 +146,7 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
                 + "(select sum(b.documentedAmount) as total "
                 + "from OtherSalesAcDoc b "
                 + "where a.reference=b.reference and b.status = 0 group by b.reference)" + operator + "0 "
-                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
+                + dateCondition
                 + clientcondition
                 + " order by a.id";
 
@@ -136,8 +154,11 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
         if (!clientcondition.isEmpty()) {
             query.setParameter("clientid", clientid);
         }
-        query.setParameter("from", from);
-        query.setParameter("to", to);
+
+        if (from != null && to != null) {
+            query.setParameter("from", from);
+            query.setParameter("to", to);
+        }
 
         List<OtherSalesAcDoc> dueInvoices = query.list();
         return dueInvoices;
@@ -196,6 +217,7 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
         }
 
         String hql = "select distinct a from OtherSalesAcDoc as a "
+                + "left join fetch a.payment as payment "
                 + "left join fetch a.accountingDocumentLines as adl "
                 + "left join fetch adl.otherService as os "
                 + "left join fetch os.category "
@@ -250,4 +272,58 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
         return new BigDecimal(balance.toString());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Map<User, BigDecimal> userProductivityReport(Date from, Date to) {
+        String hql = "select user.surName, user.foreName, user.loginID, "
+                + "coalesce(sum(a.documentedAmount),0) as balance "
+                + "from OtherSalesAcDoc a "
+                + "left join a.createdBy as user "
+                + "where a.status <> 2 and a.type <> 1 and a.type <> 4 and user.isActive = true "
+                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
+                + "group by user.id order by balance desc ";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameter("from", from);
+        query.setParameter("to", to);
+
+        List results = query.list();
+        Map<User, BigDecimal> map = new LinkedHashMap<>();
+
+        Iterator it = results.iterator();
+        while (it.hasNext()) {
+            Object[] objects = (Object[]) it.next();
+            User user = new User();
+            user.setSurName((String) objects[0]);
+            user.setForeName((String) objects[1]);
+            user.setLoginID((String) objects[2]);
+            map.put(user, (BigDecimal) objects[3]);
+        }
+        return map;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<String, BigDecimal> agentOutstandingReport(Date from, Date to) {
+        String hql = "select agent.name, coalesce(sum(a.documentedAmount),0) as balance "
+                + "from OtherSalesAcDoc a "
+                + "inner join a.agent as agent "
+                + "where a.status = 0 "
+                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
+                + "group by agent.id order by balance desc ";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameter("from", from);
+        query.setParameter("to", to);
+
+        List results = query.list();
+        Map<String, BigDecimal> map = new LinkedHashMap<>();
+
+        Iterator it = results.iterator();
+        while (it.hasNext()) {
+            Object[] objects = (Object[]) it.next();
+            map.put((String) objects[0], (BigDecimal) objects[1]);
+        }
+        return map;
+    }
 }

@@ -6,6 +6,7 @@ import com.ets.accountingdoc_o.model.InvoiceReportOther;
 import com.ets.accountingdoc_o.model.OtherInvoiceModel;
 import com.ets.accountingdoc_o.model.ServicesSaleReport;
 import com.ets.accountingdoc_o.service.OSalesAcDocService;
+import com.ets.productivity.model.ProductivityReport;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
@@ -116,8 +117,13 @@ public class OtherSalesAcDocWS {
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd) {
 
-        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
-        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+        Date dateFrom = null;
+        Date dateTo = null;
+
+        if (dateStart != null && dateEnd != null) {
+            dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+            dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+        }
 
         InvoiceReportOther report = service.dueInvoiceReport(doctype,
                 clienttype, clientid, dateFrom, dateTo);
@@ -145,8 +151,7 @@ public class OtherSalesAcDocWS {
     
     @GET
     @Path("/services_salereport")
-    //@RolesAllowed("SM")
-    @PermitAll
+    @RolesAllowed("SM")    
     public ServicesSaleReport servicesSaleReport(
             @QueryParam("clienttype") Enums.ClientType clienttype,
             @QueryParam("clientid") Long clientid,
@@ -159,6 +164,37 @@ public class OtherSalesAcDocWS {
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
 
         ServicesSaleReport report = service.servicesSaleReport(dateFrom, dateTo, categoryId, itemId, clienttype, clientid);
+
+        return report;
+    }
+    
+    @GET
+    @Path("/user_productivity")
+    @RolesAllowed("SM")    
+    public ProductivityReport userProducivityReport(
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+        
+        ProductivityReport report = service.userProductivityReport(dateFrom, dateTo);
+
+        return report;
+    }
+    
+    @GET
+    @Path("/agentduereport")
+    //@RolesAllowed("SM")
+    @PermitAll
+    public ProductivityReport agentDueReport(
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        ProductivityReport report = service.agentOutstandingReport(dateFrom, dateTo);
 
         return report;
     }

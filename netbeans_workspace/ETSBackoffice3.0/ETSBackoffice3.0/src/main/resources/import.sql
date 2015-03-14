@@ -11,3 +11,9 @@ INSERT INTO category (id,title) VALUES (1,'Hajj');
 INSERT INTO category (id,title) VALUES (2,'Umra');
 INSERT INTO category (id,title) VALUES (3,'Legal/Visa');
 INSERT INTO category (id,title) VALUES (4,'Transport');
+
+INSERT INTO airline (code,name,calculationType,bspCom) VALUES ('AI','NACIL AIR INDIA',0,0.00);
+INSERT INTO airline (code,name,calculationType,bspCom) VALUES ('SV','SAUDI ARABIAN AIRLINES',0,0.00);
+INSERT INTO airline (code,name,calculationType,bspCom) VALUES ('8U','AFRIQIYAH AIRWAYS',0,0.00);
+INSERT INTO airline (code,name,calculationType,bspCom) VALUES ('RJ','ROYAL JORDANIAN',0,0.00);
+INSERT INTO airline (code,name,calculationType,bspCom) VALUES ('BG','BIMAN BANGLADESH AIRLINE',0,0.00);

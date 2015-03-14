@@ -3,14 +3,18 @@ package com.ets.accounts.ws;
 import com.ets.accounts.model.Payments;
 import com.ets.accounts.domain.Payment;
 import com.ets.accounts.model.CashBookReport;
+import com.ets.accounts.model.CreditTransfer;
 import com.ets.accounts.service.PaymentService;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -34,6 +38,14 @@ public class PaymentWS {
         return service.save(payment);
     }
 
+    @POST
+    @Path("/newctransfer")
+    @RolesAllowed("GS")
+    public Response createCreditTransfer(CreditTransfer creditTransfer) {
+        service.createCreditTransfer(creditTransfer);
+        return Response.status(200).build();
+    }
+    
     @GET
     @Path("/byid/{id}")
     @RolesAllowed("GS")

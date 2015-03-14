@@ -1,6 +1,6 @@
 package com.ets.pnr.ws;
 
-import com.ets.pnr.model.collection.Careers;
+import com.ets.pnr.model.collection.Airlines;
 import com.ets.pnr.domain.Airline;
 import com.ets.pnr.service.AirlineService;
 import javax.annotation.security.RolesAllowed;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Controller;
  * @author Yusuf
  */
 @Controller
-@Path("/career-management")
+@Path("/airline-management")
 @Consumes("application/xml")
 @Produces("application/xml")
 public class AirlineWS {
@@ -28,31 +28,30 @@ public class AirlineWS {
     AirlineService service;
 
     @GET
-    @Path("/careers/{code}")    
+    @Path("/airlines/{code}")    
     @RolesAllowed("AD")
     public Airline find(@PathParam("code") String code) {
         return service.find(code);
     }
-
     
     @GET
-    @Path("/careers/match/{name}")    
+    @Path("/airlines/match/{name}")    
     @RolesAllowed("AD")
-    public Careers match(@QueryParam("name") String name) {
+    public Airlines match(@QueryParam("name") String name) {
         return service.match(name);
     }
     
     @POST
-    @Path("/careers/save")    
+    @Path("/airlines/save")    
     @RolesAllowed("AD")
-    public void save(Airline career) {        
-        service.save(career);
+    public void save(Airline airline) {        
+        service.save(airline);
     }
 
     @POST
-    @Path("/careers/save-all")
+    @Path("/airlines/save-all")
     @RolesAllowed("AD")
-    public void saveBulk(Careers careers) {        
-        service.saveBulk(careers);
+    public void saveBulk(Airlines airlines) {        
+        service.saveBulk(airlines);
     }
 }

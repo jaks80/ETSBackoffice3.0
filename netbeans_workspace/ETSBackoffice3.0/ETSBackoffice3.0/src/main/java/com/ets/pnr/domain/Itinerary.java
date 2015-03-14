@@ -3,16 +3,8 @@ package com.ets.pnr.domain;
 import com.ets.PersistentObject;
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.*;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -22,14 +14,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 @Access(AccessType.PROPERTY)
-public class Itinerary extends PersistentObject implements Serializable{
+public class Itinerary extends PersistentObject implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @XmlElement
-    private String segmentNo;
-    @XmlElement
-    private String stopOver;
+    private int segmentNo;
     @XmlElement
     private String deptFrom;
     @XmlElement
@@ -43,7 +33,7 @@ public class Itinerary extends PersistentObject implements Serializable{
     @XmlElement
     private String arvTime;
     @XmlElement
-    private String airLineID;
+    private String airLineCode;
     @XmlElement
     private String flightNo;
     @XmlElement
@@ -62,30 +52,26 @@ public class Itinerary extends PersistentObject implements Serializable{
     private String flightDuration;
     @XmlElement
     private String mileage;
+    @XmlElement
+    private String stopOver;//(X is no stopover permitted, O is stopover permitted) 
 
-    @XmlElement    
+    @XmlElement
     private Pnr pnr;
 
     public Itinerary() {
 
     }
 
-    public String getSegmentNo() {
+    @Column(nullable = false)
+    public int getSegmentNo() {
         return segmentNo;
     }
 
-    public void setSegmentNo(String segmentNo) {
+    public void setSegmentNo(int segmentNo) {
         this.segmentNo = segmentNo;
     }
 
-    public String isStopOver() {
-        return getStopOver();
-    }
-
-    public void setStopOver(String stopOver) {
-        this.stopOver = stopOver;
-    }
-
+    @Column(length = 10)
     public String getDeptFrom() {
         return deptFrom;
     }
@@ -94,6 +80,7 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.deptFrom = deptFrom;
     }
 
+    @Column(length = 10)
     public String getDeptTo() {
         return deptTo;
     }
@@ -103,6 +90,7 @@ public class Itinerary extends PersistentObject implements Serializable{
     }
 
     @Temporal(javax.persistence.TemporalType.DATE)
+    @Column(nullable = false)
     public Date getDeptDate() {
         return deptDate;
     }
@@ -111,6 +99,7 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.deptDate = deptDate;
     }
 
+    @Column(length = 10)
     public String getDeptTime() {
         return deptTime;
     }
@@ -128,6 +117,7 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.arvDate = arvDate;
     }
 
+    @Column(length = 10)
     public String getArvTime() {
         return arvTime;
     }
@@ -136,14 +126,16 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.arvTime = arvTime;
     }
 
-    public String getAirLineID() {
-        return airLineID;
+    @Column(length = 10)
+    public String getAirLineCode() {
+        return airLineCode;
     }
 
-    public void setAirLineID(String airLineID) {
-        this.airLineID = airLineID;
+    public void setAirLineCode(String airLineCode) {
+        this.airLineCode = airLineCode;
     }
 
+    @Column(length = 10)
     public String getFlightNo() {
         return flightNo;
     }
@@ -152,6 +144,7 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.flightNo = flightNo;
     }
 
+    @Column(length = 5)
     public String getTicketClass() {
         return ticketClass;
     }
@@ -160,6 +153,7 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.ticketClass = ticketClass;
     }
 
+    @Column(length = 5)
     public String getTktStatus() {
         return tktStatus;
     }
@@ -168,6 +162,7 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.tktStatus = tktStatus;
     }
 
+    @Column(length = 10)
     public String getBaggage() {
         return baggage;
     }
@@ -176,6 +171,7 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.baggage = baggage;
     }
 
+    @Column(length = 4)
     public String getMealCode() {
         return mealCode;
     }
@@ -184,6 +180,7 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.mealCode = mealCode;
     }
 
+    @Column(length = 10)
     public String getCheckInTerminal() {
         return checkInTerminal;
     }
@@ -192,6 +189,7 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.checkInTerminal = checkInTerminal;
     }
 
+    @Column(length = 10)
     public String getCheckInTime() {
         return checkInTime;
     }
@@ -200,6 +198,7 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.checkInTime = checkInTime;
     }
 
+    @Column(length = 10)
     public String getFlightDuration() {
         return flightDuration;
     }
@@ -208,6 +207,7 @@ public class Itinerary extends PersistentObject implements Serializable{
         this.flightDuration = flightDuration;
     }
 
+    @Column(length = 10)
     public String getMileage() {
         return mileage;
     }
@@ -215,7 +215,16 @@ public class Itinerary extends PersistentObject implements Serializable{
     public void setMileage(String mileage) {
         this.mileage = mileage;
     }
-    
+
+    @Column(length = 1)
+    public String getStopOver() {
+        return stopOver;
+    }
+
+    public void setStopOver(String stopOver) {
+        this.stopOver = stopOver;
+    }
+
     @ManyToOne
     @JoinColumn(name = "pnr_fk")
     public Pnr getPnr() {
@@ -224,9 +233,5 @@ public class Itinerary extends PersistentObject implements Serializable{
 
     public void setPnr(Pnr pnr) {
         this.pnr = pnr;
-    }
-
-    public String getStopOver() {
-        return stopOver;
     }
 }

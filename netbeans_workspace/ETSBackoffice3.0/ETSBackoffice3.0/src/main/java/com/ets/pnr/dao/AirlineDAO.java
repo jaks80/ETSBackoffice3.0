@@ -9,4 +9,5 @@ import com.ets.pnr.domain.Airline;
  */
 public interface AirlineDAO extends GenericDAO<Airline, Long>{
     
+    public Airline fineByCode(String code);
 }

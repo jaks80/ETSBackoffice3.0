@@ -9,11 +9,16 @@ import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.pnr.service.PnrService;
 import com.ets.accountingdoc.model.InvoiceReport;
+import com.ets.productivity.model.ProductivityReport;
+import com.ets.settings.domain.User;
+import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import com.ets.util.Enums.AcDocType;
 import com.ets.util.PnrUtil;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,14 +93,14 @@ public class TSalesAcDocService {
     }
 
     /**
-     * Synchronize this to avoid acdoc ref duplication
-     * This method uses to create every single accounting document with/without
-     * tickets
+     * Synchronize this to avoid acdoc ref duplication This method uses to
+     * create every single accounting document with/without tickets
+     *
      * @param doc
      * @return
      */
     public synchronized TicketingSalesAcDoc newDocument(TicketingSalesAcDoc doc) {
-        
+
         if (doc.getReference() == null && doc.getType().equals(Enums.AcDocType.INVOICE)) {
             if (doc.getReference() == null) {
                 //There will be refference from void invoice.
@@ -175,6 +180,11 @@ public class TSalesAcDocService {
         return undefineChildren(doc);
     }
 
+    public List<TicketingSalesAcDoc> findAllById(Long... id) {
+        List<TicketingSalesAcDoc> invoices = dao.findAllById(id);
+        return invoices;
+    }
+
     private TicketingSalesAcDoc undefineChildren(TicketingSalesAcDoc doc) {
 
         for (Ticket t : doc.getTickets()) {
@@ -241,7 +251,7 @@ public class TSalesAcDocService {
         TicketingSalesAcDoc doc = dao.getWithChildrenById(ticketingSalesAcDoc.getId());
         doc.setLastModified(ticketingSalesAcDoc.getLastModified());
         doc.setLastModifiedBy(ticketingSalesAcDoc.getLastModifiedBy());
-        
+
         Set<TicketingSalesAcDoc> relatedDocs = doc.getRelatedDocuments();
         if (doc.getType().equals(Enums.AcDocType.INVOICE) && !relatedDocs.isEmpty()) {
             return doc;
@@ -255,9 +265,9 @@ public class TSalesAcDocService {
     public InvoiceReport invoiceHistoryReport(Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
         List<TicketingSalesAcDoc> invoice_history = dao.findInvoiceHistory(clienttype, clientid, dateStart, dateEnd);
 
-        InvoiceReport report = InvoiceReport.serializeToSalesSummery(clientid,invoice_history,dateStart,dateEnd);
+        InvoiceReport report = InvoiceReport.serializeToSalesSummery(clientid, invoice_history, dateStart, dateEnd);
         report.setTitle("Invoice History Report");
-        return report;        
+        return report;
     }
 
     public List<TicketingSalesAcDoc> dueInvoices(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
@@ -273,7 +283,7 @@ public class TSalesAcDocService {
                 related.setParent(null);
             }
             inv.setAdditionalChargeLines(null);
-            AcDocUtil.undefineTSAcDoc(inv, inv.getTickets());            
+            AcDocUtil.undefineTSAcDoc(inv, inv.getTickets());
             //inv.setRelatedDocuments(null);
             inv.getPnr().setTickets(null);
             inv.getPnr().setRemarks(null);
@@ -284,11 +294,23 @@ public class TSalesAcDocService {
         return dueInvoices;
     }
 
-    public InvoiceReport dueInvoiceReport(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
+    public InvoiceReport dueInvoiceReport(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid,
+            Date dateStart, Date dateEnd) {
 
         List<TicketingSalesAcDoc> dueInvoices = dueInvoices(type, clienttype, clientid, dateStart, dateEnd);
-        InvoiceReport report = InvoiceReport.serializeToSalesSummery(clientid,dueInvoices,dateStart,dateEnd);
+        InvoiceReport report = InvoiceReport.serializeToSalesSummery(clientid, dueInvoices, dateStart, dateEnd);
         report.setTitle("Outstanding Invoice Report");
+        return report;
+    }
+
+    public InvoiceReport outstandingFlightReport(Enums.ClientType clienttype,
+            Long clientid, Date dateEnd) {
+
+        Date dateStart = new java.util.Date();
+
+        List<TicketingSalesAcDoc> dueInvoices = dao.outstandingFlightReport(clienttype, clientid, dateEnd);
+        InvoiceReport report = InvoiceReport.serializeToSalesSummery(clientid, dueInvoices, dateStart, dateEnd);
+        report.setTitle("Unpaid Flight Report");
         return report;
     }
 
@@ -299,9 +321,43 @@ public class TSalesAcDocService {
             dao.save(doc);
         }
     }
-    
+
     public InvoiceModel getModelbyId(long id) {
-        TicketingSalesAcDoc doc = getWithChildrenById(id);                      
+        TicketingSalesAcDoc doc = getWithChildrenById(id);
         return InvoiceModel.createModel(undefineChildren(doc));
+    }
+
+    public ProductivityReport userProductivityReport(Date from, Date to) {
+
+        Map<User, BigDecimal> productivityLine = dao.userProductivityReport(from, to);
+
+        ProductivityReport report = new ProductivityReport();
+        report.setTitle("Productivity Report");
+        report.setDateFrom(DateUtil.dateToString(from));
+        report.setDateTo(DateUtil.dateToString(to));
+        report.setSaleType(Enums.SaleType.TKTSALES);
+
+        for (User key : productivityLine.keySet()) {
+            report.getProductivityLine().put(key.calculateFullName(), productivityLine.get(key).toString());
+        }
+
+        return report;
+    }
+
+    public ProductivityReport agentOutstandingReport(Date from, Date to) {
+
+        Map<String, BigDecimal> productivityLine = dao.agentOutstandingReport(from, to);
+
+        ProductivityReport report = new ProductivityReport();
+        report.setTitle("Agent Outstanding Report");
+        report.setDateFrom(DateUtil.dateToString(from));
+        report.setDateTo(DateUtil.dateToString(to));
+        report.setSaleType(Enums.SaleType.TKTSALES);
+
+        for (String key : productivityLine.keySet()) {
+            report.getProductivityLine().put(key, productivityLine.get(key).toString());
+        }
+
+        return report;
     }
 }

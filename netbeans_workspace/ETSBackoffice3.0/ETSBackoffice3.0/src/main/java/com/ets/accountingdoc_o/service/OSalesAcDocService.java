@@ -1,18 +1,15 @@
 package com.ets.accountingdoc_o.service;
 
-import com.ets.accountingdoc.domain.AccountingDocumentLine;
-import com.ets.accountingdoc_o.dao.OtherSalesAcDocDAO;
-import com.ets.accountingdoc.domain.OtherSalesAcDoc;
-import com.ets.accountingdoc.model.InvoiceReport;
-import com.ets.accountingdoc_o.model.InvoiceReportOther;
+import com.ets.accountingdoc.domain.*;
+import com.ets.accountingdoc_o.dao.*;
+import com.ets.accountingdoc_o.model.*;
+import com.ets.productivity.model.ProductivityReport;
 import com.ets.accountingdoc.service.AcDocUtil;
-import com.ets.accountingdoc_o.dao.AccountingDocumentLineDAO;
-import com.ets.accountingdoc_o.model.OtherInvoiceModel;
-import com.ets.accountingdoc_o.model.ServicesSaleReport;
+import com.ets.settings.domain.User;
+import com.ets.util.DateUtil;
 import com.ets.util.Enums;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +22,7 @@ public class OSalesAcDocService {
 
     @Resource(name = "otherSalesAcDocDAO")
     private OtherSalesAcDocDAO dao;
-    
+
     @Resource(name = "accountingDocumentLineDAO")
     private AccountingDocumentLineDAO lineDao;
 
@@ -42,17 +39,17 @@ public class OSalesAcDocService {
         }
 
         AcDocUtil.initAcDocInLine(doc, doc.getAccountingDocumentLines());
-        doc.setStatus(Enums.AcDocStatus.ACTIVE);        
-        
-        if(doc.getParent()!=null){
-         OtherSalesAcDoc parent = getWithChildrenById(doc.getParent().getId());
-         doc.setParent(parent);
+        doc.setStatus(Enums.AcDocStatus.ACTIVE);
+
+        if (doc.getParent() != null) {
+            OtherSalesAcDoc parent = getWithChildrenById(doc.getParent().getId());
+            doc.setParent(parent);
         }
-        
+
         if (!doc.getAccountingDocumentLines().isEmpty() || !doc.getAdditionalChargeLines().isEmpty()) {
             doc.setDocumentedAmount(doc.calculateDocumentedAmount());
         }
-        
+
         dao.save(doc);
 
         if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
@@ -78,7 +75,11 @@ public class OSalesAcDocService {
         return undefineChildren(doc);
     }
 
-    
+    public List<OtherSalesAcDoc> findAllById(Long... id) {
+        List<OtherSalesAcDoc> invoices = dao.findAllById(id);
+        return invoices;
+    }
+
     public List<OtherSalesAcDoc> getByReffference(int refNo) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -89,12 +90,12 @@ public class OSalesAcDocService {
         return true;
     }
 
-     public OtherSalesAcDoc _void(OtherSalesAcDoc other_doc) {
+    public OtherSalesAcDoc _void(OtherSalesAcDoc other_doc) {
         OtherSalesAcDoc doc = dao.getWithChildrenById(other_doc.getId());
-        
+
         doc.setLastModified(other_doc.getLastModified());
         doc.setLastModifiedBy(other_doc.getLastModifiedBy());
-        
+
         Set<OtherSalesAcDoc> relatedDocs = doc.getRelatedDocuments();
         if (doc.getType().equals(Enums.AcDocType.INVOICE) && !relatedDocs.isEmpty()) {
             return doc;
@@ -104,23 +105,23 @@ public class OSalesAcDocService {
             return doc;
         }
     }
-        
+
     public InvoiceReportOther invoiceHistoryReport(Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
         List<OtherSalesAcDoc> invoice_history = dao.findInvoiceHistory(clienttype, clientid, dateStart, dateEnd);
-        
-        InvoiceReportOther report = InvoiceReportOther.serializeToSalesSummery(clientid,invoice_history,dateStart,dateEnd);
+
+        InvoiceReportOther report = InvoiceReportOther.serializeToSalesSummery(clientid, invoice_history, dateStart, dateEnd);
         report.setTitle("Invoice History Report");
-        return report;                
+        return report;
     }
 
     public List<OtherSalesAcDoc> dueInvoices(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
         List<OtherSalesAcDoc> dueInvoices = dao.findOutstandingDocuments(type, clienttype, clientid, dateStart, dateEnd);
 
         for (OtherSalesAcDoc inv : dueInvoices) {
-            for(AccountingDocumentLine l: inv.getAccountingDocumentLines()){
-             l.setOtherSalesAcDoc(null);             
+            for (AccountingDocumentLine l : inv.getAccountingDocumentLines()) {
+                l.setOtherSalesAcDoc(null);
             }
-            
+
             for (OtherSalesAcDoc related : inv.getRelatedDocuments()) {
                 related.setAccountingDocumentLines(null);
                 related.setAdditionalChargeLines(null);
@@ -137,29 +138,29 @@ public class OSalesAcDocService {
     public InvoiceReportOther dueInvoiceReport(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd) {
 
         List<OtherSalesAcDoc> dueInvoices = dueInvoices(type, clienttype, clientid, dateStart, dateEnd);
-        InvoiceReportOther report = InvoiceReportOther.serializeToSalesSummery(clientid,dueInvoices,dateStart,dateEnd);
+        InvoiceReportOther report = InvoiceReportOther.serializeToSalesSummery(clientid, dueInvoices, dateStart, dateEnd);
         report.setTitle("Outstanding Hostory Report");
-        return report;   
+        return report;
     }
 
     private OtherSalesAcDoc undefineChildren(OtherSalesAcDoc doc) {
 
         Set<OtherSalesAcDoc> relatedDocs = AcDocUtil.filterVoidRelatedDocumentsOther(doc.getRelatedDocuments());
-        
+
         for (OtherSalesAcDoc r : relatedDocs) {
             if (r.getType().equals(Enums.AcDocType.PAYMENT) || r.getType().equals(Enums.AcDocType.REFUND)) {
                 AcDocUtil.undefineOAcDocumentInPayment(r);
             }
-            if(r.getAdditionalChargeLines()!=null){
-             AcDocUtil.undefineAddChgLine(r, r.getAdditionalChargeLines());
+            if (r.getAdditionalChargeLines() != null) {
+                AcDocUtil.undefineAddChgLine(r, r.getAdditionalChargeLines());
             }
         }
         doc.setRelatedDocuments(relatedDocs);
-        
+
         if (doc.getAccountingDocumentLines() != null && !doc.getAccountingDocumentLines().isEmpty()) {
             AcDocUtil.undefineAcDocInLine(doc, doc.getAccountingDocumentLines());
         }
-                
+
         if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
             AcDocUtil.undefineAddChgLine(doc, doc.getAdditionalChargeLines());
         }
@@ -168,20 +169,53 @@ public class OSalesAcDocService {
     }
 
     public OtherInvoiceModel getModelbyId(long id) {
-        OtherSalesAcDoc doc = getWithChildrenById(id);                      
+        OtherSalesAcDoc doc = getWithChildrenById(id);
         return OtherInvoiceModel.createModel(undefineChildren(doc));
     }
-    
-    public ServicesSaleReport servicesSaleReport(Date from, Date to, Long categoryId, 
-            Long itemId,Enums.ClientType clienttype, Long clientid) {
-    
-        List<AccountingDocumentLine> line_items = lineDao.findLineItems(from, to, categoryId, 
+
+    public ServicesSaleReport servicesSaleReport(Date from, Date to, Long categoryId,
+            Long itemId, Enums.ClientType clienttype, Long clientid) {
+
+        List<AccountingDocumentLine> line_items = lineDao.findLineItems(from, to, categoryId,
                 itemId, clienttype, clientid);
         ServicesSaleReport sale_report = new ServicesSaleReport();
         sale_report.setReportTitle("Sale Report: Services");
         sale_report = ServicesSaleReport.serializeToSalesSummery(line_items, from, to);
-        
+
         return sale_report;
     }
-    
+
+    public ProductivityReport userProductivityReport(Date from, Date to) {
+
+        Map<User, BigDecimal> productivityLine = dao.userProductivityReport(from, to);
+
+        ProductivityReport report = new ProductivityReport();
+        report.setTitle("Productivity Report");
+        report.setDateFrom(DateUtil.dateToString(from));
+        report.setDateTo(DateUtil.dateToString(to));
+        report.setSaleType(Enums.SaleType.OTHERSALES);
+
+        for (User key : productivityLine.keySet()) {
+            report.getProductivityLine().put(key.calculateFullName(), productivityLine.get(key).toString());
+        }
+
+        return report;
+    }
+
+    public ProductivityReport agentOutstandingReport(Date from, Date to) {
+
+        Map<String, BigDecimal> productivityLine = dao.agentOutstandingReport(from, to);
+
+        ProductivityReport report = new ProductivityReport();
+        report.setTitle("Agent Outstanding Report");
+        report.setDateFrom(DateUtil.dateToString(from));
+        report.setDateTo(DateUtil.dateToString(to));
+        report.setSaleType(Enums.SaleType.OTHERSALES);
+
+        for (String key : productivityLine.keySet()) {
+            report.getProductivityLine().put(key, productivityLine.get(key).toString());
+        }
+
+        return report;
+    }
 }

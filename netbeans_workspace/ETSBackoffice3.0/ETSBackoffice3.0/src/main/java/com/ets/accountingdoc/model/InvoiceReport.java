@@ -1,8 +1,7 @@
 package com.ets.accountingdoc.model;
 
 import com.ets.Application;
-import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
-import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
+import com.ets.accountingdoc.domain.*;
 import com.ets.accountingdoc.service.AcDocUtil;
 import com.ets.client.domain.Contactable;
 import com.ets.pnr.domain.Pnr;
@@ -17,10 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -103,16 +99,18 @@ public class InvoiceReport implements Serializable {
             invSummery.setDocIssueDate(DateUtil.dateToString(invoice.getDocIssueDate()));
             invSummery.setGdsPnr(pnr.getGdsPnr());
             invSummery.setNoOfPax(pnr.getNoOfPax());
-            invSummery.setLeadPsgr(PnrUtil.calculateLeadPaxName(invoice.getTickets()));
+            invSummery.setLeadPsgr(PnrUtil.calculatePartialName(PnrUtil.calculateLeadPaxName(
+                    invoice.getTickets())));
             invSummery.setAirLine(pnr.getAirLineCode());
             invSummery.setPnr_id(pnr.getId());
             invSummery.setReference(invoice.getReference());
             invSummery.setStatus(invoice.getStatus());
             invSummery.setType(invoice.getType());
             invSummery.setOutBoundDetails(PnrUtil.getOutBoundFlightSummery(invoice.getPnr().getSegments()));
+            
             invSummery.setDocumentedAmount(invoice.getDocumentedAmount());
             invSummery.setOtherAmount(invoice.calculateTotalDebitMemo().add(invoice.calculateTotalCreditMemo()));
-            invSummery.setPayment(invoice.calculateTotalPayment().add(invoice.calculateTotalRefund()));
+            invSummery.setPayment((invoice.calculateTotalPayment().add(invoice.calculateTotalRefund())).abs());
             invSummery.setDue(invoice.calculateDueAmount());
 
             totalInvAmount = totalInvAmount.add(invoice.getDocumentedAmount());
@@ -125,16 +123,17 @@ public class InvoiceReport implements Serializable {
             report.addInvoice(invSummery);
         }
 
+        if(from !=null && to!=null){
         report.setDateFrom(DateUtil.dateToString(from));
         report.setDateTo(DateUtil.dateToString(to));
-
+        }
         String currency = Application.currency();
         report.setTotalInvAmount(currency + totalInvAmount.toString());
         report.setTotalCMAmount(currency + totalCMAmount.toString());
         report.setTotalDMAmount(currency + totalDMAmount.toString());
         report.setTotalDue(currency + totalDue.toString());
-        report.setTotalPayment(currency + totalPayment.toString());
-        report.setTotalRefund(currency + totalRefund.toString());
+        report.setTotalPayment(currency + totalPayment.abs().toString());
+        report.setTotalRefund(currency + totalRefund.abs().toString());
 
         if (clientid!=null && !invoices.isEmpty() && invoices.get(0).getPnr() != null) {
             Pnr pnr = invoices.get(0).getPnr();

@@ -13,10 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -103,7 +100,7 @@ public class InvoiceReportOther implements Serializable {
             
             invSummery.setDocumentedAmount(invoice.getDocumentedAmount());
             invSummery.setOtherAmount(invoice.calculateTotalDebitMemo().add(invoice.calculateTotalCreditMemo()));
-            invSummery.setPayment(invoice.calculateTotalPayment().add(invoice.calculateTotalRefund()));
+            invSummery.setPayment((invoice.calculateTotalPayment().add(invoice.calculateTotalRefund())).abs());
             invSummery.setDue(invoice.calculateDueAmount());
 
             invSummery.setAgent(invoice.getAgent());
@@ -119,16 +116,18 @@ public class InvoiceReportOther implements Serializable {
             report.addInvoice(invSummery);
         }
         
+        if(from !=null && to!=null){
         report.setDateFrom(DateUtil.dateToString(from));
         report.setDateTo(DateUtil.dateToString(to));
+        }
         
         String currency = Application.currency();
         report.setTotalInvAmount(currency + totalInvAmount.toString());
         report.setTotalCMAmount(currency + totalCMAmount.toString());
         report.setTotalDMAmount(currency + totalDMAmount.toString());
         report.setTotalDue(currency + totalDue.toString());
-        report.setTotalPayment(currency + totalPayment.toString());
-        report.setTotalRefund(currency + totalRefund.toString());
+        report.setTotalPayment(currency + totalPayment.abs().toString());
+        report.setTotalRefund(currency + totalRefund.abs().toString());
 
         if (clientid!=null && !invoices.isEmpty()){
            

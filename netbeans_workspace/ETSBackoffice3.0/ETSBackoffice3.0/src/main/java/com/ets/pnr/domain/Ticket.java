@@ -86,7 +86,7 @@ public class Ticket extends PersistentObject implements Serializable {
     public String getFullPaxName() {
 
         String paxFullName = "";
-        paxFullName = getSurName() + " / " + getForeName();
+        paxFullName = getSurName() + "/" + getForeName();
 
         return paxFullName;
     }
@@ -123,7 +123,7 @@ public class Ticket extends PersistentObject implements Serializable {
     public String getFullPaxNameWithPaxNo() {
 
         String paxFullName = "";
-        paxFullName = getPassengerNo() + ". " + getSurName() + " / " + getForeName();
+        paxFullName = getPassengerNo() + ". " + getSurName() + "/" + getForeName();
 
         return paxFullName;
     }
@@ -326,20 +326,4 @@ public class Ticket extends PersistentObject implements Serializable {
     public void setNetPurchaseFare(BigDecimal netPurchaseFare) {
         this.netPurchaseFare = netPurchaseFare;
     }
-
-//    public String getSurName() {
-//        return surName;
-//    }
-//
-//    public void setSurName(String surName) {
-//        this.surName = surName;
-//    }
-//
-//    public String getForeName() {
-//        return foreName;
-//    }
-//
-//    public void setForeName(String foreName) {
-//        this.foreName = foreName;
-//    }
 }

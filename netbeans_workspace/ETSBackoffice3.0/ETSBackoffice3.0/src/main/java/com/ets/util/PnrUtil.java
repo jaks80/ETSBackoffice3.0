@@ -36,8 +36,8 @@ public class PnrUtil {
     }
 
     public static void undefinePnrChildren(Pnr pnr) {
-        if(pnr.getRemarks()!=null){
-         PnrUtil.undefinePnrInRemark(pnr, pnr.getRemarks());
+        if (pnr.getRemarks() != null) {
+            PnrUtil.undefinePnrInRemark(pnr, pnr.getRemarks());
         }
         PnrUtil.undefinePnrInTickets(pnr, pnr.getTickets());
         PnrUtil.undefinePnrInSegments(pnr, pnr.getSegments());
@@ -170,7 +170,7 @@ public class PnrUtil {
             for (Itinerary oldSeg : oldSegs) {
                 tempOSeg = new Itinerary();
                 tempOSeg = oldSeg;
-                if (oldSeg.getSegmentNo().equals(newSeg.getSegmentNo())) {
+                if (oldSeg.getSegmentNo() == newSeg.getSegmentNo()) {
                     exist = true;
                     break loop;
                 }
@@ -236,11 +236,11 @@ public class PnrUtil {
     public static String getOutBoundFlightSummery(Set<Itinerary> segments) {
         StringBuilder sb = new StringBuilder();
         Itinerary fs = getFirstSegment(segments);
-        
-        sb.append(fs.getDeptDate()+"/");
-        sb.append(fs.getDeptFrom()+"-"+fs.getDeptTo()+"/");
-        sb.append(fs.getAirLineID());        
-        
+
+        sb.append(fs.getDeptDate() + "/");
+        sb.append(fs.getDeptFrom() + "-" + fs.getDeptTo() + "/");
+        sb.append(fs.getAirLineCode());
+
         return sb.toString();
     }
 
@@ -262,7 +262,7 @@ public class PnrUtil {
         }
         return firstSegment;
     }
-    
+
     public static String calculateLeadPaxName(Set<Ticket> ticket_list) {
         Ticket leadPax = null;
         int paxNo = 99;
@@ -283,6 +283,14 @@ public class PnrUtil {
                 break;
             }
             return setElement.getFullPaxName();
+        }
+    }
+
+    public static String calculatePartialName(String name) {
+        if (name.length() < 8) {
+            return name;
+        } else {
+            return name.substring(0, 8);
         }
     }
 }

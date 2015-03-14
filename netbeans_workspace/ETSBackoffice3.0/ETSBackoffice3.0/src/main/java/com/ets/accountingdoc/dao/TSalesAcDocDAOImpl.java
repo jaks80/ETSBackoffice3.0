@@ -4,12 +4,10 @@ import com.ets.GenericDAOImpl;
 import com.ets.accountingdoc.domain.*;
 import com.ets.pnr.dao.TicketDAO;
 import com.ets.pnr.domain.Ticket;
+import com.ets.settings.domain.User;
 import com.ets.util.Enums;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
@@ -42,10 +40,25 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     }
 
     @Override
+    public List<TicketingSalesAcDoc> findAllById(Long... id) {
+        String hql = "select distinct a from TicketingSalesAcDoc as a "
+                + "left join fetch a.additionalChargeLines as acl "
+                + "left join fetch a.pnr "
+                + "left join fetch a.relatedDocuments as a1 "
+                + "left join fetch a1.additionalChargeLines as acl1 "
+                + "where a.type = 0 and a.id in (:id)";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameterList("id", id);
+        List<TicketingSalesAcDoc> result = query.list();
+        return result;
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<TicketingSalesAcDoc> getByPnrId(Long pnrId) {
         String hql = "select distinct a from TicketingSalesAcDoc as a "
-                + "left join fetch a.additionalChargeLines as acl "                
+                + "left join fetch a.additionalChargeLines as acl "
                 + "left join fetch acl.additionalCharge "
                 + "left join fetch a.tickets as t "
                 + "left join fetch a.relatedDocuments as a1 "
@@ -86,7 +99,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         query.setParameter("id", id);
         TicketingSalesAcDoc doc = (TicketingSalesAcDoc) query.uniqueResult();
         Set<TicketingSalesAcDoc> related_docs = doc.getRelatedDocuments();
-        
+
         for (TicketingSalesAcDoc rd : related_docs) {
             rd.setRelatedDocuments(null);
             rd.setParent(null);
@@ -100,11 +113,17 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
 
     @Override
     @Transactional(readOnly = true)
-    public List<TicketingSalesAcDoc> findOutstandingDocuments(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date from, Date to) {
+    public List<TicketingSalesAcDoc> findOutstandingDocuments(Enums.AcDocType type, Enums.ClientType clienttype,
+            Long clientid, Date from, Date to) {
 
         String concatClient = "";
+        String dateCondition = "";
         String clientcondition = "and (:clientid is null or client.id = :clientid) ";
         char operator = '>';
+
+        if (from != null && to != null) {
+            dateCondition = "and a.docIssueDate >= :from and a.docIssueDate <= :to ";
+        }
 
         if (type.equals(Enums.AcDocType.REFUND)) {
             operator = '<';//To get outstanding refund
@@ -131,7 +150,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + "(select sum(b.documentedAmount) as total "
                 + "from TicketingSalesAcDoc b "
                 + "where a.reference=b.reference and b.status = 0 group by b.reference)" + operator + "0 "
-                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
+                + dateCondition
                 + clientcondition
                 + " order by a.id";
 
@@ -139,8 +158,51 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         if (!clientcondition.isEmpty()) {
             query.setParameter("clientid", clientid);
         }
-        query.setParameter("from", from);
-        query.setParameter("to", to);
+
+        if (from != null && to != null) {
+            query.setParameter("from", from);
+            query.setParameter("to", to);
+        }
+
+        List<TicketingSalesAcDoc> dueInvoices = query.list();
+        return dueInvoices;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TicketingSalesAcDoc> outstandingFlightReport(Enums.ClientType clienttype, 
+            Long clientid, Date dateEnd) {
+        String concatClient = "";
+        String clientcondition = "and (:clientid is null or client.id = :clientid) ";
+
+        if (clienttype != null && clienttype.equals(Enums.ClientType.AGENT)) {
+            concatClient = "inner join fetch p.agent as client ";
+        } else if (clienttype != null && clienttype.equals(Enums.ClientType.CUSTOMER)) {
+            concatClient = "inner join fetch p.customer as client ";
+        } else {
+            concatClient = "left join fetch p.agent left join fetch p.customer ";
+            clientcondition = "";
+        }
+
+        String hql = "select a from TicketingSalesAcDoc as a "
+                + "left join fetch a.relatedDocuments as r "
+                + "left join fetch a.tickets as t "
+                + "left join fetch a.pnr as p "
+                + "inner join fetch p.segments as seg "
+                + concatClient
+                + "where a.status = 0 and a.type = 0 and "
+                + "(select sum(b.documentedAmount) as total "
+                + "from TicketingSalesAcDoc b "
+                + "where a.reference=b.reference and b.status = 0 group by b.reference) > 0 "
+                + "and seg.deptDate <= :dateEnd "
+                + clientcondition
+                + "group by p.id order by seg.deptDate asc";
+
+        Query query = getSession().createQuery(hql);
+        if (!clientcondition.isEmpty()) {
+            query.setParameter("clientid", clientid);
+        }
+        query.setParameter("dateEnd", dateEnd);
 
         List<TicketingSalesAcDoc> dueInvoices = query.list();
         return dueInvoices;
@@ -161,7 +223,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
             clientcondition = "";
         }
 
-        String hql = "select distinct a from TicketingSalesAcDoc as a " 
+        String hql = "select distinct a from TicketingSalesAcDoc as a "
                 + "left join fetch a.tickets as t "
                 + "left join fetch a.relatedDocuments as r "
                 + "left join fetch a.pnr as p "
@@ -227,7 +289,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
             clientcondition = "";
         }
 
-        String hql = "select distinct a from TicketingSalesAcDoc as a "                
+        String hql = "select distinct a from TicketingSalesAcDoc as a "
                 + "left join fetch a.payment as payment "
                 + "left join fetch a.pnr as p "
                 + "left join fetch p.segments "
@@ -249,6 +311,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BigDecimal getAccountBallanceToDate(Enums.ClientType clienttype, Long clientid, Date to) {
 
         String concatClient = "";
@@ -278,8 +341,64 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         }
 
         query.setParameter("to", to);
-        
-        Object balance = query.uniqueResult();       
+
+        Object balance = query.uniqueResult();
         return new BigDecimal(balance.toString());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<User, BigDecimal> userProductivityReport(Date from, Date to) {
+        String hql = "select user.surName, user.foreName, user.loginID, "
+                + "coalesce(sum(a.documentedAmount),0) as balance "
+                + "from TicketingSalesAcDoc a "
+                + "left join a.createdBy as user "
+                + "where a.status <> 2 and a.type <> 1 and a.type <> 4 and user.isActive = true "
+                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
+                + "group by user.id order by balance desc ";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameter("from", from);
+        query.setParameter("to", to);
+
+        List results = query.list();
+        Map<User, BigDecimal> map = new LinkedHashMap<>();
+
+        Iterator it = results.iterator();
+        while (it.hasNext()) {
+            Object[] objects = (Object[]) it.next();
+            User user = new User();
+            user.setSurName((String) objects[0]);
+            user.setForeName((String) objects[1]);
+            user.setLoginID((String) objects[2]);
+            map.put(user, (BigDecimal) objects[3]);
+        }
+        return map;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<String, BigDecimal> agentOutstandingReport(Date from, Date to) {
+        String hql = "select agent.name, coalesce(sum(a.documentedAmount),0) as balance "
+                + "from TicketingSalesAcDoc a "
+                + "left join a.pnr as p "
+                + "inner join p.agent as agent "
+                + "where a.status = 0 "
+                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
+                + "group by agent.id order by balance desc ";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameter("from", from);
+        query.setParameter("to", to);
+
+        List results = query.list();
+        Map<String, BigDecimal> map = new LinkedHashMap<>();
+
+        Iterator it = results.iterator();
+        while (it.hasNext()) {
+            Object[] objects = (Object[]) it.next();
+            map.put((String) objects[0], (BigDecimal) objects[1]);
+        }
+        return map;
     }
 }

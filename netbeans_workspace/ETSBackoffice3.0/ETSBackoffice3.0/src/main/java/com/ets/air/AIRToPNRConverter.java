@@ -125,8 +125,10 @@ public class AIRToPNRConverter {
         }
 
         for (String[] _H : _Hs) {
-            Itinerary segment = lineToIninerary(_H);            
-             segments.add(segment);           
+            Itinerary segment = lineToIninerary(_H);  
+            if(segment.getDeptDate()!=null){//Invalid dept date means no confirmed segment
+             segments.add(segment);         
+            }
         }
 
         return segments;
@@ -346,13 +348,18 @@ public class AIRToPNRConverter {
     private Itinerary lineToIninerary(String[] _H) {
 
         Itinerary segment = new Itinerary();
-
-        segment.setSegmentNo(_H[1].substring(0, 3));
+        String segmentNo = _H[1].substring(0, 3);
+        if(segmentNo != null && segmentNo.isEmpty()){
+         segment.setSegmentNo(Integer.valueOf(segmentNo));
+        }else{
+          segment.setSegmentNo(0);
+        }
+        
         segment.setStopOver(_H[1].substring(3, 4));
         segment.setDeptFrom(_H[1].substring(4).trim());
         segment.setDeptTo(_H[3].trim());
         String[] temp = _H[5].split(" ");
-        segment.setAirLineID(temp[0]);
+        segment.setAirLineCode(temp[0]);
         if (temp.length > 4) {
             segment.setFlightNo(temp[4]);
         }

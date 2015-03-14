@@ -2,10 +2,12 @@ package com.ets.accountingdoc_o.dao;
 
 import com.ets.GenericDAO;
 import com.ets.accountingdoc.domain.OtherSalesAcDoc;
+import com.ets.settings.domain.User;
 import com.ets.util.Enums;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -17,6 +19,8 @@ public interface OtherSalesAcDocDAO extends GenericDAO<OtherSalesAcDoc, Long>{
     
     public OtherSalesAcDoc getWithChildrenById(Long id);
     
+    public List<OtherSalesAcDoc> findAllById(Long... id);
+    
     public boolean voidDocument(OtherSalesAcDoc doc);
     
     public List<OtherSalesAcDoc> findOutstandingDocuments(Enums.AcDocType type,Enums.ClientType clienttype,Long clientid,Date dateStart,Date dateEnd);      
@@ -26,4 +30,8 @@ public interface OtherSalesAcDocDAO extends GenericDAO<OtherSalesAcDoc, Long>{
     public List<OtherSalesAcDoc> findAllDocuments(Enums.ClientType clienttype,Long clientid,Date dateStart,Date dateEnd);
         
     public BigDecimal getAccountBallanceToDate(Enums.ClientType clienttype,Long clientid,Date dateEnd);
+    
+    public Map<User,BigDecimal> userProductivityReport(Date dateStart,Date dateEnd);
+    
+    public Map<String,BigDecimal> agentOutstandingReport(Date dateStart,Date dateEnd);
 }

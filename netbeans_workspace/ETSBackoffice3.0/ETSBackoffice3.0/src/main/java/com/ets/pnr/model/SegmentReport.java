@@ -1,4 +1,4 @@
-package com.ets.report.model;
+package com.ets.pnr.model;
 
 import com.ets.pnr.domain.Itinerary;
 import com.ets.pnr.domain.Pnr;
@@ -129,10 +129,11 @@ public class SegmentReport implements Serializable{
             this.pnr = pnr.getGdsPnr();
             this.bookingOid = pnr.getBookingAgtOid();
             this.ticketingOid = pnr.getTicketingAgtOid();
-            this.ticketNo = ticket.getFullTicketNo();
+            this.ticketNo = ticket.getFullTicketNo();            
             this.tktStatus = ticket.getTktStatusString();
             this.ticketClass = itinerary.getTicketClass();
-            this.airLine = itinerary.getAirLineID();
+            this.flightNo = itinerary.getFlightNo();
+            this.airLine = itinerary.getAirLineCode();
             this.travelDate = DateUtil.dateTOddmm(itinerary.getDeptDate());
             this.inCity = itinerary.getDeptFrom();
             this.outCity = itinerary.getDeptTo();

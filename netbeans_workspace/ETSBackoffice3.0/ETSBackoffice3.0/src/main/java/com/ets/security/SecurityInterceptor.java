@@ -33,8 +33,8 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
     private static final String AUTHENTICATION_SCHEME = "Basic";
-    private static final ServerResponse ACCESS_DENIED = new ServerResponse("Access denied for this resource", 401, new Headers<Object>());
-    private static final ServerResponse ACCESS_FORBIDDEN = new ServerResponse("Nobody can access this resource", 403, new Headers<Object>());
+    private static final ServerResponse ACCESS_DENIED = new ServerResponse("Access denied for this resource", 401, new Headers<Object>());//Login based
+    private static final ServerResponse ACCESS_FORBIDDEN = new ServerResponse("Nobody can access this resource", 403, new Headers<Object>());//Role based
     private static final ServerResponse SERVER_ERROR = new ServerResponse("INTERNAL SERVER ERROR", 500, new Headers<Object>());
 
     @Override
@@ -82,8 +82,11 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 
                 //Is user valid?
                 if (!isUserAllowed(username, password, rolesSet)) {
+                    requestContext.abortWith(ACCESS_FORBIDDEN);
+                    //return;
+                }
+                if (LoginManager.loginExpired(username, password)) {
                     requestContext.abortWith(ACCESS_DENIED);
-                    return;
                 }
             }
         }
@@ -97,7 +100,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
 
         /**
          * If user is allowed for his role and all the roles bellow him. For
-         * example SM has id 1 and GS has id 0. So SM is alloed for SM and GS
+         * example SM has id 1 and GS has id 0. So SM is allowed for SM and GS
          * roles.
          */
         if (LoginManager.valideRole(userRole, allowedRole)) {

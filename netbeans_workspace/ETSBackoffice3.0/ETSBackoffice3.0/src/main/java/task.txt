@@ -1,6 +1,4 @@
-1. User authentication
-2. Accounts statement
-3. Other invoice
 4. Ticketing OID and Sub agent OID break down.
-5. Segment date change
 
+1. Invoice for Customer and Agent search component make Enter Hit search with clicking search.
+2. Same component make font bold.

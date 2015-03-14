@@ -1,16 +1,16 @@
 package com.ets.air.service;
 
 import com.ets.air.dao.AirDAO;
-import com.ets.pnr.dao.ItineraryDAO;
-import com.ets.pnr.dao.TicketDAO;
-import com.ets.pnr.domain.Pnr;
-import com.ets.pnr.domain.Ticket;
+import com.ets.pnr.dao.*;
+import com.ets.pnr.domain.*;
+import com.ets.pnr.service.AirlineService;
 import com.ets.util.PnrUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,26 +25,29 @@ public class AirService {
 
     @Resource(name = "itineraryDAO")
     private ItineraryDAO itineraryDAO;
-    
+
     @Resource(name = "ticketDAO")
     private TicketDAO ticketDAO;
-    
-    public AirService(){
+
+    @Autowired
+    AirlineService airlineService;
+
+    public AirService() {
 
     }
-    
+
     /**
-     * This method is for Booking to Issue or Direct Issue or Re Issue
-     * If Pnr exist update it otherwise insert. Its children needs to be
-     * updated too.
-     * @param newPnr    
+     * This method is for Booking to Issue or Direct Issue or Re Issue If Pnr
+     * exist update it otherwise insert. Its children needs to be updated too.
+     *
+     * @param newPnr
      * @return
      */
     public Pnr savePnr(Pnr newPnr) {
-        
+
         Pnr persistedPnr = findPnr(newPnr.getGdsPnr(), newPnr.getPnrCreationDate());
-        
-        if (persistedPnr == null) {          
+
+        if (persistedPnr == null) {
             persistedPnr = newPnr;
         } else {
             // This else is for booking to issue. Booked pnr was in database.
@@ -53,10 +56,13 @@ public class AirService {
             persistedPnr.setTickets(PnrUtil.updateTickets(dbTickets, newPnr.getTickets()));
 
             itineraryDAO.deleteBulk(persistedPnr.getSegments());//Saving final segments. Issued segments are final segments.
-            persistedPnr.setSegments(newPnr.getSegments());           
+            persistedPnr.setSegments(newPnr.getSegments());
         }
-        
+        Airline airline = airlineService.find(persistedPnr.getAirLineCode());
+        setBspCommission(persistedPnr.getTickets(), airline);
+
         PnrUtil.initPnrChildren(persistedPnr);
+
         save(persistedPnr);
         PnrUtil.undefinePnrChildren(persistedPnr); //Undefine cyclic dependencies to avoid cyclic xml exception
 
@@ -64,7 +70,7 @@ public class AirService {
     }
 
     public List<Ticket> refundTicket(List<Ticket> tickets) {
-        
+
         Pnr persistedPnr = dao.findPnr(tickets.get(0).getTicketNo(), tickets.get(0).getSurName());
         List<Ticket> tobePersisted = new ArrayList<>();
 
@@ -85,23 +91,33 @@ public class AirService {
         }
 
         if (!tobePersisted.isEmpty()) {
+
+            Airline airline = airlineService.find(persistedPnr.getAirLineCode());
+            setBspCommission(persistedPnr.getTickets(), airline);
+
             PnrUtil.initPnrInTickets(persistedPnr, tobePersisted);
             ticketDAO.saveBulk(tobePersisted);
             PnrUtil.undefinePnrInTickets(persistedPnr, tobePersisted);
         }
         return tickets;
     }
-    
+
     public List<Ticket> voidTicket(List<Ticket> tickets) {
 
         return tickets;
     }
-    
-    public void save(Pnr pnr){
-        dao.save(pnr);
+
+    private void setBspCommission(Set<Ticket> tickets, Airline airline) {
+        for (Ticket t : tickets) {
+            t.setCommission(airline.calculateBspCom(t));
+        }
     }
-    
+
     public Pnr findPnr(String gdsPnr, Date pnrCreationdate) {
         return dao.findPnr(gdsPnr, pnrCreationdate);
+    }
+
+    public void save(Pnr pnr) {
+        dao.save(pnr);
     }
 }

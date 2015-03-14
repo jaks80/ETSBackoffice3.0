@@ -3,7 +3,7 @@ package com.ets.pnr.service;
 import com.ets.pnr.dao.ItineraryDAO;
 import com.ets.pnr.domain.Itinerary;
 import com.ets.pnr.domain.Ticket;
-import com.ets.report.model.SegmentReport;
+import com.ets.pnr.model.SegmentReport;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;

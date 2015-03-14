@@ -1,6 +1,6 @@
 package com.ets.pnr.ws;
 
-import com.ets.report.model.SegmentReport;
+import com.ets.pnr.model.SegmentReport;
 import com.ets.pnr.service.ItineraryService;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
