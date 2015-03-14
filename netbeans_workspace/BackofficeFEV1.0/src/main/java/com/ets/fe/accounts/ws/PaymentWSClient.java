@@ -2,6 +2,7 @@ package com.ets.fe.accounts.ws;
 
 import com.ets.fe.APIConfig;
 import com.ets.fe.accounts.model.CashBookReport;
+import com.ets.fe.accounts.model.CreditTransfer;
 import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.accounts.model.Payments;
 import com.ets.fe.util.DateUtil;
@@ -21,6 +22,13 @@ public class PaymentWSClient {
         return ppayment;
     }
 
+    public Integer createCreditTransfer(CreditTransfer creditTransfer) {        
+        StringBuilder sb = new StringBuilder();
+        sb.append(APIConfig.get("ws.pay.newctransfer"));
+        
+        return RestClientUtil.postEntityReturnStatus(CreditTransfer.class, sb.toString(), creditTransfer);        
+    }
+        
     public Payments paymentBySalesInvoice(Long invoiceid) {
         String url = APIConfig.get("ws.pay.bysinv") + invoiceid;
         Payments ppayment = RestClientUtil.getEntity(Payments.class, url, new Payments());

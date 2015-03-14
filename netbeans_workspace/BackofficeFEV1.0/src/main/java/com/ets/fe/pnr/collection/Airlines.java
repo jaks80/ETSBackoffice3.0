@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
-public class Careers {
+public class Airlines {
     
     private List<Airline> list = new ArrayList<>();
 

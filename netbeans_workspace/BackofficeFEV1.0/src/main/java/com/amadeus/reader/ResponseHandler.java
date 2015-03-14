@@ -1,9 +1,6 @@
 package com.amadeus.reader;
 
-import com.amadeus.air.AIR;
-import com.amadeus.air.AirUtil;
-import com.amadeus.air.FileToAIRConverter;
-import com.amadeus.air.AirWSClient;
+import com.amadeus.air.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,9 +78,7 @@ public class ResponseHandler implements Observer {
         File[] files = null;
         try {
             files = new File("C://AIR").listFiles();
-        } catch (Throwable e) {
-
-        }
+        } catch (Throwable e) {}
         return files;
     }
 }

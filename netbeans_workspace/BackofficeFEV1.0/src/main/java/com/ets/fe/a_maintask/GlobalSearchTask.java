@@ -81,7 +81,8 @@ public class GlobalSearchTask extends SwingWorker< Void, Integer> {
         if (this.pnrs.size() > 0) {
             for (int i = 0; i < this.pnrs.size(); i++) {
                 Pnr p = this.pnrs.get(i);
-                tableModel.insertRow(i, new Object[]{p.getGdsPnr(), p.calculateLeadPaxName(), p.getTicketingAgentSine(), p.getBookingAgtOid(), p.getTicketingAgtOid(), p.getAirLineCode()});
+                tableModel.insertRow(i, new Object[]{p.getGdsPnr(), PnrUtil.calculatePartialName(PnrUtil.calculateLeadPaxName(p.getTickets())), p.getNoOfPax(),
+                    p.getTicketingAgentSine(), p.getBookingAgtOid(), p.getTicketingAgtOid(), p.getAirLineCode()});
             }
         } else {
             tableModel.insertRow(0, new Object[]{});

@@ -132,16 +132,17 @@ public class DashBoardFrame extends JInternalFrame {
 
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
+        tblUninvoicedPnr.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
         tblUninvoicedPnr.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "PNR", "Passenger Name", "Tkt.AgentSine", "B.OfficeID", "T.OfficeID", "Airline"
+                "PNR", "LeadPax", "Qty", "Tkt.AgentSine", "B.OfficeID", "T.OfficeID", "Airline"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -152,7 +153,8 @@ public class DashBoardFrame extends JInternalFrame {
         jScrollPane1.setViewportView(tblUninvoicedPnr);
         if (tblUninvoicedPnr.getColumnModel().getColumnCount() > 0) {
             tblUninvoicedPnr.getColumnModel().getColumn(1).setMinWidth(120);
-            tblUninvoicedPnr.getColumnModel().getColumn(5).setPreferredWidth(40);
+            tblUninvoicedPnr.getColumnModel().getColumn(2).setMaxWidth(30);
+            tblUninvoicedPnr.getColumnModel().getColumn(6).setPreferredWidth(40);
         }
 
         tabPnr.addTab("UnInvoicedPNR", jScrollPane1);
@@ -331,14 +333,14 @@ public class DashBoardFrame extends JInternalFrame {
             .addGroup(pnrSearchLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(205, Short.MAX_VALUE))
+                .addContainerGap(277, Short.MAX_VALUE))
         );
         pnrSearchLayout.setVerticalGroup(
             pnrSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnrSearchLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -445,11 +447,11 @@ public class DashBoardFrame extends JInternalFrame {
         pnlFlight.setLayout(pnlFlightLayout);
         pnlFlightLayout.setHorizontalGroup(
             pnlFlightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 473, Short.MAX_VALUE)
+            .addGap(0, 545, Short.MAX_VALUE)
         );
         pnlFlightLayout.setVerticalGroup(
             pnlFlightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 91, Short.MAX_VALUE)
+            .addGap(0, 123, Short.MAX_VALUE)
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -531,15 +533,15 @@ public class DashBoardFrame extends JInternalFrame {
                         .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(mainTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 857, Short.MAX_VALUE))
+                    .addComponent(mainTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE))
                 .addGap(2, 2, 2))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addComponent(mainTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
-                .addGap(9, 9, 9)
+                .addComponent(mainTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))

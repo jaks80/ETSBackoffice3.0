@@ -268,7 +268,7 @@ public class Ticket extends PersistentObject implements Serializable {
     public String getFullPaxNameWithPaxNo() {
 
         String paxFullName = "";
-        paxFullName = getPassengerNo() + "." + getSurName() + " / " + getForeName();
+        paxFullName = getPassengerNo() + "." + getSurName() + "/" + getForeName();
 
         return paxFullName;
     }
@@ -276,7 +276,7 @@ public class Ticket extends PersistentObject implements Serializable {
     public String getFullPaxName() {
 
         String paxFullName = "";
-        paxFullName = getSurName() + " / " + getForeName();
+        paxFullName = getSurName() + "/" + getForeName();
 
         return paxFullName;
     }

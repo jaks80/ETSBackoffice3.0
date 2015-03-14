@@ -21,6 +21,8 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
     private boolean login;
     private LoginTask task;
     private APIConfig aPIConfig = new APIConfig();
+    private Main main = null;
+
     public DlgLogin() {
         //super("Login", true);
         Toolkit tk = Toolkit.getDefaultToolkit();
@@ -41,14 +43,14 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
             char[] newP = txtNewPassword.getPassword();
             String password = new String(p).trim();
             String newPassword = new String(newP).trim();
-            
+
             task = new LoginTask(loginId, password, newPassword);
             task.addPropertyChangeListener(this);
             task.execute();
         }
     }
 
-    public boolean showLoginDialog() {        
+    public boolean showLoginDialog() {
         setLocationRelativeTo(this);
         setVisible(true);
 
@@ -57,9 +59,9 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
         return login;
     }
 
-    public void login() {        
-            login = true;
-            setVisible(false);        
+    public void login() {
+        login = true;
+        setVisible(false);
     }
 
     public static void main(String args[]) {
@@ -86,15 +88,15 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
 //        }
         //</editor-fold>
 
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    DlgLogin dlgLogin = new DlgLogin();
-                    dlgLogin.setVisible(true);
-                    
-                }
-            });        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                DlgLogin dlgLogin = new DlgLogin();
+                dlgLogin.setVisible(true);
+
+            }
+        });
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -162,6 +164,7 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
         jPanel1.add(btnCancel, gridBagConstraints);
 
+        txtUserName.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtUserName.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtUserNameKeyPressed(evt);
@@ -259,11 +262,17 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
     }//GEN-LAST:event_txtUserNameKeyPressed
 
     private void txtPWordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPWordKeyReleased
-        
+        int key = evt.getKeyCode();
+        if (key == KeyEvent.VK_ENTER) {
+            loginTask();
+        }
     }//GEN-LAST:event_txtPWordKeyReleased
 
     private void txtNewPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNewPasswordKeyReleased
-        
+        int key = evt.getKeyCode();
+        if (key == KeyEvent.VK_ENTER) {
+            loginTask();
+        }
     }//GEN-LAST:event_txtNewPasswordKeyReleased
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
@@ -298,16 +307,21 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
                 try {
                     User user = task.get();
                     if (user != null) {
+                        txtUserName.setText("");
+                        txtPWord.setText("");
+                        txtNewPassword.setText("");
+                        btnLogin.setEnabled(true);
                         Application.setLoggedOnUser(user);
-                        setVisible(false);  
-                        Main main = new Main();
-                        main.setVisible(true);
+                        setVisible(false);
+                        if (main == null) {
+                            main = new Main();
+                            Main.setDlgLogin(this);
+                            main.setVisible(true);
+                        }
                         Application.loadSettings();
-                    }else{
-                     btnLogin.setEnabled(true);
                     }
                 } catch (InterruptedException | ExecutionException ex) {
-                    
+
                 }
             }
         }

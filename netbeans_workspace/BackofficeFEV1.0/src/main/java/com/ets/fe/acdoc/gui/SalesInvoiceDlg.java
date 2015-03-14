@@ -2,6 +2,7 @@ package com.ets.fe.acdoc.gui;
 
 import com.ets.fe.Application;
 import com.ets.fe.accounts.gui.logic.PaymentLogic;
+import com.ets.fe.accounts.gui.payment.DlgTktSalesCreditTransfer;
 import com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent;
 import com.ets.fe.acdoc_o.model.AdditionalChargeLine;
 import com.ets.fe.accounts.model.Payment;
@@ -19,17 +20,22 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Window;
 import java.awt.font.TextAttribute;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import org.jdesktop.swingx.JXTable;
@@ -81,7 +87,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     }
 
     public void showDialog(Long id) {
-        loadTSalesInvoice(id);
+        loadInvoice(id);
         setLocationRelativeTo(this);
         setVisible(true);
     }
@@ -176,7 +182,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         }
     }
 
-    public void loadTSalesInvoice(Long id) {
+    public void loadInvoice(Long id) {
         taskType = "COMPLETE";
         accountingDocTask = new AccountingDocTask(id, Enums.SaleType.TKTSALES, "DETAILS");
         accountingDocTask.addPropertyChangeListener(this);
@@ -229,7 +235,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
 
         int row = 0;
         for (TicketingSalesAcDoc doc : invoice.getRelatedDocuments()) {
-            String remark = "";
+            String remark = doc.getRemark();
             if (doc.getType().equals(Enums.AcDocType.PAYMENT) || doc.getType().equals(Enums.AcDocType.REFUND)) {
                 Payment payment = doc.getPayment();
                 if (payment != null) {
@@ -280,7 +286,6 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel5 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         lblTitle = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -341,7 +346,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         btnSubmitPayment = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         lblTDueRefund = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
+        btnAppyCredit = new javax.swing.JButton();
         busyLabel = new org.jdesktop.swingx.JXBusyLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -367,17 +372,6 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         btnEmail = new javax.swing.JButton();
         btnOfficeCopy = new javax.swing.JButton();
         btnAtol = new javax.swing.JButton();
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -405,7 +399,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(acDocHeaderComponent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -525,7 +519,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
                     .addComponent(txtCHFee, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
                     .addComponent(txtPostage)
                     .addComponent(txtOther))
-                .addContainerGap(372, Short.MAX_VALUE))
+                .addContainerGap(451, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -542,7 +536,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
                     .addComponent(txtOther, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addContainerGap(112, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Other Charges", jPanel9);
@@ -550,12 +544,10 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         tabPayment.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         //tabPayment.addChangeListener(tabPaymentListener);
 
+        tblPayment.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tblPayment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Type", "Remark", "Amount", "Date"
@@ -572,8 +564,8 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         tblPayment.getTableHeader().setReorderingAllowed(false);
         jScrollPane3.setViewportView(tblPayment);
         if (tblPayment.getColumnModel().getColumnCount() > 0) {
-            tblPayment.getColumnModel().getColumn(0).setMinWidth(80);
-            tblPayment.getColumnModel().getColumn(0).setMaxWidth(80);
+            tblPayment.getColumnModel().getColumn(0).setMinWidth(75);
+            tblPayment.getColumnModel().getColumn(0).setMaxWidth(75);
             tblPayment.getColumnModel().getColumn(2).setMinWidth(80);
             tblPayment.getColumnModel().getColumn(2).setMaxWidth(80);
             tblPayment.getColumnModel().getColumn(3).setMinWidth(80);
@@ -677,16 +669,21 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel8.add(lblTDueRefund, gridBagConstraints);
 
-        jButton6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/credit24.png"))); // NOI18N
-        jButton6.setText("Apply Credit");
-        jButton6.setPreferredSize(new java.awt.Dimension(135, 30));
+        btnAppyCredit.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnAppyCredit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/credit24.png"))); // NOI18N
+        btnAppyCredit.setText("Apply Credit");
+        btnAppyCredit.setPreferredSize(new java.awt.Dimension(135, 30));
+        btnAppyCredit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAppyCreditActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 2, 2, 2);
-        jPanel8.add(jButton6, gridBagConstraints);
+        jPanel8.add(btnAppyCredit, gridBagConstraints);
 
         busyLabel.setDirection(null);
         busyLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -704,7 +701,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -712,7 +709,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tabPayment.addTab("New Payment", jPanel2);
@@ -875,7 +872,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -955,18 +952,19 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(tabPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 622, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(tabPayment)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 701, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -974,16 +972,16 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(2, 2, 2)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                            .addComponent(tabPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(54, 54, 54)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                    .addComponent(tabPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1029,9 +1027,20 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         }
     }//GEN-LAST:event_btnEmailActionPerformed
 
+    private void btnAppyCreditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAppyCreditActionPerformed
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+        DlgTktSalesCreditTransfer dlg = new DlgTktSalesCreditTransfer(owner);        
+        if (dlg.showDialog(tInvoice)) {
+         loadInvoice(tInvoice.getId());
+         resetPaymentComponent();
+        }
+    }//GEN-LAST:event_btnAppyCreditActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent acDocHeaderComponent;
+    private javax.swing.JButton btnAppyCredit;
     private javax.swing.JButton btnAtol;
     private javax.swing.JButton btnCreateDocument;
     private javax.swing.JButton btnEmail;
@@ -1040,7 +1049,6 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     private javax.swing.JButton btnSubmitPayment;
     private org.jdesktop.swingx.JXBusyLabel busyLabel;
     private javax.swing.JComboBox cmbTType;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1059,7 +1067,6 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
@@ -1112,7 +1119,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
                     } else if ("PAYMENT".equals(taskType)) {
                         busyLabel.setBusy(false);
                         btnSubmitPayment.setEnabled(true);
-                        loadTSalesInvoice(tInvoice.getId());
+                        loadInvoice(tInvoice.getId());
                         resetPaymentComponent();
                     } else if ("COMPLETE".equals(taskType)) {
                         tInvoice = (TicketingSalesAcDoc) accountingDocTask.get();
@@ -1156,7 +1163,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
             } else {
                 allowPayment = true;
                 tabPayment.setEnabledAt(1, allowPayment);
-                tabPayment.setSelectedIndex(1);
+                tabPayment.setSelectedIndex(0);
             }
         }
     }

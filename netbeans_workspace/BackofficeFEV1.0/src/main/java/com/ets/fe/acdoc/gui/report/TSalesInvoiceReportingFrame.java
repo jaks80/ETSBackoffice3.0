@@ -40,7 +40,8 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
     private Date from;
     private Date to;
     private Enums.AcDocType doc_type;
-
+    private String reportType;
+    
     public TSalesInvoiceReportingFrame(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
         initComponents();
@@ -60,13 +61,16 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
 
         if (rdoDueInvoice.isSelected()) {
             doc_type = Enums.AcDocType.INVOICE;
-            task = new SalesAcDocReportingTask(doc_type, client_type, client_id, from, to, progressBar);
+            reportType = "OUTSTANDING";
+            task = new SalesAcDocReportingTask(reportType,doc_type, client_type, client_id, from, to, progressBar);
         } else if (rdoDueRefund.isSelected()) {
+            reportType = "OUTSTANDING";
             doc_type = Enums.AcDocType.REFUND;
-            task = new SalesAcDocReportingTask(doc_type, client_type, client_id, from, to, progressBar);
+            task = new SalesAcDocReportingTask(reportType,doc_type, client_type, client_id, from, to, progressBar);
         } else if (rdoInvHistory.isSelected()) {
+            reportType = "HISTORY";
             doc_type = null;
-            task = new SalesAcDocReportingTask(doc_type, client_type, client_id, from, to, progressBar);
+            task = new SalesAcDocReportingTask(reportType,doc_type, client_type, client_id, from, to, progressBar);
         }
 
         task.addPropertyChangeListener(this);

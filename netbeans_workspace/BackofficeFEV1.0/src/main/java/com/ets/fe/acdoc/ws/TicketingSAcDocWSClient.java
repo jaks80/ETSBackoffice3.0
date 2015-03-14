@@ -5,6 +5,7 @@ import com.ets.fe.APIConfig;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.accounts.model.AccountsReport;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
+import com.ets.fe.productivity.model.UserProductivityReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import com.ets.fe.util.RestClientUtil;
@@ -79,19 +80,26 @@ public class TicketingSAcDocWSClient {
             Enums.AcDocType doctype, Enums.ClientType clienttype,
             Long clientid, Date _dateFrom, Date _dateTo) {
 
-        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
-        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+        StringBuilder sb = new StringBuilder();
+        sb.append(APIConfig.get("ws.tsacdoc.report")).append("?");
 
-        String url = APIConfig.get("ws.tsacdoc.report") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo + "&doctype=" + doctype;
+        if (_dateFrom != null && _dateTo != null) {
+            String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+            String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+            sb.append("dateStart=").append(dateFrom).append("&dateEnd=").append(dateTo);
+        }
 
+        if (doctype != null) {
+            sb.append("&doctype=").append(doctype);
+        }
         if (clienttype != null) {
-            url = url + "&clienttype=" + clienttype;
+            sb.append("&clienttype=").append(clienttype);
         }
         if (clientid != null) {
-            url = url + "&clientid=" + clientid;
+            sb.append("&clientid=").append(clientid);
         }
 
-        InvoiceReport report = RestClientUtil.getEntity(InvoiceReport.class, url, new InvoiceReport());
+        InvoiceReport report = RestClientUtil.getEntity(InvoiceReport.class, sb.toString(), new InvoiceReport());
         return report;
     }
 
@@ -123,6 +131,25 @@ public class TicketingSAcDocWSClient {
         }
 
         TicketingSalesAcDocs invoices = RestClientUtil.getEntity(TicketingSalesAcDocs.class, url, new TicketingSalesAcDocs());
+        return invoices;
+    }
+
+    public InvoiceReport outstandingFlightReport(Enums.ClientType clienttype, Long clientid, Date _dateFrom, Date _dateTo) {
+        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(APIConfig.get("ws.tsacdoc.paymentdueflight")).append("?");
+        sb.append("dateStart=").append(dateFrom).append("&dateEnd=").append(dateTo);
+
+        if (clienttype != null) {
+            sb.append("&clienttype=").append(clienttype);
+        }
+        if (clientid != null) {
+            sb.append("&clientid=").append(clientid);
+        }
+
+        InvoiceReport invoices = RestClientUtil.getEntity(InvoiceReport.class, sb.toString(), new InvoiceReport());
         return invoices;
     }
 
@@ -177,6 +204,19 @@ public class TicketingSAcDocWSClient {
         }
 
         AccountsReport report = RestClientUtil.getEntity(AccountsReport.class, url, new AccountsReport());
+        return report;
+    }
+
+    public UserProductivityReport userProducivityReport(Date _dateFrom, Date _dateTo) {
+
+        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(APIConfig.get("ws.tsacdoc.userproductivity"));
+        sb.append("?dateStart=").append(dateFrom).append("&dateEnd=").append(dateTo);
+
+        UserProductivityReport report = RestClientUtil.getEntity(UserProductivityReport.class, sb.toString(), new UserProductivityReport());
         return report;
     }
 }

@@ -22,10 +22,12 @@ public class SalesAcDocReportingTask extends SwingWorker<InvoiceReport, Integer>
     private Long clientid = null;
     private Date dateFrom = null;
     private Date dateTo = null;
+    private String reportType = "";
 
-    public SalesAcDocReportingTask(Enums.AcDocType doctype, Enums.ClientType clienttype,
+    public SalesAcDocReportingTask(String reportType,Enums.AcDocType doctype, Enums.ClientType clienttype,
             Long clientid, Date dateFrom, Date dateTo,JProgressBar progressBar) {
-
+        
+        this.reportType = reportType;
         this.doctype = doctype;
         this.clienttype = clienttype;
         this.clientid = clientid;
@@ -34,6 +36,17 @@ public class SalesAcDocReportingTask extends SwingWorker<InvoiceReport, Integer>
         this.progressBar = progressBar;
     }
 
+    public SalesAcDocReportingTask(String reportType,Enums.ClientType clienttype,Long clientid, Date dateFrom, 
+            Date dateTo,JProgressBar progressBar) {
+        
+        this.reportType = reportType;
+        this.clienttype = clienttype;
+        this.clientid = clientid;
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
+        this.progressBar = progressBar;
+    }
+        
     @Override
     protected InvoiceReport doInBackground() throws Exception {
         setProgress(10);
@@ -44,10 +57,12 @@ public class SalesAcDocReportingTask extends SwingWorker<InvoiceReport, Integer>
         TicketingSAcDocWSClient client = new TicketingSAcDocWSClient();
         InvoiceReport report = null;
 
-        if (doctype == null) {
+        if (reportType.equals("HISTORY")) {
             report = client.documentHistoryReport(clienttype, clientid, dateFrom, dateTo);
-        } else {
+        } else if(reportType.equals("OUTSTANDING")){
             report = client.outstandingDocumentReport(doctype, clienttype, clientid, dateFrom, dateTo);
+        }else if(reportType.equals("UNPAID_FLIGHT")){
+            report = client.outstandingFlightReport(clienttype, clientid, dateFrom, dateTo);
         }
 
         p.cancel();

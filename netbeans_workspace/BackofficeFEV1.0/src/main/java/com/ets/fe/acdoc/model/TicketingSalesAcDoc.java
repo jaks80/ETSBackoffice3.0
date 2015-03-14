@@ -76,7 +76,7 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         }
         return total;
     }
-    
+
     @Override
     public BigDecimal calculateTotalDebitMemo() {
         BigDecimal total = new BigDecimal("0.00");
@@ -98,7 +98,7 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         }
         return total;
     }
-    
+
     @Override
     public BigDecimal calculateRelatedDocBalance() {
         BigDecimal relAmount = new BigDecimal("0.00");
@@ -128,7 +128,7 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
 
                 if (doc.getDocumentedAmount() == null) {
                     doc.setDocumentedAmount(doc.calculateDocumentedAmount());
-                }                
+                }
                 dueAmount = dueAmount.add(doc.getDocumentedAmount());
             }
         }
@@ -138,6 +138,16 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
     @Override
     public BigDecimal calculateDocumentedAmount() {
         return calculateTicketedSubTotal().add(calculateAddChargesSubTotal());
+    }
+
+    public String calculateClientName() {
+        String name = "";
+        if (this.pnr.getAgent() != null) {
+            name = this.pnr.getAgent().getName();
+        } else {
+            name = this.pnr.getCustomer().getFullName();
+        }
+        return name;
     }
 
     public List<Ticket> getTickets() {

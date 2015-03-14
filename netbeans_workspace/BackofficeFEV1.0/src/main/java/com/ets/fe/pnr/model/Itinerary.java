@@ -15,14 +15,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
-public class Itinerary  extends PersistentObject implements Serializable{
-    
-     private static final long serialVersionUID = 1L;
+public class Itinerary extends PersistentObject implements Serializable {
+
+    private static long serialVersionUID = 1L;    
 
     @XmlElement
-    private String segmentNo;
-    @XmlElement
-    private String stopOver;
+    private int segmentNo;
     @XmlElement
     private String deptFrom;
     @XmlElement
@@ -36,7 +34,7 @@ public class Itinerary  extends PersistentObject implements Serializable{
     @XmlElement
     private String arvTime;
     @XmlElement
-    private String airLineID;
+    private String airLineCode;
     @XmlElement
     private String flightNo;
     @XmlElement
@@ -55,28 +53,21 @@ public class Itinerary  extends PersistentObject implements Serializable{
     private String flightDuration;
     @XmlElement
     private String mileage;
-    
+    @XmlElement
+    private String stopOver;//(X is no stopover permitted, O is stopover permitted) 
     @XmlElement
     private Pnr pnr;
-    
-    public Itinerary(){
-    
+
+    public Itinerary() {
+
     }
 
-    public String calculateArvDateString(){
+    public String calculateArvDateString() {
         return DateUtil.dateTOddmm(arvDate);
     }
 
-    public String calculateDeptDateString(){
+    public String calculateDeptDateString() {
         return DateUtil.dateTOddmm(deptDate);
-    }
-        
-    public String getSegmentNo() {
-        return segmentNo;
-    }
-
-    public void setSegmentNo(String segmentNo) {
-        this.segmentNo = segmentNo;
     }
 
     public String isStopOver() {
@@ -133,14 +124,6 @@ public class Itinerary  extends PersistentObject implements Serializable{
 
     public void setArvTime(String arvTime) {
         this.arvTime = arvTime;
-    }
-
-    public String getAirLineID() {
-        return airLineID;
-    }
-
-    public void setAirLineID(String airLineID) {
-        this.airLineID = airLineID;
     }
 
     public String getFlightNo() {
@@ -225,5 +208,21 @@ public class Itinerary  extends PersistentObject implements Serializable{
 
     public void setPnr(Pnr pnr) {
         this.pnr = pnr;
+    }
+
+    public int getSegmentNo() {
+        return segmentNo;
+    }
+
+    public void setSegmentNo(int segmentNo) {
+        this.segmentNo = segmentNo;
+    }
+
+    public String getAirLineCode() {
+        return airLineCode;
+    }
+
+    public void setAirLineCode(String airLineCode) {
+        this.airLineCode = airLineCode;
     }
 }

@@ -9,6 +9,7 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -265,6 +266,12 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
         jPanel1.add(rdoAgent, gridBagConstraints);
+
+        txtContactableSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtContactableSearchKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -291,7 +298,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
 
         txtContactableDetails.setEditable(false);
         txtContactableDetails.setColumns(16);
-        txtContactableDetails.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        txtContactableDetails.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtContactableDetails.setLineWrap(true);
         txtContactableDetails.setRows(5);
         jScrollPane1.setViewportView(txtContactableDetails);
@@ -337,6 +344,13 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
     private void btnContactableSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContactableSearchActionPerformed
         search();
     }//GEN-LAST:event_btnContactableSearchActionPerformed
+
+    private void txtContactableSearchKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContactableSearchKeyPressed
+        int key = evt.getKeyCode();
+        if (key == KeyEvent.VK_ENTER) {
+            search();
+        }
+    }//GEN-LAST:event_txtContactableSearchKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -59,23 +59,6 @@ public class Pnr extends PersistentObject implements Serializable {
     public Pnr() {
     }
 
-    public String calculateLeadPaxName() {
-        Ticket leadPax = null;
-        int paxNo = 99;
-
-        for (Ticket t : this.tickets) {
-            if (t.getPassengerNo() <= paxNo && (!t.isChild() && !t.isInfant())) {
-                leadPax = t;
-                paxNo = t.getPassengerNo();
-            }
-        }
-        if (leadPax != null) {
-            return leadPax.getFullPaxName();
-        } else {
-            return tickets.get(0).getFullPaxName();
-        }
-    }
-
     public Integer getNoOfPax() {
         return noOfPax;
     }

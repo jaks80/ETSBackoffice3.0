@@ -1,5 +1,6 @@
 package com.ets.fe.a_main;
 
+import com.ets.fe.acdoc.gui.TicketSaleReportFrame;
 import com.ets.fe.accounts.gui.payment.*;
 import com.amadeus.reader.EventSource;
 import com.amadeus.reader.ResponseHandler;
@@ -15,14 +16,13 @@ import com.ets.fe.settings.model.AppSettings;
 import com.ets.fe.client.gui.*;
 import com.ets.fe.client.model.*;
 import com.ets.fe.os.gui.OtherServiceFrame;
-import com.ets.fe.os.gui.OtherServiceSaleReportFrame;
+import com.ets.fe.acdoc_o.gui.OtherServiceSaleReportFrame;
 import com.ets.fe.pnr.gui.*;
+import com.ets.fe.productivity.gui.UserProductivitylFrame;
 import com.ets.fe.settings.gui.*;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyVetoException;
+import java.beans.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -39,14 +39,24 @@ import javax.swing.SwingUtilities;
 public class Main extends JFrame implements PropertyChangeListener {
 
     private static boolean loginSuccess = false;
+    private static DlgLogin dlgLogin;
+
+    public static DlgLogin getDlgLogin() {
+        return dlgLogin;
+    }
+
+    public static void setDlgLogin(DlgLogin aDlgLogin) {
+        dlgLogin = aDlgLogin;
+    }
     private List<JInternalFrame> internalFrames = new ArrayList<>();
     //private Application appSettings;
     private APIConfig aPIConfig;
     private String taskType = "";
+    
 
     public Main() {
         initComponents();
-        aPIConfig = new APIConfig();        
+        aPIConfig = new APIConfig();
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset,
@@ -58,9 +68,9 @@ public class Main extends JFrame implements PropertyChangeListener {
 
         //Make dragging a little faster but perhaps uglier.
         desktopPane.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
-        
+
     }
-    
+
     private void callDashBoard() {
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -105,18 +115,21 @@ public class Main extends JFrame implements PropertyChangeListener {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        menuAirLine = new javax.swing.JMenuItem();
         menuAppSettings = new javax.swing.JMenuItem();
         menuMainAgent = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        menuServiceManager = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         menuPnrHistory = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
-        menuDueSalesInvoice = new javax.swing.JMenuItem();
+        menuSalesInvoiceRpt = new javax.swing.JMenuItem();
+        menuUnpaidFlight = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         menuBatchTransaction = new javax.swing.JMenuItem();
         menuBatchTransRpt = new javax.swing.JMenuItem();
@@ -129,8 +142,6 @@ public class Main extends JFrame implements PropertyChangeListener {
         jMenuItem7 = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         menuVendorAccounts = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItem6 = new javax.swing.JMenuItem();
         jMenu8 = new javax.swing.JMenu();
         jMenuItem8 = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
@@ -145,6 +156,8 @@ public class Main extends JFrame implements PropertyChangeListener {
         jMenuItem13 = new javax.swing.JMenuItem();
         jMenuItem15 = new javax.swing.JMenuItem();
         jMenuItem14 = new javax.swing.JMenuItem();
+        jMenu10 = new javax.swing.JMenu();
+        jMenuItem16 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -179,13 +192,13 @@ public class Main extends JFrame implements PropertyChangeListener {
 
         jMenu4.setText("Settings");
 
-        jMenuItem4.setText("Air Lines");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+        menuAirLine.setText("Air Lines");
+        menuAirLine.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
+                menuAirLineActionPerformed(evt);
             }
         });
-        jMenu4.add(jMenuItem4);
+        jMenu4.add(menuAirLine);
 
         menuAppSettings.setText("Application Settings");
         menuAppSettings.addActionListener(new java.awt.event.ActionListener() {
@@ -225,6 +238,18 @@ public class Main extends JFrame implements PropertyChangeListener {
 
         jMenuBar1.add(jMenu5);
 
+        jMenu2.setText("Services");
+
+        menuServiceManager.setText("Service Manager");
+        menuServiceManager.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuServiceManagerActionPerformed(evt);
+            }
+        });
+        jMenu2.add(menuServiceManager);
+
+        jMenuBar1.add(jMenu2);
+
         jMenu3.setText("Pnr");
 
         menuPnrHistory.setText("Pnr History");
@@ -260,13 +285,21 @@ public class Main extends JFrame implements PropertyChangeListener {
             }
         });
 
-        menuDueSalesInvoice.setText("Sales Invoice: Report");
-        menuDueSalesInvoice.addActionListener(new java.awt.event.ActionListener() {
+        menuSalesInvoiceRpt.setText("Report: Sales Invoice");
+        menuSalesInvoiceRpt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuDueSalesInvoiceActionPerformed(evt);
+                menuSalesInvoiceRptActionPerformed(evt);
             }
         });
-        jMenu6.add(menuDueSalesInvoice);
+        jMenu6.add(menuSalesInvoiceRpt);
+
+        menuUnpaidFlight.setText("Report: Outstanding Flight");
+        menuUnpaidFlight.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuUnpaidFlightActionPerformed(evt);
+            }
+        });
+        jMenu6.add(menuUnpaidFlight);
         jMenu6.add(jSeparator1);
 
         menuBatchTransaction.setText("Batch Transaction");
@@ -339,19 +372,7 @@ public class Main extends JFrame implements PropertyChangeListener {
 
         jMenuBar1.add(jMenu7);
 
-        jMenu2.setText("Services");
-
-        jMenuItem6.setText("Service Manager");
-        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem6ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem6);
-
-        jMenuBar1.add(jMenu2);
-
-        jMenu8.setText("Other Invoicing");
+        jMenu8.setText("Other");
 
         jMenuItem8.setText("New Invoice");
         jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
@@ -429,6 +450,18 @@ public class Main extends JFrame implements PropertyChangeListener {
 
         jMenuBar1.add(jMenu9);
 
+        jMenu10.setText("Productivity");
+
+        jMenuItem16.setText("Productivity Report : Sales Person");
+        jMenuItem16.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem16ActionPerformed(evt);
+            }
+        });
+        jMenu10.add(jMenuItem16);
+
+        jMenuBar1.add(jMenu10);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -461,9 +494,10 @@ public class Main extends JFrame implements PropertyChangeListener {
         history.setVisible(true);
     }//GEN-LAST:event_menuPnrHistoryActionPerformed
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    private void menuAirLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAirLineActionPerformed
+        AirlineManagementDlg dlg = new AirlineManagementDlg(this);       
+        dlg.showDialog();            
+    }//GEN-LAST:event_menuAirLineActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         SwingUtilities.invokeLater(new Runnable() {
@@ -527,7 +561,7 @@ public class Main extends JFrame implements PropertyChangeListener {
         frame.setVisible(true);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
-    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+    private void menuServiceManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuServiceManagerActionPerformed
         OtherServiceFrame frame = new OtherServiceFrame(desktopPane);
         desktopPane.add(frame);
         try {
@@ -536,7 +570,7 @@ public class Main extends JFrame implements PropertyChangeListener {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         frame.setVisible(true);
-    }//GEN-LAST:event_jMenuItem6ActionPerformed
+    }//GEN-LAST:event_menuServiceManagerActionPerformed
 
     private void menuAppSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAppSettingsActionPerformed
         SettingsDlg dlg = new SettingsDlg(this);
@@ -566,9 +600,9 @@ public class Main extends JFrame implements PropertyChangeListener {
         }
     }//GEN-LAST:event_menuMainAgentActionPerformed
 
-    private void menuDueSalesInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDueSalesInvoiceActionPerformed
+    private void menuSalesInvoiceRptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSalesInvoiceRptActionPerformed
         frameAction(new TSalesInvoiceReportingFrame(desktopPane));
-    }//GEN-LAST:event_menuDueSalesInvoiceActionPerformed
+    }//GEN-LAST:event_menuSalesInvoiceRptActionPerformed
 
     private void menuPReportingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPReportingActionPerformed
         frameAction(new TPurchaseInvoiceReportingFrame(desktopPane));
@@ -587,7 +621,7 @@ public class Main extends JFrame implements PropertyChangeListener {
     }//GEN-LAST:event_menuBatchTransRptActionPerformed
 
     private void jMenu6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu6ActionPerformed
-
+         
     }//GEN-LAST:event_jMenu6ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
@@ -639,6 +673,14 @@ public class Main extends JFrame implements PropertyChangeListener {
         frameAction(new OtherServiceSaleReportFrame(desktopPane));
     }//GEN-LAST:event_jMenuItem15ActionPerformed
 
+    private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
+        frameAction(new UserProductivitylFrame(desktopPane));
+    }//GEN-LAST:event_jMenuItem16ActionPerformed
+
+    private void menuUnpaidFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuUnpaidFlightActionPerformed
+    frameAction(new OutstandingFlightReportingFrame(desktopPane));
+    }//GEN-LAST:event_menuUnpaidFlightActionPerformed
+
     private void frameAction(JInternalFrame frame) {
         desktopPane.add(frame);
         try {
@@ -676,20 +718,21 @@ public class Main extends JFrame implements PropertyChangeListener {
 //        }
         //</editor-fold>
 
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    if(Application.getLoggedOnUser()!=null){
-                        System.out.println("Accessed>>>>>");
-                     new Main().setVisible(true);
-                    }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                if (Application.getLoggedOnUser() != null) {
+                    System.out.println("Accessed>>>>>");
+                    new Main().setVisible(true);
                 }
-            });        
+            }
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNewCustomer;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu10;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
@@ -706,11 +749,10 @@ public class Main extends JFrame implements PropertyChangeListener {
     private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JMenuItem jMenuItem14;
     private javax.swing.JMenuItem jMenuItem15;
+    private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
@@ -723,15 +765,18 @@ public class Main extends JFrame implements PropertyChangeListener {
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JMenuItem menu3rdPartyBillPayment;
+    private javax.swing.JMenuItem menuAirLine;
     private javax.swing.JMenuItem menuAppSettings;
     private javax.swing.JMenuItem menuBatchTransRpt;
     private javax.swing.JMenuItem menuBatchTransaction;
     private javax.swing.JMenuItem menuClientAccounts;
     private javax.swing.JMenuItem menuDueOSalesInvoice;
-    private javax.swing.JMenuItem menuDueSalesInvoice;
     private javax.swing.JMenuItem menuMainAgent;
     private javax.swing.JMenuItem menuPReporting;
     private javax.swing.JMenuItem menuPnrHistory;
+    private javax.swing.JMenuItem menuSalesInvoiceRpt;
+    private javax.swing.JMenuItem menuServiceManager;
+    private javax.swing.JMenuItem menuUnpaidFlight;
     private javax.swing.JMenuItem menuVendorAccounts;
     // End of variables declaration//GEN-END:variables
 @Override

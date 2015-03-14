@@ -1,15 +1,12 @@
-package com.ets.fe.os.gui;
+package com.ets.fe.acdoc_o.gui;
 
-import static com.ets.fe.acdoc_o.gui.OtherInvoiceReportingFrame.client_type;
 import com.ets.fe.acdoc_o.model.ServicesSaleReport;
 import com.ets.fe.acdoc_o.model.ServicesSaleReport.SaleReportLine;
-import com.ets.fe.acdoc_o.task.OtherAcDocReportingTask;
 import com.ets.fe.acdoc_o.task.OtherSaleReportTask;
 import com.ets.fe.os.model.Category;
 import com.ets.fe.os.model.OtherService;
 import com.ets.fe.os.ws.CategoryWSClient;
 import com.ets.fe.os.ws.OtherServiceWSClient;
-import com.ets.fe.pnr.model.TicketSaleReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.event.ActionEvent;
@@ -135,7 +132,6 @@ public class OtherServiceSaleReportFrame extends javax.swing.JInternalFrame impl
         cmbItems.addActionListener(cmbItemListener);
         AutoCompleteDecorator.decorate(cmbItems);
         documentSearchComponent = new com.ets.fe.acdoc.gui.comp.ClientSearchComp(true,true,true,Enums.AgentType.ALL);
-        jPanel3 = new javax.swing.JPanel();
         lblInfo = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -238,7 +234,7 @@ public class OtherServiceSaleReportFrame extends javax.swing.JInternalFrame impl
         gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 4, 4, 4);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 4, 0);
         jPanel2.add(dtFrom, gridBagConstraints);
 
         jLabel5.setText("Date To");
@@ -260,7 +256,7 @@ public class OtherServiceSaleReportFrame extends javax.swing.JInternalFrame impl
         gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 4, 4, 4);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 4, 0);
         jPanel2.add(dtTo, gridBagConstraints);
 
         jLabel1.setText("Category");
@@ -284,7 +280,7 @@ public class OtherServiceSaleReportFrame extends javax.swing.JInternalFrame impl
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 4, 4, 4);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 4, 0);
         jPanel2.add(cmbCategory, gridBagConstraints);
 
         jLabel2.setText("Item");
@@ -307,69 +303,58 @@ public class OtherServiceSaleReportFrame extends javax.swing.JInternalFrame impl
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 4, 4, 4);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 4, 0);
         jPanel2.add(cmbItems, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+        gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
         jPanel2.add(documentSearchComponent, gridBagConstraints);
 
-        lblInfo.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        lblInfo.setForeground(new java.awt.Color(255, 0, 0));
-        lblInfo.setText("* = Mandatory Fields");
+        lblInfo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblInfo.setText("Message:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_END;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+        jPanel2.add(lblInfo, gridBagConstraints);
 
-        progressBar.setMaximumSize(new java.awt.Dimension(146, 17));
-        progressBar.setMinimumSize(new java.awt.Dimension(146, 17));
+        progressBar.setMaximumSize(new java.awt.Dimension(146, 16));
+        progressBar.setMinimumSize(new java.awt.Dimension(146, 16));
+        progressBar.setPreferredSize(new java.awt.Dimension(146, 16));
         progressBar.setStringPainted(true);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(lblInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblInfo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_END;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+        jPanel2.add(progressBar, gridBagConstraints);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                .addGap(3, 3, 3))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
         );
 
         jSplitPane1.setLeftComponent(jPanel1);
+
+        jTabbedPane1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
 
         tblReport.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -404,7 +389,7 @@ public class OtherServiceSaleReportFrame extends javax.swing.JInternalFrame impl
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 738, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -415,7 +400,7 @@ public class OtherServiceSaleReportFrame extends javax.swing.JInternalFrame impl
                 .addGap(2, 2, 2)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Sale Report", jPanel5);
@@ -427,7 +412,7 @@ public class OtherServiceSaleReportFrame extends javax.swing.JInternalFrame impl
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jSplitPane1)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -478,7 +463,6 @@ public class OtherServiceSaleReportFrame extends javax.swing.JInternalFrame impl
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
@@ -559,7 +543,7 @@ public class OtherServiceSaleReportFrame extends javax.swing.JInternalFrame impl
                 }
                 //Collections.sort(cmbElement);
                 DefaultComboBoxModel cmbModel = new DefaultComboBoxModel(cmbElement.toArray());
-                cmbModel.insertElementAt("Select", 0);
+                cmbModel.insertElementAt("All", 0);
                 
                 cmbCategory.setModel(cmbModel);
                 cmbCategory.setSelectedIndex(0);
@@ -582,7 +566,7 @@ public class OtherServiceSaleReportFrame extends javax.swing.JInternalFrame impl
                 }
                 //Collections.sort(cmbElement);
                 DefaultComboBoxModel cmbModel = new DefaultComboBoxModel(cmbElement.toArray());
-                cmbModel.insertElementAt("Select", 0);
+                cmbModel.insertElementAt("All", 0);
                 
                 cmbItems.setModel(cmbModel);
                 cmbItems.setSelectedIndex(0);

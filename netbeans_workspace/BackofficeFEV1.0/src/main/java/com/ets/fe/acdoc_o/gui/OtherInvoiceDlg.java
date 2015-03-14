@@ -8,11 +8,14 @@ import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent;
 import com.ets.fe.accounts.task.NewPaymentTask;
 import com.ets.fe.accounts.gui.logic.PaymentLogicOther;
+import com.ets.fe.accounts.gui.payment.DlgOtherSalesCreditTransfer;
 import com.ets.fe.acdoc_o.task.AccountingDocTaskOther;
 import com.ets.fe.client.model.Contactable;
 import com.ets.fe.os.model.*;
 import com.ets.fe.report.MyJasperReport;
 import com.ets.fe.util.*;
+import java.awt.Frame;
+import java.awt.Window;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
@@ -213,7 +216,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
 
         int row = 0;
         for (OtherSalesAcDoc doc : invoice.getRelatedDocuments()) {
-            String remark = "";
+            String remark = doc.getRemark();
             if (doc.getType().equals(Enums.AcDocType.PAYMENT) || doc.getType().equals(Enums.AcDocType.REFUND)) {
                 Payment payment = doc.getPayment();
                 if (payment != null) {
@@ -517,6 +520,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         tabPayment.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         //tabPayment.addChangeListener(tabPaymentListener);
 
+        tblPayment.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tblPayment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -535,6 +539,11 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         });
         tblPayment.getTableHeader().setReorderingAllowed(false);
         jScrollPane3.setViewportView(tblPayment);
+        if (tblPayment.getColumnModel().getColumnCount() > 0) {
+            tblPayment.getColumnModel().getColumn(0).setMaxWidth(80);
+            tblPayment.getColumnModel().getColumn(2).setMaxWidth(150);
+            tblPayment.getColumnModel().getColumn(3).setMaxWidth(100);
+        }
 
         tabPayment.addTab("Payments", jScrollPane3);
 
@@ -637,6 +646,11 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/credit24.png"))); // NOI18N
         jButton6.setText("Apply Credit");
         jButton6.setPreferredSize(new java.awt.Dimension(135, 30));
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
@@ -660,7 +674,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
+                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -675,7 +689,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
 
         txtRemark.setColumns(20);
         txtRemark.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
-        txtRemark.setRows(5);
+        txtRemark.setRows(3);
         jScrollPane1.setViewportView(txtRemark);
 
         jPanel6.setBackground(new java.awt.Color(0, 0, 0));
@@ -833,9 +847,9 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTabbedPane1)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(tabPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tabPayment)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel15)
@@ -941,6 +955,16 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnEmailActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+        DlgOtherSalesCreditTransfer dlg = new DlgOtherSalesCreditTransfer(owner);        
+        if (dlg.showDialog(invoice)) {
+         loadInvoice(invoice.getId());
+         resetPaymentComponent();
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1069,7 +1093,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             } else {
                 allowPayment = true;
                 tabPayment.setEnabledAt(1, allowPayment);
-                tabPayment.setSelectedIndex(1);
+                tabPayment.setSelectedIndex(0);
             }
         }
     }

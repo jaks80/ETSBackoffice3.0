@@ -6,7 +6,9 @@ import com.ets.fe.pnr.model.Remark;
 import com.ets.fe.pnr.model.Ticket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -26,7 +28,7 @@ public class PnrUtil {
         } else if (name != null) {
             surName = name.trim();
         }
-        String[] names = {surName,foreName};
+        String[] names = {surName, foreName};
         return names;
     }
 
@@ -67,5 +69,36 @@ public class PnrUtil {
         }
 
         return list;
+    }
+
+    public static String calculateLeadPaxName(List<Ticket> ticket_list) {
+        Ticket leadPax = null;
+        int paxNo = 99;
+
+        for (Ticket t : ticket_list) {
+            if (t.getPassengerNo() <= paxNo && (!t.isChild() && !t.isInfant())) {
+                leadPax = t;
+                paxNo = t.getPassengerNo();
+            }
+        }
+        if (leadPax != null) {
+            return leadPax.getFullPaxName();
+        } else {
+            Iterator<Ticket> iterator = ticket_list.iterator();
+            Ticket setElement = new Ticket();
+            while (iterator.hasNext()) {
+                setElement = iterator.next();
+                break;
+            }
+            return setElement.getFullPaxName();
+        }
+    }
+
+    public static String calculatePartialName(String name) {
+        if (name.length() < 8) {
+            return name;
+        } else {
+            return name.substring(0, 8);
+        }
     }
 }

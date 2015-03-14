@@ -6,6 +6,7 @@ import com.ets.fe.acdoc_o.model.OtherSalesAcDoc;
 import com.ets.fe.accounts.model.AccountsReport;
 import com.ets.fe.acdoc_o.model.InvoiceReportOther;
 import com.ets.fe.acdoc_o.model.ServicesSaleReport;
+import com.ets.fe.productivity.model.UserProductivityReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import com.ets.fe.util.RestClientUtil;
@@ -16,8 +17,8 @@ import java.util.Date;
  * @author Yusuf
  */
 public class OtherSAcDocWSClient {
-    
-        public OtherSalesAcDoc create(OtherSalesAcDoc otherSalesAcDoc) {
+
+    public OtherSalesAcDoc create(OtherSalesAcDoc otherSalesAcDoc) {
         String url = APIConfig.get("ws.osacdoc.new");
         OtherSalesAcDoc persistedDoc = RestClientUtil.postEntity(OtherSalesAcDoc.class, url, otherSalesAcDoc);
         return persistedDoc;
@@ -31,7 +32,7 @@ public class OtherSAcDocWSClient {
     }
 
     public Integer delete(long id) {
-        String url = APIConfig.get("ws.osacdoc.delete")+ id;
+        String url = APIConfig.get("ws.osacdoc.delete") + id;
         Integer status = RestClientUtil.deleteById(url);
         return status;
     }
@@ -49,28 +50,35 @@ public class OtherSAcDocWSClient {
     }
 
     public OtherSalesAcDocs getByRefNo(Integer refference) {
-        String url = APIConfig.get("ws.osacdoc.byref")+ refference;
+        String url = APIConfig.get("ws.osacdoc.byref") + refference;
         OtherSalesAcDocs docs = RestClientUtil.getEntity(OtherSalesAcDocs.class, url, new OtherSalesAcDocs());
         return docs;
     }
-        
-        public InvoiceReportOther outstandingDocumentReport(
+
+    public InvoiceReportOther outstandingDocumentReport(
             Enums.AcDocType doctype, Enums.ClientType clienttype,
             Long clientid, Date _dateFrom, Date _dateTo) {
 
-        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
-        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+        StringBuilder sb = new StringBuilder();
+        sb.append(APIConfig.get("ws.osacdoc.report")).append("?");
 
-        String url = APIConfig.get("ws.osacdoc.report") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo + "&doctype=" + doctype;
+        if (_dateFrom != null && _dateTo != null) {
+            String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+            String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+            sb.append("dateStart=").append(dateFrom).append("&dateEnd=").append(dateTo);
+        }
 
+        if (doctype != null) {
+            sb.append("&doctype=").append(doctype);
+        }
         if (clienttype != null) {
-            url = url + "&clienttype=" + clienttype;
+            sb.append("&clienttype=").append(clienttype);
         }
         if (clientid != null) {
-            url = url + "&clientid=" + clientid;
+            sb.append("&clientid=").append(clientid);
         }
 
-        InvoiceReportOther report = RestClientUtil.getEntity(InvoiceReportOther.class, url, new InvoiceReportOther());
+        InvoiceReportOther report = RestClientUtil.getEntity(InvoiceReportOther.class, sb.toString(), new InvoiceReportOther());
         return report;
     }
 
@@ -111,8 +119,8 @@ public class OtherSAcDocWSClient {
         InvoiceReportOther report = RestClientUtil.getEntity(InvoiceReportOther.class, url, new InvoiceReportOther());
         return report;
     }
-    
-     public AccountsReport salesAccountsReport(
+
+    public AccountsReport salesAccountsReport(
             Enums.ClientType clienttype, Long clientid, Date _dateFrom, Date _dateTo) {
 
         String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
@@ -131,7 +139,7 @@ public class OtherSAcDocWSClient {
     }
 
     public ServicesSaleReport servicesSaleReport(
-            Enums.ClientType clienttype, Long clientid, Date _dateFrom, Date _dateTo,Long categoryId, 
+            Enums.ClientType clienttype, Long clientid, Date _dateFrom, Date _dateTo, Long categoryId,
             Long itemId) {
 
         String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
@@ -144,16 +152,29 @@ public class OtherSAcDocWSClient {
         if (clientid != null) {
             url = url + "&clientid=" + clientid;
         }
-        
-        if(categoryId !=null){
-         url = url + "&categoryId=" + categoryId;
+
+        if (categoryId != null) {
+            url = url + "&categoryId=" + categoryId;
         }
-        
-        if(itemId !=null){
-         url = url + "&itemId=" + itemId;
+
+        if (itemId != null) {
+            url = url + "&itemId=" + itemId;
         }
-        
+
         ServicesSaleReport report = RestClientUtil.getEntity(ServicesSaleReport.class, url, new ServicesSaleReport());
+        return report;
+    }
+
+    public UserProductivityReport userProducivityReport(Date _dateFrom, Date _dateTo) {
+
+        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(APIConfig.get("ws.osacdoc.userproductivity"));
+        sb.append("?dateStart=").append(dateFrom).append("&dateEnd=").append(dateTo);
+
+        UserProductivityReport report = RestClientUtil.getEntity(UserProductivityReport.class, sb.toString(), new UserProductivityReport());
         return report;
     }
 }

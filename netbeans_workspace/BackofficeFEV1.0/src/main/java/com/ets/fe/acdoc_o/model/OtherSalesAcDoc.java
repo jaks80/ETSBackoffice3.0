@@ -143,6 +143,16 @@ public class OtherSalesAcDoc extends AccountingDocument implements Serializable 
         return relAmount;
     }
 
+    public String calculateClientName() {
+        String name = "";
+        if (this.getAgent() != null) {
+            name = this.getAgent().getName();
+        } else {
+            name = this.getCustomer().getFullName();
+        }
+        return name;
+    }
+        
     public List<OtherSalesAcDoc> getRelatedDocuments() {
         return relatedDocuments;
     }

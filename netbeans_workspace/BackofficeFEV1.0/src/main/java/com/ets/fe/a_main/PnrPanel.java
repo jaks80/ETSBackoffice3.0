@@ -16,6 +16,7 @@ import com.ets.fe.pnr.model.*;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.DocumentSizeFilter;
 import com.ets.fe.util.Enums;
+import com.ets.fe.util.PnrUtil;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Window;
@@ -108,7 +109,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         for (Itinerary s : segments) {
 
             itineraryModel.insertRow(row, new Object[]{s.getSegmentNo(), s.getDeptFrom(), s.getDeptTo(), DateUtil.dateTOddmm(s.getDeptDate()),
-                s.getDeptTime(), DateUtil.dateTOddmm(s.getArvDate()), s.getArvTime(), s.getAirLineID(),
+                s.getDeptTime(), DateUtil.dateTOddmm(s.getArvDate()), s.getArvTime(), s.getAirLineCode(),
                 s.getFlightNo(), s.getTicketClass(), s.getTktStatus(), s.getBaggage(), s.getCheckInTerminal(), s.getCheckInTime(), s.getMealCode(),
                 s.getFlightDuration(), s.getMileage()});
             row++;
@@ -119,9 +120,9 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         if (pnr.getCustomer() == null && pnr.getAgent() == null) {
             MainAgent mainAgent = Application.getMainAgent();
             if (mainAgent.getOfficeID().contains(pnr.getBookingAgtOid())) {
-                clientComponent.suggestAllocatedClient(Enums.ClientType.CUSTOMER, pnr.calculateLeadPaxName(), pnr.getBookingAgtOid());
+                clientComponent.suggestAllocatedClient(Enums.ClientType.CUSTOMER, PnrUtil.calculateLeadPaxName(pnr.getTickets()), pnr.getBookingAgtOid());
             } else {
-                clientComponent.suggestAllocatedClient(Enums.ClientType.AGENT, pnr.calculateLeadPaxName(), pnr.getBookingAgtOid());
+                clientComponent.suggestAllocatedClient(Enums.ClientType.AGENT, PnrUtil.calculateLeadPaxName(pnr.getTickets()), pnr.getBookingAgtOid());
             }
 
         } else {
@@ -131,7 +132,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             } else {
                 cont = pnr.getCustomer();
             }
-            clientComponent.setAllocatetClient(cont, pnr.calculateLeadPaxName(), pnr.getBookingAgtOid(), editable);
+            clientComponent.setAllocatetClient(cont, PnrUtil.calculateLeadPaxName(pnr.getTickets()), pnr.getBookingAgtOid(), editable);
         }
     }
 

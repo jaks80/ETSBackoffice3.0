@@ -8,7 +8,7 @@ import com.ets.fe.acdoc_o.task.OtherAcDocReportingTask;
 import com.ets.fe.report.MyJasperReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Frame;
@@ -41,7 +41,9 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
     private AccountingDocTaskOther accountingDocTask;
     private String taskType;
     private InvoiceReportOther report;
+    
     private List<OtherInvoiceSummery> invoices;
+    
     private Enums.AcDocType doc_type;
     public static Enums.ClientType client_type;
     private Long client_id;
@@ -70,7 +72,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
             doc_type = Enums.AcDocType.INVOICE;
             task = new OtherAcDocReportingTask(doc_type, client_type, client_id, from, to, progressBar);
         } else if (rdoDueRefund.isSelected()) {
-            doc_type = Enums.AcDocType.INVOICE;
+            doc_type = Enums.AcDocType.REFUND;
             task = new OtherAcDocReportingTask(doc_type, client_type, client_id, from, to, progressBar);
         } else if (rdoInvHistory.isSelected()) {
             doc_type = null;

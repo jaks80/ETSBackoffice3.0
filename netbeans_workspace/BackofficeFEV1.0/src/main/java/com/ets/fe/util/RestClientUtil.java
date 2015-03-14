@@ -3,6 +3,7 @@ package com.ets.fe.util;
 import com.amadeus.air.AIR;
 import com.ets.fe.APIConfig;
 import com.ets.fe.Application;
+import com.ets.fe.a_main.Main;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -44,6 +45,12 @@ public class RestClientUtil {
             HttpResponse response = httpClient.execute(httpget);
             status = response.getStatusLine().getStatusCode();
             System.out.println("HTTP Status:>>"+status);
+            
+            if(status == 401){
+             Main.getDlgLogin().showLoginDialog();             
+            }
+            
+            
             HttpEntity httpEntity = response.getEntity();
             if (httpEntity != null) {
                 apiOutput = EntityUtils.toString(httpEntity,"UTF-8");
@@ -116,6 +123,28 @@ public class RestClientUtil {
         return persistentEntity;
     }
 
+    public synchronized static <T> Integer postEntityReturnStatus(final Class<T> type, String destUrl, T entity) {
+        
+        Integer status = 0;
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        try {
+            HttpPost httppost = new HttpPost(buildURL(destUrl));
+            httppost.setEntity(objectToXML(type, entity));
+            httppost.addHeader("content-type", "application/xml");
+            httppost.addHeader("accept", "application/xml");
+            httppost.addHeader(AUTHORIZATION_PROPERTY, Application.getUserPassowrdEncoded());
+
+            HttpResponse response = httpClient.execute(httppost);
+            
+             status = response.getStatusLine().getStatusCode();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+        
+        return status;
+    }
+    
     public synchronized static <T> T putEntity(final Class<T> type, String destUrl, T entity) {
         HttpClient httpClient = HttpClientBuilder.create().build();
         T persistentEntity = null;

@@ -1,6 +1,5 @@
 package com.amadeus.air;
 
-import com.amadeus.air.AIR;
 import com.ets.fe.util.RestClientUtil;
 import com.ets.fe.APIConfig;
 
