@@ -170,7 +170,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
 
     @Override
     @Transactional(readOnly = true)
-    public List<TicketingSalesAcDoc> outstandingFlightReport(Enums.ClientType clienttype, 
+    public List<TicketingSalesAcDoc> outstandingFlightReport(Enums.ClientType clienttype,
             Long clientid, Date dateEnd) {
         String concatClient = "";
         String clientcondition = "and (:clientid is null or client.id = :clientid) ";
@@ -246,12 +246,22 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     }
 
     @Override
-    public boolean voidDocument(TicketingSalesAcDoc doc) {
+    public TicketingSalesAcDoc voidSimpleDocument(TicketingSalesAcDoc doc) {
+        doc.setStatus(Enums.AcDocStatus.VOID);
+        save(doc);  
+        return doc;
+    }
+
+    @Override
+    public TicketingSalesAcDoc voidTicketedDocument(TicketingSalesAcDoc doc) {
         Set<Ticket> tickets = doc.getTickets();
 
-        TicketingPurchaseAcDoc purchaseDoc = tPurchaseAcDocDAO.getByTicketId(tickets.iterator().next().getId());
-        purchaseDoc.setTickets(null);
-        //getSession().evict(doc);
+        TicketingPurchaseAcDoc purchaseDoc = null;
+        if (!tickets.isEmpty()) {
+            purchaseDoc = tPurchaseAcDocDAO.getByTicketId(tickets.iterator().next().getId());
+            purchaseDoc.setTickets(null);
+        }
+
         for (Ticket t : tickets) {
             t.setTicketingSalesAcDoc(null);
             t.setTicketingPurchaseAcDoc(null);
@@ -269,9 +279,10 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         }
         doc.setStatus(Enums.AcDocStatus.VOID);
         save(doc);
-        tPurchaseAcDocDAO.delete(purchaseDoc);
-
-        return true;
+        if (purchaseDoc != null) {
+            tPurchaseAcDocDAO.delete(purchaseDoc);
+        }
+        return doc;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.ets.PersistentObject;
 import com.ets.client.domain.Agent;
 import com.ets.client.domain.Customer;
 import com.ets.settings.service.AppSettingsService;
+import com.ets.util.Enums;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -19,10 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *

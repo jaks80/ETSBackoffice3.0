@@ -4,6 +4,7 @@ import com.ets.accountingdoc.collection.TicketingSalesAcDocs;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accountingdoc.model.InvoiceModel;
 import com.ets.accountingdoc.model.InvoiceReport;
+import com.ets.accountingdoc.service.TPurchaseAcDocService;
 import com.ets.accountingdoc.service.TSalesAcDocService;
 import com.ets.productivity.model.ProductivityReport;
 import com.ets.util.DateUtil;
@@ -30,6 +31,8 @@ public class TicketingSalesAcDocWS {
 
     @Autowired
     TSalesAcDocService service;
+    @Autowired
+    TPurchaseAcDocService purchase_service;
 
     @GET
     @Path("/byid/{id}")
@@ -72,7 +75,7 @@ public class TicketingSalesAcDocWS {
     @GET
     @Path("/draftdoc")
     @RolesAllowed("GS")
-    public TicketingSalesAcDoc newDraftDocument(@QueryParam("pnrid") Long pnrid) {
+    public TicketingSalesAcDoc newDraftDocument(@QueryParam("pnrid") Long pnrid) {        
         TicketingSalesAcDoc doc = service.newDraftDocument(pnrid);
         return doc;
     }
@@ -80,7 +83,7 @@ public class TicketingSalesAcDocWS {
     @POST
     @Path("/newdoc")
     @RolesAllowed("GS")
-    public TicketingSalesAcDoc createNewDocument(TicketingSalesAcDoc ticketingSalesAcDoc) {
+    public TicketingSalesAcDoc createNewDocument(TicketingSalesAcDoc ticketingSalesAcDoc) {        
         TicketingSalesAcDoc doc = service.newDocument(ticketingSalesAcDoc);
         return doc;
     }
@@ -163,17 +166,17 @@ public class TicketingSalesAcDocWS {
     @Path("/paymentdue_flight")
     //@RolesAllowed("SM")
     @PermitAll
-    public InvoiceReport outstandingFlightReport(            
+    public InvoiceReport outstandingFlightReport(
             @QueryParam("clienttype") Enums.ClientType clienttype,
             @QueryParam("clientid") Long clientid,
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd) {
-        
+
         Date dateTo = null;
-        if (dateEnd != null) {           
+        if (dateEnd != null) {
             dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
         }
-        
+
         InvoiceReport report = service.outstandingFlightReport(clienttype, clientid, dateTo);
         return report;
     }

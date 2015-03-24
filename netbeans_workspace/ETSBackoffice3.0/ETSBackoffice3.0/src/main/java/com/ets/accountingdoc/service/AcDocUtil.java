@@ -1,11 +1,6 @@
 package com.ets.accountingdoc.service;
 
-import com.ets.accountingdoc.domain.AccountingDocument;
-import com.ets.accountingdoc.domain.AccountingDocumentLine;
-import com.ets.accountingdoc.domain.AdditionalChargeLine;
-import com.ets.accountingdoc.domain.OtherSalesAcDoc;
-import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
-import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
+import com.ets.accountingdoc.domain.*;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums;
 import java.util.LinkedHashSet;
@@ -82,40 +77,31 @@ public class AcDocUtil {
         }
     }
 
-    public static Set<Ticket> initTSAcDocInTickets(TicketingSalesAcDoc doc, Set<Ticket> tickets) {
-        Set<Ticket> tempTickets = new LinkedHashSet<>();
+    public static void initTSAcDocInTickets(TicketingSalesAcDoc doc, Set<Ticket> tickets) {        
         for (Ticket t : tickets) {
             t.setTicketingSalesAcDoc(doc);
-        }
-        return tempTickets;
+        }       
     }
 
-    public static Set<Ticket> initTPAcDocInTickets(TicketingPurchaseAcDoc doc, Set<Ticket> tickets) {
-        Set<Ticket> tempTickets = new LinkedHashSet<>();
+    public static void initTPAcDocInTickets(TicketingPurchaseAcDoc doc, Set<Ticket> tickets) {       
         for (Ticket t : tickets) {
             t.setTicketingPurchaseAcDoc(doc);
         }
-        return tempTickets;
     }
 
-    public static Set<AccountingDocumentLine> initAcDocInLine(OtherSalesAcDoc doc, Set<AccountingDocumentLine> lines) {
-        Set<AccountingDocumentLine> tempLines = new LinkedHashSet<>();
+    public static void initAcDocInLine(OtherSalesAcDoc doc, Set<AccountingDocumentLine> lines) {        
         for (AccountingDocumentLine line : lines) {
             line.setOtherSalesAcDoc((OtherSalesAcDoc) doc);
         }
-        return tempLines;
     }
 
-    public static Set<AccountingDocumentLine> UndefineAcDocInLine(OtherSalesAcDoc doc, Set<AccountingDocumentLine> lines) {
-        Set<AccountingDocumentLine> tempLines = new LinkedHashSet<>();
+    public static void UndefineAcDocInLine(OtherSalesAcDoc doc, Set<AccountingDocumentLine> lines) {        
         for (AccountingDocumentLine line : lines) {
             line.setOtherSalesAcDoc(null);
-        }
-        return tempLines;
+        }        
     }
 
-    public static Set<AdditionalChargeLine> initAddChgLine(AccountingDocument doc, Set<AdditionalChargeLine> lines) {
-        Set<AdditionalChargeLine> tempLines = new LinkedHashSet<>();
+    public static void initAddChgLine(AccountingDocument doc, Set<AdditionalChargeLine> lines) {        
         for (AdditionalChargeLine line : lines) {
             if (doc instanceof TicketingSalesAcDoc) {
                 line.setTicketingSalesAcDoc((TicketingSalesAcDoc) doc);
@@ -124,13 +110,10 @@ public class AcDocUtil {
             } else if (doc instanceof OtherSalesAcDoc) {
                 line.setOtherSalesAcDoc((OtherSalesAcDoc) doc);
             }
-        }
-        return tempLines;
+        }       
     }
 
-    public static Set<AccountingDocumentLine> initAcDocInLine(AccountingDocument doc, Set<AccountingDocumentLine> lines) {
-        
-        Set<AccountingDocumentLine> tempLines = new LinkedHashSet<>();
+    public static void initAcDocInLine(AccountingDocument doc, Set<AccountingDocumentLine> lines) {              
         for (AccountingDocumentLine line : lines) {
             if (doc instanceof TicketingSalesAcDoc) {
                 //line.setTicketingSalesAcDoc((TicketingSalesAcDoc) doc);
@@ -138,12 +121,9 @@ public class AcDocUtil {
                 line.setOtherSalesAcDoc((OtherSalesAcDoc) doc);
             }
         }
-        return tempLines;
     }
         
-    public static Set<AccountingDocumentLine> undefineAcDocInLine(AccountingDocument doc, Set<AccountingDocumentLine> lines) {
-        
-        Set<AccountingDocumentLine> tempLines = new LinkedHashSet<>();
+    public static void undefineAcDocInLine(AccountingDocument doc, Set<AccountingDocumentLine> lines) {        
         for (AccountingDocumentLine line : lines) {
             if (doc instanceof TicketingSalesAcDoc) {
                 //line.setTicketingSalesAcDoc(null);
@@ -151,7 +131,6 @@ public class AcDocUtil {
                 line.setOtherSalesAcDoc(null);
             }
         }
-        return tempLines;
     }
         
     public static Set<AdditionalChargeLine> undefineAddChgLine(AccountingDocument doc, Set<AdditionalChargeLine> lines) {

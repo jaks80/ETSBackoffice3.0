@@ -4,7 +4,9 @@ import com.ets.settings.domain.User;
 import com.ets.util.Enums;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -17,6 +19,20 @@ public class LoginManager {
 
     private static Map<String, Login> loginList = new HashMap<>();
     private static final int LOGIN_EXPIRE_TIME = 30;//Minutes
+
+    public synchronized static User getUserById(Long id) {
+        Iterator it = getLoginList().entrySet().iterator();
+        User user = null;
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            Login login = (Login) pair.getValue();
+            if (Objects.equals(login.getUser().getId(), id)) {
+                user = login.getUser();
+                break;
+            }
+        }
+        return user;
+    }
 
     public synchronized static void addLogin(User user) {
         Login login = new Login();

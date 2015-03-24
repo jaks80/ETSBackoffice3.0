@@ -1,16 +1,12 @@
 package com.ets.accounts.ws;
 
-import com.ets.accounts.model.Payments;
+import com.ets.accounts.model.*;
 import com.ets.accounts.domain.Payment;
-import com.ets.accounts.model.CashBookReport;
-import com.ets.accounts.model.CreditTransfer;
 import com.ets.accounts.service.PaymentService;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -34,10 +30,26 @@ public class PaymentWS {
     @POST
     @Path("/new")
     @RolesAllowed("GS")
-    public Payment create(Payment payment) {
+    public Payment newPayment(Payment payment) {
         return service.save(payment);
     }
 
+    @POST
+    @Path("/newbsppay")
+    @RolesAllowed("SM")
+    public Payment newBSPPayment(@QueryParam("userid") Long userid,
+            @QueryParam("agentid") Long agentid,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd,@QueryParam("dateEnd") String paymentDate) {
+        
+        
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+        Date _paymentDate = DateUtil.stringToDate(paymentDate, "ddMMMyyyy");
+
+        return service.newBSPPayment(agentid, dateFrom, dateTo,userid,_paymentDate);
+    }
+    
     @POST
     @Path("/newctransfer")
     @RolesAllowed("GS")

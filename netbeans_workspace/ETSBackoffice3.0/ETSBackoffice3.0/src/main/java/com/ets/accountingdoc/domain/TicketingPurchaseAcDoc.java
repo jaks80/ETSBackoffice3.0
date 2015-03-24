@@ -19,10 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -148,7 +145,7 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
     }
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pnr_fk")
+    @JoinColumn(name = "pnr_fk",nullable=false)
     public Pnr getPnr() {
         return pnr;
     }
@@ -194,5 +191,9 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
 
     public void setPayment(Payment payment) {
         this.payment = payment;
+    }
+    
+    public void addTicket(Ticket ticket){
+     this.tickets.add(ticket);
     }
 }

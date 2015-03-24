@@ -1,20 +1,20 @@
 package com.ets.accounts.service;
 
-import com.ets.accounts.model.Payments;
-import com.ets.accounts.dao.PaymentDAO;
-import com.ets.accountingdoc.domain.OtherSalesAcDoc;
 import com.ets.accounts.domain.Payment;
-import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
-import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
+import com.ets.accounts.model.*;
+import com.ets.accounts.dao.PaymentDAO;
+import com.ets.accountingdoc.domain.*;
+import com.ets.accountingdoc.service.TPurchaseAcDocService;
 import com.ets.accountingdoc.service.TSalesAcDocService;
 import com.ets.accountingdoc_o.service.OSalesAcDocService;
 import com.ets.accounts.logic.PaymentLogic;
-import com.ets.accounts.model.CashBookReport;
-import com.ets.accounts.model.CreditTransfer;
+import com.ets.security.LoginManager;
+import com.ets.settings.domain.User;
 import com.ets.util.Enums;
 import java.math.BigDecimal;
 import java.util.*;
 import javax.annotation.Resource;
+import javax.ws.rs.QueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,20 @@ public class PaymentService {
     @Autowired
     private TSalesAcDocService tSalesAcDocService;
     @Autowired
+    private TPurchaseAcDocService tPurchaseAcDocService;
+    @Autowired
     private OSalesAcDocService oSalesAcDocService;
+
+    public Payment newBSPPayment(Long agentid, Date dateStart, Date dateEnd, Long userid, Date paymentDate) {
+        List<TicketingPurchaseAcDoc> invoices = tPurchaseAcDocService.dueBSPInvoices(agentid, dateStart, dateEnd);
+        User user = LoginManager.getUserById(userid);
+        PaymentLogic logic = new PaymentLogic();
+
+        Payment bspPayment = logic.processBSPPayment(invoices, user, paymentDate);
+
+        save(bspPayment);
+        return bspPayment;
+    }
 
     public Payment save(Payment payment) {
         Set<TicketingSalesAcDoc> sdocs = payment.gettSalesAcDocuments();

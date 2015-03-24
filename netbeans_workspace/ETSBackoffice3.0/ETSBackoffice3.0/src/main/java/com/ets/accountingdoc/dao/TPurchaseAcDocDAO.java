@@ -16,18 +16,22 @@ public interface TPurchaseAcDocDAO extends GenericDAO<TicketingPurchaseAcDoc, Lo
     public TicketingPurchaseAcDoc getWithChildrenById(Long id);
 
     public List<TicketingPurchaseAcDoc> getByPnrId(Long pnrId);
-    
+
     public boolean voidDocument(TicketingPurchaseAcDoc doc);
-    
+
     public TicketingPurchaseAcDoc getByTicketId(Long ticketId);
 
     public List<TicketingPurchaseAcDoc> getByGDSPnr(String GdsPnr);
+
+    public List<TicketingPurchaseAcDoc> findOutstandingInvoice(Enums.AcDocType type,Long agentid,Date dateStart,Date dateEnd);
     
-    public List<TicketingPurchaseAcDoc> findOutstandingDocuments(Enums.AcDocType type,Long agentid,Date dateStart,Date dateEnd);      
+    public List<TicketingPurchaseAcDoc> findOutstandingBSPInvoice(Long agentid,Date dateStart,Date dateEnd);
     
+    public List<TicketingPurchaseAcDoc> findBSP_ADM_ACM(Long agentid, Date from, Date to);
+
     public List<TicketingPurchaseAcDoc> findInvoiceHistory(Long agentid,Date dateStart,Date dateEnd);
-    
+
     public List<TicketingPurchaseAcDoc> findAllDocuments(Long agentid,Date dateStart,Date dateEnd);
-        
+
     public BigDecimal getAccountBallanceToDate(Long agentid,Date dateEnd);
 }

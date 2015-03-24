@@ -1,8 +1,7 @@
 package com.ets.accountingdoc.service;
 
 import com.ets.accountingdoc.dao.TSalesAcDocDAO;
-import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
-import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
+import com.ets.accountingdoc.domain.*;
 import com.ets.accountingdoc.logic.TicketingAcDocBL;
 import com.ets.accountingdoc.model.InvoiceModel;
 import com.ets.pnr.domain.Pnr;
@@ -11,10 +10,8 @@ import com.ets.pnr.service.PnrService;
 import com.ets.accountingdoc.model.InvoiceReport;
 import com.ets.productivity.model.ProductivityReport;
 import com.ets.settings.domain.User;
-import com.ets.util.DateUtil;
-import com.ets.util.Enums;
+import com.ets.util.*;
 import com.ets.util.Enums.AcDocType;
-import com.ets.util.PnrUtil;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -74,8 +71,8 @@ public class TSalesAcDocService {
             draftDocument = logic.newTicketingDraftInvoice(invoice, uninvoicedTicket);
         } else {
 
-            Set<Ticket> reIssuedTickets = PnrUtil.getUnInvoicedReIssuedTicket(pnr);
-            Set<Ticket> refundedTickets = PnrUtil.getUnRefundedTickets(pnr);
+            Set<Ticket> reIssuedTickets = PnrUtil.getUnInvoicedReIssuedTicket(pnr, Enums.SaleType.TKTSALES);
+            Set<Ticket> refundedTickets = PnrUtil.getUnRefundedTickets(pnr, Enums.SaleType.TKTSALES);
 
             //We need only Invoice here not children
             invoice.setTickets(null);
@@ -248,6 +245,10 @@ public class TSalesAcDocService {
      * @return
      */
     public TicketingSalesAcDoc _void(TicketingSalesAcDoc ticketingSalesAcDoc) {
+        if (!ticketingSalesAcDoc.getTickets().isEmpty()) {
+            ticketingSalesAcDoc = dao.voidSimpleDocument(ticketingSalesAcDoc);
+            return ticketingSalesAcDoc;
+        }
         TicketingSalesAcDoc doc = dao.getWithChildrenById(ticketingSalesAcDoc.getId());
         doc.setLastModified(ticketingSalesAcDoc.getLastModified());
         doc.setLastModifiedBy(ticketingSalesAcDoc.getLastModifiedBy());
@@ -257,7 +258,7 @@ public class TSalesAcDocService {
             return doc;
         } else {
 
-            dao.voidDocument(undefineChildren(doc));
+            dao.voidTicketedDocument(undefineChildren(doc));
             return doc;
         }
     }

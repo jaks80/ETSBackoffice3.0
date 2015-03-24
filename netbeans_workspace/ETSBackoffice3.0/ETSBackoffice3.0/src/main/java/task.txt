@@ -1,4 +1,6 @@
 4. Ticketing OID and Sub agent OID break down.
 
-1. Invoice for Customer and Agent search component make Enter Hit search with clicking search.
-2. Same component make font bold.
+1. Add TKXL for Issue automatically and for booking manually
+2. VOID ticket has not been done yet
+3. Save ticketing agent while saving new PNR
+4. Ticket sale report Self and Third party filtering in two sections

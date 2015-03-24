@@ -1,5 +1,6 @@
 package com.ets.air.service;
 
+import com.ets.accountingdoc.service.TPurchaseAcDocService;
 import com.ets.air.dao.AirDAO;
 import com.ets.pnr.dao.*;
 import com.ets.pnr.domain.*;
@@ -31,7 +32,9 @@ public class AirService {
 
     @Autowired
     AirlineService airlineService;
-
+    @Autowired
+    TPurchaseAcDocService purchase_service;
+    
     public AirService() {
 
     }
@@ -58,14 +61,17 @@ public class AirService {
             itineraryDAO.deleteBulk(persistedPnr.getSegments());//Saving final segments. Issued segments are final segments.
             persistedPnr.setSegments(newPnr.getSegments());
         }
+        
         Airline airline = airlineService.find(persistedPnr.getAirLineCode());
-        setBspCommission(persistedPnr.getTickets(), airline);
-
+        if (airline != null) {
+            setBspCommission(persistedPnr.getTickets(), airline);
+        }
+        
         PnrUtil.initPnrChildren(persistedPnr);
 
         save(persistedPnr);
         PnrUtil.undefinePnrChildren(persistedPnr); //Undefine cyclic dependencies to avoid cyclic xml exception
-
+        
         return persistedPnr;
     }
 
@@ -93,7 +99,9 @@ public class AirService {
         if (!tobePersisted.isEmpty()) {
 
             Airline airline = airlineService.find(persistedPnr.getAirLineCode());
-            setBspCommission(persistedPnr.getTickets(), airline);
+            if (airline != null) {
+                setBspCommission(persistedPnr.getTickets(), airline);
+            }
 
             PnrUtil.initPnrInTickets(persistedPnr, tobePersisted);
             ticketDAO.saveBulk(tobePersisted);
@@ -118,6 +126,6 @@ public class AirService {
     }
 
     public void save(Pnr pnr) {
-        dao.save(pnr);
+        dao.save(pnr);        
     }
 }

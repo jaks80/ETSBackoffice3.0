@@ -67,7 +67,7 @@ public class InvoiceReport implements Serializable {
     @XmlElement
     private String dateTo;
 
-    public static InvoiceReport serializeToSalesSummery(Long clientid,List<TicketingSalesAcDoc> invoices, Date from, Date to) {
+    public static InvoiceReport serializeToSalesSummery(Long clientid, List<TicketingSalesAcDoc> invoices, Date from, Date to) {
         BigDecimal totalInvAmount = new BigDecimal("0.00");
         BigDecimal totalDMAmount = new BigDecimal("0.00");
         BigDecimal totalCMAmount = new BigDecimal("0.00");
@@ -84,9 +84,9 @@ public class InvoiceReport implements Serializable {
             }
 
             TktingInvoiceSummery invSummery = new TktingInvoiceSummery();
-            
+
             Pnr pnr = invoice.getPnr();
-            
+
             if (pnr.getAgent() != null) {
                 invSummery.setClientType(Enums.ClientType.AGENT);
                 invSummery.setClientName(pnr.getAgent().getName());
@@ -94,7 +94,7 @@ public class InvoiceReport implements Serializable {
                 invSummery.setClientType(Enums.ClientType.CUSTOMER);
                 invSummery.setClientName(pnr.getCustomer().calculateFullName());
             }
-            
+
             invSummery.setId(invoice.getId());
             invSummery.setDocIssueDate(DateUtil.dateToString(invoice.getDocIssueDate()));
             invSummery.setGdsPnr(pnr.getGdsPnr());
@@ -107,7 +107,7 @@ public class InvoiceReport implements Serializable {
             invSummery.setStatus(invoice.getStatus());
             invSummery.setType(invoice.getType());
             invSummery.setOutBoundDetails(PnrUtil.getOutBoundFlightSummery(invoice.getPnr().getSegments()));
-            
+
             invSummery.setDocumentedAmount(invoice.getDocumentedAmount());
             invSummery.setOtherAmount(invoice.calculateTotalDebitMemo().add(invoice.calculateTotalCreditMemo()));
             invSummery.setPayment((invoice.calculateTotalPayment().add(invoice.calculateTotalRefund())).abs());
@@ -123,9 +123,9 @@ public class InvoiceReport implements Serializable {
             report.addInvoice(invSummery);
         }
 
-        if(from !=null && to!=null){
-        report.setDateFrom(DateUtil.dateToString(from));
-        report.setDateTo(DateUtil.dateToString(to));
+        if (from != null && to != null) {
+            report.setDateFrom(DateUtil.dateToString(from));
+            report.setDateTo(DateUtil.dateToString(to));
         }
         String currency = Application.currency();
         report.setTotalInvAmount(currency + totalInvAmount.toString());
@@ -135,7 +135,7 @@ public class InvoiceReport implements Serializable {
         report.setTotalPayment(currency + totalPayment.abs().toString());
         report.setTotalRefund(currency + totalRefund.abs().toString());
 
-        if (clientid!=null && !invoices.isEmpty() && invoices.get(0).getPnr() != null) {
+        if (clientid != null && !invoices.isEmpty() && invoices.get(0).getPnr() != null) {
             Pnr pnr = invoices.get(0).getPnr();
             Contactable cont = null;
 
@@ -155,7 +155,7 @@ public class InvoiceReport implements Serializable {
         return report;
     }
 
-    public static InvoiceReport serializeToPurchaseSummery(Long clientid,List<TicketingPurchaseAcDoc> invoices, Date from, Date to) {
+    public static InvoiceReport serializeToPurchaseSummery(Long clientid, List<TicketingPurchaseAcDoc> invoices, Date from, Date to) {
         BigDecimal totalInvAmount = new BigDecimal("0.00");
         BigDecimal totalDMAmount = new BigDecimal("0.00");
         BigDecimal totalCMAmount = new BigDecimal("0.00");
@@ -208,19 +208,19 @@ public class InvoiceReport implements Serializable {
         report.setTotalPayment(currency + totalPayment.toString());
         report.setTotalRefund(currency + totalRefund.toString());
 
-        if (clientid!=null && !invoices.isEmpty() && invoices.get(0).getPnr() != null) {
+        if (clientid != null && !invoices.isEmpty() && invoices.get(0).getPnr() != null) {
             Pnr pnr = invoices.get(0).getPnr();
             Contactable cont = null;
 
-            if (pnr.getAgent() != null) {
+            if (pnr.getTicketing_agent() != null) {
                 cont = pnr.getTicketing_agent();
+                report.setClientName(cont.calculateFullName());
+                report.setEmail(cont.getEmail());
+                report.setFax(cont.getFax());
+                report.setMobile(cont.getMobile());
+                report.setTelNo(cont.getMobile());
+                report.setAddressCRSeperated(cont.getAddressCRSeperated());
             }
-            report.setClientName(cont.calculateFullName());
-            report.setEmail(cont.getEmail());
-            report.setFax(cont.getFax());
-            report.setMobile(cont.getMobile());
-            report.setTelNo(cont.getMobile());
-            report.setAddressCRSeperated(cont.getAddressCRSeperated());
         }
         report.setTotalInvoice(String.valueOf(report.getInvoices().size()));
         return report;

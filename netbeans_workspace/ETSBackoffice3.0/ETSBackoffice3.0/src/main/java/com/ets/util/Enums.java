@@ -232,6 +232,31 @@ public class Enums {
         }
     }
 
+    public enum TicketingType {
+
+        IATA(0), THIRDPARY(1);
+        private int id;
+
+        TicketingType(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static String valueOf(int id) {
+            switch (id) {
+                case 0:
+                    return IATA.toString();
+                case 1:
+                    return THIRDPARY.toString();
+                default:
+                    return null;
+            }
+        }
+    }
+        
     public enum PaymentType {
 
         CASH(0), CHEQUE(1), CREDIT_CARD(2), DEBIT_CARD(3), BANKT_TANSFER(4), OTHER(5), CREDIT_TRANSFER(6);

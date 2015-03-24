@@ -75,10 +75,15 @@ public class TicketSaleReport implements Serializable {
             line.setDocIssuedate(DateUtil.dateToString(t.getDocIssuedate()));
             line.setTktStatus(t.getTktStatus().toString());
             
-            line.setSalesInvoiceId(t.getTicketingSalesAcDoc().getId());
-            line.setPurchaseInvoiceId(t.getTicketingPurchaseAcDoc().getId());
-            line.setSellingRefference(t.getTicketingSalesAcDoc().getReference().toString());
-            line.setVendorRefference(t.getTicketingPurchaseAcDoc().getVendorRef());
+            if(t.getTicketingSalesAcDoc()!=null){
+             line.setSalesInvoiceId(t.getTicketingSalesAcDoc().getId());
+             line.setSellingRefference(t.getTicketingSalesAcDoc().getReference().toString());
+            }
+            if(t.getTicketingPurchaseAcDoc()!=null){
+             line.setPurchaseInvoiceId(t.getTicketingPurchaseAcDoc().getId());
+             line.setVendorRefference(t.getTicketingPurchaseAcDoc().getVendorRef());
+            }
+                        
             line.setBaseFare(t.getBaseFare().toString());
             totalBaseFare = totalBaseFare.add(t.getBaseFare());
 
@@ -108,10 +113,12 @@ public class TicketSaleReport implements Serializable {
             Pnr pnr = t.getPnr();
             line.setGdsPnr(pnr.getGdsPnr());
             line.setAirLineCode(pnr.getAirLineCode());
-            line.setTicketingAgent(pnr.getTicketing_agent().calculateFullName());
+            if(pnr.getTicketing_agent()!=null){
+             line.setTicketingAgent(pnr.getTicketing_agent().calculateFullName());
+            }
             if (pnr.getAgent() != null) {
                 line.setClient(pnr.getAgent().getName());
-            } else {
+            } else if(pnr.getCustomer() !=null){
                 line.setClient(pnr.getCustomer().calculateFullName());
             }
                         

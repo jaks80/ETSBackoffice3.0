@@ -2,10 +2,12 @@ package com.ets.accountingdoc.ws;
 
 import com.ets.accountingdoc.collection.TicketingPurchaseAcDocs;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
+import com.ets.accountingdoc.model.BSPReport;
 import com.ets.accountingdoc.service.TPurchaseAcDocService;
 import com.ets.accountingdoc.model.InvoiceReport;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
@@ -86,7 +88,7 @@ public class TicketingPurchaseAcDocWS {
         ticketingPurchaseAcDoc = service._void(ticketingPurchaseAcDoc);
         return ticketingPurchaseAcDoc;
     }
-    
+
     @DELETE
     @Path("/delete/{id}")
     @RolesAllowed("SM")
@@ -98,6 +100,7 @@ public class TicketingPurchaseAcDocWS {
     @Path("/due_invoices")
     @RolesAllowed("SM")
     public TicketingPurchaseAcDocs outstandingInvoices(
+            @QueryParam("ticketingtype") Enums.TicketingType ticketingType,
             @QueryParam("doctype") Enums.AcDocType doctype,
             @QueryParam("agentid") Long agentid,
             @QueryParam("dateStart") String dateStart,
@@ -106,14 +109,30 @@ public class TicketingPurchaseAcDocWS {
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
 
-        List<TicketingPurchaseAcDoc> list = service.dueInvoices(doctype,
+        List<TicketingPurchaseAcDoc> list = new ArrayList<>();
+        list = service.dueThirdPartyInvoices(doctype,
                 agentid, dateFrom, dateTo);
 
         TicketingPurchaseAcDocs docs = new TicketingPurchaseAcDocs();
         docs.setList(list);
         return docs;
     }
-    
+
+    @GET
+    @Path("/due_bspreport")
+    @RolesAllowed("SM")    
+    public BSPReport outstandingBSPReport(
+            @QueryParam("agentid") Long agentid,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        BSPReport report = service.dueBSPReport(agentid, dateFrom, dateTo);
+        return report;
+    }
+
     //*****************Reporting Methods are Bellow******************//
     @GET
     @Path("/acdoc_report")

@@ -30,7 +30,8 @@ public class TicketWS {
     @Produces("application/xml")
     @Path("/gds-salereport")
     @RolesAllowed("SM")
-    public GDSSaleReport gdsSaleReport(@QueryParam("ticketStatus") Enums.TicketStatus ticketStatus,
+    public GDSSaleReport gdsSaleReport(@QueryParam("ticketingType") Enums.TicketingType ticketingType,
+            @QueryParam("ticketStatus") Enums.TicketStatus ticketStatus,
             @QueryParam("airLineCode") String airLineCode,
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd,
@@ -39,7 +40,7 @@ public class TicketWS {
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
 
-        GDSSaleReport report = service.saleReport(ticketStatus, airLineCode, dateFrom, dateTo, ticketingAgtOid);
+        GDSSaleReport report = service.saleReport(ticketingType,ticketStatus, airLineCode, dateFrom, dateTo, ticketingAgtOid);
         return report;
     }
 
@@ -47,7 +48,8 @@ public class TicketWS {
     @Produces("application/xml")
     @Path("/salereport")
     @RolesAllowed("SM")    
-    public TicketSaleReport saleReport(@QueryParam("ticketStatus") Enums.TicketStatus ticketStatus,
+    public TicketSaleReport saleReport(@QueryParam("ticketingType") Enums.TicketingType ticketingType,
+            @QueryParam("ticketStatus") Enums.TicketStatus ticketStatus,
             @QueryParam("airLineCode") String airLineCode,
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd,
@@ -56,7 +58,7 @@ public class TicketWS {
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
 
-        TicketSaleReport report = service.saleRevenueReport(ticketStatus, airLineCode, dateFrom, dateTo, ticketingAgtOid);
+        TicketSaleReport report = service.saleRevenueReport(ticketingType,ticketStatus, airLineCode, dateFrom, dateTo, ticketingAgtOid);
         return report;
     }
 }

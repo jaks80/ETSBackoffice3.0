@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements TicketDAO{
 
     @Override
-    public List<Ticket> saleReport(Enums.TicketStatus ticketStatus, String[] airLineCode, Date from, Date to, String... ticketingAgtOid) {
+    public List<Ticket> saleReport(Enums.TicketingType ticketingType,Enums.TicketStatus ticketStatus, String[] airLineCode, Date from, Date to, String... ticketingAgtOid) {
 
         String airLineCodeQuery="";
         String ticketingAgtOidQuery = "";
@@ -64,7 +64,7 @@ public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements Ticke
     }
 
     @Override
-    public List<Ticket> saleRevenueReport(Enums.TicketStatus ticketStatus, String[] airLineCode, Date from, Date to, String... ticketingAgtOid) {
+    public List<Ticket> saleRevenueReport(Enums.TicketingType ticketingType,Enums.TicketStatus ticketStatus, String[] airLineCode, Date from, Date to, String... ticketingAgtOid) {
         String airLineCodeQuery="";
         String ticketingAgtOidQuery = "";
 

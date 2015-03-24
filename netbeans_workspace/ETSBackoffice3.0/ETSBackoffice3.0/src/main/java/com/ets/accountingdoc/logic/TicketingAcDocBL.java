@@ -90,6 +90,61 @@ public class TicketingAcDocBL {
         return invoice;
     }
 
+    public TicketingPurchaseAcDoc newTicketingDraftPurchaseInvoice(TicketingPurchaseAcDoc draftInvoice, Set<Ticket> unDocumentedTickets) {
+
+        draftInvoice.setType(Enums.AcDocType.INVOICE);
+        draftInvoice.setDocIssueDate(getEarliestDate(unDocumentedTickets));
+        Set<Ticket> ticketsToInv = new LinkedHashSet<>();
+        for (Ticket t : unDocumentedTickets) {
+            if (t.getTicketingPurchaseAcDoc() == null && draftInvoice.getDocIssueDate().equals(t.getDocIssuedate())) {
+                ticketsToInv.add(t);
+            }
+        }
+
+        if (ticketsToInv.isEmpty()) {
+            return null;
+        }
+        unDocumentedTickets.removeAll(ticketsToInv);
+        draftInvoice.setTickets(ticketsToInv);
+        draftInvoice.setPnr(pnr);
+        return draftInvoice;
+    }
+
+    public TicketingPurchaseAcDoc newTicketingDraftPurchaseDMemo(TicketingPurchaseAcDoc invoice, Set<Ticket> unDocumentedTickets) {
+
+        TicketingPurchaseAcDoc debitMemo = new TicketingPurchaseAcDoc();
+        debitMemo.setType(Enums.AcDocType.DEBITMEMO);
+        debitMemo.setPnr(pnr);
+        debitMemo.setReference(invoice.getReference());
+        debitMemo.setDocIssueDate(getEarliestDate(unDocumentedTickets));
+        debitMemo.setParent(invoice);
+        for (Ticket t : unDocumentedTickets) {
+            if (t.getTicketingPurchaseAcDoc()== null && debitMemo.getDocIssueDate().equals(t.getDocIssuedate())) {
+                debitMemo.addTicket(t);
+            }
+        }
+
+        return debitMemo;
+    }
+
+    public TicketingPurchaseAcDoc newTicketingDraftPurchaseCMemo(TicketingPurchaseAcDoc invoice, Set<Ticket> unDocumentedTickets) {
+
+        TicketingPurchaseAcDoc creditMemo = new TicketingPurchaseAcDoc();
+        creditMemo.setType(Enums.AcDocType.CREDITMEMO);
+        creditMemo.setPnr(pnr);
+        creditMemo.setReference(invoice.getReference());
+        creditMemo.setDocIssueDate(getEarliestDate(unDocumentedTickets));
+        creditMemo.setParent(invoice);
+
+        for (Ticket t : unDocumentedTickets) {
+            if (t.getTicketingPurchaseAcDoc() == null && creditMemo.getDocIssueDate().equals(t.getDocIssuedate())) {
+                creditMemo.addTicket(t);
+            }
+        }
+
+        return creditMemo;
+    }
+
     public TicketingPurchaseAcDoc newTicketingPurchaseDMemo(TicketingSalesAcDoc salesDebitMemo, TicketingPurchaseAcDoc invoice) {
 
         TicketingPurchaseAcDoc debitMemo = new TicketingPurchaseAcDoc();
@@ -118,7 +173,7 @@ public class TicketingAcDocBL {
 
         Date date = new java.util.Date();
         for (Ticket t : tickets) {
-            if (t.getDocIssuedate().before(date) && t.getTicketingSalesAcDoc() == null) {
+            if (t.getDocIssuedate().before(date)) {
                 date = t.getDocIssuedate();
             }
         }

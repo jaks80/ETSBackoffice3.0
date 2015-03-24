@@ -22,6 +22,8 @@ import javax.xml.bind.annotation.*;
 @Access(AccessType.PROPERTY)
 public class Payment extends PersistentObject implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     @XmlElement
     private String remark;
     @XmlElement

@@ -1,6 +1,8 @@
 package com.ets.pnr.dao;
 
 import com.ets.GenericDAOImpl;
+import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
+import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
 
-    @Override    
+    @Override
     @Transactional(readOnly = true)
     public Pnr getByIdWithChildren(Long id) {
 
@@ -40,21 +42,25 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
         Query query = getSession().createQuery(hql);
         query.setParameter("id", id);
         Pnr pnr = (Pnr) query.uniqueResult();
-        
-        if(pnr==null){
-         return null;
+
+        if (pnr == null) {
+            return null;
         }
         for (Ticket t : pnr.getTickets()) {
-            if (t.getTicketingSalesAcDoc() != null) {
-                t.getTicketingSalesAcDoc().setAdditionalChargeLines(null);
-                t.getTicketingSalesAcDoc().setTickets(null);
-                t.getTicketingSalesAcDoc().setPnr(null);
-                t.getTicketingSalesAcDoc().setRelatedDocuments(null);
-                
-                t.getTicketingPurchaseAcDoc().setAdditionalChargeLines(null);
-                t.getTicketingPurchaseAcDoc().setTickets(null);
-                t.getTicketingPurchaseAcDoc().setPnr(null);
-                t.getTicketingPurchaseAcDoc().setRelatedDocuments(null);
+
+            TicketingSalesAcDoc sdoc = t.getTicketingSalesAcDoc();
+            if (sdoc != null) {
+                sdoc.setAdditionalChargeLines(null);
+                sdoc.setTickets(null);
+                sdoc.setPnr(null);
+                sdoc.setRelatedDocuments(null);
+            }
+            TicketingPurchaseAcDoc pdoc = t.getTicketingPurchaseAcDoc();
+            if (pdoc != null) {
+                pdoc.setAdditionalChargeLines(null);
+                pdoc.setTickets(null);
+                pdoc.setPnr(null);
+                pdoc.setRelatedDocuments(null);
             }
         }
         return pnr;
@@ -109,7 +115,6 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
 //        String hql = "select t,p from Ticket t "
 //                + "inner join t.pnr as p "
 //                + "where t.ticketingSalesAcDoc is null group by t.pnr.id";
-        
         String hql = "select distinct p from Pnr p left join fetch p.tickets as t where t.ticketingSalesAcDoc is null group by p.id";
 
         Query query = getSession().createQuery(hql);
@@ -129,7 +134,6 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
 //            pnr.setTickets(tickets);
 //            list.add(pnr);
 //        }
-
         return list;
     }
 

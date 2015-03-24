@@ -18,10 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -130,7 +127,7 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         this.getAdditionalChargeLines().add(line);
     }
 
-    @OneToMany(mappedBy = "ticketingSalesAcDoc", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ticketingSalesAcDoc", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     public Set<Ticket> getTickets() {
         return tickets;
     }

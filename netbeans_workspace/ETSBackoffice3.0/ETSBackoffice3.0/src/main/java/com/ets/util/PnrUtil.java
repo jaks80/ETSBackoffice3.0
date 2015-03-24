@@ -184,10 +184,22 @@ public class PnrUtil {
         return finalSegments;
     }
 
-    public static Set<Ticket> getUnRefundedTickets(Pnr pnr) {
+    public static Set<Ticket> getUnRefundedTickets(Pnr pnr, Enums.SaleType saleType) {
         Set<Ticket> refundTickets = new LinkedHashSet<>();
 
         for (Ticket t : pnr.getTickets()) {
+            
+            if (t.getTktStatus().equals(Enums.TicketStatus.REFUND)&&
+                    saleType.equals(Enums.SaleType.TKTSALES) && 
+                    t.getTicketingSalesAcDoc() == null&& 
+                    t.getGrossFare().compareTo(new BigDecimal("0.00")) != 0) {
+                    refundTickets.add(t);
+                } else if (t.getTktStatus().equals(Enums.TicketStatus.REFUND)&&
+                    saleType.equals(Enums.SaleType.TKTPURCHASE) && 
+                    t.getTicketingPurchaseAcDoc()== null) {
+                    refundTickets.add(t);
+                }
+            
             if (t.getTktStatus().equals(Enums.TicketStatus.REFUND) && t.getTicketingSalesAcDoc() == null && t.getGrossFare().compareTo(new BigDecimal("0.00")) != 0) {
                 refundTickets.add(t);
             }
@@ -208,13 +220,31 @@ public class PnrUtil {
         return tickets;
     }
 
-    public static Set<Ticket> getUnInvoicedReIssuedTicket(Pnr pnr) {
+    public static Set<Ticket> getPUnInvoicedTicket(Pnr pnr) {
         Set<Ticket> tickets = new LinkedHashSet<>();
 
         for (Ticket t : pnr.getTickets()) {
-            if (t.getTktStatus().equals(Enums.TicketStatus.REISSUE)
-                    && t.getTicketingSalesAcDoc() == null) {
+            if (!t.getTktStatus().equals(Enums.TicketStatus.REFUND)
+                    && !t.getTktStatus().equals(Enums.TicketStatus.BOOK)
+                    && !t.getTktStatus().equals(Enums.TicketStatus.VOID)
+                    && t.getTicketingPurchaseAcDoc() == null) {
                 tickets.add(t);
+            }
+        }
+        return tickets;
+    }
+
+    public static Set<Ticket> getUnInvoicedReIssuedTicket(Pnr pnr, Enums.SaleType saleType) {
+        Set<Ticket> tickets = new LinkedHashSet<>();
+
+        for (Ticket t : pnr.getTickets()) {
+            if (t.getTktStatus().equals(Enums.TicketStatus.REISSUE)) {
+
+                if (saleType.equals(Enums.SaleType.TKTSALES) && t.getTicketingSalesAcDoc() == null) {
+                    tickets.add(t);
+                } else if (saleType.equals(Enums.SaleType.TKTPURCHASE) && t.getTicketingPurchaseAcDoc()== null) {
+                    tickets.add(t);
+                }
             }
         }
         return tickets;

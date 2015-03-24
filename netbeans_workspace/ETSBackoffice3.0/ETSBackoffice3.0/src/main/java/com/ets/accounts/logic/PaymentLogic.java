@@ -7,6 +7,7 @@ import com.ets.accounts.domain.Payment;
 import com.ets.settings.domain.User;
 import com.ets.util.Enums;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -115,13 +116,13 @@ public class PaymentLogic {
             payment.setPaymentType(type);
             payment.setCreatedOn(new java.util.Date());
             payment.setCreatedBy(user);
-            
+
             OtherSalesAcDoc doc = new OtherSalesAcDoc();
             doc.setReference(invoice.getReference());
             doc.setStatus(Enums.AcDocStatus.ACTIVE);
             doc.setDocIssueDate(new java.util.Date());
             doc.setCreatedBy(user);
-            doc.setCreatedOn(new java.util.Date());            
+            doc.setCreatedOn(new java.util.Date());
             doc.setAgent(invoice.getAgent());
             doc.setCustomer(invoice.getCustomer());
             doc.setParent(invoice);
@@ -153,6 +154,50 @@ public class PaymentLogic {
         }
 
         return total;
+    }
+
+    /**
+     * BSP Payment logic: BSP payment is fixed for the period. So just pay due
+     * invoice amount or pay due invoice refund. Refund may occur from last
+     * months invoice payment.
+     *
+     * @param payment_amount
+     * @param invoices
+     * @param user
+     * @param paymentDate
+     * @return
+     */
+    public synchronized Payment processBSPPayment(List<TicketingPurchaseAcDoc> invoices, User user,Date paymentDate) {
+      
+        Payment payment = new Payment();
+        payment.setRemark("BSP payment");
+        payment.setPaymentType(Enums.PaymentType.BANKT_TANSFER);
+        payment.setCreatedOn(paymentDate);
+        payment.setCreatedBy(user);
+
+        for (TicketingPurchaseAcDoc invoice : invoices) {
+            TicketingPurchaseAcDoc doc = new TicketingPurchaseAcDoc();
+            doc.setReference(invoice.getReference());
+            doc.setStatus(Enums.AcDocStatus.ACTIVE);
+            doc.setDocIssueDate(paymentDate);
+            doc.setPnr(invoice.getPnr());
+            doc.setCreatedBy(user);
+            doc.setCreatedOn(paymentDate);
+            doc.setParent(invoice);
+            doc.setPayment(payment);
+
+            if (invoice.calculateDueAmount().compareTo(new BigDecimal("0.00")) == 1) {
+                //Make payment   
+                doc.setType(Enums.AcDocType.PAYMENT);
+                doc.setDocumentedAmount(invoice.calculateDueAmount().negate());//Payment saves as negative
+            } else if (invoice.calculateDueAmount().compareTo(new BigDecimal("0.00")) == -1) {
+                //Make refund
+                doc.setType(Enums.AcDocType.REFUND);
+                doc.setDocumentedAmount(invoice.calculateDueAmount().abs());//Refund saves a +
+            }
+            payment.addTPurchaseDocument(doc);
+        }
+        return payment;
     }
 
     public BigDecimal calculateTotalDueAmountOther(List<OtherSalesAcDoc> invoices) {
