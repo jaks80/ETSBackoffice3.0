@@ -1,14 +1,10 @@
 package com.amadeus.air;
 
-import com.ets.fe.util.DateUtil;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,7 +24,6 @@ public class FileToTJQConverter {
             BufferedReader bf = new BufferedReader(new FileReader(file));
 
             String line = null;
-
             while ((line = bf.readLine()) != null) {
                 if (!readableBlock) {
                     if (line.contains("QUERY REPORT")) {
@@ -38,10 +33,12 @@ public class FileToTJQConverter {
                                 String date_val = s.replaceFirst("QUERY REPORT", "").trim();
                                 if (date_val.contains("-")) {
                                     String[] dates = date_val.split("-");
-                                    tjq.setDateStart(DateUtil.ddmmToDate(dates[0]));
-                                    tjq.setDateEnd(DateUtil.ddmmToDate(dates[1]));
+                                    tjq.setDateStart(dates[0]);
+                                    tjq.setDateEnd(dates[1]);
+                                    break;
                                 } else {
-                                    tjq.setDateStart(DateUtil.ddmmToDate(date_val));
+                                    tjq.setDateStart(date_val);
+                                    break;
                                 }
                             }
                         }
@@ -51,6 +48,14 @@ public class FileToTJQConverter {
                         readableBlock = true;
                     }
                 } else {
+                    if(line.contains("SEQ NO") || 
+                            line.contains("-------") || 
+                            line.trim().isEmpty() || 
+                            line.length()<20 || 
+                            line.contains("CNJ")){
+                     continue;
+                    }
+                    
                     tjq.addLine(line);
                 }
             }

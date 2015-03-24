@@ -58,7 +58,7 @@ public abstract class AccountingDocument extends PersistentObject implements Ser
     public abstract Pnr getPnr();
     
     public abstract void setParent(AccountingDocument doc);
-
+    
     public AcDocType getType() {
         return type;
     }

@@ -285,7 +285,7 @@
           <Font name="Tahoma" size="12" style="1"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="11"/>
-        <Property name="text" type="java.lang.String" value="Debit / Credit Memo"/>
+        <Property name="text" type="java.lang.String" value="Agent Debit / Credit Memo"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JPanel" name="jPanel3">

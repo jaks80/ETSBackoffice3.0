@@ -1,5 +1,6 @@
 package com.ets.fe.a_main;
 
+import com.ets.fe.tools.gui.TicketingDiscrepancyFrame;
 import com.ets.fe.acdoc.gui.TicketSaleReportFrame;
 import com.ets.fe.accounts.gui.payment.*;
 import com.amadeus.reader.EventSource;
@@ -127,6 +128,7 @@ public class Main extends JFrame implements PropertyChangeListener {
         menuPnrHistory = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
         menuSalesInvoiceRpt = new javax.swing.JMenuItem();
         menuUnpaidFlight = new javax.swing.JMenuItem();
@@ -138,9 +140,11 @@ public class Main extends JFrame implements PropertyChangeListener {
         jMenu7 = new javax.swing.JMenu();
         menuPReporting = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        menuBSPBilling = new javax.swing.JMenuItem();
         menu3rdPartyBillPayment = new javax.swing.JMenuItem();
-        jMenuItem7 = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jSeparator8 = new javax.swing.JPopupMenu.Separator();
         menuVendorAccounts = new javax.swing.JMenuItem();
         jMenu8 = new javax.swing.JMenu();
         jMenuItem8 = new javax.swing.JMenuItem();
@@ -276,6 +280,14 @@ public class Main extends JFrame implements PropertyChangeListener {
         });
         jMenu3.add(jMenuItem3);
 
+        jMenuItem4.setText("Ticketing Discrepancy");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem4);
+
         jMenuBar1.add(jMenu3);
 
         jMenu6.setText("Sales");
@@ -345,6 +357,14 @@ public class Main extends JFrame implements PropertyChangeListener {
         jMenu7.add(menuPReporting);
         jMenu7.add(jSeparator2);
 
+        menuBSPBilling.setText("Bill Payment: BSP");
+        menuBSPBilling.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuBSPBillingActionPerformed(evt);
+            }
+        });
+        jMenu7.add(menuBSPBilling);
+
         menu3rdPartyBillPayment.setText("Bill Payment: 3rd Party");
         menu3rdPartyBillPayment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -352,15 +372,16 @@ public class Main extends JFrame implements PropertyChangeListener {
             }
         });
         jMenu7.add(menu3rdPartyBillPayment);
+        jMenu7.add(jSeparator3);
 
-        jMenuItem7.setText("History: Bill Payment");
+        jMenuItem7.setText("History: Billing Payment");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem7ActionPerformed(evt);
             }
         });
         jMenu7.add(jMenuItem7);
-        jMenu7.add(jSeparator3);
+        jMenu7.add(jSeparator8);
 
         menuVendorAccounts.setText("History: Vendor Account");
         menuVendorAccounts.addActionListener(new java.awt.event.ActionListener() {
@@ -681,6 +702,14 @@ public class Main extends JFrame implements PropertyChangeListener {
     frameAction(new OutstandingFlightReportingFrame(desktopPane));
     }//GEN-LAST:event_menuUnpaidFlightActionPerformed
 
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        frameAction(new TicketingDiscrepancyFrame());
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void menuBSPBillingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBSPBillingActionPerformed
+        frameAction(new BSPBillPayment(desktopPane));
+    }//GEN-LAST:event_menuBSPBillingActionPerformed
+
     private void frameAction(JInternalFrame frame) {
         desktopPane.add(frame);
         try {
@@ -752,6 +781,7 @@ public class Main extends JFrame implements PropertyChangeListener {
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
@@ -764,9 +794,11 @@ public class Main extends JFrame implements PropertyChangeListener {
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
+    private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JMenuItem menu3rdPartyBillPayment;
     private javax.swing.JMenuItem menuAirLine;
     private javax.swing.JMenuItem menuAppSettings;
+    private javax.swing.JMenuItem menuBSPBilling;
     private javax.swing.JMenuItem menuBatchTransRpt;
     private javax.swing.JMenuItem menuBatchTransaction;
     private javax.swing.JMenuItem menuClientAccounts;

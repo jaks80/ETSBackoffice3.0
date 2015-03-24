@@ -5,6 +5,7 @@ import com.ets.fe.util.RestClientUtil;
 import com.ets.fe.APIConfig;
 import com.ets.fe.pnr.model.TicketSaleReport;
 import com.ets.fe.util.DateUtil;
+import com.ets.fe.util.Enums.*;
 import java.util.Date;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Date;
  */
 public class TicketWSClient {
 
-    public GDSSaleReport gdsSaleReport(String ticketStatus, String airLineCode,
+    public GDSSaleReport gdsSaleReport(TicketingType ticketingType,TicketStatus ticketStatus, String airLineCode,
             Date issueDateFrom, Date issueDateTo, String ticketingAgtOid) {
 
         String dateFrom = DateUtil.dateToString(issueDateFrom, "ddMMMyyyy");
@@ -23,6 +24,10 @@ public class TicketWSClient {
         sb.append(APIConfig.get("ws.ticket.gds-salereport"))
                 .append("?dateStart=").append(dateFrom)
                 .append("&dateEnd=").append(dateTo);
+        
+        if(ticketingType!=null){
+         sb.append("&ticketingType=").append(ticketingType);
+        }
         
         if(ticketStatus!=null){
          sb.append("&ticketStatus=").append(ticketStatus);
@@ -38,7 +43,7 @@ public class TicketWSClient {
         return report;
     }
     
-    public TicketSaleReport saleReport(String ticketStatus, String airLineCode,
+    public TicketSaleReport saleReport(TicketingType ticketingType,TicketStatus ticketStatus, String airLineCode,
             Date issueDateFrom, Date issueDateTo, String ticketingAgtOid) {
 
         String dateFrom = DateUtil.dateToString(issueDateFrom, "ddMMMyyyy");
@@ -48,6 +53,10 @@ public class TicketWSClient {
         sb.append(APIConfig.get("ws.ticket.salereport"))
                 .append("?dateStart=").append(dateFrom)
                 .append("&dateEnd=").append(dateTo);
+        
+        if(ticketingType!=null){
+         sb.append("&ticketingType=").append(ticketingType);
+        }
         
         if(ticketStatus!=null){
          sb.append("&ticketStatus=").append(ticketStatus);

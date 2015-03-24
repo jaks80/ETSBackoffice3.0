@@ -68,7 +68,7 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
         Long client_id = documentSearchComponent.getClient_id();
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
-        task = new DueInvoiceTask(Enums.AcDocType.INVOICE, Enums.ClientType.AGENT, client_id, from, to, progressBar, "SALES");
+        task = new DueInvoiceTask(null,Enums.AcDocType.INVOICE, Enums.ClientType.AGENT, client_id, from, to, progressBar, "SALES");
         task.addPropertyChangeListener(this);
         task.execute();
     }

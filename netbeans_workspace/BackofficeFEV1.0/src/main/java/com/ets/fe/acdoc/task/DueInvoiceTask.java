@@ -8,6 +8,9 @@ import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.ws.TicketingPAcDocWSClient;
 import com.ets.fe.acdoc.ws.TicketingSAcDocWSClient;
 import com.ets.fe.util.Enums;
+import com.ets.fe.util.Enums.AcDocType;
+import com.ets.fe.util.Enums.ClientType;
+import com.ets.fe.util.Enums.TicketingType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,14 +24,15 @@ import javax.swing.SwingWorker;
 public class DueInvoiceTask extends SwingWorker<List<AccountingDocument>, Integer> {
 
     private JProgressBar progressBar;
-    private Enums.AcDocType doctype = null;
-    private Enums.ClientType clienttype = null;
+    private AcDocType doctype = null;
+    private ClientType clienttype = null;
+    private TicketingType ticketingType = null;
     private Long clientid = null;
     private Date dateFrom = null;
     private Date dateTo = null;
     private String docClass;
 
-    public DueInvoiceTask(Enums.AcDocType doctype, Enums.ClientType clienttype,
+    public DueInvoiceTask(TicketingType ticketingType,AcDocType doctype, ClientType clienttype,
             Long clientid, Date dateFrom, Date dateTo, JProgressBar progressBar,String docClass) {
 
         this.docClass = docClass;
@@ -38,6 +42,7 @@ public class DueInvoiceTask extends SwingWorker<List<AccountingDocument>, Intege
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
         this.progressBar = progressBar;
+        this.ticketingType = ticketingType;
     }
 
     @Override
@@ -54,7 +59,8 @@ public class DueInvoiceTask extends SwingWorker<List<AccountingDocument>, Intege
             }
         } else if ("PURCHASE".equals(docClass)) {
             TicketingPAcDocWSClient client = new TicketingPAcDocWSClient();
-            TicketingPurchaseAcDocs docs = client.outstandingInvoices(doctype, clientid, dateFrom, dateTo);
+            TicketingPurchaseAcDocs docs = client.outstandingInvoices(ticketingType,doctype, clientid, 
+                    dateFrom, dateTo);
 
             for (TicketingPurchaseAcDoc doc : docs.getList()) {
                 list.add(doc);

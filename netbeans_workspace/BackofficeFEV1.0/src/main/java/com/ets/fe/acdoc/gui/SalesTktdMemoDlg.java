@@ -252,10 +252,7 @@ public class SalesTktdMemoDlg extends JDialog implements PropertyChangeListener 
         tblTicket.setBackground(new java.awt.Color(0, 0, 0));
         tblTicket.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "Passenger Name", "Status", "Gross Fare", "Disc", "ATOL", "NetPayable"

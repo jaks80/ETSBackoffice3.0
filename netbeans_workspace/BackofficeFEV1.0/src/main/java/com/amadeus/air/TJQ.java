@@ -2,12 +2,12 @@ package com.amadeus.air;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Map;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -20,25 +20,53 @@ public class TJQ implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @XmlElement
-    private Date dateStart;
+    private String dateStart;
     @XmlElement
-    private Date dateEnd;
+    private String dateEnd;
+    @XmlElement
+    private String officeId;
     @XmlElement
     private List<String> lines = new ArrayList<>();
 
-    public Date getDateStart() {
+    public static Map<String,String> getLinesValues(String line) {
+        line = line.replaceAll("\\s+", " ").trim();
+        String[] vals = line.split(" ");
+        for (String s : vals) {
+            s = s.trim();
+        }
+
+        /*Reversing line because beginning of the line has some unstable characters.
+        To avoind unnecessary complexity we are just reversing line to get data from
+        end of the line.*/
+        List<String> list = Arrays.asList(vals);
+        Collections.reverse(list);
+        vals = (String[]) list.toArray();
+        
+        Map<String,String> map = new HashMap<>();
+        map.put("TRNC", vals[0]);
+        map.put("RLOC", vals[1]);
+        map.put("PAX NAME", vals[3]);
+        map.put("COMM", vals[5]);
+        map.put("FEE", vals[6]);
+        map.put("TAX", vals[7]);
+        map.put("TOTAL DOC", vals[8]);
+        map.put("DOC NUMBER", vals[9]);
+        return map;
+    }
+
+    public String getDateStart() {
         return dateStart;
     }
 
-    public void setDateStart(Date dateStart) {
+    public void setDateStart(String dateStart) {
         this.dateStart = dateStart;
     }
 
-    public Date getDateEnd() {
+    public String getDateEnd() {
         return dateEnd;
     }
 
-    public void setDateEnd(Date dateEnd) {
+    public void setDateEnd(String dateEnd) {
         this.dateEnd = dateEnd;
     }
 
@@ -49,8 +77,16 @@ public class TJQ implements Serializable {
     public void setLines(List<String> lines) {
         this.lines = lines;
     }
-    
-    public void addLine(String line){
-     this.lines.add(line);
+
+    public void addLine(String line) {
+        this.lines.add(line);
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
     }
 }

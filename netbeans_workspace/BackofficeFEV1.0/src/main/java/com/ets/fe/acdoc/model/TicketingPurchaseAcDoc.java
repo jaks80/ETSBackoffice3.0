@@ -199,4 +199,13 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
     public void setParent(AccountingDocument parent) {
         this.parent = (TicketingPurchaseAcDoc) parent;
     }
+
+    public String getDocTypeString() {
+        if (this.getType().equals(Enums.AcDocType.DEBITMEMO)) {
+            return "ADM";
+        } else if (this.getType().equals(Enums.AcDocType.CREDITMEMO)) {
+            return "ACM";
+        }
+        return "";
+    }
 }

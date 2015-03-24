@@ -3,14 +3,12 @@ package com.ets.fe.pnr.model;
 import com.ets.fe.PersistentObject;
 import com.ets.fe.client.model.Agent;
 import com.ets.fe.client.model.Customer;
+import com.ets.fe.util.Enums;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *

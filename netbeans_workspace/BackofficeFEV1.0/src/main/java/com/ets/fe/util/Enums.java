@@ -8,7 +8,7 @@ public class Enums {
 
     public enum UserType {
 
-        GS(0), SM(1), AD(2),SU(3);
+        GS(0), SM(1), AD(2), SU(3);
         private int id;
 
         UserType(int id) {
@@ -257,6 +257,31 @@ public class Enums {
                     return VARIABLE.toString();
                 case 2:
                     return PERCENT.toString();
+                default:
+                    return null;
+            }
+        }
+    }
+
+    public enum TicketingType {
+
+        IATA(0), THIRDPARY(1);
+        private int id;
+
+        TicketingType(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static String valueOf(int id) {
+            switch (id) {
+                case 0:
+                    return IATA.toString();
+                case 1:
+                    return THIRDPARY.toString();
                 default:
                     return null;
             }

@@ -4,6 +4,7 @@ import com.ets.fe.pnr.task.GDSSalesReportTask;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.pnr.model.GDSSaleReport;
 import com.ets.fe.util.DateUtil;
+import com.ets.fe.util.Enums;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -14,6 +15,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JInternalFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -34,7 +36,9 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
         initComponents();
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
         dtTo.setDate(DateUtil.getEndOfMonth());
-
+        setTicketStatus();
+        setIssueType();
+        
         int inset = 0;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset, screenSize.width / 2, screenSize.height / 2);
@@ -43,8 +47,13 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
 
     private void buttonSearchActionPerformed(ActionEvent event) {
 
-        String issueType = (String) cmbIssueType.getSelectedItem();
-        String ticketStatus = (String) cmbTicketStatus.getSelectedItem();
+        Enums.TicketingType ticketingType = (Enums.TicketingType) cmbIssueType.getSelectedItem();
+        Enums.TicketStatus ticketStatus = null;
+        
+        if(cmbTicketStatus.getSelectedIndex()>0){
+         ticketStatus = (Enums.TicketStatus) cmbTicketStatus.getSelectedItem();
+        }
+        
         String airLineCode = txtCareerCode.getText();
         String ticketingAgtOid = txtOfficeId.getText();
 
@@ -65,7 +74,7 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
 
         progressBar.setValue(0);
 
-        task = new GDSSalesReportTask(ticketStatus, airLineCode, from, to, ticketingAgtOid);
+        task = new GDSSalesReportTask(ticketingType,ticketStatus, airLineCode, from, to, ticketingAgtOid);
         task.addPropertyChangeListener(this);
         task.execute();
     }
@@ -188,8 +197,6 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
     jPanel1.add(jLabel1, gridBagConstraints);
-
-    cmbTicketStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All", "ISSUE", "REISSUE", "REFUND", "VOID" }));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 1;
@@ -422,6 +429,19 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     private javax.swing.JTextField txtOfficeId;
     private javax.swing.JTextPane txtSaleSummery;
     // End of variables declaration//GEN-END:variables
+    private void setTicketStatus() {
+        DefaultComboBoxModel model = new DefaultComboBoxModel(Enums.TicketStatus.values());
+        model.insertElementAt("All", 0);
+        cmbTicketStatus.setModel(model);
+        cmbTicketStatus.setSelectedIndex(0);
+    }
+    
+    private void setIssueType() {
+        DefaultComboBoxModel model = new DefaultComboBoxModel(Enums.TicketingType.values());        
+        cmbIssueType.setModel(model);
+        cmbIssueType.setSelectedIndex(0);
+    }
+        
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress" == evt.getPropertyName()) {

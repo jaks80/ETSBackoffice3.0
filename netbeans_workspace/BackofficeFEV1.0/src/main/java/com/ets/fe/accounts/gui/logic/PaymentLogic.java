@@ -6,7 +6,6 @@ import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
-import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.util.Enums;
 import java.math.BigDecimal;
 import java.util.List;

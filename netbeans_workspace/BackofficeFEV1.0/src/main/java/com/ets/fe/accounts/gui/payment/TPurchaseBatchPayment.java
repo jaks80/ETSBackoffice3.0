@@ -3,16 +3,12 @@ package com.ets.fe.accounts.gui.payment;
 import com.ets.fe.Application;
 import com.ets.fe.accounts.gui.logic.PaymentLogic;
 import com.ets.fe.acdoc.gui.PurchaseInvoiceDlg;
-import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
-import com.ets.fe.acdoc.gui.comp.ClientSearchComp;
 import com.ets.fe.acdoc.model.AccountingDocument;
 import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.task.DueInvoiceTask;
 import com.ets.fe.accounts.task.NewPaymentTask;
-import com.ets.fe.util.CheckInput;
-import com.ets.fe.util.DateUtil;
-import com.ets.fe.util.Enums;
+import com.ets.fe.util.*;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
@@ -68,7 +64,7 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
         Long client_id = documentSearchComponent.getClient_id();
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
-        task = new DueInvoiceTask(Enums.AcDocType.INVOICE, Enums.ClientType.AGENT, client_id, from, to, progressBar, "PURCHASE");
+        task = new DueInvoiceTask(Enums.TicketingType.THIRDPARY,Enums.AcDocType.INVOICE, Enums.ClientType.AGENT, client_id, from, to, progressBar, "PURCHASE");
         task.addPropertyChangeListener(this);
         task.execute();
     }
@@ -700,7 +696,7 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(documentSearchComponent, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
-                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(4, 4, 4)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

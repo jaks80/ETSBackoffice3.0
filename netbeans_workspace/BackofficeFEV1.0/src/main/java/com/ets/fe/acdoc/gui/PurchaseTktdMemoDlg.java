@@ -66,9 +66,9 @@ public class PurchaseTktdMemoDlg extends JDialog implements PropertyChangeListen
         this.pnr = document.getPnr();
         this.tickets = document.getTickets();
         if (document.getType().equals(Enums.AcDocType.DEBITMEMO)) {
-            lblTitle.setText("Debit Memo");
+            lblTitle.setText("Agent Debit Memo");
         } else if (document.getType().equals(Enums.AcDocType.CREDITMEMO)) {
-            lblTitle.setText("Credit Memo");
+            lblTitle.setText("Agent Credit Memo");
         }
         acDocHeaderComponent.display(document);
         populateTblTicket();
@@ -104,9 +104,9 @@ public class PurchaseTktdMemoDlg extends JDialog implements PropertyChangeListen
         model.getDataVector().removeAllElements();
 
         int row = 0;
-        BigDecimal totalGF = new BigDecimal("0.00");
-        BigDecimal totalDisc = new BigDecimal("0.00");
-        BigDecimal totalAtol = new BigDecimal("0.00");
+        BigDecimal totalBF = new BigDecimal("0.00");
+        BigDecimal totalTax = new BigDecimal("0.00");
+        BigDecimal totalCom = new BigDecimal("0.00");
         BigDecimal totalNetPayable = new BigDecimal("0.00");
 
         for (Ticket t : this.tickets) {
@@ -116,18 +116,18 @@ public class PurchaseTktdMemoDlg extends JDialog implements PropertyChangeListen
             } else {
                 invoiced = true;
             }
-            totalGF = totalGF.add(t.getGrossFare());
-            totalDisc = totalDisc.add(t.getDiscount());
-            totalAtol = totalAtol.add(t.getAtolChg());
-            totalNetPayable = totalNetPayable.add(t.calculateNetSellingFare());
+            totalBF = totalBF.add(t.getBaseFare());
+            totalTax = totalTax.add(t.getTax());
+            totalCom = totalCom.add(t.getCommission());
+            totalNetPayable = totalNetPayable.add(t.calculateNetPurchaseFare());
 
             model.insertRow(row, new Object[]{t.getFullPaxNameWithPaxNo(),
-                t.getTktStatus(), t.getGrossFare(), t.getDiscount(), t.getAtolChg(), t.calculateNetSellingFare()});
+                t.getTktStatus(), t.getBaseFare(), t.getTax(), t.getCommission(), t.calculateNetPurchaseFare()});
 
             row++;
         }
 
-        model.addRow(new Object[]{"Totals", "", totalGF, totalDisc, totalAtol, totalNetPayable});
+        model.addRow(new Object[]{"Totals", "", totalBF, totalTax, totalCom, totalNetPayable});
     }
 
     /**
@@ -251,10 +251,7 @@ public class PurchaseTktdMemoDlg extends JDialog implements PropertyChangeListen
         tblTicket.setBackground(new java.awt.Color(0, 0, 0));
         tblTicket.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "Passenger Name", "Status", "Base Fare", "Tax", "Disc", "Total"

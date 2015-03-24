@@ -1,10 +1,8 @@
 package com.ets.fe.accounts.ws;
 
 import com.ets.fe.APIConfig;
-import com.ets.fe.accounts.model.CashBookReport;
-import com.ets.fe.accounts.model.CreditTransfer;
-import com.ets.fe.accounts.model.Payment;
-import com.ets.fe.accounts.model.Payments;
+import com.ets.fe.Application;
+import com.ets.fe.accounts.model.*;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import com.ets.fe.util.RestClientUtil;
@@ -16,19 +14,38 @@ import java.util.Date;
  */
 public class PaymentWSClient {
 
+    public Integer newBSPPayment(Long agentid, Date _dateFrom,
+            Date _dateTo) {
+
+        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+        String _paymentDate = DateUtil.dateToString(new java.util.Date(), "ddMMMyyyy");
+
+        StringBuilder sb = new StringBuilder(APIConfig.get("ws.pay.newbsppay"));
+        sb.append("?");
+        sb.append("agentid=").append(agentid);
+        sb.append("&dateStart=").append(dateFrom);
+        sb.append("&dateEnd=").append(dateTo);
+        sb.append("&paymentDate=").append(_paymentDate);
+        sb.append("&userid=").append(Application.getLoggedOnUser().getId());
+
+        Integer status = RestClientUtil.postEntityReturnStatus(Payment.class, sb.toString(), new Payment());
+        return status;
+    }
+
     public Payment create(Payment payment) {
         String url = APIConfig.get("ws.pay.new");
         Payment ppayment = RestClientUtil.postEntity(Payment.class, url, payment);
         return ppayment;
     }
 
-    public Integer createCreditTransfer(CreditTransfer creditTransfer) {        
+    public Integer createCreditTransfer(CreditTransfer creditTransfer) {
         StringBuilder sb = new StringBuilder();
         sb.append(APIConfig.get("ws.pay.newctransfer"));
-        
-        return RestClientUtil.postEntityReturnStatus(CreditTransfer.class, sb.toString(), creditTransfer);        
+
+        return RestClientUtil.postEntityReturnStatus(CreditTransfer.class, sb.toString(), creditTransfer);
     }
-        
+
     public Payments paymentBySalesInvoice(Long invoiceid) {
         String url = APIConfig.get("ws.pay.bysinv") + invoiceid;
         Payments ppayment = RestClientUtil.getEntity(Payments.class, url, new Payments());

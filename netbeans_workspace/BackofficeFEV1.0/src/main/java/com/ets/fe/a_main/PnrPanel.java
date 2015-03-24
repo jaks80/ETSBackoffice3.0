@@ -795,7 +795,11 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
     }//GEN-LAST:event_txtAirlineFocusLost
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        if(accountingDocumentsComponent.getSelectedTab()==0){
         showSalesAcDocDlg(new TicketingSalesAcDoc());
+        }else{
+            showPurchaseAcDocDlg(new TicketingPurchaseAcDoc());
+        }
     }//GEN-LAST:event_jButton10ActionPerformed
 
 

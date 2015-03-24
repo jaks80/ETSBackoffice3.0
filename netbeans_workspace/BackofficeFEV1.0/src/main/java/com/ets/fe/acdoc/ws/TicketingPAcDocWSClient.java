@@ -4,6 +4,7 @@ import com.ets.accountingdoc.collection.TicketingPurchaseAcDocs;
 import com.ets.fe.APIConfig;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.accounts.model.AccountsReport;
+import com.ets.fe.acdoc.model.BSPReport;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
@@ -65,13 +66,34 @@ public class TicketingPAcDocWSClient {
         return docs;
     }
 
-     public TicketingPurchaseAcDocs outstandingInvoices(Enums.AcDocType doctype,Long agentid, Date _dateFrom, Date _dateTo) {
+    public BSPReport outstandingBSPReport(Long agentid, Date _dateFrom, Date _dateTo) {
 
         String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
         String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
 
-        String url = APIConfig.get("ws.tpacdoc.dueinvoices") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo + "&doctype=" + doctype;
+        StringBuilder sb = new StringBuilder(APIConfig.get("ws.tpacdoc.duebspreport"));
+        sb.append("?agentid=").append(agentid);
+        sb.append("&dateStart=").append(dateFrom);
+        sb.append("&dateEnd=").append(dateTo);
+        
 
+        BSPReport report = RestClientUtil.getEntity(BSPReport.class, sb.toString(), new BSPReport());
+        return report;
+    }
+         
+     public TicketingPurchaseAcDocs outstandingInvoices(Enums.TicketingType ticketingType,Enums.AcDocType doctype,Long agentid, Date _dateFrom, Date _dateTo) {
+
+        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+
+        String url = APIConfig.get("ws.tpacdoc.dueinvoices") + "?dateStart=" + dateFrom + 
+                "&dateEnd=" + dateTo;        
+        url = url + "&ticketingtype="+ticketingType;
+        
+        if(doctype!=null){
+            url = url + "&doctype=" + doctype;
+        }
+        
         if (agentid != null) {
             url = url + "&agentid=" + agentid;
         }

@@ -2,6 +2,7 @@ package com.ets.fe.pnr.task;
 
 import com.ets.fe.pnr.model.TicketSaleReport;
 import com.ets.fe.pnr.ws.TicketWSClient;
+import com.ets.fe.util.Enums.*;
 import java.util.Date;
 import javax.swing.SwingWorker;
 
@@ -12,14 +13,18 @@ import javax.swing.SwingWorker;
 public class TicketSaleReportTask extends SwingWorker<TicketSaleReport, Integer> {
 
     private TicketSaleReport report;
-    private String ticketStatus;
+    private TicketStatus ticketStatus;
     private String airLineCode;
     private Date issueDateFrom;
     private Date issueDateTo;
     private String ticketingAgtOid;
+    
+    private TicketingType ticketingType;
 
-    public TicketSaleReportTask(String ticketStatus, String airLineCode,
+    public TicketSaleReportTask(TicketingType ticketingType,TicketStatus ticketStatus, String airLineCode,
             Date issueDateFrom, Date issueDateTo, String ticketingAgtOid) {
+        
+        this.ticketingType = ticketingType;
         this.ticketStatus = ticketStatus;
         this.airLineCode = airLineCode;
         this.issueDateFrom = issueDateFrom;
@@ -31,7 +36,7 @@ public class TicketSaleReportTask extends SwingWorker<TicketSaleReport, Integer>
     protected TicketSaleReport doInBackground() {
 
         TicketWSClient client = new TicketWSClient();
-        report = client.saleReport(ticketStatus, airLineCode, issueDateFrom, issueDateTo, ticketingAgtOid);
+        report = client.saleReport(ticketingType,ticketStatus, airLineCode, issueDateFrom, issueDateTo, ticketingAgtOid);
         return report;
     }
 

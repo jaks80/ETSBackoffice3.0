@@ -6,7 +6,7 @@ import com.ets.fe.acdoc.model.*;
 import com.ets.fe.acdoc.task.AcDocSummeryTask;
 import com.ets.fe.acdoc.task.AccountingDocTask;
 import com.ets.fe.util.DateUtil;
-import com.ets.fe.util.Enums;
+import com.ets.fe.util.Enums.*;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.font.TextAttribute;
@@ -67,8 +67,8 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                     index = tblSales.getSelectedRow();
                     id = tSAcDocList.get(index).getId();
                     if (index != -1) {
-                        if (!tSAcDocList.get(index).getType().equals(Enums.AcDocType.PAYMENT)) {
-                            accountingDocTask = new AccountingDocTask(id, Enums.SaleType.TKTSALES, "DETAILS");
+                        if (!tSAcDocList.get(index).getType().equals(AcDocType.PAYMENT)) {
+                            accountingDocTask = new AccountingDocTask(id, SaleType.TKTSALES, "DETAILS");
                             accountingDocTask.addPropertyChangeListener(this);
                             accountingDocTask.execute();
                         }
@@ -78,8 +78,8 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                     index = tblPurchase.getSelectedRow();
                     id = tPAcDocList.get(index).getId();
                     if (index != -1) {
-                        if (!tPAcDocList.get(index).getType().equals(Enums.AcDocType.PAYMENT)) {
-                            accountingDocTask = new AccountingDocTask(id, Enums.SaleType.TKTPURCHASE, "DETAILS");
+                        if (!tPAcDocList.get(index).getType().equals(AcDocType.PAYMENT)) {
+                            accountingDocTask = new AccountingDocTask(id, SaleType.TKTPURCHASE, "DETAILS");
                             accountingDocTask.addPropertyChangeListener(this);
                             accountingDocTask.execute();
                         }
@@ -93,23 +93,31 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         taskType = "VOID";
         AccountingDocument doc = null;
         int index = -1;
+        SaleType saleType = null;
         if (tabAcDoc.getSelectedIndex() == 0) {
-            if (tabAcDoc.getSelectedIndex() == 0) {
-                index = tblSales.getSelectedRow();
+            index = tblSales.getSelectedRow();
+            saleType = SaleType.TKTSALES;
+            if (index != -1) {
                 doc = new TicketingSalesAcDoc();
-            } else if (tabAcDoc.getSelectedIndex() == 1) {
-                index = tblPurchase.getSelectedRow();
-                doc = new TicketingPurchaseAcDoc();
-            }
-
-            if (index != -1 && doc != null) {
                 Long id = tSAcDocList.get(index).getId();
                 doc.setId(id);
                 doc.recordUpdateBy();
-                accountingDocTask = new AccountingDocTask(doc, Enums.SaleType.TKTSALES, "VOID");
-                accountingDocTask.addPropertyChangeListener(this);
-                accountingDocTask.execute();
             }
+        } else if (tabAcDoc.getSelectedIndex() == 1) {
+            index = tblPurchase.getSelectedRow();
+            saleType = SaleType.TKTPURCHASE;
+            if (index != -1) {
+                doc = new TicketingPurchaseAcDoc();
+                Long id = tPAcDocList.get(index).getId();
+                doc.setId(id);
+                doc.recordUpdateBy();
+            }
+        }
+
+        if (doc != null) {
+            accountingDocTask = new AccountingDocTask(doc, saleType, "VOID");
+            accountingDocTask.addPropertyChangeListener(this);
+            accountingDocTask.execute();
         }
     }
 
@@ -128,7 +136,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         if (!tSAcDocList.isEmpty()) {
             for (TicketingSalesAcDoc s : tSAcDocList) {
                 BigDecimal amount = s.getDocumentedAmount();
-                if (s.getType().equals(Enums.AcDocType.PAYMENT)) {
+                if (s.getType().equals(AcDocType.PAYMENT)) {
                     amount = amount.abs();
                 }
                 model.insertRow(row, new Object[]{s.getType(), s.getReference(), DateUtil.dateToString(s.getDocIssueDate()), amount, "", s.getStatus()});
@@ -146,7 +154,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         if (!tPAcDocList.isEmpty()) {
             for (TicketingPurchaseAcDoc s : tPAcDocList) {
                 BigDecimal amount = s.getDocumentedAmount();
-                if (s.getType().equals(Enums.AcDocType.PAYMENT)) {
+                if (s.getType().equals(AcDocType.PAYMENT)) {
                     amount = amount.abs();
                 }
                 model.insertRow(row, new Object[]{s.getType(), s.getReference(), s.getVendorRef(),
@@ -331,13 +339,13 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                                 TicketingSalesAcDoc temp_doc = (TicketingSalesAcDoc) doc;
 
                                 tSAcDocList.add(temp_doc);
-                                if (temp_doc.getType().equals(Enums.AcDocType.INVOICE)) {
+                                if (temp_doc.getType().equals(AcDocType.INVOICE)) {
                                     salesSummeryInvoice = temp_doc;
                                 }
                             } else {
                                 TicketingPurchaseAcDoc temp_doc = (TicketingPurchaseAcDoc) doc;
                                 tPAcDocList.add(temp_doc);
-                                if (temp_doc.getType().equals(Enums.AcDocType.INVOICE)) {
+                                if (temp_doc.getType().equals(AcDocType.INVOICE)) {
                                     purchaseSummeryInvoice = temp_doc;
                                 }
                             }
@@ -354,10 +362,10 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
 
                         if (doc instanceof TicketingSalesAcDoc) {
                             ticketingSalesAcDoc = (TicketingSalesAcDoc) doc;
-                            if (ticketingSalesAcDoc.getType().equals(Enums.AcDocType.INVOICE)) {
+                            if (ticketingSalesAcDoc.getType().equals(AcDocType.INVOICE)) {
                                 parent.showTSalesInvoiceDlg(ticketingSalesAcDoc);
-                            } else if (ticketingSalesAcDoc.getType().equals(Enums.AcDocType.DEBITMEMO)
-                                    || ticketingSalesAcDoc.getType().equals(Enums.AcDocType.CREDITMEMO)) {
+                            } else if (ticketingSalesAcDoc.getType().equals(AcDocType.DEBITMEMO)
+                                    || ticketingSalesAcDoc.getType().equals(AcDocType.CREDITMEMO)) {
 
                                 if (!ticketingSalesAcDoc.getTickets().isEmpty()) {
                                     parent.showTSalesAcDocDlg(ticketingSalesAcDoc);
@@ -368,10 +376,10 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                         } else {
                             ticketingPurchaseAcDoc = (TicketingPurchaseAcDoc) doc;
 
-                            if (ticketingPurchaseAcDoc.getType().equals(Enums.AcDocType.INVOICE)) {
+                            if (ticketingPurchaseAcDoc.getType().equals(AcDocType.INVOICE)) {
                                 parent.showTPurchaseInvoiceDlg(ticketingPurchaseAcDoc);
-                            } else if (ticketingPurchaseAcDoc.getType().equals(Enums.AcDocType.DEBITMEMO)
-                                    || ticketingPurchaseAcDoc.getType().equals(Enums.AcDocType.CREDITMEMO)) {
+                            } else if (ticketingPurchaseAcDoc.getType().equals(AcDocType.DEBITMEMO)
+                                    || ticketingPurchaseAcDoc.getType().equals(AcDocType.CREDITMEMO)) {
 
                                 if (!ticketingPurchaseAcDoc.getTickets().isEmpty()) {
                                     parent.showTPurchaseAcDocDlg(ticketingPurchaseAcDoc);
@@ -381,7 +389,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                             }
                         }
                         taskType = "";
-                    } else if ("VOID".equals(taskType)) {                        
+                    } else if ("VOID".equals(taskType)) {
                         parent.loadCompletePnr();
                     }
                 } catch (InterruptedException | ExecutionException ex) {
@@ -417,5 +425,9 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
 
     public TicketingPurchaseAcDoc getPurchaseSummeryInvoice() {
         return purchaseSummeryInvoice;
+    }
+    
+    public int getSelectedTab(){
+      return tabAcDoc.getSelectedIndex();
     }
 }

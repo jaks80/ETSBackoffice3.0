@@ -47,19 +47,17 @@ public class PurchaseAcDocumentDlg extends javax.swing.JDialog implements Proper
 
         if (docType != null) {
             if (document.getType().equals(Enums.AcDocType.DEBITMEMO)) {
-                lblTitle.setText("Debit Memo");
+                lblTitle.setText("Agent Debit Memo");
             } else if (document.getType().equals(AcDocType.CREDITMEMO)) {
-                lblTitle.setText("Credit Memo");
+                lblTitle.setText("Agent Credit Memo");
             }
         }
         acDocHeaderComponent.display(document);
 
         controllComponent(document);
-        if (pnr.getAgent() != null) {
-            txtAcDocFor.setText(pnr.getAgent().getFullName() + pnr.getAgent().getAddressCRSeperated());
-        } else {
-            txtAcDocFor.setText(pnr.getCustomer().getFullName() + pnr.getCustomer().getAddressCRSeperated());
-        }
+        if (pnr.getTicketing_agent()!= null) {
+            txtAcDocFor.setText(pnr.getTicketing_agent().getFullName() + pnr.getTicketing_agent().getAddressCRSeperated());
+        } 
         if (document.getDocumentedAmount() != null) {
             txtAmount.setText(document.getDocumentedAmount().toString());
         }
@@ -257,7 +255,7 @@ public class PurchaseAcDocumentDlg extends javax.swing.JDialog implements Proper
 
         lblTitle.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        lblTitle.setText("Debit / Credit Memo");
+        lblTitle.setText("Agent Debit / Credit Memo");
 
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));
         jPanel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));

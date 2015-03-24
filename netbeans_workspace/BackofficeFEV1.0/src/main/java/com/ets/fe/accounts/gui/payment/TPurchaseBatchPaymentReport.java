@@ -13,6 +13,7 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,12 +75,16 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
         tableModel.getDataVector().removeAllElements();
         
         List<TicketingPurchaseAcDoc> docs = payment.gettPurchaseAcDocuments();
+        BigDecimal total = new BigDecimal("0.00");
+        int i = 0;
         if (docs.size() > 0) {
-            for (int i = 0; i < docs.size(); i++) {
+            for (; i < docs.size(); i++) {
                 TicketingPurchaseAcDoc doc = docs.get(i);
+                total = total.add(doc.getDocumentedAmount());
                 String date = DateUtil.dateToString(doc.getDocIssueDate());
                 tableModel.insertRow(i, new Object[]{i+1,doc.getReference(),date,doc.getPnr().getGdsPnr(),doc.getPnr().getAirLineCode(),doc.getDocumentedAmount().abs()});
             }
+            tableModel.insertRow(i, new Object[]{"", "","Total:","","",total});
         } else {
             tableModel.insertRow(0, new Object[]{"", "","","","",""});
         }
@@ -181,10 +186,7 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
         tblPayment.setBackground(new java.awt.Color(255, 255, 204));
         tblPayment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
                 "Date", "Amount", "User"
@@ -216,10 +218,7 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
         tblPaymentDocs.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
         tblPaymentDocs.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "", "Inv Reference", "Date", "PNR", "Airline", "Paid"

@@ -567,6 +567,11 @@ public class TicketComponent extends javax.swing.JPanel {
         cmbStatus.setMaximumSize(new java.awt.Dimension(32767, 19));
         cmbStatus.setMinimumSize(new java.awt.Dimension(28, 19));
         cmbStatus.setPreferredSize(new java.awt.Dimension(28, 19));
+        cmbStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbStatusActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -620,6 +625,11 @@ public class TicketComponent extends javax.swing.JPanel {
         dtIssueDate.setToolTipText("Date: Booking / Issue / Refund");
         dtIssueDate.setMaximumSize(new java.awt.Dimension(108, 20));
         dtIssueDate.setMinimumSize(new java.awt.Dimension(108, 20));
+        dtIssueDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dtIssueDateActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 5;
@@ -802,6 +812,14 @@ public class TicketComponent extends javax.swing.JPanel {
     private void txtFeesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFeesKeyReleased
          keyEvents(evt, txtTax, txtBspCom);
     }//GEN-LAST:event_txtFeesKeyReleased
+
+    private void dtIssueDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dtIssueDateActionPerformed
+       ticket.setDocIssuedate(dtIssueDate.getDate());
+    }//GEN-LAST:event_dtIssueDateActionPerformed
+
+    private void cmbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStatusActionPerformed
+        ticket.setTktStatus((Enums.TicketStatus) cmbStatus.getSelectedItem());
+    }//GEN-LAST:event_cmbStatusActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

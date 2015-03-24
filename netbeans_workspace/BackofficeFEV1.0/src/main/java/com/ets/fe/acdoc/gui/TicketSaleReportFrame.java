@@ -4,6 +4,7 @@ import com.ets.fe.pnr.model.TicketSaleReport;
 import com.ets.fe.pnr.model.TicketSaleReport.SaleReportLine;
 import com.ets.fe.pnr.task.TicketSaleReportTask;
 import com.ets.fe.util.DateUtil;
+import com.ets.fe.util.Enums;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.table.DefaultTableModel;
@@ -36,7 +38,8 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
         this.desktopPane = desktopPane;
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
         dtTo.setDate(DateUtil.getEndOfMonth());
-
+        setIssueType();
+        setTicketStatus();
         int inset = 0;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset, screenSize.width / 2, screenSize.height / 2);
@@ -44,8 +47,13 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
 
     private void search() {
         btnSearch.setEnabled(false);
-        String issueType = (String) cmbIssueType.getSelectedItem();
-        String ticketStatus = (String) cmbTicketStatus.getSelectedItem();
+        Enums.TicketingType ticketingType = (Enums.TicketingType) cmbIssueType.getSelectedItem();
+        Enums.TicketStatus ticketStatus = null;
+
+        if (cmbTicketStatus.getSelectedIndex() > 0) {
+            ticketStatus = (Enums.TicketStatus) cmbTicketStatus.getSelectedItem();
+        }
+
         String airLineCode = txtCareerCode.getText();
         String ticketingAgtOid = txtOfficeId.getText();
 
@@ -66,7 +74,7 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
 
         progressBar.setValue(0);
 
-        task = new TicketSaleReportTask(ticketStatus, airLineCode, from, to, ticketingAgtOid);
+        task = new TicketSaleReportTask(ticketingType, ticketStatus, airLineCode, from, to, ticketingAgtOid);
         task.addPropertyChangeListener(this);
         task.execute();
     }
@@ -82,12 +90,12 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
             for (SaleReportLine t : lines) {
                 tableModel.insertRow(row, new Object[]{t.getDocIssuedate(), t.getTktStatus(),
                     t.getGdsPnr(), t.getClient(), t.getTicketingAgent(),
-                    t.getAirLineCode(), t.getTicketNo(), t.getSellingRefference(), 
-                    t.getNetPurchaseFare(), t.getNetSellingFare(), t.getRevenue(),t.getAtolChg()});
+                    t.getAirLineCode(), t.getTicketNo(), t.getSellingRefference(),
+                    t.getNetPurchaseFare(), t.getNetSellingFare(), t.getRevenue(), t.getAtolChg()});
                 row++;
             }
             tableModel.insertRow(row, new Object[]{"", "", "", "", "", "", "", "", report.getTotalNetPurchaseFare(),
-                report.getTotalNetSellingFare(), report.getTotalRevenue(),report.getTotalAtolChg()});
+                report.getTotalNetSellingFare(), report.getTotalRevenue(), report.getTotalAtolChg()});
         } else {
             tableModel.insertRow(0, new Object[]{});
         }
@@ -208,7 +216,6 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
     jPanel1.add(jLabel3, gridBagConstraints);
 
-    cmbIssueType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All", "Self Issue", "3rd Party Issue" }));
     cmbIssueType.setPreferredSize(new java.awt.Dimension(99, 18));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -228,7 +235,6 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
     jPanel1.add(jLabel1, gridBagConstraints);
 
-    cmbTicketStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All", "ISSUE", "REISSUE", "REFUND", "VOID" }));
     cmbTicketStatus.setPreferredSize(new java.awt.Dimension(67, 18));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -470,6 +476,20 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     private javax.swing.JTextField txtCareerCode;
     private javax.swing.JTextField txtOfficeId;
     // End of variables declaration//GEN-END:variables
+
+    private void setTicketStatus() {
+        DefaultComboBoxModel model = new DefaultComboBoxModel(Enums.TicketStatus.values());
+        model.insertElementAt("All", 0);
+        cmbTicketStatus.setModel(model);
+        cmbTicketStatus.setSelectedIndex(0);
+    }
+
+    private void setIssueType() {
+        DefaultComboBoxModel model = new DefaultComboBoxModel(Enums.TicketingType.values());
+        cmbIssueType.setModel(model);
+        cmbIssueType.setSelectedIndex(0);
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress".equals(evt.getPropertyName())) {

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  *
@@ -99,6 +98,20 @@ public class PnrUtil {
             return name;
         } else {
             return name.substring(0, 8);
+        }
+    }
+
+    public static Enums.TicketStatus tjqStatusConverter(String TRNC) {
+
+        switch (TRNC) {
+            case "TKTT":
+                return Enums.TicketStatus.ISSUE;
+            case "CANX":
+                return Enums.TicketStatus.REFUND;
+                case "RFND":
+                return Enums.TicketStatus.REFUND;
+            default:
+                return null;
         }
     }
 }
