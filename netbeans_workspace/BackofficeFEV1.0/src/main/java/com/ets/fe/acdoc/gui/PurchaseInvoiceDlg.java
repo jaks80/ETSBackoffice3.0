@@ -47,7 +47,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
 
     private String taskType;
     private Pnr pnr;
-    private List<Ticket> tickets;    
+    private List<Ticket> tickets;
     private TicketingPurchaseAcDoc tInvoice;
     private boolean allowPayment = true;
 
@@ -80,14 +80,13 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
         return true;
     }
 
-        public void showDialog(Long id) {   
-        loadTPurchaseInvoice(id);    
-        setLocationRelativeTo(this);                      
-        setVisible(true);           
-            
+    public void showDialog(Long id) {
+        loadTPurchaseInvoice(id);
+        setLocationRelativeTo(this);
+        setVisible(true);
+
     }
-    
-        
+
     private void displayInvoice(TicketingPurchaseAcDoc tInvoice) {
 
         this.tInvoice = tInvoice;
@@ -102,7 +101,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
         populateTblPayment(tInvoice);
         controllComponent(tInvoice);
 
-        if (pnr.getTicketing_agent()!= null) {
+        if (pnr.getTicketing_agent() != null) {
             txtAcDocFor.setText(pnr.getTicketing_agent().getFullName() + pnr.getTicketing_agent().getAddressCRSeperated());
         }
     }
@@ -134,40 +133,76 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
     private void createOtherChargeLine() {
         String chFee = txtCHFee.getText();
         String postage = txtPostage.getText();
-        String other = txtOther.getText();        
+        String other = txtOther.getText();
 
         if (chFee != null && !chFee.isEmpty()) {
-            AdditionalChargeLine line = new AdditionalChargeLine();
-            line.setAmount(new BigDecimal(chFee));
-            line.setAdditionalCharge(Application.getCardHandlingFee());
-            chargeLines.add(line);
-        } 
-        
+            AdditionalChargeLine line = null;
+            for (AdditionalChargeLine l : chargeLines) {
+                if (l.getAdditionalCharge().getTitle().equals("Card Handling")) {
+                    line = l;
+                    break;
+                }
+            }
+            if (line != null) {
+                line.setAmount(new BigDecimal(chFee));
+                line.setAdditionalCharge(Application.getCardHandlingFee());
+            } else {
+                line = new AdditionalChargeLine();
+                line.setAmount(new BigDecimal(chFee));
+                line.setAdditionalCharge(Application.getCardHandlingFee());
+                chargeLines.add(line);
+            }
+        }
+
         if (postage != null && !postage.isEmpty()) {
-            AdditionalChargeLine line = new AdditionalChargeLine();
-            line.setAmount(new BigDecimal(postage));
-            line.setAdditionalCharge(Application.getPostage());
-            chargeLines.add(line);
-        } 
-        
+            AdditionalChargeLine line = null;
+            for (AdditionalChargeLine l : chargeLines) {
+                if (l.getAdditionalCharge().getTitle().equals("Postage")) {
+                    line = l;
+                    break;
+                }
+            }
+            if (line != null) {
+                line.setAmount(new BigDecimal(postage));
+                line.setAdditionalCharge(Application.getPostage());
+            } else {
+                line = new AdditionalChargeLine();
+                line.setAmount(new BigDecimal(postage));
+                line.setAdditionalCharge(Application.getPostage());
+                chargeLines.add(line);
+            }
+        }
+
         if (other != null && !other.isEmpty()) {
-            AdditionalChargeLine line = new AdditionalChargeLine();
-            line.setAmount(new BigDecimal(other));
-            line.setAdditionalCharge(Application.getOther());            
-            chargeLines.add(line);
+            AdditionalChargeLine line = null;
+            for (AdditionalChargeLine l : chargeLines) {
+                if (l.getAdditionalCharge().getTitle().equals("Other")) {
+                    line = l;
+                    break;
+                }
+            }
+            if (line != null) {
+                line.setAmount(new BigDecimal(other));
+                line.setAdditionalCharge(Application.getOther());
+            } else {
+                line = new AdditionalChargeLine();
+                line.setAmount(new BigDecimal(other));
+                line.setAdditionalCharge(Application.getOther());
+                chargeLines.add(line);
+            }
         }
     }
 
     public void saveInvoice() {
         createOtherChargeLine();
-        
+
         String terms = (String) AcDocHeaderComponent.cmbTerms.getSelectedItem();
-        
-        if(!"Select".equals(terms)){
-         tInvoice.setTerms(terms);
+
+        if (!"Select".equals(terms)) {
+            tInvoice.setTerms(terms);
         }
         tInvoice.setVendorRef(AcDocHeaderComponent.txtVendorRef.getText());
-        tInvoice.setAdditionalChargeLines(chargeLines);        
+        tInvoice.setAdditionalChargeLines(chargeLines);
         taskType = "SAVE";
         newInvoiceTask = new TktingPurchaseDocTask(tInvoice, progressBar);
         newInvoiceTask.addPropertyChangeListener(this);
@@ -209,7 +244,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
             totalGF = totalGF.add(t.getGrossFare());
             totalDisc = totalDisc.add(t.getDiscount());
             totalAtol = totalAtol.add(t.getAtolChg());
-            totalNetPayable = totalNetPayable.add(t.calculateNetSellingFare());
+            totalNetPayable = totalNetPayable.add(t.calculateNetPurchaseFare());
 
             model.insertRow(row, new Object[]{t.getFullPaxNameWithPaxNo(),
                 t.getTktStatus(), t.getBaseFare(), t.getTax(), t.getCommission(), t.calculateNetPurchaseFare()});
@@ -636,7 +671,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
         jPanel8.add(txtRef, gridBagConstraints);
 
         btnSubmitPayment.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        btnSubmitPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/payment24.png"))); // NOI18N
+        btnSubmitPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/payment18.png"))); // NOI18N
         btnSubmitPayment.setText("Submit");
         btnSubmitPayment.setPreferredSize(new java.awt.Dimension(135, 30));
         btnSubmitPayment.addActionListener(new java.awt.event.ActionListener() {
@@ -675,7 +710,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
         jPanel8.add(lblTDueRefund, gridBagConstraints);
 
         jButton6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/credit24.png"))); // NOI18N
+        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/credit18.png"))); // NOI18N
         jButton6.setText("Apply Credit");
         jButton6.setPreferredSize(new java.awt.Dimension(135, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -882,7 +917,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
         jPanel7.setBackground(new java.awt.Color(102, 102, 102));
         jPanel7.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Save.png"))); // NOI18N
+        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save18.png"))); // NOI18N
         btnSave.setToolTipText("Create New Invoice");
         btnSave.setFocusable(false);
         btnSave.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -893,13 +928,13 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
             }
         });
 
-        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
+        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
         btnEmail.setToolTipText("Email Invoice");
         btnEmail.setFocusable(false);
         btnEmail.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnEmail.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        btnOfficeCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnOfficeCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
         btnOfficeCopy.setToolTipText("Print Office Copy");
         btnOfficeCopy.setFocusable(false);
         btnOfficeCopy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -914,7 +949,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
                 .addComponent(btnSave)
                 .addGap(2, 2, 2)
                 .addComponent(btnEmail)
-                .addGap(0, 0, 0)
+                .addGap(2, 2, 2)
                 .addComponent(btnOfficeCopy))
         );
         jPanel7Layout.setVerticalGroup(
@@ -1059,22 +1094,24 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    if (null != taskType) switch (taskType) {
-                        case "SAVE":
-                            tInvoice = newInvoiceTask.get();
-                            displayInvoice(tInvoice);
-                            break;
-                        case "PAYMENT":
-                            busyLabel.setBusy(false);
-                            btnSubmitPayment.setEnabled(true);
-                            loadTPurchaseInvoice(tInvoice.getId());
-                            resetPaymentComponent();
-                            break;
-                        case "COMPLETE":
-                            tInvoice = (TicketingPurchaseAcDoc) accountingDocTask.get();
-                            displayInvoice(tInvoice);
-                            taskType = "";
-                            break;
+                    if (null != taskType) {
+                        switch (taskType) {
+                            case "SAVE":
+                                tInvoice = newInvoiceTask.get();
+                                displayInvoice(tInvoice);
+                                break;
+                            case "PAYMENT":
+                                busyLabel.setBusy(false);
+                                btnSubmitPayment.setEnabled(true);
+                                loadTPurchaseInvoice(tInvoice.getId());
+                                resetPaymentComponent();
+                                break;
+                            case "COMPLETE":
+                                tInvoice = (TicketingPurchaseAcDoc) accountingDocTask.get();
+                                displayInvoice(tInvoice);
+                                taskType = "";
+                                break;
+                        }
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(SalesInvoiceDlg.class.getName()).log(Level.SEVERE, null, ex);
@@ -1086,14 +1123,14 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
     }
 
     private void controllComponent(TicketingPurchaseAcDoc tInvoice) {
-        if (tInvoice.getId()== null || tInvoice.getStatus().equals(Enums.AcDocStatus.VOID)) {
+        if (tInvoice.getId() == null || tInvoice.getStatus().equals(Enums.AcDocStatus.VOID)) {
             //btnSave.setEnabled(true);
             btnEmail.setEnabled(false);
             btnOfficeCopy.setEnabled(false);
             allowPayment = false;
             tabPayment.setEnabledAt(1, allowPayment);
-        } else {            
-            btnEmail.setEnabled(true);           
+        } else {
+            btnEmail.setEnabled(true);
             btnOfficeCopy.setEnabled(true);
 
             if (tInvoice.calculateDueAmount().compareTo(new BigDecimal("0.00")) == 0) {

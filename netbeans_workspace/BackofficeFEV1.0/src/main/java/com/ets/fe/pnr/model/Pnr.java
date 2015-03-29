@@ -3,7 +3,6 @@ package com.ets.fe.pnr.model;
 import com.ets.fe.PersistentObject;
 import com.ets.fe.client.model.Agent;
 import com.ets.fe.client.model.Customer;
-import com.ets.fe.util.Enums;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.ArrayList;
@@ -34,6 +33,8 @@ public class Pnr extends PersistentObject implements Serializable {
     private String ticketingAgentSine;
     @XmlElement
     private Date pnrCreationDate;
+    @XmlElement
+    private Date pnrCancellationDate;
     @XmlElement
     private Date airCreationDate;
     @XmlElement
@@ -183,5 +184,13 @@ public class Pnr extends PersistentObject implements Serializable {
 
     public void setTicketing_agent(Agent ticketing_agent) {
         this.ticketing_agent = ticketing_agent;
+    }
+
+    public Date getPnrCancellationDate() {
+        return pnrCancellationDate;
+    }
+
+    public void setPnrCancellationDate(Date pnrCancellationDate) {
+        this.pnrCancellationDate = pnrCancellationDate;
     }
 }

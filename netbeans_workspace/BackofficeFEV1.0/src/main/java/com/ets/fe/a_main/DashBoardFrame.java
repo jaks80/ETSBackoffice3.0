@@ -4,9 +4,11 @@ import com.ets.fe.Application;
 import com.ets.fe.a_maintask.GlobalSearchTask;
 import com.ets.fe.pnr.task.DeletePnrTask;
 import com.ets.fe.pnr.model.Pnr;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -22,12 +24,12 @@ public class DashBoardFrame extends JInternalFrame {
     private GlobalSearchTask globalSearchTask;
     private final List<PnrPanel> pnrTabs = new ArrayList<>();
 
-    public DashBoardFrame() {      
+    public DashBoardFrame() {
         initComponents();
         remove_title_bar();
-        lblUser.setText("User: "+ Application.getLoggedOnUser().getFullName());
+        lblUser.setText("User: " + Application.getLoggedOnUser().getFullName());
     }
-    
+
     private void showPnrPanel() {
         int index = tblUninvoicedPnr.getSelectedRow();
         if (index != -1) {
@@ -35,7 +37,7 @@ public class DashBoardFrame extends JInternalFrame {
 
             PnrPanel panel = getPanel(pnr.getGdsPnr());
             if (panel == null) {
-                PnrPanel p = new PnrPanel(pnr.getId(),this);
+                PnrPanel p = new PnrPanel(pnr.getId(), this);
                 mainTabPane.addTab(pnr.getGdsPnr(), p);
                 pnrTabs.add(p);
                 mainTabPane.setSelectedComponent(p);
@@ -44,13 +46,17 @@ public class DashBoardFrame extends JInternalFrame {
             }
         }
     }
-   
-    private void deletePnr(){
-    int index = tblUninvoicedPnr.getSelectedRow();
+
+    private void deletePnr() {
+        int index = tblUninvoicedPnr.getSelectedRow();
+        int choice = JOptionPane.showConfirmDialog(null, "Delete pnr permanently?", "Delete PNR", JOptionPane.YES_NO_OPTION);
+        
         if (index != -1) {
+            if (choice == JOptionPane.YES_OPTION) {
             Pnr pnr = globalSearchTask.getPnrs().get(index);
             DeletePnrTask task = new DeletePnrTask(pnr, pnrBusyLabel, tblUninvoicedPnr);
-            task.execute();            
+            task.execute();
+            }
         }
     }
 
@@ -64,7 +70,15 @@ public class DashBoardFrame extends JInternalFrame {
 
         return null;
     }
-  
+
+    private void search() {
+        String name = txtName.getText();
+        String pnr = txtPnr.getText();
+        String invRef = txtInvRef.getText();
+        globalSearchTask = new GlobalSearchTask("QUERY_SEARCH", pnrBusyLabel, tblUninvoicedPnr, pnr, invRef, name);
+        globalSearchTask.execute();
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -179,18 +193,18 @@ public class DashBoardFrame extends JInternalFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.gridheight = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHEAST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         pnlTask.add(tabPnr, gridBagConstraints);
 
-        btnRefreshPnr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh24.png"))); // NOI18N
+        btnRefreshPnr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh18.png"))); // NOI18N
         btnRefreshPnr.setBorderPainted(false);
-        btnRefreshPnr.setMaximumSize(new java.awt.Dimension(45, 30));
-        btnRefreshPnr.setMinimumSize(new java.awt.Dimension(45, 30));
-        btnRefreshPnr.setPreferredSize(new java.awt.Dimension(45, 30));
+        btnRefreshPnr.setMaximumSize(new java.awt.Dimension(35, 25));
+        btnRefreshPnr.setMinimumSize(new java.awt.Dimension(35, 25));
+        btnRefreshPnr.setPreferredSize(new java.awt.Dimension(35, 25));
         btnRefreshPnr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRefreshPnrActionPerformed(evt);
@@ -201,11 +215,11 @@ public class DashBoardFrame extends JInternalFrame {
         gridBagConstraints.gridy = 0;
         pnlTask.add(btnRefreshPnr, gridBagConstraints);
 
-        btnPnrDetails.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details.png"))); // NOI18N
+        btnPnrDetails.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
         btnPnrDetails.setBorderPainted(false);
-        btnPnrDetails.setMaximumSize(new java.awt.Dimension(45, 30));
-        btnPnrDetails.setMinimumSize(new java.awt.Dimension(45, 30));
-        btnPnrDetails.setPreferredSize(new java.awt.Dimension(45, 30));
+        btnPnrDetails.setMaximumSize(new java.awt.Dimension(35, 25));
+        btnPnrDetails.setMinimumSize(new java.awt.Dimension(35, 25));
+        btnPnrDetails.setPreferredSize(new java.awt.Dimension(35, 25));
         btnPnrDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPnrDetailsActionPerformed(evt);
@@ -216,11 +230,11 @@ public class DashBoardFrame extends JInternalFrame {
         gridBagConstraints.gridy = 1;
         pnlTask.add(btnPnrDetails, gridBagConstraints);
 
-        btnDeletePnr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete.png"))); // NOI18N
+        btnDeletePnr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete18.png"))); // NOI18N
         btnDeletePnr.setBorderPainted(false);
-        btnDeletePnr.setMaximumSize(new java.awt.Dimension(45, 30));
-        btnDeletePnr.setMinimumSize(new java.awt.Dimension(45, 30));
-        btnDeletePnr.setPreferredSize(new java.awt.Dimension(45, 30));
+        btnDeletePnr.setMaximumSize(new java.awt.Dimension(35, 25));
+        btnDeletePnr.setMinimumSize(new java.awt.Dimension(35, 25));
+        btnDeletePnr.setPreferredSize(new java.awt.Dimension(35, 25));
         btnDeletePnr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeletePnrActionPerformed(evt);
@@ -228,11 +242,13 @@ public class DashBoardFrame extends JInternalFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_END;
+        gridBagConstraints.insets = new java.awt.Insets(50, 0, 0, 0);
         pnlTask.add(btnDeletePnr, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 4, 0);
         pnlTask.add(pnrBusyLabel, gridBagConstraints);
@@ -260,6 +276,13 @@ public class DashBoardFrame extends JInternalFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel2.add(jLabel6, gridBagConstraints);
+
+        txtPnr.setToolTipText("GDS Pnr");
+        txtPnr.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPnrKeyReleased(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -270,9 +293,10 @@ public class DashBoardFrame extends JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel2.add(txtPnr, gridBagConstraints);
 
-        txtInvRef.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtInvRefActionPerformed(evt);
+        txtInvRef.setToolTipText("Invoice Reference");
+        txtInvRef.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtInvRefKeyReleased(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -302,6 +326,13 @@ public class DashBoardFrame extends JInternalFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel2.add(jLabel4, gridBagConstraints);
+
+        txtName.setToolTipText("Example: Surname/Fore Names(s)");
+        txtName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNameKeyReleased(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
@@ -312,6 +343,8 @@ public class DashBoardFrame extends JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel2.add(txtName, gridBagConstraints);
 
+        btnSearch.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
         btnSearch.setText("Search");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -333,14 +366,14 @@ public class DashBoardFrame extends JInternalFrame {
             .addGroup(pnrSearchLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(277, Short.MAX_VALUE))
+                .addContainerGap(213, Short.MAX_VALUE))
         );
         pnrSearchLayout.setVerticalGroup(
             pnrSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnrSearchLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -406,24 +439,33 @@ public class DashBoardFrame extends JInternalFrame {
         gridBagConstraints.weighty = 1.0;
         pnlInvoice.add(jTabbedPane3, gridBagConstraints);
 
-        jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh24.png"))); // NOI18N
+        jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh18.png"))); // NOI18N
         jButton10.setBorderPainted(false);
+        jButton10.setMaximumSize(new java.awt.Dimension(35, 25));
+        jButton10.setMinimumSize(new java.awt.Dimension(35, 25));
+        jButton10.setPreferredSize(new java.awt.Dimension(35, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         pnlInvoice.add(jButton10, gridBagConstraints);
 
-        jButton11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details.png"))); // NOI18N
+        jButton11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
         jButton11.setBorderPainted(false);
+        jButton11.setMaximumSize(new java.awt.Dimension(35, 25));
+        jButton11.setMinimumSize(new java.awt.Dimension(35, 25));
+        jButton11.setPreferredSize(new java.awt.Dimension(35, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         pnlInvoice.add(jButton11, gridBagConstraints);
 
-        jButton12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete.png"))); // NOI18N
+        jButton12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete18.png"))); // NOI18N
         jButton12.setBorderPainted(false);
+        jButton12.setMaximumSize(new java.awt.Dimension(35, 25));
+        jButton12.setMinimumSize(new java.awt.Dimension(35, 25));
+        jButton12.setPreferredSize(new java.awt.Dimension(35, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -447,11 +489,11 @@ public class DashBoardFrame extends JInternalFrame {
         pnlFlight.setLayout(pnlFlightLayout);
         pnlFlightLayout.setHorizontalGroup(
             pnlFlightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 545, Short.MAX_VALUE)
+            .addGap(0, 481, Short.MAX_VALUE)
         );
         pnlFlightLayout.setVerticalGroup(
             pnlFlightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 123, Short.MAX_VALUE)
+            .addGap(0, 84, Short.MAX_VALUE)
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -551,7 +593,7 @@ public class DashBoardFrame extends JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRefreshPnrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshPnrActionPerformed
-        globalSearchTask = new GlobalSearchTask("UNINVOICED_PNR",pnrBusyLabel, tblUninvoicedPnr);
+        globalSearchTask = new GlobalSearchTask("UNINVOICED_PNR", pnrBusyLabel, tblUninvoicedPnr);
         globalSearchTask.execute();
     }//GEN-LAST:event_btnRefreshPnrActionPerformed
 
@@ -565,17 +607,30 @@ public class DashBoardFrame extends JInternalFrame {
         deletePnr();
     }//GEN-LAST:event_btnDeletePnrActionPerformed
 
-    private void txtInvRefActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtInvRefActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtInvRefActionPerformed
-
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        String name = txtName.getText();
-        String pnr = txtPnr.getText();
-        String invRef = txtInvRef.getText();
-        globalSearchTask = new GlobalSearchTask("QUERY_SEARCH",pnrBusyLabel, tblUninvoicedPnr,pnr,invRef,name);
-        globalSearchTask.execute();
+        search();
     }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void txtPnrKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPnrKeyReleased
+        int key = evt.getKeyCode();
+        if (key == KeyEvent.VK_ENTER) {
+            search();
+        }
+    }//GEN-LAST:event_txtPnrKeyReleased
+
+    private void txtInvRefKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtInvRefKeyReleased
+        int key = evt.getKeyCode();
+        if (key == KeyEvent.VK_ENTER) {
+            search();
+        }
+    }//GEN-LAST:event_txtInvRefKeyReleased
+
+    private void txtNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameKeyReleased
+       int key = evt.getKeyCode();
+        if (key == KeyEvent.VK_ENTER) {
+            search();
+        }
+    }//GEN-LAST:event_txtNameKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -624,9 +679,10 @@ public class DashBoardFrame extends JInternalFrame {
         ((BasicInternalFrameUI) this.getUI()).setNorthPane(null);
         this.setBorder(null);
     }
-    public void removeTabRefference(String pnr) {        
+
+    public void removeTabRefference(String pnr) {
         PnrPanel panel = getPanel(pnr);
         pnrTabs.remove(panel);
-        mainTabPane.remove(panel);        
-    }    
+        mainTabPane.remove(panel);
+    }
 }

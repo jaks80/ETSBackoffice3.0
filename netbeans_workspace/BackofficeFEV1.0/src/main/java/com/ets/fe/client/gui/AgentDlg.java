@@ -451,6 +451,8 @@ public class AgentDlg extends JDialog implements ActionListener{
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
+        btnSave.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save18.png"))); // NOI18N
         btnSave.setText("Save");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -458,6 +460,8 @@ public class AgentDlg extends JDialog implements ActionListener{
             }
         });
 
+        btnClose.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exit18.png"))); // NOI18N
         btnClose.setText("Close");
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -488,7 +492,7 @@ public class AgentDlg extends JDialog implements ActionListener{
                 .addComponent(lblInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnSave)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnClose)
                 .addGap(22, 22, 22))
         );

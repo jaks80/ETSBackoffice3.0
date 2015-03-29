@@ -1,17 +1,26 @@
 package com.ets.fe.a_main;
 
+import com.ets.fe.pnr.logic.TicketLogic;
 import com.ets.fe.pnr.model.Ticket;
+import com.ets.fe.pnr.task.TicketTask;
 import com.ets.fe.util.CheckInput;
 import com.ets.fe.util.Enums;
+import com.ets.fe.util.PnrUtil;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
@@ -24,11 +33,17 @@ import org.jdesktop.swingx.JXTable;
  *
  * @author Yusuf
  */
-public class TicketComponent extends javax.swing.JPanel {
+public class TicketComponent extends javax.swing.JPanel implements PropertyChangeListener {
+
+    private boolean saveNeeded = false;
 
     private Ticket ticket;
+    private int selectedRow = 0;
+
     private boolean editable;
     private List<Ticket> tickets = new ArrayList<>();
+    private TicketTask ticketTask;
+    private String taskType = "";
 
     public TicketComponent() {
         initComponents();
@@ -39,14 +54,14 @@ public class TicketComponent extends javax.swing.JPanel {
         CheckInput d = new CheckInput();
         CheckInput e = new CheckInput();
         CheckInput f = new CheckInput();
-        CheckInput g = new CheckInput();
+        CheckInput g = new CheckInput();        
 
         a.setNegativeAccepted(true);
         b.setNegativeAccepted(true);
         c.setNegativeAccepted(true);
         d.setNegativeAccepted(true);
         e.setNegativeAccepted(true);
-        f.setNegativeAccepted(true);
+        f.setNegativeAccepted(true);        
 
         txtBaseFare.setDocument(a);
         txtTax.setDocument(b);
@@ -54,7 +69,8 @@ public class TicketComponent extends javax.swing.JPanel {
         txtGrossFare.setDocument(d);
         txtDisc.setDocument(e);
         txtAtol.setDocument(f);
-        txtAirlineCode.setDocument(g);
+        txtAirlineCode.setDocument(g);       
+
         cmbTicketStatus();
     }
 
@@ -64,30 +80,39 @@ public class TicketComponent extends javax.swing.JPanel {
         //cmbStatus.setSelectedItem(ticket.getTktStatus());
     }
 
+    private void deleteTicket(Ticket ticket) {
+        if (ticket.getTicketingSalesAcDoc() == null) {
+            if (ticket.getId() != null) {
+                busyLabel.setBusy(true);
+                taskType = "DELETE";
+                ticketTask = new TicketTask(ticket, taskType, busyLabel);
+                ticketTask.addPropertyChangeListener(this);
+                ticketTask.execute();
+            }
+        } else {
+            tickets.remove(ticket);
+            populateTblTicket(tickets);
+        }
+    }
+
     public void populateTblTicket(List<Ticket> tickets) {
-        this.tickets = tickets;
-        tblTicket.clearSelection();
+        this.tickets = tickets;      
         DefaultTableModel model = (DefaultTableModel) tblTicket.getModel();
         model.getDataVector().removeAllElements();
-
-        int row = 0;
+        
         BigDecimal totalPurchase = new BigDecimal("0.00");
-        BigDecimal totalSelling = new BigDecimal("0.00");
-        BigDecimal tCom = new BigDecimal("0.00");
-        BigDecimal tNetPayable = new BigDecimal("0.00");
+        BigDecimal totalSelling = new BigDecimal("0.00");       
         BigDecimal tPL = new BigDecimal("0.00");
 
+        int row = 0;
         for (Ticket t : this.getTickets()) {
-            boolean invoiced = true;
-            if (t.getTicketingSalesAcDoc() == null) {
-                invoiced = false;
-            } else {
-                invoiced = true;
-            }
+            boolean invoiced = t.getTicketingSalesAcDoc() != null;            
+            
             totalPurchase = totalPurchase.add(t.calculateNetPurchaseFare());
             totalSelling = totalSelling.add(t.calculateNetSellingFare());
+            tPL = tPL.add(t.calculateRevenue());
 
-            model.insertRow(row, new Object[]{t.getFullPaxNameWithPaxNo(),
+            model.insertRow(row, new Object[]{PnrUtil.calculatePartialName(t.getFullPaxName()),
                 t.getTktStatus(), t.getBaseFare(), t.getTax(), t.getCommission(), t.calculateNetPurchaseFare(),
                 t.getGrossFare(), t.getDiscount(), t.calculateNetSellingFare(),
                 t.calculateRevenue(), invoiced});
@@ -95,13 +120,13 @@ public class TicketComponent extends javax.swing.JPanel {
             row++;
         }
 
-        model.addRow(new Object[]{"Totals", "", "", "", "", "", totalPurchase, "", "", "", totalSelling});
-       
-        if(!this.tickets.isEmpty()){
-         tblTicket.setRowSelectionInterval(0, 0);//Select first row
-        }        
+        model.addRow(new Object[]{"Total:", "", "", "", "", totalPurchase, "", "", totalSelling, tPL});
+
+        if (!this.tickets.isEmpty()) {
+            tblTicket.setRowSelectionInterval(selectedRow, selectedRow);
+        }
     }
-    
+
     public void displayTicket(Ticket ticket) {
         this.ticket = ticket;
         if (ticket.getTicketingSalesAcDoc() != null) {
@@ -126,7 +151,7 @@ public class TicketComponent extends javax.swing.JPanel {
         txtAtol.setText(this.ticket.getAtolChg().toString());
         txtNetSellingFare.setText(this.ticket.calculateNetSellingFare().toString());
 
-        lblRevenue.setText("Revenue: "+ticket.calculateRevenue().toString());
+        lblRevenue.setText("Revenue: " + ticket.calculateRevenue().toString());
 
         setEditing();
     }
@@ -138,13 +163,15 @@ public class TicketComponent extends javax.swing.JPanel {
             if (e.getValueIsAdjusting()) {
                 return;
             }
-            int selectedRow = tblTicket.getSelectedRow();
-            if (selectedRow != -1 && selectedRow != tblTicket.getRowCount() - 1) {
-                ticket = getTickets().get(selectedRow);
+            int row = tblTicket.getSelectedRow();
+            if (row != -1 && row != tblTicket.getRowCount() - 1) {
+                selectedRow = row;
+                ticket = getTickets().get(row);
                 displayTicket(ticket);
             }
         }
     };
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -212,8 +239,17 @@ public class TicketComponent extends javax.swing.JPanel {
         dtIssueDate = new org.jdesktop.swingx.JXDatePicker();
         jLabel13 = new javax.swing.JLabel();
         txtFees = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        btnView = new javax.swing.JButton();
+        btnRefund = new javax.swing.JButton();
+        btnReIssue = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
+        btnVoid = new javax.swing.JButton();
+        btnNewTicket = new javax.swing.JButton();
+        busyLabel = new org.jdesktop.swingx.JXBusyLabel();
 
         setPreferredSize(new java.awt.Dimension(900, 270));
+        setLayout(new java.awt.GridBagLayout());
 
         jScrollPane2.setPreferredSize(new java.awt.Dimension(785, 360));
 
@@ -241,7 +277,7 @@ public class TicketComponent extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        tblTicket.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        tblTicket.setFont(new java.awt.Font("Courier New", 1, 12)); // NOI18N
         tblTicket.setSelectionBackground(new java.awt.Color(255, 255, 153));
         tblTicket.setSortable(false);
         tblTicket.getTableHeader().setReorderingAllowed(false);
@@ -262,6 +298,15 @@ public class TicketComponent extends javax.swing.JPanel {
             tblTicket.getColumnModel().getColumn(10).setPreferredWidth(25);
             tblTicket.getColumnModel().getColumn(10).setMaxWidth(30);
         }
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(jScrollPane2, gridBagConstraints);
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
@@ -380,6 +425,7 @@ public class TicketComponent extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 2, 2, 2);
         jPanel1.add(lblRevenue, gridBagConstraints);
 
@@ -428,11 +474,6 @@ public class TicketComponent extends javax.swing.JPanel {
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtTaxFocusLost(evt);
-            }
-        });
-        txtTax.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTaxActionPerformed(evt);
             }
         });
         txtTax.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -591,7 +632,8 @@ public class TicketComponent extends javax.swing.JPanel {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 0.3;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(jScrollPane1, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -666,32 +708,113 @@ public class TicketComponent extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtFees, gridBagConstraints);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 0);
+        add(jPanel1, gridBagConstraints);
+
+        btnView.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
+        btnView.setMaximumSize(new java.awt.Dimension(35, 22));
+        btnView.setMinimumSize(new java.awt.Dimension(35, 22));
+        btnView.setPreferredSize(new java.awt.Dimension(35, 22));
+
+        btnRefund.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refund1-18.png"))); // NOI18N
+        btnRefund.setMaximumSize(new java.awt.Dimension(35, 22));
+        btnRefund.setMinimumSize(new java.awt.Dimension(35, 22));
+        btnRefund.setPreferredSize(new java.awt.Dimension(35, 22));
+        btnRefund.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefundActionPerformed(evt);
+            }
+        });
+
+        btnReIssue.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/reissue.png"))); // NOI18N
+        btnReIssue.setMaximumSize(new java.awt.Dimension(35, 22));
+        btnReIssue.setMinimumSize(new java.awt.Dimension(35, 22));
+        btnReIssue.setPreferredSize(new java.awt.Dimension(35, 22));
+        btnReIssue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReIssueActionPerformed(evt);
+            }
+        });
+
+        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete18.png"))); // NOI18N
+        btnDelete.setMaximumSize(new java.awt.Dimension(35, 22));
+        btnDelete.setMinimumSize(new java.awt.Dimension(35, 22));
+        btnDelete.setPreferredSize(new java.awt.Dimension(35, 22));
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+
+        btnVoid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/void18-1.png"))); // NOI18N
+        btnVoid.setMaximumSize(new java.awt.Dimension(35, 22));
+        btnVoid.setMinimumSize(new java.awt.Dimension(35, 22));
+        btnVoid.setPreferredSize(new java.awt.Dimension(35, 22));
+        btnVoid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVoidActionPerformed(evt);
+            }
+        });
+
+        btnNewTicket.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/plus18.png"))); // NOI18N
+        btnNewTicket.setMaximumSize(new java.awt.Dimension(35, 22));
+        btnNewTicket.setMinimumSize(new java.awt.Dimension(35, 22));
+        btnNewTicket.setPreferredSize(new java.awt.Dimension(35, 22));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnRefund, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnReIssue, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnNewTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(busyLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnNewTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(btnRefund, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(btnReIssue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
+                .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17)
+                .addComponent(busyLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        add(jPanel2, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtTaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTaxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTaxActionPerformed
-
     private void txtAirlineCodeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAirlineCodeFocusLost
-        this.ticket.setNumericAirLineCode(txtAirlineCode.getText());
+        this.ticket.setNumericAirLineCode(txtAirlineCode.getText());        
+        setSaveNeeded(true);
     }//GEN-LAST:event_txtAirlineCodeFocusLost
 
     private void txtTktNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTktNoFocusLost
-
+        String val = txtTktNo.getText();
+        if (val != null && !val.isEmpty()) {
+            ticket.setTicketNo(val);            
+            setSaveNeeded(true);
+        }
     }//GEN-LAST:event_txtTktNoFocusLost
 
     private void txtBaseFareKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBaseFareKeyReleased
@@ -749,6 +872,7 @@ public class TicketComponent extends javax.swing.JPanel {
         }
         this.ticket.setBaseFare(val);
         calculatePurchaseBalance();
+        setSaveNeeded(true);
     }//GEN-LAST:event_txtBaseFareFocusLost
 
     private void txtTaxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTaxFocusLost
@@ -758,6 +882,7 @@ public class TicketComponent extends javax.swing.JPanel {
         }
         this.ticket.setTax(val);
         calculatePurchaseBalance();
+        setSaveNeeded(true);
     }//GEN-LAST:event_txtTaxFocusLost
 
     private void txtBspComFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBspComFocusLost
@@ -767,6 +892,7 @@ public class TicketComponent extends javax.swing.JPanel {
         }
         this.ticket.setCommission(val);
         calculatePurchaseBalance();
+        setSaveNeeded(true);
     }//GEN-LAST:event_txtBspComFocusLost
 
     private void txtGrossFareFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGrossFareFocusLost
@@ -776,6 +902,7 @@ public class TicketComponent extends javax.swing.JPanel {
         }
         this.ticket.setGrossFare(val);
         calculateSellingBalance();
+        setSaveNeeded(true);
     }//GEN-LAST:event_txtGrossFareFocusLost
 
     private void txtDiscFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDiscFocusLost
@@ -785,6 +912,7 @@ public class TicketComponent extends javax.swing.JPanel {
         }
         this.ticket.setDiscount(val);
         calculateSellingBalance();
+        setSaveNeeded(true);
     }//GEN-LAST:event_txtDiscFocusLost
 
     private void txtAtolFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAtolFocusLost
@@ -794,6 +922,7 @@ public class TicketComponent extends javax.swing.JPanel {
         }
         this.ticket.setAtolChg(val);
         calculateSellingBalance();
+        setSaveNeeded(true);
     }//GEN-LAST:event_txtAtolFocusLost
 
     private void txtFeesFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtFeesFocusGained
@@ -807,22 +936,68 @@ public class TicketComponent extends javax.swing.JPanel {
         }
         this.ticket.setFee(val);
         calculateSellingBalance();
+        setSaveNeeded(true);
     }//GEN-LAST:event_txtFeesFocusLost
 
     private void txtFeesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFeesKeyReleased
-         keyEvents(evt, txtTax, txtBspCom);
+        keyEvents(evt, txtTax, txtBspCom);
     }//GEN-LAST:event_txtFeesKeyReleased
 
     private void dtIssueDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dtIssueDateActionPerformed
-       ticket.setDocIssuedate(dtIssueDate.getDate());
+        ticket.setDocIssuedate(dtIssueDate.getDate());
     }//GEN-LAST:event_dtIssueDateActionPerformed
 
     private void cmbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStatusActionPerformed
         ticket.setTktStatus((Enums.TicketStatus) cmbStatus.getSelectedItem());
     }//GEN-LAST:event_cmbStatusActionPerformed
 
+    private void btnRefundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefundActionPerformed
+        int index = tblTicket.getSelectedRow();
+        if (index != -1) {
+            Ticket t = TicketLogic.createNewRefund(ticket);
+            if (t != null && !ticketExist(t)) {
+                this.tickets.add(t);
+                populateTblTicket(tickets);
+            }
+            setSaveNeeded(true);
+        }
+    }//GEN-LAST:event_btnRefundActionPerformed
+
+    private void btnReIssueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReIssueActionPerformed
+        int index = tblTicket.getSelectedRow();
+        if (index != -1) {
+            Ticket t = TicketLogic.createNewReIssue(ticket);
+            if (t != null && !ticketExist(t)) {
+                this.tickets.add(t);
+                populateTblTicket(tickets);
+            }
+            setSaveNeeded(true);
+        }
+    }//GEN-LAST:event_btnReIssueActionPerformed
+
+    private void btnVoidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoidActionPerformed
+        int index = tblTicket.getSelectedRow();
+        if (index != -1) {
+            TicketLogic.voidTicket(ticket);
+            populateTblTicket(tickets);
+            setSaveNeeded(true);
+        }
+    }//GEN-LAST:event_btnVoidActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        deleteTicket(ticket);
+        setSaveNeeded(true);
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnNewTicket;
+    private javax.swing.JButton btnReIssue;
+    private javax.swing.JButton btnRefund;
+    private javax.swing.JButton btnView;
+    private javax.swing.JButton btnVoid;
+    private org.jdesktop.swingx.JXBusyLabel busyLabel;
     private javax.swing.JComboBox cmbStatus;
     private org.jdesktop.swingx.JXDatePicker dtIssueDate;
     private javax.swing.JLabel jLabel1;
@@ -839,6 +1014,7 @@ public class TicketComponent extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
@@ -890,11 +1066,13 @@ public class TicketComponent extends javax.swing.JPanel {
     }
 
     private void calculatePurchaseBalance() {
+        populateTblTicket(this.tickets);
         txtNetPurchaseFare.setText(ticket.calculateNetPurchaseFare().toString());
         lblRevenue.setText("Revenue: " + ticket.calculateRevenue());
     }
 
     private void calculateSellingBalance() {
+        populateTblTicket(this.tickets);
         txtNetSellingFare.setText(ticket.calculateNetSellingFare().toString());
         lblRevenue.setText("Revenue: " + ticket.calculateRevenue());
     }
@@ -912,5 +1090,58 @@ public class TicketComponent extends javax.swing.JPanel {
 
     public List<Ticket> getTickets() {
         return tickets;
+    }
+
+    private boolean ticketExist(Ticket ticket) {
+        boolean exist = false;
+        for (Ticket t : tickets) {
+            if (t.getTicketNo().equals(ticket.getTicketNo())
+                    && t.getTktStatus().equals(ticket.getTktStatus())) {
+                exist = true;
+                break;
+            }
+        }
+        return exist;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("progress".equals(evt.getPropertyName())) {
+            int progress = (Integer) evt.getNewValue();
+            if (progress == 100) {
+                try {
+                    switch (taskType) {
+                        case "DELETE":
+
+                            ticket = ticketTask.get();
+
+                            if (ticketTask.getStatus() == 200) {
+                                for (Ticket t : tickets) {
+                                    if (Objects.equals(t.getId(), ticket.getId())) {
+                                        tickets.remove(t);
+                                        break;
+                                    }
+                                }
+                                populateTblTicket(tickets);
+                            }
+                            break;
+                        case "UPDATE":
+                            break;
+                    }
+                } catch (InterruptedException | ExecutionException ex) {
+                    Logger.getLogger(TicketComponent.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    busyLabel.setBusy(false);
+                }
+            }
+        }
+    }
+
+    public boolean isSaveNeeded() {
+        return saveNeeded;
+    }
+
+    public void setSaveNeeded(boolean saveNeeded) {
+        this.saveNeeded = saveNeeded;
     }
 }

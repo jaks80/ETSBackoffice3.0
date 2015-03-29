@@ -6,7 +6,9 @@ import com.ets.fe.acdoc.model.*;
 import com.ets.fe.acdoc.task.AcDocSummeryTask;
 import com.ets.fe.acdoc.task.AccountingDocTask;
 import com.ets.fe.util.DateUtil;
-import com.ets.fe.util.Enums.*;
+import com.ets.fe.util.Enums;
+import com.ets.fe.util.Enums.AcDocType;
+import com.ets.fe.util.Enums.SaleType;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.font.TextAttribute;
@@ -86,6 +88,34 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                     }
                     break;
             }
+        }
+    }
+
+    private void deleteDocument() {
+        taskType = "DELETE";
+        AccountingDocument doc = null;
+        int index = -1;
+        SaleType saleType = null;
+        if (tabAcDoc.getSelectedIndex() == 0) {
+            index = tblSales.getSelectedRow();
+            saleType = SaleType.TKTSALES;
+            if (index != -1) {
+                doc = tSAcDocList.get(index);                
+                doc.recordUpdateBy();
+            }
+        }else if (tabAcDoc.getSelectedIndex() == 1) {
+            index = tblPurchase.getSelectedRow();
+            saleType = SaleType.TKTPURCHASE;
+            if (index != -1) {
+                doc = tPAcDocList.get(index);                
+                doc.recordUpdateBy();
+            }
+        }
+
+        if (doc != null && doc.getStatus().equals(Enums.AcDocStatus.VOID)) {
+            accountingDocTask = new AccountingDocTask(doc, saleType, "DELETE");
+            accountingDocTask.addPropertyChangeListener(this);
+            accountingDocTask.execute();
         }
     }
 
@@ -207,6 +237,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         btnPrint = new javax.swing.JButton();
         btnVoid = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
 
         tblSales.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -252,26 +283,45 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
 
         tabAcDoc.addTab("Purchase Documents", jScrollPane2);
 
-        btnViewDocument.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details.png"))); // NOI18N
+        btnViewDocument.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
+        btnViewDocument.setMaximumSize(new java.awt.Dimension(35, 25));
+        btnViewDocument.setMinimumSize(new java.awt.Dimension(35, 25));
+        btnViewDocument.setPreferredSize(new java.awt.Dimension(35, 25));
         btnViewDocument.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnViewDocumentActionPerformed(evt);
             }
         });
 
-        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
+        btnPrint.setMaximumSize(new java.awt.Dimension(35, 25));
+        btnPrint.setMinimumSize(new java.awt.Dimension(35, 25));
+        btnPrint.setPreferredSize(new java.awt.Dimension(35, 25));
 
-        btnVoid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/void24.png"))); // NOI18N
-        btnVoid.setMaximumSize(new java.awt.Dimension(55, 30));
-        btnVoid.setMinimumSize(new java.awt.Dimension(55, 30));
-        btnVoid.setPreferredSize(new java.awt.Dimension(55, 30));
+        btnVoid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/void18.png"))); // NOI18N
+        btnVoid.setMaximumSize(new java.awt.Dimension(35, 25));
+        btnVoid.setMinimumSize(new java.awt.Dimension(35, 25));
+        btnVoid.setPreferredSize(new java.awt.Dimension(35, 25));
         btnVoid.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVoidActionPerformed(evt);
             }
         });
 
-        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh24.png"))); // NOI18N
+        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh18.png"))); // NOI18N
+        btnRefresh.setMaximumSize(new java.awt.Dimension(35, 25));
+        btnRefresh.setMinimumSize(new java.awt.Dimension(35, 25));
+        btnRefresh.setPreferredSize(new java.awt.Dimension(35, 25));
+
+        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete18.png"))); // NOI18N
+        btnDelete.setMaximumSize(new java.awt.Dimension(35, 25));
+        btnDelete.setMinimumSize(new java.awt.Dimension(35, 25));
+        btnDelete.setPreferredSize(new java.awt.Dimension(35, 25));
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -279,12 +329,13 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnViewDocument, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(2, 2, 2)
-                .addComponent(tabAcDoc, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE))
+                    .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnViewDocument, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addComponent(tabAcDoc, javax.swing.GroupLayout.DEFAULT_SIZE, 509, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -292,12 +343,14 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnViewDocument)
+                        .addComponent(btnViewDocument, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(2, 2, 2)
-                        .addComponent(btnPrint)
+                        .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(2, 2, 2)
-                        .addComponent(btnRefresh)
-                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(2, 2, 2)
                         .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tabAcDoc, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
@@ -311,8 +364,13 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         _voidDocument();
     }//GEN-LAST:event_btnVoidActionPerformed
 
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+       deleteDocument();
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnViewDocument;
@@ -389,7 +447,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                             }
                         }
                         taskType = "";
-                    } else if ("VOID".equals(taskType)) {
+                    } else if ("VOID".equals(taskType)|| "DELETE".equals(taskType)) {
                         parent.loadCompletePnr();
                     }
                 } catch (InterruptedException | ExecutionException ex) {
@@ -426,8 +484,8 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
     public TicketingPurchaseAcDoc getPurchaseSummeryInvoice() {
         return purchaseSummeryInvoice;
     }
-    
-    public int getSelectedTab(){
-      return tabAcDoc.getSelectedIndex();
+
+    public int getSelectedTab() {
+        return tabAcDoc.getSelectedIndex();
     }
 }

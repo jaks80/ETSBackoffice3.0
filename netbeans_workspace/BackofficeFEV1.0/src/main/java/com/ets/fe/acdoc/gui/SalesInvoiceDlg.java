@@ -179,6 +179,8 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
             newInvoiceTask = new NewTSalesDocumentTask(tInvoice, progressBar);
             newInvoiceTask.addPropertyChangeListener(this);
             newInvoiceTask.execute();
+        } else {
+            btnCreateDocument.setEnabled(true);
         }
     }
 
@@ -371,7 +373,6 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         btnPrint = new javax.swing.JButton();
         btnEmail = new javax.swing.JButton();
         btnOfficeCopy = new javax.swing.JButton();
-        btnAtol = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -631,7 +632,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         jPanel8.add(txtRef, gridBagConstraints);
 
         btnSubmitPayment.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        btnSubmitPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/payment24.png"))); // NOI18N
+        btnSubmitPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/payment18.png"))); // NOI18N
         btnSubmitPayment.setText("Submit");
         btnSubmitPayment.setPreferredSize(new java.awt.Dimension(135, 30));
         btnSubmitPayment.addActionListener(new java.awt.event.ActionListener() {
@@ -670,7 +671,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         jPanel8.add(lblTDueRefund, gridBagConstraints);
 
         btnAppyCredit.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        btnAppyCredit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/credit24.png"))); // NOI18N
+        btnAppyCredit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/credit18.png"))); // NOI18N
         btnAppyCredit.setText("Apply Credit");
         btnAppyCredit.setPreferredSize(new java.awt.Dimension(135, 30));
         btnAppyCredit.addActionListener(new java.awt.event.ActionListener() {
@@ -893,7 +894,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
             }
         });
 
-        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
         btnPrint.setToolTipText("Print");
         btnPrint.setFocusable(false);
         btnPrint.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -904,7 +905,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
             }
         });
 
-        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
+        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
         btnEmail.setToolTipText("Email Invoice");
         btnEmail.setFocusable(false);
         btnEmail.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -915,28 +916,24 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
             }
         });
 
-        btnOfficeCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnOfficeCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
         btnOfficeCopy.setToolTipText("Print Office Copy");
         btnOfficeCopy.setFocusable(false);
         btnOfficeCopy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnOfficeCopy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-
-        btnAtol.setText("ATOL");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAtol)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap(698, Short.MAX_VALUE)
                 .addComponent(btnCreateDocument)
-                .addGap(0, 0, 0)
+                .addGap(2, 2, 2)
                 .addComponent(btnPrint)
-                .addGap(0, 0, 0)
+                .addGap(2, 2, 2)
                 .addComponent(btnEmail)
-                .addGap(0, 0, 0)
+                .addGap(2, 2, 2)
                 .addComponent(btnOfficeCopy))
         );
         jPanel7Layout.setVerticalGroup(
@@ -945,7 +942,6 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
             .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnOfficeCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnAtol, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1030,10 +1026,10 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     private void btnAppyCreditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAppyCreditActionPerformed
         Window w = SwingUtilities.getWindowAncestor(this);
         Frame owner = w instanceof Frame ? (Frame) w : null;
-        DlgTktSalesCreditTransfer dlg = new DlgTktSalesCreditTransfer(owner);        
+        DlgTktSalesCreditTransfer dlg = new DlgTktSalesCreditTransfer(owner);
         if (dlg.showDialog(tInvoice)) {
-         loadInvoice(tInvoice.getId());
-         resetPaymentComponent();
+            loadInvoice(tInvoice.getId());
+            resetPaymentComponent();
         }
     }//GEN-LAST:event_btnAppyCreditActionPerformed
 
@@ -1041,7 +1037,6 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent acDocHeaderComponent;
     private javax.swing.JButton btnAppyCredit;
-    private javax.swing.JButton btnAtol;
     private javax.swing.JButton btnCreateDocument;
     private javax.swing.JButton btnEmail;
     private javax.swing.JButton btnOfficeCopy;

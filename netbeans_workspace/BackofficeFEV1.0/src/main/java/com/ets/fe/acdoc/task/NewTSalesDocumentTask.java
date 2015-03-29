@@ -2,7 +2,7 @@ package com.ets.fe.acdoc.task;
 
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.ws.TicketingSAcDocWSClient;
-import com.ets.fe.client.gui.AgentSearchTask;
+import com.ets.fe.client.task.AgentSearchTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JProgressBar;

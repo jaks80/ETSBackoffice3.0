@@ -1,7 +1,7 @@
-package com.ets.fe.a_maintask;
+package com.ets.fe.settings.task;
 
 import com.ets.fe.settings.model.User;
-import com.ets.fe.client.gui.AgentSearchTask;
+import com.ets.fe.client.task.AgentSearchTask;
 import com.ets.fe.settings.ws.ApplicationWSClient;
 import java.util.logging.Level;
 import java.util.logging.Logger;

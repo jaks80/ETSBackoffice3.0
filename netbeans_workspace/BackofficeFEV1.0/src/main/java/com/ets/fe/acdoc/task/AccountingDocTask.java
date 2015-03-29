@@ -24,12 +24,13 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
         this.saleType = saleType;
         this.taskType = taskType;
     }
-    
+
     /**
      * Use it to void Document
+     *
      * @param accountingDocument
      * @param saleType
-     * @param taskType 
+     * @param taskType
      */
     public AccountingDocTask(AccountingDocument accountingDocument, Enums.SaleType saleType, String taskType) {
         this.accountingDocument = accountingDocument;
@@ -50,6 +51,10 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
                     TicketingSalesAcDoc doc = (TicketingSalesAcDoc) accountingDocument;
                     client._void(doc);
                     break;
+                case "DELETE":
+                    TicketingSalesAcDoc void_doc = (TicketingSalesAcDoc) accountingDocument;
+                    client.delete(void_doc.getId());
+                    break;
             }
         } else if (Enums.SaleType.TKTPURCHASE.equals(saleType)) {
             TicketingPAcDocWSClient client = new TicketingPAcDocWSClient();
@@ -60,6 +65,10 @@ public class AccountingDocTask extends SwingWorker<AccountingDocument, Integer> 
                 case "VOID":
                     TicketingPurchaseAcDoc doc = (TicketingPurchaseAcDoc) accountingDocument;
                     client._void(doc);
+                    break;
+                case "DELETE":
+                    TicketingPurchaseAcDoc void_doc = (TicketingPurchaseAcDoc) accountingDocument;
+                    client.delete(void_doc.getId());
                     break;
             }
         }

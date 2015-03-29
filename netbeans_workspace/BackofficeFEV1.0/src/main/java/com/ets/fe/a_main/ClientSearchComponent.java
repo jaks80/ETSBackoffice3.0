@@ -1,5 +1,9 @@
 package com.ets.fe.a_main;
 
+import com.ets.fe.client.task.CustomerSearchTask;
+import com.ets.fe.client.task.CustomerTask;
+import com.ets.fe.client.task.AgentSearchTask;
+import com.ets.fe.client.task.ContactableSearchTask;
 import com.ets.fe.client.collection.Agents;
 import com.ets.fe.client.collection.Customers;
 import com.ets.fe.client.gui.*;
@@ -27,6 +31,8 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  * @author Yusuf
  */
 public class ClientSearchComponent extends JPanel implements PropertyChangeListener {
+
+    private boolean saveNeeded = false;
 
     private Agent agent;
     private Customer customer;
@@ -89,6 +95,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
                 setCmbSearchResult(list);
             }
         }
+        setSaveNeeded(true);
     }
 
     private void addNewCustomer() {
@@ -281,7 +288,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
         jPanel1.add(txtContactableSearch, gridBagConstraints);
 
         btnContactableSearch.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        btnContactableSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search24.png"))); // NOI18N
+        btnContactableSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
         btnContactableSearch.setText("Search");
         btnContactableSearch.setPreferredSize(new java.awt.Dimension(110, 25));
         btnContactableSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -420,5 +427,13 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
 
     public Customer getCustomer() {
         return customer;
+    }
+
+    public boolean isSaveNeeded() {
+        return saveNeeded;
+    }
+
+    public void setSaveNeeded(boolean saveNeeded) {
+        this.saveNeeded = saveNeeded;
     }
 }

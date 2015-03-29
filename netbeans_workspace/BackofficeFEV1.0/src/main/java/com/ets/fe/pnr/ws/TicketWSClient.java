@@ -3,10 +3,14 @@ package com.ets.fe.pnr.ws;
 import com.ets.fe.pnr.model.GDSSaleReport;
 import com.ets.fe.util.RestClientUtil;
 import com.ets.fe.APIConfig;
+import com.ets.fe.pnr.model.Itinerary;
+import com.ets.fe.pnr.model.Pnr;
+import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.pnr.model.TicketSaleReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -14,36 +18,50 @@ import java.util.Date;
  */
 public class TicketWSClient {
 
-    public GDSSaleReport gdsSaleReport(TicketingType ticketingType,TicketStatus ticketStatus, String airLineCode,
+    public Ticket update(Ticket ticket) {
+        ticket.recordUpdateBy();
+
+        String url = APIConfig.get("ws.ticket.update");
+        ticket = RestClientUtil.putEntity(Ticket.class, url, ticket);
+        return ticket;
+    }
+
+    public Integer delete(long id) {
+        String url = APIConfig.get("ws.ticket.delete") + id;
+        Integer status = RestClientUtil.deleteById(url);
+        return status;
+    }
+
+    public GDSSaleReport gdsSaleReport(TicketingType ticketingType, TicketStatus ticketStatus, String airLineCode,
             Date issueDateFrom, Date issueDateTo, String ticketingAgtOid) {
 
         String dateFrom = DateUtil.dateToString(issueDateFrom, "ddMMMyyyy");
-        String dateTo = DateUtil.dateToString(issueDateTo, "ddMMMyyyy");        
+        String dateTo = DateUtil.dateToString(issueDateTo, "ddMMMyyyy");
 
         StringBuilder sb = new StringBuilder();
         sb.append(APIConfig.get("ws.ticket.gds-salereport"))
                 .append("?dateStart=").append(dateFrom)
                 .append("&dateEnd=").append(dateTo);
-        
-        if(ticketingType!=null){
-         sb.append("&ticketingType=").append(ticketingType);
+
+        if (ticketingType != null) {
+            sb.append("&ticketingType=").append(ticketingType);
         }
-        
-        if(ticketStatus!=null){
-         sb.append("&ticketStatus=").append(ticketStatus);
+
+        if (ticketStatus != null) {
+            sb.append("&ticketStatus=").append(ticketStatus);
         }
-        if(airLineCode!=null){
-         sb.append("&airLineCode=").append(airLineCode);
+        if (airLineCode != null) {
+            sb.append("&airLineCode=").append(airLineCode);
         }
-        if(ticketingAgtOid!=null){
-         sb.append("&ticketingAgtOid=").append(ticketingAgtOid);
+        if (ticketingAgtOid != null) {
+            sb.append("&ticketingAgtOid=").append(ticketingAgtOid);
         }
-                
+
         GDSSaleReport report = RestClientUtil.getEntity(GDSSaleReport.class, sb.toString(), new GDSSaleReport());
         return report;
     }
-    
-    public TicketSaleReport saleReport(TicketingType ticketingType,TicketStatus ticketStatus, String airLineCode,
+
+    public TicketSaleReport saleReport(TicketingType ticketingType, TicketStatus ticketStatus, String airLineCode,
             Date issueDateFrom, Date issueDateTo, String ticketingAgtOid) {
 
         String dateFrom = DateUtil.dateToString(issueDateFrom, "ddMMMyyyy");
@@ -53,21 +71,21 @@ public class TicketWSClient {
         sb.append(APIConfig.get("ws.ticket.salereport"))
                 .append("?dateStart=").append(dateFrom)
                 .append("&dateEnd=").append(dateTo);
-        
-        if(ticketingType!=null){
-         sb.append("&ticketingType=").append(ticketingType);
+
+        if (ticketingType != null) {
+            sb.append("&ticketingType=").append(ticketingType);
         }
-        
-        if(ticketStatus!=null){
-         sb.append("&ticketStatus=").append(ticketStatus);
+
+        if (ticketStatus != null) {
+            sb.append("&ticketStatus=").append(ticketStatus);
         }
-        if(airLineCode!=null){
-         sb.append("&airLineCode=").append(airLineCode);
+        if (airLineCode != null) {
+            sb.append("&airLineCode=").append(airLineCode);
         }
-        if(ticketingAgtOid!=null){
-         sb.append("&ticketingAgtOid=").append(ticketingAgtOid);
+        if (ticketingAgtOid != null) {
+            sb.append("&ticketingAgtOid=").append(ticketingAgtOid);
         }
-        
+
         TicketSaleReport report = RestClientUtil.getEntity(TicketSaleReport.class, sb.toString(), new TicketSaleReport());
         return report;
     }

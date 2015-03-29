@@ -1,7 +1,7 @@
 package com.ets.fe.a_main;
 
 import com.ets.fe.client.collection.Agents;
-import com.ets.fe.client.gui.AgentSearchTask;
+import com.ets.fe.client.task.AgentSearchTask;
 import com.ets.fe.client.model.Agent;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.util.Enums;
@@ -24,6 +24,7 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  */
 public class TicketingAgentComponent extends javax.swing.JPanel implements PropertyChangeListener {
 
+    private boolean saveNeeded = false;
     private AgentSearchTask task;
     private List<Agent> agentlist;
     private Pnr pnr;
@@ -33,33 +34,33 @@ public class TicketingAgentComponent extends javax.swing.JPanel implements Prope
     }
 
     public void setTicketingAgent(final Pnr pnr) {
-        this.pnr = pnr;                
+        this.pnr = pnr;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                if(pnr.getTicketing_agent()!=null){
-                 setTxtAgentDetails(pnr.getTicketing_agent());
-                }else{                    
-                 search();
-                }                
+                if (pnr.getTicketing_agent() != null) {
+                    setTxtAgentDetails(pnr.getTicketing_agent());
+                } else {
+                    search();
+                }
             }
         });
     }
-        
+
     public void search() {
-        task = new AgentSearchTask(busyLabel,Enums.AgentType.TICKETING_AGT);
+        task = new AgentSearchTask(busyLabel, Enums.AgentType.TICKETING_AGT);
         task.addPropertyChangeListener(this);
         task.execute();
     }
-        
+
     public void populateComponent() {
 
         for (Agent a : this.agentlist) {
-            if (pnr.getTicketingAgtOid().equals(a.getOfficeID())){
-             pnr.setTicketing_agent(a);
-             setTxtAgentDetails(a);
+            if (pnr.getTicketingAgtOid().equals(a.getOfficeID())) {
+                pnr.setTicketing_agent(a);
+                setTxtAgentDetails(a);
             }
         }
-        
+
         List<String> list = new ArrayList<>();
         for (Agent a : agentlist) {
             list.add(a.getFullName());
@@ -72,16 +73,16 @@ public class TicketingAgentComponent extends javax.swing.JPanel implements Prope
         txtVendorDetails.append(agent.getFullAddressCRSeperated());
     }
 
-    private void setCmbVendors(List<String> list) {        
-        
-        if(pnr.getTicketing_agent()!=null){
-         DefaultComboBoxModel model = new DefaultComboBoxModel(list.toArray());
-         cmbVendor.setModel(model);
-         cmbVendor.setSelectedItem(pnr.getTicketing_agent().getFullName());
-        }else{        
-         DefaultComboBoxModel model = new DefaultComboBoxModel(list.toArray());
-         cmbVendor.setModel(model);
-         cmbVendor.setSelectedIndex(-1);
+    private void setCmbVendors(List<String> list) {
+
+        if (pnr.getTicketing_agent() != null) {
+            DefaultComboBoxModel model = new DefaultComboBoxModel(list.toArray());
+            cmbVendor.setModel(model);
+            cmbVendor.setSelectedItem(pnr.getTicketing_agent().getFullName());
+        } else {
+            DefaultComboBoxModel model = new DefaultComboBoxModel(list.toArray());
+            cmbVendor.setModel(model);
+            cmbVendor.setSelectedIndex(-1);
         }
     }
 
@@ -90,10 +91,11 @@ public class TicketingAgentComponent extends javax.swing.JPanel implements Prope
         public void actionPerformed(ActionEvent e) {
             if (cmbVendor.getItemCount() > 0) {
                 int index = cmbVendor.getSelectedIndex();
-                if(index!=-1){
-                Agent a = agentlist.get(index);
-                pnr.setTicketing_agent(a);
-                setTxtAgentDetails(a);
+                if (index != -1) {
+                    Agent a = agentlist.get(index);
+                    pnr.setTicketing_agent(a);
+                    setTxtAgentDetails(a);
+                    setSaveNeeded(true);
                 }
             }
         }
@@ -134,7 +136,7 @@ public class TicketingAgentComponent extends javax.swing.JPanel implements Prope
         TicketingAgtPanel.add(cmbVendor, gridBagConstraints);
 
         txtVendorDetails.setColumns(20);
-        txtVendorDetails.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        txtVendorDetails.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtVendorDetails.setLineWrap(true);
         txtVendorDetails.setRows(5);
         jScrollPane2.setViewportView(txtVendorDetails);
@@ -156,9 +158,14 @@ public class TicketingAgentComponent extends javax.swing.JPanel implements Prope
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
         TicketingAgtPanel.add(busyLabel, gridBagConstraints);
 
-        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh24.png"))); // NOI18N
+        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh18.png"))); // NOI18N
         btnRefresh.setToolTipText("Reload Agent List");
-        btnRefresh.setPreferredSize(new java.awt.Dimension(40, 33));
+        btnRefresh.setPreferredSize(new java.awt.Dimension(30, 30));
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -177,6 +184,10 @@ public class TicketingAgentComponent extends javax.swing.JPanel implements Prope
             .addComponent(TicketingAgtPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        search();
+    }//GEN-LAST:event_btnRefreshActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -204,4 +215,11 @@ public class TicketingAgentComponent extends javax.swing.JPanel implements Prope
         }
     }
 
+    public boolean isSaveNeeded() {
+        return saveNeeded;
+    }
+
+    public void setSaveNeeded(boolean saveNeeded) {
+        this.saveNeeded = saveNeeded;
+    }
 }

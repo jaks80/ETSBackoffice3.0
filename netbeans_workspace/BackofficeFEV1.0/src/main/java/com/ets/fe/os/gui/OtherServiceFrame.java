@@ -60,6 +60,7 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
                 }
                 tableModel.insertRow(i, new Object[]{i + 1, os.getTitle(),os.getPurchaseCost(),os.getSellingPrice(),vat,archive,category});
             }
+            tblService.setRowSelectionInterval(0, 0);
         } else {
             tableModel.insertRow(0, new Object[]{});
         }
@@ -88,6 +89,8 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
         tblService = new javax.swing.JTable();
 
         setClosable(true);
+        setMaximizable(true);
+        setResizable(true);
         setTitle("Service Manager");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -95,6 +98,9 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
         jPanel3.setPreferredSize(new java.awt.Dimension(980, 30));
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
+        progressBar.setMaximumSize(new java.awt.Dimension(140, 17));
+        progressBar.setMinimumSize(new java.awt.Dimension(140, 17));
+        progressBar.setPreferredSize(new java.awt.Dimension(140, 17));
         progressBar.setStringPainted(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -126,7 +132,7 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        btnLoad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh24.png"))); // NOI18N
+        btnLoad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh18.png"))); // NOI18N
         btnLoad.setToolTipText("Load items");
         btnLoad.setPreferredSize(new java.awt.Dimension(60, 35));
         btnLoad.addActionListener(new java.awt.event.ActionListener() {
@@ -135,7 +141,7 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
             }
         });
 
-        btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/plus24.png"))); // NOI18N
+        btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/plus18.png"))); // NOI18N
         btnNew.setToolTipText("Add new service");
         btnNew.setPreferredSize(new java.awt.Dimension(60, 35));
         btnNew.addActionListener(new java.awt.event.ActionListener() {
@@ -144,7 +150,7 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
             }
         });
 
-        btnView.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details.png"))); // NOI18N
+        btnView.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
         btnView.setToolTipText("");
         btnView.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -152,7 +158,7 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
             }
         });
 
-        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit24.png"))); // NOI18N
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit18.png"))); // NOI18N
         btnEdit.setToolTipText("Select item and Edit");
         btnEdit.setPreferredSize(new java.awt.Dimension(60, 35));
         btnEdit.addActionListener(new java.awt.event.ActionListener() {
@@ -167,13 +173,13 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -181,11 +187,11 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnEdit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLoad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNew, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnView, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(btnEdit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLoad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNew, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnView, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2))
         );
 
         tblService.setModel(new javax.swing.table.DefaultTableModel(
@@ -209,8 +215,8 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
         if (tblService.getColumnModel().getColumnCount() > 0) {
             tblService.getColumnModel().getColumn(0).setMaxWidth(20);
             tblService.getColumnModel().getColumn(1).setMinWidth(250);
-            tblService.getColumnModel().getColumn(2).setPreferredWidth(20);
-            tblService.getColumnModel().getColumn(3).setPreferredWidth(20);
+            tblService.getColumnModel().getColumn(2).setPreferredWidth(40);
+            tblService.getColumnModel().getColumn(3).setPreferredWidth(40);
             tblService.getColumnModel().getColumn(4).setPreferredWidth(10);
             tblService.getColumnModel().getColumn(5).setPreferredWidth(10);
         }

@@ -28,15 +28,20 @@
           <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
           <Component id="lblInfo" alignment="1" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
-              <Component id="btnSave" min="-2" pref="90" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-              <Component id="btnClose" min="-2" pref="90" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="1" attributes="0">
-              <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel1" min="-2" pref="360" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="btnSave" min="-2" pref="90" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btnClose" min="-2" pref="90" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jPanel1" min="-2" pref="360" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
           </Group>
       </Group>
     </DimensionLayout>
@@ -50,9 +55,9 @@
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="btnClose" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnSave" alignment="0" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnSave" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnClose" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="lblInfo" max="32767" attributes="0"/>
@@ -88,7 +93,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Address Line1"/>
+            <Property name="text" type="java.lang.String" value="Address Line1*"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -287,6 +292,12 @@
     </Container>
     <Component class="javax.swing.JButton" name="btnSave">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Tahoma" size="11" style="1"/>
+        </Property>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/icons/save18.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Save"/>
       </Properties>
       <Events>
@@ -295,6 +306,12 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnClose">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Tahoma" size="11" style="1"/>
+        </Property>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/icons/exit18.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Close"/>
       </Properties>
       <Events>

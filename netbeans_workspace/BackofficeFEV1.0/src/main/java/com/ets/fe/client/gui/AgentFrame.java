@@ -1,10 +1,13 @@
 package com.ets.fe.client.gui;
 
+import com.ets.fe.client.task.AgentTask;
+import com.ets.fe.client.task.AgentSearchTask;
 import com.ets.fe.client.collection.Agents;
 import com.ets.fe.client.model.Agent;
 import com.ets.fe.util.Enums;
 import java.awt.Frame;
 import java.awt.Window;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -25,13 +28,13 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
     private AgentSearchTask task;
     private Agents agents;
     private JDesktopPane desktopPane;
-    
+
     public AgentFrame(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
         initComponents();
     }
 
-public void search() {
+    public void search() {
         btnSearch.setEnabled(false);
         String name = "";
         String postCode = "";
@@ -59,12 +62,12 @@ public void search() {
             officeId = null;
         }
 
-        task = new AgentSearchTask(name, postCode, officeId,progressBar,Enums.AgentType.ALL);
+        task = new AgentSearchTask(name, postCode, officeId, progressBar, Enums.AgentType.ALL);
         task.addPropertyChangeListener(this);
         task.execute();
     }
-        
-     private void populateTblAgent() {
+
+    private void populateTblAgent() {
         List<Agent> list = agents.getList();
         DefaultTableModel tableModel = (DefaultTableModel) tblAgent.getModel();
         tableModel.getDataVector().removeAllElements();
@@ -72,13 +75,13 @@ public void search() {
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
                 Agent agent = list.get(i);
-                tableModel.insertRow(i, new Object[]{i + 1, agent.getFullName(),agent.getAddLine1(), agent.getPostCode(), agent.getTelNo(), agent.getEmail(),agent.getOfficeID()});
+                tableModel.insertRow(i, new Object[]{i + 1, agent.getFullName(), agent.getAddLine1(), agent.getPostCode(), agent.getTelNo(), agent.getEmail(), agent.getOfficeID()});
             }
         } else {
             tableModel.insertRow(0, new Object[]{});
         }
     }
-            
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -97,21 +100,24 @@ public void search() {
         txtPostCode = new javax.swing.JTextField();
         txtOfficeId = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblAgent = new org.jdesktop.swingx.JXTable();
-        btnEdit = new javax.swing.JButton();
-        btnNew = new javax.swing.JButton();
-        btnReport = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         progressBar = new javax.swing.JProgressBar();
         jSeparator1 = new javax.swing.JSeparator();
         lblInfo = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        btnViewInvoice = new javax.swing.JButton();
+        btnEmail = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnPrint = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblAgent = new org.jdesktop.swingx.JXTable();
 
         setClosable(true);
-        setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Agent Management");
+        setTitle("Travel Agents and Sub Agents Details");
+        setPreferredSize(new java.awt.Dimension(1000, 450));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Search", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
         jPanel1.setLayout(new java.awt.GridBagLayout());
@@ -142,6 +148,11 @@ public void search() {
         jPanel1.add(jLabel5, gridBagConstraints);
 
         txtName.setToolTipText("Surname / ForeName(s)");
+        txtName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNameKeyReleased(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -149,6 +160,12 @@ public void search() {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtName, gridBagConstraints);
+
+        txtPostCode.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPostCodeKeyReleased(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -158,6 +175,11 @@ public void search() {
         jPanel1.add(txtPostCode, gridBagConstraints);
 
         txtOfficeId.setToolTipText("Agent office Id(s), Separated by comma, Example: ABC123AB,CDE123CD");
+        txtOfficeId.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtOfficeIdKeyReleased(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
@@ -167,6 +189,8 @@ public void search() {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtOfficeId, gridBagConstraints);
 
+        btnSearch.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
         btnSearch.setText("Search");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -179,48 +203,6 @@ public void search() {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
         jPanel1.add(btnSearch, gridBagConstraints);
-
-        tblAgent.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "", "Name", "Address", "Post Code", "Tel Number", "Email", "Office ID(s)"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblAgent.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(tblAgent);
-        if (tblAgent.getColumnModel().getColumnCount() > 0) {
-            tblAgent.getColumnModel().getColumn(0).setPreferredWidth(40);
-            tblAgent.getColumnModel().getColumn(0).setMaxWidth(40);
-        }
-
-        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Save.png"))); // NOI18N
-        btnEdit.setText("Edit");
-        btnEdit.setPreferredSize(new java.awt.Dimension(60, 23));
-        btnEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditActionPerformed(evt);
-            }
-        });
-
-        btnNew.setText("New");
-        btnNew.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNewActionPerformed(evt);
-            }
-        });
-
-        btnReport.setText("Report");
-        btnReport.setPreferredSize(new java.awt.Dimension(60, 23));
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel3.setMaximumSize(new java.awt.Dimension(32767, 30));
@@ -256,43 +238,110 @@ public void search() {
         gridBagConstraints.insets = new java.awt.Insets(1, 2, 1, 2);
         jPanel3.add(lblInfo, gridBagConstraints);
 
+        jPanel2.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newClient18.png"))); // NOI18N
+        btnViewInvoice.setToolTipText("New Agent");
+        btnViewInvoice.setMaximumSize(new java.awt.Dimension(35, 22));
+        btnViewInvoice.setMinimumSize(new java.awt.Dimension(35, 22));
+        btnViewInvoice.setPreferredSize(new java.awt.Dimension(35, 22));
+        btnViewInvoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewInvoiceActionPerformed(evt);
+            }
+        });
+
+        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
+        btnEmail.setToolTipText("Send Email");
+        btnEmail.setMaximumSize(new java.awt.Dimension(35, 22));
+        btnEmail.setMinimumSize(new java.awt.Dimension(35, 22));
+        btnEmail.setPreferredSize(new java.awt.Dimension(35, 22));
+
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit18.png"))); // NOI18N
+        btnEdit.setToolTipText("Edit");
+        btnEdit.setMaximumSize(new java.awt.Dimension(35, 22));
+        btnEdit.setMinimumSize(new java.awt.Dimension(35, 22));
+        btnEdit.setPreferredSize(new java.awt.Dimension(35, 22));
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
+
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
+        btnPrint.setToolTipText("Print");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        jTabbedPane1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+
+        tblAgent.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "", "Name", "Address", "Post Code", "Tel Number", "Email", "Office ID(s)"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblAgent.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tblAgent);
+        if (tblAgent.getColumnModel().getColumnCount() > 0) {
+            tblAgent.getColumnModel().getColumn(0).setPreferredWidth(40);
+            tblAgent.getColumnModel().getColumn(0).setMaxWidth(40);
+        }
+
+        jTabbedPane1.addTab("Agent list", jScrollPane1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 984, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(btnReport, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-                                    .addComponent(btnEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 983, Short.MAX_VALUE))
-                .addGap(0, 0, 0))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jTabbedPane1))
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
-                        .addGap(2, 2, 2))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnNew))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(36, 187, Short.MAX_VALUE))
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -324,32 +373,47 @@ public void search() {
         }
     }//GEN-LAST:event_btnEditActionPerformed
 
-    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
-        Window w = SwingUtilities.getWindowAncestor(this);
-        Frame owner = w instanceof Frame ? (Frame)w : null;
-        AgentDlg dlg = new AgentDlg(owner);
-        dlg.setLocationRelativeTo(this);
-        dlg.setTitle("New Agent");
-        Agent agent = new Agent();
-        if (dlg.showAgentDialog(agent)) {
-            AgentTask task = new AgentTask(agent);
-            task.execute();
+    private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
+        
+    }//GEN-LAST:event_btnViewInvoiceActionPerformed
+
+    private void txtNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameKeyReleased
+        int key = evt.getKeyCode();
+        if (key == KeyEvent.VK_ENTER) {
+            search();
         }
-    }//GEN-LAST:event_btnNewActionPerformed
+    }//GEN-LAST:event_txtNameKeyReleased
+
+    private void txtPostCodeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPostCodeKeyReleased
+        int key = evt.getKeyCode();
+        if (key == KeyEvent.VK_ENTER) {
+            search();
+        }
+    }//GEN-LAST:event_txtPostCodeKeyReleased
+
+    private void txtOfficeIdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOfficeIdKeyReleased
+       int key = evt.getKeyCode();
+        if (key == KeyEvent.VK_ENTER) {
+            search();
+        }
+    }//GEN-LAST:event_txtOfficeIdKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEdit;
-    private javax.swing.JButton btnNew;
-    private javax.swing.JButton btnReport;
+    private javax.swing.JButton btnEmail;
+    private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnViewInvoice;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblInfo;
     private javax.swing.JProgressBar progressBar;
     private org.jdesktop.swingx.JXTable tblAgent;
@@ -370,7 +434,7 @@ public void search() {
                     Logger.getLogger(AgentFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ExecutionException ex) {
                     Logger.getLogger(AgentFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }finally {
+                } finally {
                     btnSearch.setEnabled(true);
                 }
             }

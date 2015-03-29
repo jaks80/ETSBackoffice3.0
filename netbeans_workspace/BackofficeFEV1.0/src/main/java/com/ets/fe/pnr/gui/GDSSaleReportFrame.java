@@ -265,6 +265,8 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
     jPanel1.add(txtCareerCode, gridBagConstraints);
 
+    btnSearch.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+    btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
     btnSearch.setText("Search");
     btnSearch.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -294,7 +296,7 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
         jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
     );
     jPanel2Layout.setVerticalGroup(
         jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

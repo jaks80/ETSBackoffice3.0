@@ -267,6 +267,9 @@ public class OtherServiceDlg extends JDialog implements ActionListener {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
+        progressBar.setMaximumSize(new java.awt.Dimension(146, 16));
+        progressBar.setMinimumSize(new java.awt.Dimension(146, 16));
+        progressBar.setPreferredSize(new java.awt.Dimension(146, 16));
         progressBar.setStringPainted(true);
 
         lblInfo.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -299,11 +302,11 @@ public class OtherServiceDlg extends JDialog implements ActionListener {
         jSeparator1.setEnabled(false);
 
         btnSave.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Save.png"))); // NOI18N
+        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save18.png"))); // NOI18N
         btnSave.setText("Save");
 
         btnClose.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exit.png"))); // NOI18N
+        btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exit18.png"))); // NOI18N
         btnClose.setText("Close");
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -340,7 +343,7 @@ public class OtherServiceDlg extends JDialog implements ActionListener {
                         .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnClose, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)))
+                        .addComponent(btnClose, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 

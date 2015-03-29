@@ -184,7 +184,7 @@ public class RestClientUtil {
             entity = (T) jaxbUnmarshaller.unmarshal(new StringReader(xml));
 
         } catch (JAXBException ex) {
-            ex.printStackTrace();
+            System.out.println("Exception: xmlToObject");
         }
         return entity;
     }

@@ -38,7 +38,7 @@ public class AppSettings  extends PersistentObject implements Serializable{
     @XmlElement
     private String oInvFooter;
     @XmlElement
-    private String mainAgentCode;
+    private String mainAgentID;
     @XmlElement
     private BigDecimal vatRate = new BigDecimal("0.00");
     @XmlElement
@@ -78,14 +78,6 @@ public class AppSettings  extends PersistentObject implements Serializable{
 
     public void setoInvFooter(String oInvFooter) {
         this.oInvFooter = oInvFooter;
-    }
-
-    public String getMainAgentCode() {
-        return mainAgentCode;
-    }
-
-    public void setMainAgentCode(String mainAgentCode) {
-        this.mainAgentCode = mainAgentCode;
     }
 
     public String getEmail() {
@@ -150,5 +142,13 @@ public class AppSettings  extends PersistentObject implements Serializable{
 
     public void setStarttls_enable(String starttls_enable) {
         this.starttls_enable = starttls_enable;
+    }
+
+    public String getMainAgentID() {
+        return mainAgentID;
+    }
+
+    public void setMainAgentID(String mainAgentID) {
+        this.mainAgentID = mainAgentID;
     }
 }

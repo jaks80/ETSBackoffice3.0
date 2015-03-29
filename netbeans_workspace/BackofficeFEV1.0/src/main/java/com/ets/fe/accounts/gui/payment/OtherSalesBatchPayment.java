@@ -57,19 +57,22 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
 
         CheckInput c = new CheckInput(CheckInput.FLOAT);
         c.setNegativeAccepted(true);
-        txtAmount.setDocument(c);       
+        txtAmount.setDocument(c);
         setPaymentType();
     }
 
     private void search() {
-        taskType = "SEARCH";
-        btnSearch.setEnabled(false);
         Long client_id = documentSearchComponent.getClient_id();
-        Date from = dtFrom.getDate();
-        Date to = dtTo.getDate();
-        task = new OtherDueInvoiceTask(Enums.AcDocType.INVOICE, Enums.ClientType.AGENT, client_id, from, to, progressBar, "OTHER");
-        task.addPropertyChangeListener(this);
-        task.execute();
+        if (client_id != null) {
+            taskType = "SEARCH";
+            btnSearch.setEnabled(false);
+
+            Date from = dtFrom.getDate();
+            Date to = dtTo.getDate();
+            task = new OtherDueInvoiceTask(Enums.AcDocType.INVOICE, Enums.ClientType.AGENT, client_id, from, to, progressBar, "OTHER");
+            task.addPropertyChangeListener(this);
+            task.execute();
+        }
     }
 
     public void processPayment() {
@@ -105,7 +108,7 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
                         doc.setReference(invoice.getReference());
                         doc.setType(Enums.AcDocType.PAYMENT);
                         doc.setStatus(Enums.AcDocStatus.ACTIVE);
-                        doc.setDocIssueDate(new java.util.Date());                        
+                        doc.setDocIssueDate(new java.util.Date());
                         doc.setCreatedBy(Application.getLoggedOnUser());
                         doc.setDocumentedAmount(newPayment.negate());//Payment saves as negative
                         doc.setParent(invoice);
@@ -151,8 +154,8 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
                 totalOther = totalOther.add(inv.calculateRelatedDocBalance());
                 totalPayment = totalPayment.add(inv.calculateTotalPayment());
                 totalDue = totalDue.add(inv.calculateDueAmount());
-                tableModel.insertRow(i, new Object[]{i + 1, DateUtil.dateToString(inv.getDocIssueDate()), inv.getReference(),inv.getRemark(),
-                    inv.getDocumentedAmount(),inv.calculateTotalPayment(), inv.calculateRelatedDocBalance(), inv.calculateDueAmount(), "", false});
+                tableModel.insertRow(i, new Object[]{i + 1, DateUtil.dateToString(inv.getDocIssueDate()), inv.getReference(), inv.getRemark(),
+                    inv.getDocumentedAmount(), inv.calculateTotalPayment(), inv.calculateRelatedDocBalance(), inv.calculateDueAmount(), "", false});
             }
         } else {
             tableModel.insertRow(0, new Object[]{"", "", "", "", "", "", "", "", "", "", false});
@@ -355,25 +358,40 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details.png"))); // NOI18N
+        btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
+        btnViewReport.setMaximumSize(new java.awt.Dimension(35, 22));
+        btnViewReport.setMinimumSize(new java.awt.Dimension(35, 22));
+        btnViewReport.setPreferredSize(new java.awt.Dimension(35, 22));
         btnViewReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnViewReportActionPerformed(evt);
             }
         });
 
-        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Invoice24.png"))); // NOI18N
+        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/acdoc18.png"))); // NOI18N
+        btnViewInvoice.setMaximumSize(new java.awt.Dimension(35, 22));
+        btnViewInvoice.setMinimumSize(new java.awt.Dimension(35, 22));
+        btnViewInvoice.setPreferredSize(new java.awt.Dimension(35, 22));
         btnViewInvoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnViewInvoiceActionPerformed(evt);
             }
         });
 
-        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
+        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
+        btnEmail.setMaximumSize(new java.awt.Dimension(35, 22));
+        btnEmail.setMinimumSize(new java.awt.Dimension(35, 22));
+        btnEmail.setPreferredSize(new java.awt.Dimension(35, 22));
 
-        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
+        btnPrint.setMaximumSize(new java.awt.Dimension(35, 22));
+        btnPrint.setMinimumSize(new java.awt.Dimension(35, 22));
+        btnPrint.setPreferredSize(new java.awt.Dimension(35, 22));
 
-        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search24.png"))); // NOI18N
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
+        btnSearch.setMaximumSize(new java.awt.Dimension(35, 22));
+        btnSearch.setMinimumSize(new java.awt.Dimension(35, 22));
+        btnSearch.setPreferredSize(new java.awt.Dimension(35, 22));
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchActionPerformed(evt);
@@ -385,15 +403,15 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(btnViewInvoice)
+                .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnViewReport)
+                .addComponent(btnViewReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnEmail)
+                .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnPrint)
+                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnSearch)
+                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(651, 651, 651))
         );
         jPanel1Layout.setVerticalGroup(
@@ -651,7 +669,7 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
         jPanel8.add(txtRef, gridBagConstraints);
 
         btnSubmitPayment.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        btnSubmitPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/payment24.png"))); // NOI18N
+        btnSubmitPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/payment18.png"))); // NOI18N
         btnSubmitPayment.setText("Submit");
         btnSubmitPayment.setPreferredSize(new java.awt.Dimension(135, 30));
         btnSubmitPayment.addActionListener(new java.awt.event.ActionListener() {
@@ -811,12 +829,12 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
     private javax.swing.JTextField txtRef;
     // End of variables declaration//GEN-END:variables
 
-    private void resetPaymentComponent(){
-     btnSubmitPayment.setEnabled(true);
-     cmbTType.setSelectedIndex(0);
-     txtAmount.setText("");
-     txtRef.setText("");
-     chkReverseEntry.setSelected(false);
+    private void resetPaymentComponent() {
+        btnSubmitPayment.setEnabled(true);
+        cmbTType.setSelectedIndex(0);
+        txtAmount.setText("");
+        txtRef.setText("");
+        chkReverseEntry.setSelected(false);
     }
 
     private void setPaymentType() {
@@ -848,19 +866,22 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    if (null != taskType) switch (taskType) {
-                        case "SEARCH":
-                            invoices = new ArrayList<>();
-                            List<AccountingDocument> list = task.get();
-                            for (AccountingDocument doc : list) {
-                                invoices.add((OtherSalesAcDoc) doc);
-                            }   populateTable();
-                            taskType = "";
-                            break;
-                        case "PAYMENT":
-                            resetPaymentComponent();
-                            search();
-                            break;
+                    if (null != taskType) {
+                        switch (taskType) {
+                            case "SEARCH":
+                                invoices = new ArrayList<>();
+                                List<AccountingDocument> list = task.get();
+                                for (AccountingDocument doc : list) {
+                                    invoices.add((OtherSalesAcDoc) doc);
+                                }
+                                populateTable();
+                                taskType = "";
+                                break;
+                            case "PAYMENT":
+                                resetPaymentComponent();
+                                search();
+                                break;
+                        }
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(OtherSalesBatchPayment.class.getName()).log(Level.SEVERE, null, ex);

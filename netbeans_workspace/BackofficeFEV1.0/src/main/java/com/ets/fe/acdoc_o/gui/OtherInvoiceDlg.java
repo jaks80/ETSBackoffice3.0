@@ -315,7 +315,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             }
         });
 
-        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
         btnPrint.setToolTipText("Print");
         btnPrint.setFocusable(false);
         btnPrint.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -326,7 +326,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             }
         });
 
-        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
+        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
         btnEmail.setToolTipText("Email Invoice");
         btnEmail.setFocusable(false);
         btnEmail.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -337,7 +337,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             }
         });
 
-        btnOfficeCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnOfficeCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
         btnOfficeCopy.setToolTipText("Print Office Copy");
         btnOfficeCopy.setFocusable(false);
         btnOfficeCopy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -604,7 +604,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         jPanel8.add(txtRef, gridBagConstraints);
 
         btnSubmitPayment.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        btnSubmitPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/payment24.png"))); // NOI18N
+        btnSubmitPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/payment18.png"))); // NOI18N
         btnSubmitPayment.setText("Submit");
         btnSubmitPayment.setPreferredSize(new java.awt.Dimension(135, 30));
         btnSubmitPayment.addActionListener(new java.awt.event.ActionListener() {
@@ -643,7 +643,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         jPanel8.add(lblTDueRefund, gridBagConstraints);
 
         jButton6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/credit24.png"))); // NOI18N
+        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/credit18.png"))); // NOI18N
         jButton6.setText("Apply Credit");
         jButton6.setPreferredSize(new java.awt.Dimension(135, 30));
         jButton6.addActionListener(new java.awt.event.ActionListener() {

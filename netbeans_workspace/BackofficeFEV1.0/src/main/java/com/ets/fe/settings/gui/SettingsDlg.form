@@ -49,7 +49,7 @@
                   <Component id="jPanel2" max="32767" attributes="0"/>
                   <Component id="jPanel1" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="7" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="lblInfo" min="-2" max="-2" attributes="0"/>
@@ -130,7 +130,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" pref="292" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" pref="298" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -181,7 +181,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane2" pref="292" max="32767" attributes="0"/>
+                          <Component id="jScrollPane2" pref="298" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -222,10 +222,16 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-                          <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="jLabel6" max="32767" attributes="0"/>
+                              <Component id="jLabel5" max="32767" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtVAT" min="-2" pref="95" max="-2" attributes="0"/>
-                          <EmptySpace pref="306" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="txtVAT" pref="95" max="32767" attributes="0"/>
+                              <Component id="txtMainAgentID" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="260" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -237,7 +243,12 @@
                               <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="txtVAT" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="255" max="32767" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtMainAgentID" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="223" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -252,6 +263,13 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="0.00"/>
                   </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="jLabel6">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Main Agent Code *"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="txtMainAgentID">
                 </Component>
               </SubComponents>
             </Container>
@@ -311,7 +329,7 @@
                               <Component id="txtPort" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="179" max="32767" attributes="0"/>
+                          <EmptySpace pref="185" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -357,7 +375,7 @@
           <Font name="Tahoma" size="11" style="1"/>
         </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/icons/Save.png"/>
+          <Image iconType="3" name="/icons/save18.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Save"/>
       </Properties>
@@ -368,10 +386,13 @@
           <Font name="Tahoma" size="11" style="1"/>
         </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/icons/exit.png"/>
+          <Image iconType="3" name="/icons/exit18.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Close"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCloseActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lblInfo">
       <Properties>

@@ -2,7 +2,7 @@ package com.ets.fe.a_main;
 
 import com.ets.fe.APIConfig;
 import com.ets.fe.Application;
-import com.ets.fe.a_maintask.LoginTask;
+import com.ets.fe.settings.task.LoginTask;
 import com.ets.fe.settings.model.User;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -117,6 +117,7 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
         jLabel2 = new javax.swing.JLabel();
         txtPWord = new javax.swing.JPasswordField();
         txtNewPassword = new javax.swing.JPasswordField();
+        lblMessage = new javax.swing.JLabel();
         lblBanner = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -176,7 +177,7 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 2, 0);
         jPanel1.add(txtUserName, gridBagConstraints);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -232,12 +233,24 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
         gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 0);
         jPanel1.add(txtNewPassword, gridBagConstraints);
 
+        lblMessage.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblMessage.setForeground(new java.awt.Color(255, 0, 0));
+        lblMessage.setText(" ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 2);
+        jPanel1.add(lblMessage, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.ipadx = 75;
-        gridBagConstraints.ipady = 31;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 15;
+        gridBagConstraints.ipady = 15;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(30, 190, 0, 0);
         getContentPane().add(jPanel1, gridBagConstraints);
@@ -246,8 +259,9 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         getContentPane().add(lblBanner, gridBagConstraints);
 
@@ -292,6 +306,7 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblBanner;
+    private javax.swing.JLabel lblMessage;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JPasswordField txtNewPassword;
     private javax.swing.JPasswordField txtPWord;
@@ -306,7 +321,7 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
             if (progress == 100) {
                 try {
                     User user = task.get();
-                    if (user != null) {
+                    if (user != null && user.getUserType()!=null) {
                         txtUserName.setText("");
                         txtPWord.setText("");
                         txtNewPassword.setText("");
@@ -319,6 +334,9 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
                             main.setVisible(true);
                         }
                         Application.loadSettings();
+                    }else{
+                     btnLogin.setEnabled(true);
+                     lblMessage.setText("Could not login...");
                     }
                 } catch (InterruptedException | ExecutionException ex) {
 

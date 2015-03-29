@@ -2,8 +2,8 @@ package com.ets.fe.acdoc.gui.comp;
 
 import com.ets.fe.client.collection.Agents;
 import com.ets.fe.client.collection.Customers;
-import com.ets.fe.client.gui.AgentSearchTask;
-import com.ets.fe.client.gui.CustomerSearchTask;
+import com.ets.fe.client.task.AgentSearchTask;
+import com.ets.fe.client.task.CustomerSearchTask;
 import com.ets.fe.client.model.Agent;
 import com.ets.fe.client.model.Customer;
 import com.ets.fe.util.Enums;

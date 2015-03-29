@@ -398,6 +398,7 @@ public class SalesTktdMemoDlg extends JDialog implements PropertyChangeListener 
         btnCreateDocument.setToolTipText("Create New Invoice");
         btnCreateDocument.setFocusable(false);
         btnCreateDocument.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCreateDocument.setPreferredSize(new java.awt.Dimension(51, 25));
         btnCreateDocument.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnCreateDocument.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -405,19 +406,19 @@ public class SalesTktdMemoDlg extends JDialog implements PropertyChangeListener 
             }
         });
 
-        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
         btnPrint.setToolTipText("Print");
         btnPrint.setFocusable(false);
         btnPrint.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnPrint.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
+        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
         btnEmail.setToolTipText("Email Invoice");
         btnEmail.setFocusable(false);
         btnEmail.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnEmail.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        btnOfficeCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnOfficeCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
         btnOfficeCopy.setToolTipText("Print Office Copy");
         btnOfficeCopy.setFocusable(false);
         btnOfficeCopy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -435,12 +436,12 @@ public class SalesTktdMemoDlg extends JDialog implements PropertyChangeListener 
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnCreateDocument)
-                .addGap(0, 0, 0)
+                .addComponent(btnCreateDocument, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
                 .addComponent(btnPrint)
-                .addGap(0, 0, 0)
+                .addGap(2, 2, 2)
                 .addComponent(btnEmail)
-                .addGap(0, 0, 0)
+                .addGap(2, 2, 2)
                 .addComponent(btnOfficeCopy))
         );
         jPanel7Layout.setVerticalGroup(

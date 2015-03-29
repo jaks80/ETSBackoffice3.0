@@ -2,7 +2,7 @@ package com.ets.fe.acdoc.task;
 
 import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc.ws.TicketingSAcDocWSClient;
-import com.ets.fe.client.gui.AgentSearchTask;
+import com.ets.fe.client.task.AgentSearchTask;
 import com.ets.fe.util.Enums;
 import java.util.Date;
 import java.util.logging.Level;

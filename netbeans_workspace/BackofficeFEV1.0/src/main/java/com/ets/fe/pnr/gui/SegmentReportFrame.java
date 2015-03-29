@@ -12,6 +12,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -23,11 +24,13 @@ import org.jdesktop.swingx.JXTable;
  */
 public class SegmentReportFrame extends JInternalFrame implements PropertyChangeListener {
 
+    private JDesktopPane desktopPane;
     SegmentReportTask task;
     List<Segment> list = new ArrayList<>();
 
-    public SegmentReportFrame() {
+    public SegmentReportFrame(JDesktopPane desktopPane) {
         initComponents();
+        this.desktopPane = desktopPane;
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
         dtTo.setDate(DateUtil.getEndOfMonth());
     }
@@ -233,6 +236,8 @@ public class SegmentReportFrame extends JInternalFrame implements PropertyChange
     gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel1.add(jLabel4, gridBagConstraints);
 
+    btnSearch.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+    btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
     btnSearch.setText("Search");
     btnSearch.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {

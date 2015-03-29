@@ -200,7 +200,7 @@ public class AirlineManagementDlg extends javax.swing.JDialog implements Propert
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         jPanel1.add(cmbCaclType, gridBagConstraints);
 
-        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Save.png"))); // NOI18N
+        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save18.png"))); // NOI18N
         btnSave.setToolTipText("Email Invoice");
         btnSave.setFocusable(false);
         btnSave.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -262,7 +262,7 @@ public class AirlineManagementDlg extends javax.swing.JDialog implements Propert
             .addGap(0, 25, Short.MAX_VALUE)
         );
 
-        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search16.png"))); // NOI18N
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
         btnSearch.setToolTipText("Create New Invoice");
         btnSearch.setFocusable(false);
         btnSearch.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -273,7 +273,7 @@ public class AirlineManagementDlg extends javax.swing.JDialog implements Propert
             }
         });
 
-        btnClose.setText("Close");
+        btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exit18.png"))); // NOI18N
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
@@ -300,7 +300,7 @@ public class AirlineManagementDlg extends javax.swing.JDialog implements Propert
                                 .addContainerGap())))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnClose)
                         .addContainerGap())))
         );
         layout.setVerticalGroup(

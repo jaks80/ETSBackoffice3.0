@@ -2,7 +2,7 @@ package com.ets.fe.accounts.task;
 
 import com.ets.fe.accounts.model.Payments;
 import com.ets.fe.accounts.ws.PaymentWSClient;
-import com.ets.fe.client.gui.AgentSearchTask;
+import com.ets.fe.client.task.AgentSearchTask;
 import com.ets.fe.util.Enums;
 import java.util.Date;
 import java.util.logging.Level;

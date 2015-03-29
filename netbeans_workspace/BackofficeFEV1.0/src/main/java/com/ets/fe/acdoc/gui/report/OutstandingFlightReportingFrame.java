@@ -150,35 +150,50 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details.png"))); // NOI18N
+        btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
+        btnViewReport.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnViewReport.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnViewReport.setPreferredSize(new java.awt.Dimension(40, 22));
         btnViewReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnViewReportActionPerformed(evt);
             }
         });
 
-        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Invoice24.png"))); // NOI18N
+        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/acdoc18.png"))); // NOI18N
+        btnViewInvoice.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnViewInvoice.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnViewInvoice.setPreferredSize(new java.awt.Dimension(40, 22));
         btnViewInvoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnViewInvoiceActionPerformed(evt);
             }
         });
 
-        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
+        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
+        btnEmail.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnEmail.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnEmail.setPreferredSize(new java.awt.Dimension(40, 22));
         btnEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEmailActionPerformed(evt);
             }
         });
 
-        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
+        btnPrint.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnPrint.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnPrint.setPreferredSize(new java.awt.Dimension(40, 22));
         btnPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintActionPerformed(evt);
             }
         });
 
-        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search24.png"))); // NOI18N
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
+        btnSearch.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnSearch.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnSearch.setPreferredSize(new java.awt.Dimension(40, 22));
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchActionPerformed(evt);
@@ -190,15 +205,15 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(btnViewInvoice)
+                .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnViewReport)
+                .addComponent(btnViewReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnEmail)
+                .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnPrint)
+                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnSearch)
+                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(651, 651, 651))
         );
         jPanel1Layout.setVerticalGroup(
@@ -419,7 +434,7 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 851, Short.MAX_VALUE)
+            .addGap(0, 725, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

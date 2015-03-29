@@ -1,6 +1,6 @@
 package com.ets.fe.a_maintask;
 
-import com.ets.fe.client.gui.AgentSearchTask;
+import com.ets.fe.client.task.AgentSearchTask;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.ws.PnrWSClient;
 import java.util.logging.Level;

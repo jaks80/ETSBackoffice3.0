@@ -1,6 +1,6 @@
 package com.ets.fe.pnr.task;
 
-import com.ets.fe.client.gui.AgentSearchTask;
+import com.ets.fe.client.task.AgentSearchTask;
 import com.ets.fe.pnr.model.Airline;
 import java.util.logging.Level;
 import java.util.logging.Logger;

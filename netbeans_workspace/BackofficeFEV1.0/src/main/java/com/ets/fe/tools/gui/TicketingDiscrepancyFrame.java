@@ -50,40 +50,55 @@ public class TicketingDiscrepancyFrame extends javax.swing.JInternalFrame implem
         setMaximizable(true);
         setResizable(true);
         setTitle("Ticketing Discrepancy Analysis");
+        setMaximumSize(new java.awt.Dimension(40, 22));
+        setMinimumSize(new java.awt.Dimension(40, 22));
+        setPreferredSize(new java.awt.Dimension(40, 22));
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details.png"))); // NOI18N
+        btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
+        btnViewReport.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnViewReport.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnViewReport.setPreferredSize(new java.awt.Dimension(40, 22));
         btnViewReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnViewReportActionPerformed(evt);
             }
         });
 
-        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Invoice24.png"))); // NOI18N
+        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/acdoc18.png"))); // NOI18N
+        btnViewInvoice.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnViewInvoice.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnViewInvoice.setPreferredSize(new java.awt.Dimension(40, 22));
         btnViewInvoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnViewInvoiceActionPerformed(evt);
             }
         });
 
-        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
+        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
+        btnEmail.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnEmail.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnEmail.setPreferredSize(new java.awt.Dimension(40, 22));
 
-        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
+        btnPrint.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnPrint.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnPrint.setPreferredSize(new java.awt.Dimension(40, 22));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(btnViewInvoice)
+                .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnViewReport)
+                .addComponent(btnViewReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnEmail)
+                .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnPrint)
+                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(710, 710, 710))
         );
         jPanel1Layout.setVerticalGroup(

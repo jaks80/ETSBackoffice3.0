@@ -9,14 +9,10 @@ import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.client.gui.AgentFrame;
-import com.ets.fe.client.model.Contactable;
-import com.ets.fe.client.model.MainAgent;
+import com.ets.fe.client.model.*;
 import com.ets.fe.pnr.task.SavePnrTask;
 import com.ets.fe.pnr.model.*;
-import com.ets.fe.util.DateUtil;
-import com.ets.fe.util.DocumentSizeFilter;
-import com.ets.fe.util.Enums;
-import com.ets.fe.util.PnrUtil;
+import com.ets.fe.util.*;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Window;
@@ -43,7 +39,10 @@ import javax.swing.text.AbstractDocument;
 public class PnrPanel extends JPanel implements PropertyChangeListener, ComponentListener {
 
     final DashBoardFrame parent;
+
     private boolean editable = true;
+    private boolean saveNeeded = false;
+
     private Pnr pnr;
     private final Long pnrId;
     private List<Itinerary> segments;
@@ -58,35 +57,23 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         this.pnrId = pnrId;
         initComponents();
         AbstractDocument doc;
-//      doc = (AbstractDocument) txtBookingOID.getDocument();
-//      doc.setDocumentFilter(new DocumentSizeFilter(6));
-//      doc = (AbstractDocument) txtTicketingOID.getDocument();
-//      doc.setDocumentFilter(new DocumentSizeFilter(6));
+        doc = (AbstractDocument) txtBookingOID.getDocument();
+        doc.setDocumentFilter(new DocumentSizeFilter(9));
+        doc = (AbstractDocument) txtTicketingOID.getDocument();
+        doc.setDocumentFilter(new DocumentSizeFilter(9));
         doc = (AbstractDocument) txtAirline.getDocument();
         doc.setDocumentFilter(new DocumentSizeFilter(3));
 
         mainSplitPane.addComponentListener(this);
-        completePnrTask = new CompletePnrTask(pnrId, progressBar);
-        completePnrTask.addPropertyChangeListener(this);
-        completePnrTask.execute();
-        callAccountingDocs();
+        loadCompletePnr();
+    }
+
+    public void setSaveNeeded(boolean value) {
+        saveNeeded = value;
     }
 
     private void callAccountingDocs() {
         accountingDocumentsComponent.search(pnrId);
-    }
-
-    private void savePnr() {
-        btnSave.setEnabled(false);
-        pnr.setAgent(clientComponent.getAgent());
-        pnr.setCustomer(clientComponent.getCustomer());
-
-        if (pnr.getBookingAgtOid() != null || !pnr.getBookingAgtOid().isEmpty()) {
-            this.pnr.setTickets(ticketComponent.getTickets());
-            savePnrTask = new SavePnrTask(pnr, progressBar);
-            savePnrTask.addPropertyChangeListener(this);
-            savePnrTask.execute();
-        }
     }
 
     private void populatePnr() {
@@ -99,6 +86,12 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         txtAirline.setText(pnr.getAirLineCode());
         txtTotalPsgr.setText(pnr.getNoOfPax().toString());
         dtBookingDate.setDate(pnr.getPnrCreationDate());
+        dtCanceldate.setDate(pnr.getPnrCancellationDate());
+        if (pnr.getTicketingAgtOid() != null && !pnr.getTicketingAgtOid().isEmpty()) {
+            dtCanceldate.setEnabled(true);
+        } else {
+            dtCanceldate.setEnabled(false);
+        }
     }
 
     private void populateTblItinerary() {
@@ -158,99 +151,59 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         ticketingAgentComponent.setTicketingAgent(pnr);
     }
 
+    private void savePnr() {
+        btnSave.setEnabled(false);
+        pnr.setAgent(clientComponent.getAgent());
+        pnr.setCustomer(clientComponent.getCustomer());
+        pnr.setPnrCreationDate(dtBookingDate.getDate());
+        pnr.setBookingAgtOid(txtBookingOID.getText().trim());
+        pnr.setTicketingAgtOid(txtTicketingOID.getText().trim());
+        pnr.setAirLineCode(txtAirline.getText().trim());
+
+        pnr.setPnrCancellationDate(dtCanceldate.getDate());
+        if (pnr.getBookingAgtOid() != null || !pnr.getBookingAgtOid().isEmpty()) {
+            this.pnr.setTickets(ticketComponent.getTickets());
+            this.taskType = "SAVE";
+            savePnrTask = new SavePnrTask(pnr, progressBar);
+            savePnrTask.addPropertyChangeListener(this);
+            savePnrTask.execute();
+        }
+    }
+
+    private void updateSavingStatus(boolean status) {
+        ticketingAgentComponent.setSaveNeeded(status);
+        clientComponent.setSaveNeeded(status);
+        ticketComponent.setSaveNeeded(status);
+        setSaveNeeded(status);
+
+    }
+
+    /**
+     * Save it before creating invoice. Just incase user forget to call save.
+     * Saving is a different task. A loop is used to check of its done.
+     */
     public void newTSalesAcDocumentTask() {
         btnCreateInvoice.setEnabled(false);
-        if (AcDocUtil.validateSellingFare(pnr.getTickets()) && AcDocUtil.validateContactable(pnr)) {
+
+        if (ticketingAgentComponent.isSaveNeeded()
+                || clientComponent.isSaveNeeded()
+                || ticketComponent.isSaveNeeded()
+                || saveNeeded) {
+            savePnr();
+            while (savePnrTask.isDone() == false) {
+                try {
+                    Thread.sleep(300);
+                    //wait untill save worker is done.
+                } catch (InterruptedException ex) {}
+            }
+            savePnrTask.removePropertyChangeListener(this);
+        }
+        
+        if (AcDocUtil.validateSellingFare(pnr.getTickets()) && AcDocUtil.validateContactable(pnr)) {           
             this.taskType = "AC_DOCUMENT";
             newTSalesDocumentTask = new NewTSalesDocumentTask(pnrId, progressBar);
             newTSalesDocumentTask.addPropertyChangeListener(this);
             newTSalesDocumentTask.execute();
-        }
-    }
-
-    public void showTSalesInvoiceDlg(TicketingSalesAcDoc acdoc) {
-        Window w = SwingUtilities.getWindowAncestor(this);
-        Frame owner = w instanceof Frame ? (Frame) w : null;
-
-        SalesInvoiceDlg dlg = new SalesInvoiceDlg(owner);
-        dlg.setLocationRelativeTo(this);
-        if (dlg.showDialog(acdoc)) {
-            //callAccountingDocs();
-            loadCompletePnr();
-        }
-    }
-
-    public void showTSalesAcDocDlg(TicketingSalesAcDoc acdoc) {
-        Window w = SwingUtilities.getWindowAncestor(this);
-        Frame owner = w instanceof Frame ? (Frame) w : null;
-
-        SalesTktdMemoDlg dlg = new SalesTktdMemoDlg(owner);
-        dlg.setLocationRelativeTo(this);
-        if (dlg.showDialog(acdoc)) {
-            //callAccountingDocs();
-            loadCompletePnr();
-        }
-    }
-
-    public void showSalesAcDocDlg(TicketingSalesAcDoc acdoc) {
-        Window w = SwingUtilities.getWindowAncestor(this);
-        Frame owner = w instanceof Frame ? (Frame) w : null;
-
-        if (acdoc.getId() == null) {
-            TicketingSalesAcDoc invoice = accountingDocumentsComponent.getSalesSummeryInvoice();
-            acdoc.setPnr(pnr);
-            acdoc.setReference(invoice.getReference());
-            acdoc.setParent(invoice);
-            acdoc.setDocIssueDate(new java.util.Date());
-        }
-        SalesAcDocumentDlg dlg = new SalesAcDocumentDlg(owner);
-        dlg.setLocationRelativeTo(this);
-        if (dlg.showDialog(acdoc)) {
-            //callAccountingDocs();
-            loadCompletePnr();
-        }
-    }
-
-    public void showTPurchaseInvoiceDlg(TicketingPurchaseAcDoc acdoc) {
-        Window w = SwingUtilities.getWindowAncestor(this);
-        Frame owner = w instanceof Frame ? (Frame) w : null;
-
-        PurchaseInvoiceDlg dlg = new PurchaseInvoiceDlg(owner);
-        dlg.setLocationRelativeTo(this);
-        if (dlg.showDialog(acdoc)) {
-            //callAccountingDocs();
-            loadCompletePnr();
-        }
-    }
-
-    public void showTPurchaseAcDocDlg(TicketingPurchaseAcDoc acdoc) {
-        Window w = SwingUtilities.getWindowAncestor(this);
-        Frame owner = w instanceof Frame ? (Frame) w : null;
-
-        PurchaseTktdMemoDlg dlg = new PurchaseTktdMemoDlg(owner);
-        dlg.setLocationRelativeTo(this);
-        if (dlg.showDialog(acdoc)) {
-            //callAccountingDocs();
-            loadCompletePnr();
-        }
-    }
-
-    public void showPurchaseAcDocDlg(TicketingPurchaseAcDoc acdoc) {
-        Window w = SwingUtilities.getWindowAncestor(this);
-        Frame owner = w instanceof Frame ? (Frame) w : null;
-
-        if (acdoc.getId() == null) {
-            TicketingPurchaseAcDoc invoice = accountingDocumentsComponent.getPurchaseSummeryInvoice();
-            acdoc.setPnr(pnr);
-            acdoc.setReference(invoice.getReference());
-            acdoc.setParent(invoice);
-            acdoc.setDocIssueDate(new java.util.Date());
-        }
-        PurchaseAcDocumentDlg dlg = new PurchaseAcDocumentDlg(owner);
-        dlg.setLocationRelativeTo(this);
-        if (dlg.showDialog(acdoc)) {
-            //callAccountingDocs();
-            loadCompletePnr();
         }
     }
 
@@ -272,7 +225,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         java.awt.GridBagConstraints gridBagConstraints;
 
         CommandPanel = new javax.swing.JPanel();
-        jButton10 = new javax.swing.JButton();
+        btnNewDoc = new javax.swing.JButton();
         btnCreateInvoice = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
@@ -299,6 +252,8 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         dtBookingDate = new org.jdesktop.swingx.JXDatePicker();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtPnr = new javax.swing.JTextArea();
+        jLabel8 = new javax.swing.JLabel();
+        dtCanceldate = new org.jdesktop.swingx.JXDatePicker();
         accountingDocumentsComponent = new AccountingDocumentsComponent(this);
         TicketPanel = new javax.swing.JPanel();
         tabsTicket = new javax.swing.JTabbedPane();
@@ -310,11 +265,6 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         tblItinerrary = new org.jdesktop.swingx.JXTable();
         jPanel5 = new javax.swing.JPanel();
         remarkComponent = new com.ets.fe.a_main.RemarkComponent();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         clientComponent = new com.ets.fe.a_main.ClientSearchComponent();
         ticketingAgentComponent = new com.ets.fe.a_main.TicketingAgentComponent();
@@ -323,19 +273,25 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         CommandPanel.setBackground(new java.awt.Color(102, 102, 102));
         CommandPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         CommandPanel.setPreferredSize(new java.awt.Dimension(441, 35));
-        CommandPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 2, 2));
+        java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 3, 1);
+        flowLayout1.setAlignOnBaseline(true);
+        CommandPanel.setLayout(flowLayout1);
 
-        jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/SCNote24.png"))); // NOI18N
-        jButton10.setPreferredSize(new java.awt.Dimension(57, 25));
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        btnNewDoc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newdoc18.png"))); // NOI18N
+        btnNewDoc.setMaximumSize(new java.awt.Dimension(45, 22));
+        btnNewDoc.setMinimumSize(new java.awt.Dimension(45, 22));
+        btnNewDoc.setPreferredSize(new java.awt.Dimension(45, 22));
+        btnNewDoc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                btnNewDocActionPerformed(evt);
             }
         });
-        CommandPanel.add(jButton10);
+        CommandPanel.add(btnNewDoc);
 
-        btnCreateInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/STInv24.png"))); // NOI18N
-        btnCreateInvoice.setPreferredSize(new java.awt.Dimension(57, 25));
+        btnCreateInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/tinv18.png"))); // NOI18N
+        btnCreateInvoice.setMaximumSize(new java.awt.Dimension(45, 22));
+        btnCreateInvoice.setMinimumSize(new java.awt.Dimension(45, 22));
+        btnCreateInvoice.setPreferredSize(new java.awt.Dimension(45, 22));
         btnCreateInvoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCreateInvoiceActionPerformed(evt);
@@ -343,8 +299,10 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         });
         CommandPanel.add(btnCreateInvoice);
 
-        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh24.png"))); // NOI18N
-        btnRefresh.setPreferredSize(new java.awt.Dimension(57, 25));
+        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh18.png"))); // NOI18N
+        btnRefresh.setMaximumSize(new java.awt.Dimension(45, 22));
+        btnRefresh.setMinimumSize(new java.awt.Dimension(45, 22));
+        btnRefresh.setPreferredSize(new java.awt.Dimension(45, 22));
         btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRefreshActionPerformed(evt);
@@ -352,8 +310,10 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         });
         CommandPanel.add(btnRefresh);
 
-        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save24.png"))); // NOI18N
-        btnSave.setPreferredSize(new java.awt.Dimension(57, 25));
+        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save18.png"))); // NOI18N
+        btnSave.setMaximumSize(new java.awt.Dimension(45, 22));
+        btnSave.setMinimumSize(new java.awt.Dimension(45, 22));
+        btnSave.setPreferredSize(new java.awt.Dimension(45, 22));
         btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
@@ -361,8 +321,10 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         });
         CommandPanel.add(btnSave);
 
-        btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exit24.png"))); // NOI18N
-        btnClose.setPreferredSize(new java.awt.Dimension(57, 25));
+        btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exit18.png"))); // NOI18N
+        btnClose.setMaximumSize(new java.awt.Dimension(45, 22));
+        btnClose.setMinimumSize(new java.awt.Dimension(45, 22));
+        btnClose.setPreferredSize(new java.awt.Dimension(45, 22));
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
@@ -565,14 +527,35 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         PnrPanel.add(jScrollPane1, gridBagConstraints);
 
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel8.setText("Cancel Date");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        PnrPanel.add(jLabel8, gridBagConstraints);
+
+        dtCanceldate.setPreferredSize(new java.awt.Dimension(108, 21));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 2, 2);
+        PnrPanel.add(dtCanceldate, gridBagConstraints);
+
         javax.swing.GroupLayout TopPanelLayout = new javax.swing.GroupLayout(TopPanel);
         TopPanel.setLayout(TopPanelLayout);
         TopPanelLayout.setHorizontalGroup(
             TopPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(TopPanelLayout.createSequentialGroup()
                 .addComponent(PnrPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(accountingDocumentsComponent, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE))
+                .addGap(2, 2, 2)
+                .addComponent(accountingDocumentsComponent, javax.swing.GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE))
         );
         TopPanelLayout.setVerticalGroup(
             TopPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -631,7 +614,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 934, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 972, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -651,7 +634,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(remarkComponent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(310, Short.MAX_VALUE))
+                .addContainerGap(348, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -663,53 +646,17 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
 
         tabsTicket.addTab("Remarks", jPanel5);
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refund.png"))); // NOI18N
-        jButton1.setPreferredSize(new java.awt.Dimension(55, 30));
-
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/void24.png"))); // NOI18N
-        jButton3.setPreferredSize(new java.awt.Dimension(55, 30));
-
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/plus24.png"))); // NOI18N
-        jButton4.setPreferredSize(new java.awt.Dimension(55, 30));
-
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete.png"))); // NOI18N
-        jButton5.setPreferredSize(new java.awt.Dimension(55, 30));
-
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details.png"))); // NOI18N
-        jButton6.setPreferredSize(new java.awt.Dimension(55, 30));
-
         javax.swing.GroupLayout TicketPanelLayout = new javax.swing.GroupLayout(TicketPanel);
         TicketPanel.setLayout(TicketPanelLayout);
         TicketPanelLayout.setHorizontalGroup(
             TicketPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(TicketPanelLayout.createSequentialGroup()
-                .addGap(2, 2, 2)
-                .addGroup(TicketPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabsTicket))
+            .addComponent(tabsTicket, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         TicketPanelLayout.setVerticalGroup(
             TicketPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(TicketPanelLayout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addGroup(TicketPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(TicketPanelLayout.createSequentialGroup()
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addComponent(tabsTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                .addComponent(tabsTicket, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE))
         );
 
         innerSplitPane.setRightComponent(TicketPanel);
@@ -726,15 +673,15 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 0.3;
+        gridBagConstraints.weighty = 0.5;
         jPanel2.add(clientComponent, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 0.3;
+        gridBagConstraints.weighty = 0.5;
         jPanel2.add(ticketingAgentComponent, gridBagConstraints);
 
         progressBar.setMinimumSize(new java.awt.Dimension(150, 17));
@@ -743,9 +690,8 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHEAST;
-        gridBagConstraints.weighty = 0.3;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 2);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
+        gridBagConstraints.insets = new java.awt.Insets(4, 0, 2, 2);
         jPanel2.add(progressBar, gridBagConstraints);
 
         mainSplitPane.setRightComponent(jPanel2);
@@ -760,7 +706,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(CommandPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(CommandPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(mainSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE))
         );
@@ -794,13 +740,13 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         this.pnr.setAirLineCode(checkValue(txtAirline, pnr.getAirLineCode()));
     }//GEN-LAST:event_txtAirlineFocusLost
 
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        if(accountingDocumentsComponent.getSelectedTab()==0){
-        showSalesAcDocDlg(new TicketingSalesAcDoc());
-        }else{
+    private void btnNewDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewDocActionPerformed
+        if (accountingDocumentsComponent.getSelectedTab() == 0) {
+            showSalesAcDocDlg(new TicketingSalesAcDoc());
+        } else {
             showPurchaseAcDocDlg(new TicketingPurchaseAcDoc());
         }
-    }//GEN-LAST:event_jButton10ActionPerformed
+    }//GEN-LAST:event_btnNewDocActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -811,17 +757,13 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
     private com.ets.fe.acdoc.gui.comp.AccountingDocumentsComponent accountingDocumentsComponent;
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnCreateInvoice;
+    private javax.swing.JButton btnNewDoc;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSave;
     private com.ets.fe.a_main.ClientSearchComponent clientComponent;
     private org.jdesktop.swingx.JXDatePicker dtBookingDate;
+    private org.jdesktop.swingx.JXDatePicker dtCanceldate;
     private javax.swing.JSplitPane innerSplitPane;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -829,6 +771,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -862,7 +805,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
                 try {
                     if ("AC_DOCUMENT".equals(taskType)) {
                         TicketingSalesAcDoc draftDocument = newTSalesDocumentTask.get();
-
+                        System.out.println("asdad");
                         if (draftDocument != null) {
                             if (draftDocument.getType().equals(Enums.AcDocType.INVOICE)) {
                                 showTSalesInvoiceDlg(draftDocument);
@@ -885,7 +828,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(AgentFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
-                    //btnSave.setEnabled(true);
+                    updateSavingStatus(false);
                     this.taskType = "";
                 }
             }
@@ -920,11 +863,91 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         }
     };
 
+    public void showTSalesInvoiceDlg(TicketingSalesAcDoc acdoc) {
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+
+        SalesInvoiceDlg dlg = new SalesInvoiceDlg(owner);
+        dlg.setLocationRelativeTo(this);
+        if (dlg.showDialog(acdoc)) {
+            loadCompletePnr();
+        }
+    }
+
+    public void showTSalesAcDocDlg(TicketingSalesAcDoc acdoc) {
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+
+        SalesTktdMemoDlg dlg = new SalesTktdMemoDlg(owner);
+        dlg.setLocationRelativeTo(this);
+        if (dlg.showDialog(acdoc)) {
+            loadCompletePnr();
+        }
+    }
+
+    public void showSalesAcDocDlg(TicketingSalesAcDoc acdoc) {
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+
+        if (acdoc.getId() == null) {
+            TicketingSalesAcDoc invoice = accountingDocumentsComponent.getSalesSummeryInvoice();
+            acdoc.setPnr(pnr);
+            acdoc.setReference(invoice.getReference());
+            acdoc.setParent(invoice);
+            acdoc.setDocIssueDate(new java.util.Date());
+        }
+        SalesAcDocumentDlg dlg = new SalesAcDocumentDlg(owner);
+        dlg.setLocationRelativeTo(this);
+        if (dlg.showDialog(acdoc)) {
+            loadCompletePnr();
+        }
+    }
+
+    public void showTPurchaseInvoiceDlg(TicketingPurchaseAcDoc acdoc) {
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+
+        PurchaseInvoiceDlg dlg = new PurchaseInvoiceDlg(owner);
+        dlg.setLocationRelativeTo(this);
+        if (dlg.showDialog(acdoc)) {
+            loadCompletePnr();
+        }
+    }
+
+    public void showTPurchaseAcDocDlg(TicketingPurchaseAcDoc acdoc) {
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+
+        PurchaseTktdMemoDlg dlg = new PurchaseTktdMemoDlg(owner);
+        dlg.setLocationRelativeTo(this);
+        if (dlg.showDialog(acdoc)) {
+            loadCompletePnr();
+        }
+    }
+
+    public void showPurchaseAcDocDlg(TicketingPurchaseAcDoc acdoc) {
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+
+        if (acdoc.getId() == null) {
+            TicketingPurchaseAcDoc invoice = accountingDocumentsComponent.getPurchaseSummeryInvoice();
+            acdoc.setPnr(pnr);
+            acdoc.setReference(invoice.getReference());
+            acdoc.setParent(invoice);
+            acdoc.setDocIssueDate(new java.util.Date());
+        }
+        PurchaseAcDocumentDlg dlg = new PurchaseAcDocumentDlg(owner);
+        dlg.setLocationRelativeTo(this);
+        if (dlg.showDialog(acdoc)) {
+            //callAccountingDocs();
+            loadCompletePnr();
+        }
+    }
+
     @Override
     public void componentResized(ComponentEvent e) {
         int width = getWidth();
         int rightPanelRatio = 83;
-
         mainSplitPane.setDividerLocation(width * rightPanelRatio / 100);
     }
 

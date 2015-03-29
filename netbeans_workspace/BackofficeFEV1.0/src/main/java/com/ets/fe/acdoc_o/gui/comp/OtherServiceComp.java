@@ -196,7 +196,9 @@ public class OtherServiceComp extends javax.swing.JPanel implements PropertyChan
 
         btnRemoveItem.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnRemoveItem.setForeground(new java.awt.Color(255, 0, 0));
-        btnRemoveItem.setText("X");
+        btnRemoveItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete18.png"))); // NOI18N
+        btnRemoveItem.setToolTipText("Remove Item");
+        btnRemoveItem.setPreferredSize(new java.awt.Dimension(25, 25));
         btnRemoveItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoveItemActionPerformed(evt);
@@ -208,13 +210,14 @@ public class OtherServiceComp extends javax.swing.JPanel implements PropertyChan
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 638, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 650, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(btnRemoveItem, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btnRemoveItem, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
             .addComponent(btnRemoveItem, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents

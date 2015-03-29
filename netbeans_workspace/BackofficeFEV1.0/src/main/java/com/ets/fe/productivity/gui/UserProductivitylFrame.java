@@ -113,9 +113,15 @@ public class UserProductivitylFrame extends javax.swing.JInternalFrame implement
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
+        btnPrint.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnPrint.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnPrint.setPreferredSize(new java.awt.Dimension(40, 22));
 
-        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search24.png"))); // NOI18N
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
+        btnSearch.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnSearch.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnSearch.setPreferredSize(new java.awt.Dimension(40, 22));
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchActionPerformed(evt);
@@ -127,9 +133,9 @@ public class UserProductivitylFrame extends javax.swing.JInternalFrame implement
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(btnPrint)
+                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnSearch)
+                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 644, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(

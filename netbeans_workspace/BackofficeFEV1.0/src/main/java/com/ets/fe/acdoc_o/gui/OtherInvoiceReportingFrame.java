@@ -41,9 +41,9 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
     private AccountingDocTaskOther accountingDocTask;
     private String taskType;
     private InvoiceReportOther report;
-    
+
     private List<OtherInvoiceSummery> invoices;
-    
+
     private Enums.AcDocType doc_type;
     public static Enums.ClientType client_type;
     private Long client_id;
@@ -196,6 +196,8 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         btnSearch = new javax.swing.JButton();
         btnVoid = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        btnNewInvoice = new javax.swing.JButton();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
         documentSearchComponent = new com.ets.fe.acdoc.gui.comp.ClientSearchComp(true,true,true,Enums.AgentType.ALL);
         jSeparator2 = new javax.swing.JSeparator();
         jPanel2 = new javax.swing.JPanel();
@@ -287,52 +289,83 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details.png"))); // NOI18N
+        btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
+        btnViewReport.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnViewReport.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnViewReport.setPreferredSize(new java.awt.Dimension(40, 22));
         btnViewReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnViewReportActionPerformed(evt);
             }
         });
 
-        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Invoice24.png"))); // NOI18N
+        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/acdoc18.png"))); // NOI18N
+        btnViewInvoice.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnViewInvoice.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnViewInvoice.setPreferredSize(new java.awt.Dimension(40, 22));
         btnViewInvoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnViewInvoiceActionPerformed(evt);
             }
         });
 
-        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email24.png"))); // NOI18N
+        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
+        btnEmail.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnEmail.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnEmail.setPreferredSize(new java.awt.Dimension(40, 22));
         btnEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEmailActionPerformed(evt);
             }
         });
 
-        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print24.png"))); // NOI18N
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
+        btnPrint.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnPrint.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnPrint.setPreferredSize(new java.awt.Dimension(40, 22));
         btnPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintActionPerformed(evt);
             }
         });
 
-        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search24.png"))); // NOI18N
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
+        btnSearch.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnSearch.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnSearch.setPreferredSize(new java.awt.Dimension(40, 22));
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchActionPerformed(evt);
             }
         });
 
-        btnVoid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/void24.png"))); // NOI18N
+        btnVoid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/void18-1.png"))); // NOI18N
+        btnVoid.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnVoid.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnVoid.setPreferredSize(new java.awt.Dimension(40, 22));
         btnVoid.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVoidActionPerformed(evt);
             }
         });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/STCrn24.png"))); // NOI18N
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newdoc18.png"))); // NOI18N
+        jButton2.setMaximumSize(new java.awt.Dimension(40, 22));
+        jButton2.setMinimumSize(new java.awt.Dimension(40, 22));
+        jButton2.setPreferredSize(new java.awt.Dimension(40, 22));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
+            }
+        });
+
+        btnNewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/onewinv18.png"))); // NOI18N
+        btnNewInvoice.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnNewInvoice.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnNewInvoice.setPreferredSize(new java.awt.Dimension(40, 22));
+        btnNewInvoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewInvoiceActionPerformed(evt);
             }
         });
 
@@ -341,29 +374,42 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(btnViewInvoice)
+                .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnViewReport)
+                .addComponent(btnViewReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnEmail)
+                .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnPrint)
+                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnSearch)
-                .addGap(563, 563, 563)
-                .addComponent(jButton2)
+                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(564, 564, 564)
+                .addComponent(filler1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnNewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnViewReport, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnVoid, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(filler1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnViewInvoice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(btnEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(btnPrint, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(btnViewReport, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(btnNewInvoice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
@@ -627,7 +673,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -681,9 +727,17 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         report.otherInvoiceReport(doc_type, client_type, client_id, from, to, "PRINT");
     }//GEN-LAST:event_btnPrintActionPerformed
 
+    private void btnNewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewInvoiceActionPerformed
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+        OtherInvoiceDlg dlg = new OtherInvoiceDlg(owner);
+        dlg.showDialog(null);
+    }//GEN-LAST:event_btnNewInvoiceActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEmail;
+    private javax.swing.JButton btnNewInvoice;
     private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnViewInvoice;
@@ -693,6 +747,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
     private com.ets.fe.acdoc.gui.comp.ClientSearchComp documentSearchComponent;
     private org.jdesktop.swingx.JXDatePicker dtFrom;
     private org.jdesktop.swingx.JXDatePicker dtTo;
+    private javax.swing.Box.Filler filler1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

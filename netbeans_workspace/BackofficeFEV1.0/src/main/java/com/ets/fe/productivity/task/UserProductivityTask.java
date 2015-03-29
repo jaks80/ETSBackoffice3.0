@@ -2,7 +2,7 @@ package com.ets.fe.productivity.task;
 
 import com.ets.fe.acdoc.ws.TicketingSAcDocWSClient;
 import com.ets.fe.acdoc_o.ws.OtherSAcDocWSClient;
-import com.ets.fe.client.gui.AgentSearchTask;
+import com.ets.fe.client.task.AgentSearchTask;
 import com.ets.fe.productivity.model.UserProductivityReport;
 import com.ets.fe.util.Enums;
 import java.util.ArrayList;

@@ -1,9 +1,12 @@
 package com.ets.fe.client.gui;
 
+import com.ets.fe.client.task.CustomerSearchTask;
+import com.ets.fe.client.task.CustomerTask;
 import com.ets.fe.client.collection.Customers;
 import com.ets.fe.client.model.Customer;
 import java.awt.Frame;
 import java.awt.Window;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -99,17 +102,20 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
         txtPostCode = new javax.swing.JTextField();
         txtTelNo = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCustomer = new org.jdesktop.swingx.JXTable();
-        btnEdit = new javax.swing.JButton();
-        btnReport = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
         btnNew = new javax.swing.JButton();
+        btnEmail = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnPrint = new javax.swing.JButton();
 
         setClosable(true);
-        setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
         setTitle("Customer Management");
+        setPreferredSize(new java.awt.Dimension(1000, 450));
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel3.setMaximumSize(new java.awt.Dimension(32767, 30));
@@ -150,6 +156,7 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
 
         jLabel1.setText("Name");
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
@@ -159,6 +166,7 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 2);
@@ -168,35 +176,58 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 2);
         jPanel1.add(jLabel5, gridBagConstraints);
 
         txtName.setToolTipText("Surname / ForeName(s)");
+        txtName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNameKeyReleased(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtName, gridBagConstraints);
+
+        txtPostCode.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPostCodeKeyReleased(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtPostCode, gridBagConstraints);
+
+        txtTelNo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTelNoKeyReleased(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtTelNo, gridBagConstraints);
 
+        btnSearch.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
         btnSearch.setText("Search");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -204,11 +235,13 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
         jPanel1.add(btnSearch, gridBagConstraints);
+
+        jTabbedPane1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
 
         tblCustomer.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -239,60 +272,87 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
             tblCustomer.getColumnModel().getColumn(6).setResizable(false);
         }
 
-        btnEdit.setText("Edit");
-        btnEdit.setPreferredSize(new java.awt.Dimension(60, 23));
-        btnEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditActionPerformed(evt);
-            }
-        });
+        jTabbedPane1.addTab("Customer List", jScrollPane1);
 
-        btnReport.setText("Report");
-        btnReport.setPreferredSize(new java.awt.Dimension(60, 23));
+        jPanel2.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        btnNew.setText("New");
+        btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newClient18.png"))); // NOI18N
+        btnNew.setToolTipText("New Agent");
+        btnNew.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnNew.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnNew.setPreferredSize(new java.awt.Dimension(40, 22));
         btnNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNewActionPerformed(evt);
             }
         });
 
+        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
+        btnEmail.setToolTipText("Send Email");
+        btnEmail.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnEmail.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnEmail.setPreferredSize(new java.awt.Dimension(40, 22));
+
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit18.png"))); // NOI18N
+        btnEdit.setToolTipText("Edit");
+        btnEdit.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnEdit.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnEdit.setPreferredSize(new java.awt.Dimension(40, 22));
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
+
+        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
+        btnPrint.setToolTipText("Print");
+        btnPrint.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnPrint.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnPrint.setPreferredSize(new java.awt.Dimension(40, 22));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 984, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(btnReport, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-                                    .addComponent(btnEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 983, Short.MAX_VALUE))
-                .addGap(0, 0, 0))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(jTabbedPane1))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
-                        .addGap(2, 2, 2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnNew))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -300,9 +360,26 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        search();
-    }//GEN-LAST:event_btnSearchActionPerformed
+    private void txtNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameKeyReleased
+        int key = evt.getKeyCode();
+        if (key == KeyEvent.VK_ENTER) {
+            search();
+        }
+    }//GEN-LAST:event_txtNameKeyReleased
+
+    private void txtPostCodeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPostCodeKeyReleased
+        int key = evt.getKeyCode();
+        if (key == KeyEvent.VK_ENTER) {
+            search();
+        }
+    }//GEN-LAST:event_txtPostCodeKeyReleased
+
+    private void txtTelNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelNoKeyReleased
+        int key = evt.getKeyCode();
+        if (key == KeyEvent.VK_ENTER) {
+            search();
+        }
+    }//GEN-LAST:event_txtTelNoKeyReleased
 
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
         Window w = SwingUtilities.getWindowAncestor(this);
@@ -318,7 +395,7 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
     }//GEN-LAST:event_btnNewActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        Window w = SwingUtilities.getWindowAncestor(this);
+       Window w = SwingUtilities.getWindowAncestor(this);
         Frame owner = w instanceof Frame ? (Frame) w : null;
         CustomerDlg dlg = new CustomerDlg(owner);
         dlg.setLocationRelativeTo(this);
@@ -338,19 +415,26 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
         }
     }//GEN-LAST:event_btnEditActionPerformed
 
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        search();
+    }//GEN-LAST:event_btnSearchActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnEmail;
     private javax.swing.JButton btnNew;
-    private javax.swing.JButton btnReport;
+    private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSearch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblInfo;
     private javax.swing.JProgressBar progressBar;
     private org.jdesktop.swingx.JXTable tblCustomer;
