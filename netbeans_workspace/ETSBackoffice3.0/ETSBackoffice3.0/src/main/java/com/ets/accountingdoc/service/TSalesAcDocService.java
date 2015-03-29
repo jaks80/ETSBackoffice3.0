@@ -233,8 +233,14 @@ public class TSalesAcDocService {
         return list;
     }
 
-    public void delete(TicketingSalesAcDoc document) {
-        dao.delete(document);
+    public int delete(long id) {
+        TicketingSalesAcDoc document = dao.findByID(TicketingSalesAcDoc.class, id);
+        if (document.getStatus().equals(Enums.AcDocStatus.VOID)) {
+            dao.delete(document);
+            return 1;
+        }
+
+        return 0;
     }
 
     /**

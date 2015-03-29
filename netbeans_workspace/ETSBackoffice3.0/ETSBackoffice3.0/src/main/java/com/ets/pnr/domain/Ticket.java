@@ -67,7 +67,7 @@ public class Ticket extends PersistentObject implements Serializable {
     private BigDecimal netSellingFare = new BigDecimal("0.00");
 
     @XmlElement
-    private TicketStatus tktStatus;//1.Booked, 2. Issued,3. ReIssued, 4.Refund,5.VOID    
+    private TicketStatus tktStatus;
 
     public Ticket() {
 

@@ -1,8 +1,11 @@
 package com.ets.pnr.service;
 
+import com.ets.client.domain.MainAgent;
 import com.ets.pnr.model.collection.Pnrs;
 import com.ets.pnr.dao.PnrDAO;
 import com.ets.pnr.domain.Pnr;
+import com.ets.pnr.model.ATOLCertificate;
+import com.ets.settings.service.AppSettingsService;
 import com.ets.util.DateUtil;
 import com.ets.util.PnrUtil;
 import java.util.ArrayList;
@@ -37,8 +40,8 @@ public class PnrService {
     public List<Pnr> getByGDSPnr(String gdsPnr) {
         List<Pnr> list = new ArrayList<>();
         list = dao.getByGDSPnr(gdsPnr);
-        for(Pnr p: list){
-         PnrUtil.undefinePnrInTickets(p, p.getTickets());
+        for (Pnr p : list) {
+            PnrUtil.undefinePnrInTickets(p, p.getTickets());
         }
         return list;
     }
@@ -46,8 +49,8 @@ public class PnrService {
     public List<Pnr> getPnrByName(String surName, String foreName) {
         List<Pnr> list = new ArrayList<>();
         list = dao.searchByPaxName(surName, foreName);
-        for(Pnr p: list){
-         PnrUtil.undefinePnrInTickets(p, p.getTickets());
+        for (Pnr p : list) {
+            PnrUtil.undefinePnrInTickets(p, p.getTickets());
         }
         return list;
     }
@@ -56,6 +59,15 @@ public class PnrService {
         Pnr pnr = dao.getByIdWithChildren(id);
         PnrUtil.undefinePnrChildren(pnr);
         return pnr;
+    }
+
+    public ATOLCertificate getAtolCertificate(long id, Date issueDate) {
+        Pnr pnr = getByIdWithChildren(id);
+        MainAgent mainAgent = AppSettingsService.mainAgent;
+        ATOLCertificate certificate = 
+                ATOLCertificate.serializeToCertificate(DateUtil.dateToString(issueDate, "mm/dd/yyyy").toString(), 
+                        mainAgent, pnr);
+        return certificate;
     }
 
     public Pnrs pnrHistory(String issueDateFrom, String issueDateTo, String ticketingAgtOid, String bookingAgtOid) {

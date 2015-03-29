@@ -2,8 +2,12 @@ package com.ets.pnr.ws;
 
 import com.ets.pnr.model.collection.Pnrs;
 import com.ets.pnr.domain.Pnr;
+import com.ets.pnr.model.ATOLCertificate;
 import com.ets.pnr.service.PnrService;
+import com.ets.util.DateUtil;
+import java.util.Date;
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -77,6 +81,16 @@ public class PnrWS {
     @RolesAllowed("GS")
     public Pnr getById(@PathParam("id") long id) {
         return service.getByIdWithChildren(id);
+    }
+
+    @GET
+    @Produces("application/xml")
+    @Path("/atolcertbyid")
+    //@RolesAllowed("GS")
+    @PermitAll
+    public ATOLCertificate getAtolCertificate(@QueryParam("id") long id, @QueryParam("issuedate") String issuedate) {
+        Date date = DateUtil.stringToDate(issuedate, "ddMMMyyyy");
+        return service.getAtolCertificate(id, date);
     }
 
     @GET

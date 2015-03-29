@@ -259,7 +259,9 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         TicketingPurchaseAcDoc purchaseDoc = null;
         if (!tickets.isEmpty()) {
             purchaseDoc = tPurchaseAcDocDAO.getByTicketId(tickets.iterator().next().getId());
-            purchaseDoc.setTickets(null);
+            if(purchaseDoc!=null){
+             purchaseDoc.setTickets(null);
+            }
         }
 
         for (Ticket t : tickets) {

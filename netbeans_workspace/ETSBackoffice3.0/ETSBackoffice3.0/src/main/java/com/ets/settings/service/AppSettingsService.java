@@ -16,10 +16,6 @@ import org.springframework.stereotype.Service;
 @Service("appSettingsService")
 public class AppSettingsService {
 
-    public static Letterhead getLetterhead() {
-        return letterhead;
-    }
-
     @Resource(name = "appSettingsDAO")
     private AppSettingsDAO dao;
 
@@ -40,10 +36,10 @@ public class AppSettingsService {
     public AppSettings getSettings() {
 
         AppSettings settings = dao.findByID(AppSettings.class, Long.parseLong("1"));
-        if(settings == null){
-         return null;
+        if (settings == null) {
+            return null;
         }
-        
+
         mainAgent = getMainAgent();
         if (mainAgent != null) {
             letterhead = new Letterhead();
@@ -65,8 +61,8 @@ public class AppSettingsService {
             getLetterhead().setFooter(sb.toString());
             getLetterhead().settInvTAndC(settings.gettInvTAndC());
             getLetterhead().setoInvTAndC(settings.getoInvTAndC());
-        }        
-        
+        }
+
         return settings;
     }
 
@@ -81,5 +77,9 @@ public class AppSettingsService {
 
     public AgentService getAgentService() {
         return agentService;
+    }
+
+    public static Letterhead getLetterhead() {
+        return letterhead;
     }
 }

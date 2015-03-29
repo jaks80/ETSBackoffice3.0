@@ -5,6 +5,7 @@ import com.ets.air.dao.AirDAO;
 import com.ets.pnr.dao.*;
 import com.ets.pnr.domain.*;
 import com.ets.pnr.service.AirlineService;
+import com.ets.pnr.service.TicketService;
 import com.ets.util.PnrUtil;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,12 +30,14 @@ public class AirService {
 
     @Resource(name = "ticketDAO")
     private TicketDAO ticketDAO;
+    @Autowired
+    TicketService ticketService;
 
     @Autowired
     AirlineService airlineService;
     @Autowired
     TPurchaseAcDocService purchase_service;
-    
+
     public AirService() {
 
     }
@@ -61,17 +64,17 @@ public class AirService {
             itineraryDAO.deleteBulk(persistedPnr.getSegments());//Saving final segments. Issued segments are final segments.
             persistedPnr.setSegments(newPnr.getSegments());
         }
-        
+
         Airline airline = airlineService.find(persistedPnr.getAirLineCode());
         if (airline != null) {
             setBspCommission(persistedPnr.getTickets(), airline);
         }
-        
+
         PnrUtil.initPnrChildren(persistedPnr);
 
         save(persistedPnr);
         PnrUtil.undefinePnrChildren(persistedPnr); //Undefine cyclic dependencies to avoid cyclic xml exception
-        
+
         return persistedPnr;
     }
 
@@ -110,8 +113,10 @@ public class AirService {
         return tickets;
     }
 
-    public List<Ticket> voidTicket(List<Ticket> tickets) {
-
+    public List<Ticket> voidTicket(List<Ticket> tickets, Pnr pnr) {
+        for (Ticket t : tickets) {
+            ticketService._void(pnr.getGdsPnr(),t.getNumericAirLineCode(), t.getTicketNo(), t.getSurName());
+        }
         return tickets;
     }
 
@@ -126,6 +131,6 @@ public class AirService {
     }
 
     public void save(Pnr pnr) {
-        dao.save(pnr);        
+        dao.save(pnr);
     }
 }

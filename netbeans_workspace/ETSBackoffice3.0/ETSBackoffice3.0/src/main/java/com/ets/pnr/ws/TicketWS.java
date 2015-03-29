@@ -1,17 +1,21 @@
 package com.ets.pnr.ws;
 
+import com.ets.pnr.domain.Ticket;
 import com.ets.pnr.model.GDSSaleReport;
 import com.ets.pnr.model.TicketSaleReport;
 import com.ets.pnr.service.TicketService;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -25,6 +29,37 @@ public class TicketWS {
 
     @Autowired
     TicketService service;
+
+    @PUT
+    @Path("/update")
+    @RolesAllowed("GS")
+    public Ticket update(Ticket ticket) {
+        service.update(ticket);
+        return ticket;
+    }
+
+    @PUT
+    @Path("/void")
+    @RolesAllowed("SM")
+    public Response _void(@QueryParam("pnr") String pnr,
+            @QueryParam("airlinecode") String airlineCode,
+            @QueryParam("tktno") String tktno,
+            @QueryParam("surname") String surname) {
+        service._void(pnr, airlineCode,tktno, surname);
+        return Response.status(200).build();
+    }
+    
+    @DELETE
+    @Path("/delete/{id}")
+    @RolesAllowed("SM")
+    public Response delete(@PathParam("id") long id) {
+
+        if (service.delete(id)) {
+            return Response.status(200).build();
+        } else {
+            return Response.status(500).build();
+        }
+    }
 
     @GET
     @Produces("application/xml")
@@ -40,14 +75,14 @@ public class TicketWS {
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
 
-        GDSSaleReport report = service.saleReport(ticketingType,ticketStatus, airLineCode, dateFrom, dateTo, ticketingAgtOid);
+        GDSSaleReport report = service.saleReport(ticketingType, ticketStatus, airLineCode, dateFrom, dateTo, ticketingAgtOid);
         return report;
     }
 
     @GET
     @Produces("application/xml")
     @Path("/salereport")
-    @RolesAllowed("SM")    
+    @RolesAllowed("SM")
     public TicketSaleReport saleReport(@QueryParam("ticketingType") Enums.TicketingType ticketingType,
             @QueryParam("ticketStatus") Enums.TicketStatus ticketStatus,
             @QueryParam("airLineCode") String airLineCode,
@@ -58,7 +93,7 @@ public class TicketWS {
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
 
-        TicketSaleReport report = service.saleRevenueReport(ticketingType,ticketStatus, airLineCode, dateFrom, dateTo, ticketingAgtOid);
+        TicketSaleReport report = service.saleRevenueReport(ticketingType, ticketStatus, airLineCode, dateFrom, dateTo, ticketingAgtOid);
         return report;
     }
 }

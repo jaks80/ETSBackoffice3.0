@@ -8,6 +8,7 @@ import com.ets.util.Enums.TicketStatus;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -107,6 +108,7 @@ public class PnrUtil {
         oldPnr.setTicketingAgentSine(newPnr.getTicketingAgentSine());
         oldPnr.setPnrCreatorAgentSine(newPnr.getPnrCreatorAgentSine());
         oldPnr.setPnrCreationDate(newPnr.getPnrCreationDate());
+        oldPnr.setPnrCancellationDate(newPnr.getPnrCancellationDate());
         oldPnr.setVendorPNR(newPnr.getVendorPNR());
         oldPnr.setAirLineCode(newPnr.getAirLineCode());
         oldPnr.setRemarks(initPnrInRemark(oldPnr, newPnr.getRemarks()));
@@ -322,5 +324,16 @@ public class PnrUtil {
         } else {
             return name.substring(0, 8);
         }
+    }
+    
+    public static Date getEarliestDate(Set<Date> dates) {
+
+        Date date = new java.util.Date();
+        for (Date t : dates) {
+            if (t.before(date)) {
+                date = t;
+            }
+        }
+        return date;
     }
 }

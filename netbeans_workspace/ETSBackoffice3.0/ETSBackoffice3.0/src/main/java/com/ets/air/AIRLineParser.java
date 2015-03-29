@@ -147,8 +147,10 @@ public class AIRLineParser {
     }
 
     /*
+     TKXL01DEC/0910/LONU123IT
      TKOK27JUN/LONU123IT
      TKOK01AUG/LONU121DN//ETEK 3rd party issue
+     This line is used only for Ticket agent office ID for 3rd party issue file.
      */
     public static String[] parseTKLine(String line) {
         line = line.replace("TK", "").trim();

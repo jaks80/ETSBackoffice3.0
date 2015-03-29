@@ -7,9 +7,13 @@ import com.ets.pnr.domain.Remark;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums.TicketStatus;
+import com.ets.util.PnrUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -56,6 +60,23 @@ public class AIRToPNRConverter {
             }
         }
 
+        //This block is to get pnr cancellation date frm TKXL
+        Set<Date> dates = new HashSet<>();
+        for (String s : air.getLines()) {
+            if (s.startsWith("TKXL")) {
+                String[] data = AIRLineParser.parseTKLine(s);
+                String date = data[0].substring(2);
+                dates.add(DateUtil.ddmmToDate(date));
+            }
+        }
+        if (dates.size() > 1) {
+            Date date = PnrUtil.getEarliestDate(dates);
+            pnr.setPnrCancellationDate(date);
+        } else if (dates.size() == 1) {
+            Date date = dates.iterator().next();
+            pnr.setPnrCancellationDate(date);
+        }
+
         if ("INV".equals(air.getType())) {
             for (String s : air.getLines()) {
                 if (s.startsWith("TK")) {
@@ -68,8 +89,8 @@ public class AIRToPNRConverter {
         }
 
         Airline airLine = airToCareer();
-        if(airLine != null){
-         pnr.setAirLineCode(airLine.getCode());
+        if (airLine != null) {
+            pnr.setAirLineCode(airLine.getCode());
         }
 
         return pnr;
@@ -95,7 +116,7 @@ public class AIRToPNRConverter {
         Airline career = null;
 
         String aLine = air.getALine();
-        if (aLine.length() > 4) {
+        if (aLine != null && aLine.length() > 4) {
             career = new Airline();
             String[] vals = AIRLineParser.parseALine(aLine);
             career.setName(vals[0]);
@@ -125,9 +146,9 @@ public class AIRToPNRConverter {
         }
 
         for (String[] _H : _Hs) {
-            Itinerary segment = lineToIninerary(_H);  
-            if(segment.getDeptDate()!=null){//Invalid dept date means no confirmed segment
-             segments.add(segment);         
+            Itinerary segment = lineToIninerary(_H);
+            if (segment.getDeptDate() != null) {//Invalid dept date means no confirmed segment
+                segments.add(segment);
             }
         }
 
@@ -162,12 +183,12 @@ public class AIRToPNRConverter {
                 if (tax.compareTo(BigDecimal.ONE) < 0) {
                     tax = new BigDecimal("0.00");
                 }
-            }else if (s.startsWith("KN-") && s.length() > 4) {
-                
-                if(totalFare.compareTo(new BigDecimal("0.00")) == 1){
-                 continue;
+            } else if (s.startsWith("KN-") && s.length() > 4) {
+
+                if (totalFare.compareTo(new BigDecimal("0.00")) == 1) {
+                    continue;
                 }
-                String[] data = AIRLineParser.parseKNLine(s);                
+                String[] data = AIRLineParser.parseKNLine(s);
                 localCurrencyCode = data[12].replaceAll("[^A-Z]", "");
                 bfCurrencyCode = data[0].replaceAll("[^A-Z]", "").substring(1);
 
@@ -181,10 +202,9 @@ public class AIRToPNRConverter {
                 if (tax.compareTo(BigDecimal.ONE) < 0) {
                     tax = new BigDecimal("0.00");
                 }
-            }
-            else if (s.startsWith("KS-") && s.length() > 4 && "INV".equals(air.getType())) {
-                if(totalFare.compareTo(new BigDecimal("0.00")) == 1){
-                 continue;
+            } else if (s.startsWith("KS-") && s.length() > 4 && "INV".equals(air.getType())) {
+                if (totalFare.compareTo(new BigDecimal("0.00")) == 1) {
+                    continue;
                 }
                 //This block is only for thirdparty ticketing
                 String[] data = AIRLineParser.parseKSLine(s);
@@ -221,10 +241,10 @@ public class AIRToPNRConverter {
                     ticket.setNumericAirLineCode(data[0].substring(1, 4).trim());
                 }
 
-                if(data.length == 3){
-                 ticket.setTicketNo(data[1]+"-"+data[2]);
-                }else{
-                 ticket.setTicketNo(data[1]);
+                if (data.length == 3) {
+                    ticket.setTicketNo(data[1] + "-" + data[2]);
+                } else {
+                    ticket.setTicketNo(data[1]);
                 }
 
                 ticket.setTktStatus(TicketStatus.ISSUE);
@@ -249,7 +269,7 @@ public class AIRToPNRConverter {
         return tickets;
     }
 
-    public List<Ticket> airToRefundedTicket(){
+    public List<Ticket> airToRefundedTicket() {
         List<Ticket> tickets = new ArrayList<>();
 
         BigDecimal baseFare = new BigDecimal("0.00");
@@ -297,7 +317,7 @@ public class AIRToPNRConverter {
             } else if (s.startsWith("R-")) {
                 String[] data = AIRLineParser.parseRLine(s);
                 ticket.setDocIssuedate(DateUtil.refundDate(data[1]));
-            }else if (s.startsWith("FO") && s.length() > 4) {
+            } else if (s.startsWith("FO") && s.length() > 4) {
                 String[] data = AIRLineParser.parseFOLine(s);
 
                 if (s.charAt(5) == '-') {
@@ -311,19 +331,18 @@ public class AIRToPNRConverter {
         return tickets;
     }
 
-
     private Ticket getNameFormStringArray(String[] data, Ticket ticket) {
         String[] name = data[1].substring(2).trim().split("/");
         String paxNumber = data[1].substring(0, 2);
-        if(paxNumber!=null){
-         ticket.setPassengerNo(Integer.valueOf(paxNumber));
+        if (paxNumber != null) {
+            ticket.setPassengerNo(Integer.valueOf(paxNumber));
         }
         ticket.setSurName(name[0].trim());
         ticket.setForeName(name[1].trim());
         return ticket;
     }
 
-    public List<Ticket> airToVoidTicket(){
+    public List<Ticket> airToVoidTicket() {
         List<Ticket> tickets = new ArrayList<>();
         Ticket ticket = null;
 
@@ -333,7 +352,7 @@ public class AIRToPNRConverter {
                 ticket = new Ticket();
                 ticket = getNameFormStringArray(data, ticket);
                 tickets.add(ticket);
-            }else if (s.startsWith("T-") && s.length() > 4) {
+            } else if (s.startsWith("T-") && s.length() > 4) {
                 String[] data = AIRLineParser.parseTLine(s);
                 if (data[0] != null && data[0].length() > 3) {
                     ticket.setNumericAirLineCode(data[0].substring(1, 4).trim());
@@ -349,12 +368,12 @@ public class AIRToPNRConverter {
 
         Itinerary segment = new Itinerary();
         String segmentNo = _H[1].substring(0, 3);
-        if(segmentNo != null && segmentNo.isEmpty()){
-         segment.setSegmentNo(Integer.valueOf(segmentNo));
-        }else{
-          segment.setSegmentNo(0);
+        if (segmentNo != null && segmentNo.isEmpty()) {
+            segment.setSegmentNo(Integer.valueOf(segmentNo));
+        } else {
+            segment.setSegmentNo(0);
         }
-        
+
         segment.setStopOver(_H[1].substring(3, 4));
         segment.setDeptFrom(_H[1].substring(4).trim());
         segment.setDeptTo(_H[3].trim());

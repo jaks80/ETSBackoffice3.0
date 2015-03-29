@@ -44,6 +44,8 @@ public class Pnr extends PersistentObject implements Serializable {
     @XmlElement
     private Date pnrCreationDate;
     @XmlElement
+    private Date pnrCancellationDate;
+    @XmlElement
     private Date airCreationDate;
     @XmlElement
     private String PnrCreatorAgentSine;
@@ -223,5 +225,13 @@ public class Pnr extends PersistentObject implements Serializable {
 
     public boolean selfTicketing() {
         return this.ticketingAgtOid.equals(AppSettingsService.mainAgent.getOfficeID());
+    }
+
+    public Date getPnrCancellationDate() {
+        return pnrCancellationDate;
+    }
+
+    public void setPnrCancellationDate(Date pnrCancellationDate) {
+        this.pnrCancellationDate = pnrCancellationDate;
     }
 }

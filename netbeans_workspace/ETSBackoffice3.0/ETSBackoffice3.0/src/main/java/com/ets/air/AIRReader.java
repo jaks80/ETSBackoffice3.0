@@ -23,9 +23,7 @@ public class AIRReader {
 
     private AIR air;
 
-    public AIRReader() {
-
-    }
+    public AIRReader() {}
 
     public void startReading() {
 
@@ -42,7 +40,7 @@ public class AIRReader {
                         converter = new AIRToPNRConverter(a);
                         tickets.addAll(converter.airToTicket());
                     }
-                    
+
                     pnr.setTickets(new LinkedHashSet(tickets));
                     pnr.setSegments(new LinkedHashSet(segments));
                     pnr.setRemarks(new LinkedHashSet(remarks));
@@ -59,12 +57,13 @@ public class AIRReader {
                     break;
                 }
                 case "VOID": {
+                    Pnr pnr = converter.airToPNR();
                     List<Ticket> tickets = converter.airToVoidTicket();
                     for (AIR a : air.getMorePages()) {
                         converter = new AIRToPNRConverter(a);
                         tickets.addAll(converter.airToTicket());
                     }
-                    service.voidTicket(tickets);
+                    service.voidTicket(tickets, pnr);
                     break;
                 }
                 case "INV":

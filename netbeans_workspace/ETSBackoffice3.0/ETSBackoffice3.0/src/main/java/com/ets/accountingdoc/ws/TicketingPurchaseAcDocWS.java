@@ -93,7 +93,12 @@ public class TicketingPurchaseAcDocWS {
     @Path("/delete/{id}")
     @RolesAllowed("SM")
     public Response delete(@PathParam("id") long id) {
-        return Response.status(200).build();
+        int status = service.delete(id);
+        if (status == 1) {
+            return Response.status(200).build();
+        } else {
+            return Response.status(500).build();
+        }
     }
 
     @GET

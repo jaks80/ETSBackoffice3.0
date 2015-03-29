@@ -2,6 +2,7 @@ package com.ets.accountingdoc.service;
 
 import com.ets.accountingdoc.dao.TPurchaseAcDocDAO;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
+import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accountingdoc.model.BSPReport;
 import com.ets.pnr.domain.Ticket;
 import com.ets.accountingdoc.model.InvoiceReport;
@@ -59,6 +60,16 @@ public class TPurchaseAcDocService {
         }
         dao.save(doc);
         return undefineChildren(doc);
+    }
+
+    public int delete(long id) {
+        TicketingPurchaseAcDoc document = dao.findByID(TicketingPurchaseAcDoc.class, id);
+        if (document.getStatus().equals(Enums.AcDocStatus.VOID)) {
+            dao.delete(document);
+            return 1;
+        }
+
+        return 0;
     }
 
     public TicketingPurchaseAcDoc _void(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
@@ -232,10 +243,10 @@ public class TPurchaseAcDocService {
         GDSSaleReport sale_report = ticketService.saleReport(null, null, null, dateStart, dateEnd, null);
 
         List<TicketingPurchaseAcDoc> adm_acm_noticket = new ArrayList<>();
-        
+
         for (TicketingPurchaseAcDoc related : adm_acm) {
             related.setAdditionalChargeLines(null);
-            related.setPayment(null);            
+            related.setPayment(null);
             related.setTickets(null);
             related.setRelatedDocuments(null);
             related.setParent(null);

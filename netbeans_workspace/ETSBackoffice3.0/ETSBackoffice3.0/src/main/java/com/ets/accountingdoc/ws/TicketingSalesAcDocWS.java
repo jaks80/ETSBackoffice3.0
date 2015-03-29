@@ -75,7 +75,7 @@ public class TicketingSalesAcDocWS {
     @GET
     @Path("/draftdoc")
     @RolesAllowed("GS")
-    public TicketingSalesAcDoc newDraftDocument(@QueryParam("pnrid") Long pnrid) {        
+    public TicketingSalesAcDoc newDraftDocument(@QueryParam("pnrid") Long pnrid) {
         TicketingSalesAcDoc doc = service.newDraftDocument(pnrid);
         return doc;
     }
@@ -83,7 +83,7 @@ public class TicketingSalesAcDocWS {
     @POST
     @Path("/newdoc")
     @RolesAllowed("GS")
-    public TicketingSalesAcDoc createNewDocument(TicketingSalesAcDoc ticketingSalesAcDoc) {        
+    public TicketingSalesAcDoc createNewDocument(TicketingSalesAcDoc ticketingSalesAcDoc) {
         TicketingSalesAcDoc doc = service.newDocument(ticketingSalesAcDoc);
         return doc;
     }
@@ -92,7 +92,13 @@ public class TicketingSalesAcDocWS {
     @Path("/delete/{id}")
     @RolesAllowed("SM")
     public Response delete(@PathParam("id") long id) {
-        return Response.status(200).build();
+
+        int status = service.delete(id);
+        if (status == 1) {
+            return Response.status(200).build();
+        } else {
+            return Response.status(500).build();
+        }
     }
 
     @PUT
