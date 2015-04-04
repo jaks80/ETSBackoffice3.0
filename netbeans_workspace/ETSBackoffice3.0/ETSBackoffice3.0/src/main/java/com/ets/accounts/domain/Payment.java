@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 @Access(AccessType.PROPERTY)
+@Table(name = "payment")
 public class Payment extends PersistentObject implements Serializable {
 
     private static final long serialVersionUID = 1L;

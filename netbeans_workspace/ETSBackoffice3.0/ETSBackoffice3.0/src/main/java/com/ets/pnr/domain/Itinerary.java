@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 @Access(AccessType.PROPERTY)
+@Table(name = "itinerary")
 public class Itinerary extends PersistentObject implements Serializable {
 
     private static final long serialVersionUID = 1L;

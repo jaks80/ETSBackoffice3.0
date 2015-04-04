@@ -4,22 +4,11 @@ import com.ets.PersistentObject;
 import com.ets.client.domain.Agent;
 import com.ets.client.domain.Customer;
 import com.ets.settings.service.AppSettingsService;
-import com.ets.util.Enums;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Temporal;
+import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 
 /**
@@ -30,6 +19,7 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 @Access(AccessType.PROPERTY)
+@Table(name = "pnr")
 public class Pnr extends PersistentObject implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -127,7 +117,7 @@ public class Pnr extends PersistentObject implements Serializable {
     }
 
     @OneToMany(mappedBy = "pnr", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @OrderBy(value = "segmentNo")
+    @OrderBy(value = "id")
     public Set<Itinerary> getSegments() {
         return segments;
     }

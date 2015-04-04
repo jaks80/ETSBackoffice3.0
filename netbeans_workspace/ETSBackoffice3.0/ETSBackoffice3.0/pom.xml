@@ -4,7 +4,7 @@
 
     <groupId>com.ets</groupId>
     <artifactId>ETSBackoffice3.0</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-RELEASE</version>
     <packaging>war</packaging>
 
     <name>ETSBackoffice3.0</name>

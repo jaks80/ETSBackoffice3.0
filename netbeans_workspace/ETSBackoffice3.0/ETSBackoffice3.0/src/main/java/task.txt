@@ -4,3 +4,10 @@
 3. Save ticketing agent while saving new PNR
 4. Ticket sale report Self and Third party filtering in two sections
 5. Other service manager search by category and item.
+
+Urgent before deployment:
+
+1. Main agent code in webservice url;
+2. CSV reading to import agents
+3. Report footer.
+4. Encrypt all passwords in db

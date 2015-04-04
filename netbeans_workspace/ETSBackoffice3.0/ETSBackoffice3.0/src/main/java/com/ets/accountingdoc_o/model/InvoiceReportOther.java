@@ -105,6 +105,7 @@ public class InvoiceReportOther implements Serializable {
 
             invSummery.setAgent(invoice.getAgent());
             invSummery.setCustomer(invoice.getCustomer());
+            invSummery.setInvBy(invoice.getCreatedBy().calculateFullName());
             
             totalInvAmount = totalInvAmount.add(invoice.getDocumentedAmount());
             totalDMAmount = totalDMAmount.add(invoice.calculateTotalDebitMemo());

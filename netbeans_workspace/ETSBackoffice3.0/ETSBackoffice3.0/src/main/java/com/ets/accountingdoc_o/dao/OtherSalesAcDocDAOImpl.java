@@ -138,6 +138,7 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
 
         String hql = "select distinct a from OtherSalesAcDoc as a "
                 + "left join fetch a.accountingDocumentLines as adl "
+                + "left join a.createdBy as user "
                 + "left join fetch adl.otherService as os "
                 + "left join fetch os.category "
                 + "left join fetch a.relatedDocuments as r "
@@ -181,6 +182,7 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
 
         String hql = "select distinct a from OtherSalesAcDoc as a "
                 + "left join fetch a.accountingDocumentLines as adl "
+                + "left join a.createdBy as user "
                 + "left join fetch adl.otherService as os "
                 + "left join fetch os.category "
                 + "left join fetch a.relatedDocuments as r "

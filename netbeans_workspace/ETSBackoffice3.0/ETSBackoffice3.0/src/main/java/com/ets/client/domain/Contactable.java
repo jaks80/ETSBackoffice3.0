@@ -15,7 +15,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Yusuf
  */
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 @Access(AccessType.PROPERTY)
@@ -57,25 +56,25 @@ public abstract class Contactable extends PersistentObject implements Serializab
     public String getFullAddress() {
         String fullAddress = "";
 
-        if (!this.getAddLine1().equals("") && this.getAddLine1() != null) {
+        if (this.getAddLine1() != null && !this.getAddLine1().isEmpty()) {
             fullAddress = fullAddress.concat("," + this.getAddLine1());
         }
-        if (!this.getAddLine2().equals("") && this.getAddLine2() != null) {
+        if (this.getAddLine2() != null && !this.getAddLine2().isEmpty()) {
             fullAddress = fullAddress.concat("," + this.getAddLine2());
         }
-        if (!this.getCity().equals("") && this.getCity() != null) {
+        if (this.getCity() != null && !this.getCity().isEmpty()) {
             fullAddress = fullAddress.concat("," + this.getCity());
         }
-        if (!this.getPostCode().equals("") && this.getPostCode() != null) {
+        if (this.getPostCode() != null && !this.getPostCode().isEmpty()) {
             fullAddress = fullAddress.concat("," + this.getPostCode());
         }
-        if (!this.getTelNo().equals("") && this.getTelNo() != null) {
+        if (this.getTelNo() != null && !this.getTelNo().isEmpty()) {
             fullAddress = fullAddress.concat("," + "Tel: " + this.getTelNo());
         }
-        if (!this.getFax().equals("") && this.getFax() != null) {
+        if (this.getFax() != null && !this.getFax().isEmpty()) {
             fullAddress = fullAddress.concat("," + "Fax: " + this.getFax());
         }
-        if (!this.getEmail().equals("") && this.getEmail() != null) {
+        if (this.getEmail() != null && !this.getEmail().isEmpty()) {
             fullAddress = fullAddress.concat("," + "EMail: " + this.getEmail());
         }
 
@@ -86,25 +85,25 @@ public abstract class Contactable extends PersistentObject implements Serializab
     public String getFullAddressCRSeperated() {
         String fullAddress = "";
 
-        if (!this.getAddLine1().equals("") && this.getAddLine1() != null) {
+        if (this.getAddLine1() != null && !this.getAddLine1().isEmpty()) {
             fullAddress = fullAddress.concat("\n" + this.getAddLine1());
         }
-        if (!this.getAddLine2().equals("") && this.getAddLine2() != null) {
+        if (this.getAddLine2() != null && !this.getAddLine2().isEmpty()) {
             fullAddress = fullAddress.concat("\n" + this.getAddLine2());
         }
-        if (!this.getCity().equals("") && this.getCity() != null) {
+        if (this.getCity() != null && !this.getCity().isEmpty()) {
             fullAddress = fullAddress.concat("\n" + this.getCity());
         }
-        if (!this.getPostCode().equals("") && this.getPostCode() != null) {
+        if (this.getPostCode() != null && !this.getPostCode().isEmpty()) {
             fullAddress = fullAddress.concat("\n" + this.getPostCode());
         }
-        if (!this.getTelNo().equals("") && this.getTelNo() != null) {
+        if (this.getTelNo() != null && !this.getTelNo().isEmpty()) {
             fullAddress = fullAddress.concat("\n" + "Tel: " + this.getTelNo());
         }
-        if (!this.getFax().equals("") && this.getFax() != null) {
+        if (this.getFax() != null && !this.getFax().isEmpty()) {
             fullAddress = fullAddress.concat("\n" + "Fax: " + this.getFax());
         }
-        if (!this.getEmail().equals("") && this.getEmail() != null) {
+        if (this.getEmail() != null && !this.getEmail().isEmpty()) {
             fullAddress = fullAddress.concat("\n" + "EMail: " + this.getEmail());
         }
 
@@ -115,16 +114,16 @@ public abstract class Contactable extends PersistentObject implements Serializab
     public String getAddressCRSeperated() {
         String fullAddress = "";
 
-        if (!this.getAddLine1().equals("") && this.getAddLine1() != null) {
+        if (this.getAddLine1() != null && !this.getAddLine1().isEmpty()) {
             fullAddress = fullAddress.concat("\n" + this.getAddLine1());
         }
-        if (!this.getAddLine2().equals("") && this.getAddLine2() != null) {
+        if (this.getAddLine2() != null && !this.getAddLine2().isEmpty()) {
             fullAddress = fullAddress.concat("\n" + this.getAddLine2());
         }
-        if (!this.getCity().equals("") && this.getCity() != null) {
+        if (this.getCity() != null && !this.getCity().isEmpty()) {
             fullAddress = fullAddress.concat("\n" + this.getCity());
         }
-        if (!this.getPostCode().equals("") && this.getPostCode() != null) {
+        if (this.getPostCode() != null && !this.getPostCode().isEmpty()) {
             fullAddress = fullAddress.concat(", " + this.getPostCode());
         }
 

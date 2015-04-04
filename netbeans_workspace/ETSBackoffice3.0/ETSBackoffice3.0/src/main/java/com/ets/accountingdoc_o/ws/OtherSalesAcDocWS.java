@@ -6,7 +6,7 @@ import com.ets.accountingdoc_o.model.InvoiceReportOther;
 import com.ets.accountingdoc_o.model.OtherInvoiceModel;
 import com.ets.accountingdoc_o.model.ServicesSaleReport;
 import com.ets.accountingdoc_o.service.OSalesAcDocService;
-import com.ets.productivity.model.ProductivityReport;
+import com.ets.productivity.model.UserProductivityReport;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
@@ -171,14 +171,14 @@ public class OtherSalesAcDocWS {
     @GET
     @Path("/user_productivity")
     @RolesAllowed("SM")    
-    public ProductivityReport userProducivityReport(
+    public UserProductivityReport userProducivityReport(
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd) {
 
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
         
-        ProductivityReport report = service.userProductivityReport(dateFrom, dateTo);
+        UserProductivityReport report = service.userProductivityReport(dateFrom, dateTo);
 
         return report;
     }
@@ -187,14 +187,14 @@ public class OtherSalesAcDocWS {
     @Path("/agentduereport")
     //@RolesAllowed("SM")
     @PermitAll
-    public ProductivityReport agentDueReport(
+    public UserProductivityReport agentDueReport(
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd) {
 
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
 
-        ProductivityReport report = service.agentOutstandingReport(dateFrom, dateTo);
+        UserProductivityReport report = service.agentOutstandingReport(dateFrom, dateTo);
 
         return report;
     }

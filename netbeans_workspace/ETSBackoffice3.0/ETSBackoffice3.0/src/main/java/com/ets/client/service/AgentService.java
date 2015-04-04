@@ -28,6 +28,33 @@ public class AgentService {
         return dao.findByID(Agent.class, id);
     }
 
+    public Agent findByOfficeID(String officeID) {
+        List<Agent> agents = dao.findByOfficeID(officeID);
+        if (!agents.isEmpty()) {
+            return agents.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public List<Agent> findListByOfficeID(String officeID) {
+        List<Agent> agents = dao.findByOfficeID(officeID);
+        return agents;
+    }
+
+    public Agent findTktingAgentByOfficeID(String officeID) {
+
+        List<Agent> tkting_agents = dao.findTicketingAgents();
+        Agent agent = null;
+        for (Agent ta : tkting_agents) {
+            if (ta.getOfficeID().equals(officeID)) {
+                agent = ta;
+                return agent;
+            }
+        }
+        return agent;
+    }
+
     public List<Agent> findAll() {
         return dao.findAll(Agent.class);
     }
@@ -40,6 +67,11 @@ public class AgentService {
         return dao.findByLike(name, pCode, officeID);
     }
 
+    public List<Agent> findByKeyword(String name, String officeID) {
+        return dao.findByKeyword(name, officeID);
+    }
+
+    
     public MainAgent saveorUpdate(MainAgent agent) {
         //agent.setId(Long.parseLong("1"));
         mainAgentDAO.save(agent);

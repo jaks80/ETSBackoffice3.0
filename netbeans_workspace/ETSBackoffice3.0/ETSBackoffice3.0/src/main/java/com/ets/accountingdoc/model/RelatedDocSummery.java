@@ -22,7 +22,7 @@ public class RelatedDocSummery {
      RelatedDocSummery sm = new RelatedDocSummery();
      sm.setDate(DateUtil.dateToString(d.getDocIssueDate()));
      sm.setType(d.getType().toString());
-     sm.setAmount(d.getDocumentedAmount().toString());
+     sm.setAmount(d.getDocumentedAmount().abs().toString());
      
      StringBuilder remark = new StringBuilder();
      if(d.getRemark()!=null){

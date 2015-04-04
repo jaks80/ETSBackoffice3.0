@@ -50,6 +50,8 @@ public class OtherInvoiceSummery implements Serializable {
     private Customer customer;
     @XmlElement
     private String clientName;
+    @XmlElement
+    private String invBy; 
 
     public Long getReference() {
         return reference;
@@ -170,5 +172,13 @@ public class OtherInvoiceSummery implements Serializable {
 
     public void setClientName(String clientName) {
         this.clientName = clientName;
+    }
+
+    public String getInvBy() {
+        return invBy;
+    }
+
+    public void setInvBy(String invBy) {
+        this.invBy = invBy;
     }
 }

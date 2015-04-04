@@ -47,15 +47,15 @@ public class AppSettingsService {
             getLetterhead().setAddress(mainAgent.getFullAddressCRSeperated());
 
             StringBuilder sb = new StringBuilder();
-            if (mainAgent.getAtol() != null) {
+            if (mainAgent.getAtol() != null && !mainAgent.getAtol().isEmpty()) {
                 sb.append("ATOL: ").append(mainAgent.getAtol()).append(" ");
             }
 
-            if (mainAgent.getIata() != null) {
+            if (mainAgent.getIata() != null && !mainAgent.getIata().isEmpty()) {
                 sb.append("IATA: ").append(mainAgent.getIata()).append(" ");
             }
 
-            if (mainAgent.getAbta() != null) {
+            if (mainAgent.getAbta() != null && !mainAgent.getAbta().isEmpty()) {
                 sb.append("ABTA: ").append(mainAgent.getAbta()).append(" ");
             }
             getLetterhead().setFooter(sb.toString());

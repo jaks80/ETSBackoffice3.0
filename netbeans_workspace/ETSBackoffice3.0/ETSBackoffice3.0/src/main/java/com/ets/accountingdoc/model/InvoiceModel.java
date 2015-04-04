@@ -11,10 +11,7 @@ import com.ets.util.DateUtil;
 import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  * com.ets.fe.acdoc.model.report.InvoiceModel
@@ -93,7 +90,7 @@ public class InvoiceModel implements Serializable{
         model.setRefference(invoice.getReference().toString());
         model.setDate(DateUtil.dateToString(invoice.getDocIssueDate()));
         model.setTerms(invoice.getTerms());
-        //model.setDocumentBy(invoice.getCreatedBy().calculateFullName());
+        model.setDocumentBy(invoice.getCreatedBy().calculateFullName());
         model.setPnr(pnr.getGdsPnr());
         model.setVendorPnr(pnr.getVendorPNR());
         model.setAirLine(pnr.getAirLineCode());
@@ -123,7 +120,7 @@ public class InvoiceModel implements Serializable{
             model.addTicketModel(TicketModel.ticketToModel(t));
         }      
         
-        Set<TicketingSalesAcDoc> related_docs = invoice.getRelatedDocuments();
+        //Set<TicketingSalesAcDoc> related_docs = invoice.getRelatedDocuments();
         Set<RelatedDocSummery> relateddocs= new LinkedHashSet<>();
         
         for(TicketingSalesAcDoc d: relatedDocs){

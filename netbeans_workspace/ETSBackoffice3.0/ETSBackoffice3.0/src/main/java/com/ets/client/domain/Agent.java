@@ -1,12 +1,12 @@
 package com.ets.client.domain;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.*;
 
 /**
@@ -18,15 +18,16 @@ import javax.xml.bind.annotation.*;
 @XmlAccessorType(XmlAccessType.NONE)
 @Access(AccessType.PROPERTY)
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Agent extends Contactable implements Serializable{
-    
+@Table(name = "agent")
+public class Agent extends Contactable implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @XmlElement
     private String contactPerson;
     @XmlElement
     private String name;
     @XmlElement
-    private String web;    
+    private String web;
     @XmlElement
     private String atol;
     @XmlElement
@@ -34,15 +35,13 @@ public class Agent extends Contactable implements Serializable{
     @XmlElement
     private String abta;
     @XmlElement
-    private BigDecimal creditLimit = new BigDecimal("0.00");
-    @XmlElement
-    private boolean cLimitOverInvoicing;    
-    @XmlElement
     private String officeID;
-    
+    @XmlElement
+    private boolean isActive;
+
     public Agent() {
         super();
-        
+
     }
 
     public String getName() {
@@ -69,29 +68,13 @@ public class Agent extends Contactable implements Serializable{
         this.atol = atol;
     }
 
-    public BigDecimal getCreditLimit() {
-        return creditLimit;
-    }
-
-    public void setCreditLimit(BigDecimal creditLimit) {
-        this.creditLimit = creditLimit;
-    }
-
-    public boolean iscLimitOverInvoicing() {
-        return cLimitOverInvoicing;
-    }
-
-    public void setcLimitOverInvoicing(boolean cLimitOverInvoicing) {
-        this.cLimitOverInvoicing = cLimitOverInvoicing;
-    }
-
     public String getOfficeID() {
         return officeID;
     }
 
     public void setOfficeID(String officeID) {
         this.officeID = officeID;
-    } 
+    }
 
     public String getIata() {
         return iata;
@@ -117,8 +100,16 @@ public class Agent extends Contactable implements Serializable{
         this.contactPerson = contactPerson;
     }
 
-    @Override    
+    @Override
     public String calculateFullName() {
         return this.name;
+    }
+
+    public boolean isIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 }

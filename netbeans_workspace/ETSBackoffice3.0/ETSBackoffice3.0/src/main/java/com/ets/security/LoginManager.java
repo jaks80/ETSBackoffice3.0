@@ -62,13 +62,13 @@ public class LoginManager {
         Login login = getLoginList().get(loginId);
         Date currentTime = new java.util.Date();
         long currentTimeMills = currentTime.getTime();
-        long lastCommunicationMills = login.getLastCommunication().getTime();
-
+        long lastCommunicationMills = login.getLastCommunication().getTime();        
         long lastCommunicationGap = TimeUnit.MILLISECONDS.toMinutes(currentTimeMills - lastCommunicationMills);
 
         if (lastCommunicationGap > LOGIN_EXPIRE_TIME) {
             return true;
         } else {
+            login.setLastCommunication(new java.util.Date());
             return false;
         }
     }

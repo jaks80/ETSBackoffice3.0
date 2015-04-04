@@ -3,7 +3,7 @@ package com.ets.accountingdoc_o.service;
 import com.ets.accountingdoc.domain.*;
 import com.ets.accountingdoc_o.dao.*;
 import com.ets.accountingdoc_o.model.*;
-import com.ets.productivity.model.ProductivityReport;
+import com.ets.productivity.model.UserProductivityReport;
 import com.ets.accountingdoc.service.AcDocUtil;
 import com.ets.settings.domain.User;
 import com.ets.util.DateUtil;
@@ -185,11 +185,11 @@ public class OSalesAcDocService {
         return sale_report;
     }
 
-    public ProductivityReport userProductivityReport(Date from, Date to) {
+    public UserProductivityReport userProductivityReport(Date from, Date to) {
 
         Map<User, BigDecimal> productivityLine = dao.userProductivityReport(from, to);
 
-        ProductivityReport report = new ProductivityReport();
+        UserProductivityReport report = new UserProductivityReport();
         report.setTitle("Productivity Report");
         report.setDateFrom(DateUtil.dateToString(from));
         report.setDateTo(DateUtil.dateToString(to));
@@ -202,11 +202,11 @@ public class OSalesAcDocService {
         return report;
     }
 
-    public ProductivityReport agentOutstandingReport(Date from, Date to) {
+    public UserProductivityReport agentOutstandingReport(Date from, Date to) {
 
         Map<String, BigDecimal> productivityLine = dao.agentOutstandingReport(from, to);
 
-        ProductivityReport report = new ProductivityReport();
+        UserProductivityReport report = new UserProductivityReport();
         report.setTitle("Agent Outstanding Report");
         report.setDateFrom(DateUtil.dateToString(from));
         report.setDateTo(DateUtil.dateToString(to));

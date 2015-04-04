@@ -144,6 +144,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + "left join fetch a.relatedDocuments as r "
                 + "left join fetch a.tickets as t "
                 + "left join fetch a.pnr as p "
+                + "left join a.createdBy as user "
                 + "left join fetch p.segments "
                 + concatClient
                 + "where a.status = 0 and a.type = 0 and "
@@ -188,6 +189,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + "left join fetch a.relatedDocuments as r "
                 + "left join fetch a.tickets as t "
                 + "left join fetch a.pnr as p "
+                + "left join a.createdBy as user "
                 + "inner join fetch p.segments as seg "
                 + concatClient
                 + "where a.status = 0 and a.type = 0 and "
@@ -227,6 +229,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + "left join fetch a.tickets as t "
                 + "left join fetch a.relatedDocuments as r "
                 + "left join fetch a.pnr as p "
+                + "left join a.createdBy as user "
                 + "left join fetch p.segments "
                 + concatClient
                 + "where a.status = 0 and a.type = 0 "
@@ -305,6 +308,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         String hql = "select distinct a from TicketingSalesAcDoc as a "
                 + "left join fetch a.payment as payment "
                 + "left join fetch a.pnr as p "
+                + "left join a.createdBy as user "
                 + "left join fetch p.segments "
                 + concatClient
                 + "where a.status <> 2 "

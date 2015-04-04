@@ -368,7 +368,7 @@ public class AIRToPNRConverter {
 
         Itinerary segment = new Itinerary();
         String segmentNo = _H[1].substring(0, 3);
-        if (segmentNo != null && segmentNo.isEmpty()) {
+        if (segmentNo != null && !segmentNo.isEmpty()) {
             segment.setSegmentNo(Integer.valueOf(segmentNo));
         } else {
             segment.setSegmentNo(0);

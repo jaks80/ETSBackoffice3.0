@@ -47,13 +47,18 @@ public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements Ticke
         ticket.setBaseFare(new BigDecimal("0.00"));
         ticket.setTax(new BigDecimal("0.00"));
         ticket.setFee(new BigDecimal("0.00"));
-        ticket.setCommission(new BigDecimal("0.00"));
+        ticket.setCommission(new BigDecimal("0.00"));        
+        ticket.setGrossFare(new BigDecimal("0.00"));
+        ticket.setAtolChg(new BigDecimal("0.00"));
+        ticket.setDiscount(new BigDecimal("0.00"));
         ticket.setTktStatus(Enums.TicketStatus.VOID);
         save(ticket);
         
-        TicketingPurchaseAcDoc doc = tPurchaseAcDocDAO.getWithChildrenById(ticket.getTicketingPurchaseAcDoc().getId());
-        doc.setDocumentedAmount(doc.calculateDocumentedAmount());
-        tPurchaseAcDocDAO.save(doc);
+        if(ticket.getTicketingPurchaseAcDoc()!=null){
+         TicketingPurchaseAcDoc doc = tPurchaseAcDocDAO.getWithChildrenById(ticket.getTicketingPurchaseAcDoc().getId());
+         doc.setDocumentedAmount(doc.calculateDocumentedAmount());
+         tPurchaseAcDocDAO.save(doc);
+        }
         return 1;
     }
 

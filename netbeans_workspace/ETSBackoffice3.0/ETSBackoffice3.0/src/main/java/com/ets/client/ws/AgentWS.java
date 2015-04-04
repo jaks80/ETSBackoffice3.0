@@ -58,11 +58,11 @@ public class AgentWS {
     @GET
     @Path("/agents/kw")
     @RolesAllowed("GS")
-    public Agents find(@QueryParam("keyword") String keyword) {
+    public Agents findByQuery(@QueryParam("keyword") String keyword) {
 
-        List<Agent> list = service.findAll(null, null, keyword);
+        List<Agent> list = service.findByKeyword(null, keyword);
         if(list.isEmpty()){
-        list = service.findAll(keyword, null, null);
+        list = service.findByKeyword(keyword, null);
         }
         
         Agents agents = new Agents();

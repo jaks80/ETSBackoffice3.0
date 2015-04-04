@@ -2,6 +2,8 @@ package com.ets.air.service;
 
 import com.ets.accountingdoc.service.TPurchaseAcDocService;
 import com.ets.air.dao.AirDAO;
+import com.ets.client.domain.Agent;
+import com.ets.client.service.AgentService;
 import com.ets.pnr.dao.*;
 import com.ets.pnr.domain.*;
 import com.ets.pnr.service.AirlineService;
@@ -24,6 +26,8 @@ public class AirService {
 
     @Resource(name = "airDAO")
     private AirDAO dao;
+    @Autowired
+    AgentService agentService;
 
     @Resource(name = "itineraryDAO")
     private ItineraryDAO itineraryDAO;
@@ -72,6 +76,8 @@ public class AirService {
 
         PnrUtil.initPnrChildren(persistedPnr);
 
+        Agent ticketing_agent = agentService.findByOfficeID(persistedPnr.getTicketingAgtOid());
+        persistedPnr.setTicketing_agent(ticketing_agent);
         save(persistedPnr);
         PnrUtil.undefinePnrChildren(persistedPnr); //Undefine cyclic dependencies to avoid cyclic xml exception
 

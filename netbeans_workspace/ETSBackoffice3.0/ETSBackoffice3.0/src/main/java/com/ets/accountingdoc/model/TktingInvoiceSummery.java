@@ -49,9 +49,11 @@ public class TktingInvoiceSummery implements Serializable {
     @XmlElement
     private String outBoundDetails;
     @XmlElement
-    private String leadPsgr;   
+    private String leadPsgr;
     @XmlElement
-    private String airLine;  
+    private String airLine;
+    @XmlElement
+    private String invBy;
 
     public Long getReference() {
         return reference;
@@ -187,6 +189,14 @@ public class TktingInvoiceSummery implements Serializable {
 
     public void setClientName(String clientName) {
         this.clientName = clientName;
+    }
+
+    public String getInvBy() {
+        return invBy;
+    }
+
+    public void setInvBy(String invBy) {
+        this.invBy = invBy;
     }
 
 }

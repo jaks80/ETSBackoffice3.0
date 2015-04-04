@@ -112,6 +112,8 @@ public class InvoiceReport implements Serializable {
             invSummery.setOtherAmount(invoice.calculateTotalDebitMemo().add(invoice.calculateTotalCreditMemo()));
             invSummery.setPayment((invoice.calculateTotalPayment().add(invoice.calculateTotalRefund())).abs());
             invSummery.setDue(invoice.calculateDueAmount());
+            
+            invSummery.setInvBy(invoice.getCreatedBy().calculateFullName());
 
             totalInvAmount = totalInvAmount.add(invoice.getDocumentedAmount());
             totalDMAmount = totalDMAmount.add(invoice.calculateTotalDebitMemo());

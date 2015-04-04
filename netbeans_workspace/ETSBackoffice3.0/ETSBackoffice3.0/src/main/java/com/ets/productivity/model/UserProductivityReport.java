@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class ProductivityReport {
+public class UserProductivityReport {
    
     @XmlElement
     private String title;
