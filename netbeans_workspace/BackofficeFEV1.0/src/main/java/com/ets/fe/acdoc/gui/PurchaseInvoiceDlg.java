@@ -270,7 +270,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
                     remark = remark + " / " + doc.getPayment().getRemark();
                 }
             }
-            model.insertRow(row, new Object[]{doc.getType(), remark, doc.getDocumentedAmount(), DateUtil.dateToString(doc.getDocIssueDate())});
+            model.insertRow(row, new Object[]{doc.getType(), remark, doc.getDocumentedAmount().abs(), DateUtil.dateToString(doc.getDocIssueDate())});
             row++;
         }
     }
@@ -584,10 +584,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
 
         tblPayment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Type", "Remark", "Amount", "Date"

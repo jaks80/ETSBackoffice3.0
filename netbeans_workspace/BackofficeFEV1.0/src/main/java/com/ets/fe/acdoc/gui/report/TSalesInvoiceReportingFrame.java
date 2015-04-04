@@ -8,6 +8,7 @@ import com.ets.fe.acdoc.task.SalesAcDocReportingTask;
 import com.ets.fe.report.MyJasperReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
+import com.ets.fe.util.PnrUtil;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
@@ -96,7 +97,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
                 TktingInvoiceSummery s = invoices.get(i);
                 tableModel.insertRow(i, new Object[]{i + 1, s.getDocIssueDate(), s.getReference(), s.getClientName(),
                     s.getGdsPnr(), s.getNoOfPax(), s.getOutBoundDetails(), s.getLeadPsgr(),
-                    s.getDocumentedAmount(), s.getPayment(), s.getOtherAmount(), s.getDue()});
+                    s.getDocumentedAmount(), s.getPayment(), s.getOtherAmount(), s.getDue(),PnrUtil.calculatePartialName(s.getInvBy())});
             }
         } else {
             tableModel.insertRow(0, new Object[]{"", "", "", "", "", "", "", "", "", "", "",""});
@@ -423,11 +424,11 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
 
             },
             new String [] {
-                "", "Date", "Reference", "Invoicee", "PNR", "Psgr", "Flight Details", "Lead Psgr", "Inv Amount", "Payment", "Other (+/-)", "Balance"
+                "", "Date", "Reference", "Invoicee", "PNR", "Psgr", "Flight Details", "Lead Psgr", "Inv Amount", "Payment", "Other (+/-)", "Balance", "InvBy"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

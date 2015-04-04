@@ -312,7 +312,6 @@
                           <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                           <Component id="txtAtol" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="chkCreditCheck" alignment="1" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -320,11 +319,10 @@
                       </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel12" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
-                              <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtCreditLimit" alignment="0" min="-2" pref="94" max="-2" attributes="0"/>
+                              <Component id="chkActive" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel12" min="-2" pref="74" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="106" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -353,13 +351,9 @@
                   <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="txtOfficeId" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
-                  <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="177" max="-2" attributes="0"/>
+                  <Component id="chkActive" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="txtCreditLimit" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="chkCreditCheck" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -368,11 +362,6 @@
         <Component class="javax.swing.JLabel" name="jLabel12">
           <Properties>
             <Property name="text" type="java.lang.String" value="Office ID"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabel14">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Credit Limit"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel15">
@@ -392,13 +381,6 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtIATA">
         </Component>
-        <Component class="javax.swing.JTextField" name="txtCreditLimit">
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="chkCreditCheck">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Allow invoicing upon limit exceded"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JLabel" name="jLabel17">
           <Properties>
             <Property name="text" type="java.lang.String" value="ABTA"/>
@@ -407,6 +389,14 @@
         <Component class="javax.swing.JTextField" name="txtAbta">
         </Component>
         <Component class="javax.swing.JTextField" name="txtOfficeId">
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chkActive">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="11" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Active"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

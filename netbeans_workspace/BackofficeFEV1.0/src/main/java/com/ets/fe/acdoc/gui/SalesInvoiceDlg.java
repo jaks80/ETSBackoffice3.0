@@ -446,6 +446,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         tblTicket.setBackground(new java.awt.Color(0, 0, 0));
+        tblTicket.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         tblTicket.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -478,6 +479,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
 
         jLabel12.setText("Card Handling Fee:");
 
+        txtCHFee.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtCHFee.setText("0.00");
         txtCHFee.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -488,6 +490,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel13.setText("Postage:");
 
+        txtPostage.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtPostage.setText("0.00");
         txtPostage.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -498,6 +501,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel14.setText("Other:");
 
+        txtOther.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtOther.setText("0.00");
         txtOther.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -921,6 +925,11 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         btnOfficeCopy.setFocusable(false);
         btnOfficeCopy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnOfficeCopy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnOfficeCopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOfficeCopyActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -1032,6 +1041,11 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
             resetPaymentComponent();
         }
     }//GEN-LAST:event_btnAppyCreditActionPerformed
+
+    private void btnOfficeCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOfficeCopyActionPerformed
+       MyJasperReport report = new MyJasperReport();
+        report.reportInvoice(tInvoice.getId(), Enums.SaleType.TKTSALES, "VIEW");
+    }//GEN-LAST:event_btnOfficeCopyActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

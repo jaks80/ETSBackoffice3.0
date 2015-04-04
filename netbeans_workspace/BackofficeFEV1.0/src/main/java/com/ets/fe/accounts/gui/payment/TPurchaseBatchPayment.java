@@ -47,7 +47,7 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
     private String taskType;
 
     public TPurchaseBatchPayment(JDesktopPane desktopPane) {
-        this.desktopPane = desktopPane;        
+        this.desktopPane = desktopPane;
         initComponents();
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
         dtTo.setDate(DateUtil.getEndOfMonth());
@@ -59,14 +59,16 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
     }
 
     private void search() {
-        taskType = "SEARCH";
-        btnSearch.setEnabled(false);
         Long client_id = documentSearchComponent.getClient_id();
-        Date from = dtFrom.getDate();
-        Date to = dtTo.getDate();
-        task = new DueInvoiceTask(Enums.TicketingType.THIRDPARY,Enums.AcDocType.INVOICE, Enums.ClientType.AGENT, client_id, from, to, progressBar, "PURCHASE");
-        task.addPropertyChangeListener(this);
-        task.execute();
+        if (client_id != null) {
+            taskType = "SEARCH";
+            btnSearch.setEnabled(false);
+            Date from = dtFrom.getDate();
+            Date to = dtTo.getDate();
+            task = new DueInvoiceTask(Enums.TicketingType.THIRDPARY, Enums.AcDocType.INVOICE, Enums.ClientType.AGENT, client_id, from, to, progressBar, "PURCHASE");
+            task.addPropertyChangeListener(this);
+            task.execute();
+        }
     }
 
     public void processPayment() {
@@ -107,6 +109,7 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
                         doc.setCreatedBy(Application.getLoggedOnUser());
                         doc.setDocumentedAmount(newPayment.negate());//Payment saves as negative
                         doc.setParent(invoice);
+                        doc.setRemark("Batch payment: " + amountString);
                         payment.addTPurchaseDocument(doc);
                     }
                 }
@@ -765,8 +768,8 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
 
             Window w = SwingUtilities.getWindowAncestor(this);
             Frame owner = w instanceof Frame ? (Frame) w : null;
-            PurchaseInvoiceDlg dlg = new PurchaseInvoiceDlg(owner);            
-            dlg.showDialog(id);            
+            PurchaseInvoiceDlg dlg = new PurchaseInvoiceDlg(owner);
+            dlg.showDialog(id);
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
 

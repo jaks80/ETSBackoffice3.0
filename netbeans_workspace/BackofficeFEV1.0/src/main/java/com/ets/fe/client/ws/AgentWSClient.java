@@ -13,21 +13,21 @@ public class AgentWSClient {
 
     public Agents find(String name,String postCode,String officeID) {
 
-        String url = APIConfig.get("ws.agent.agents");
+        StringBuilder sb = new StringBuilder(APIConfig.get("ws.agent.agents"));
         
         if(name !=null && !name.isEmpty()){
-         url = url+"?name="+name; 
+            sb.append("?name=").append(name);         
         }
         
         if(postCode !=null && !postCode.isEmpty()){
-         url = url +"&postCode="+postCode;
+            sb.append("?postCode=").append(postCode);
         }
         
         if(officeID !=null && !officeID.isEmpty()){
-         url = url + "&officeID="+officeID;
+            sb.append("?officeID=").append(officeID);
         }
         
-        return RestClientUtil.getEntity(Agents.class, url, new Agents());
+        return RestClientUtil.getEntity(Agents.class, sb.toString(), new Agents());
 
     }
 

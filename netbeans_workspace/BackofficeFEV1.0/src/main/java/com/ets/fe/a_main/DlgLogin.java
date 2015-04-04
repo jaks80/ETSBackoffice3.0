@@ -2,8 +2,10 @@ package com.ets.fe.a_main;
 
 import com.ets.fe.APIConfig;
 import com.ets.fe.Application;
+import com.ets.fe.LockApp;
 import com.ets.fe.settings.task.LoginTask;
 import com.ets.fe.settings.model.User;
+import com.ets.fe.util.DirectoryHandler;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -89,12 +91,22 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
         //</editor-fold>
 
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                DlgLogin dlgLogin = new DlgLogin();
-                dlgLogin.setVisible(true);
 
+            public void run() {
+
+                try {
+                    DirectoryHandler.setAppDirectories();
+                    LockApp l = new LockApp();
+                    DlgLogin dlgLogin = new DlgLogin();
+                    dlgLogin.setVisible(true);
+                } catch (RuntimeException ex) {
+                    JOptionPane.showMessageDialog(null, "ETSBackoffice is already running!", "ETSBAckoffice", JOptionPane.WARNING_MESSAGE);
+                    System.exit(0);
+                    return;
+                }
             }
-        });
+        }
+        );
     }
 
     /**
@@ -321,7 +333,7 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
             if (progress == 100) {
                 try {
                     User user = task.get();
-                    if (user != null && user.getUserType()!=null) {
+                    if (user != null && user.getUserType() != null) {
                         txtUserName.setText("");
                         txtPWord.setText("");
                         txtNewPassword.setText("");
@@ -334,9 +346,9 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
                             main.setVisible(true);
                         }
                         Application.loadSettings();
-                    }else{
-                     btnLogin.setEnabled(true);
-                     lblMessage.setText("Could not login...");
+                    } else {
+                        btnLogin.setEnabled(true);
+                        lblMessage.setText("Could not login...");
                     }
                 } catch (InterruptedException | ExecutionException ex) {
 

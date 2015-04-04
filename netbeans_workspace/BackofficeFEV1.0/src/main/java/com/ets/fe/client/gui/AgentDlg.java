@@ -1,6 +1,7 @@
 package com.ets.fe.client.gui;
 
 import com.ets.fe.client.model.Agent;
+import com.ets.fe.util.CheckInput;
 import com.ets.fe.util.DocumentSizeFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,14 +13,14 @@ import javax.swing.text.AbstractDocument;
  *
  * @author Yusuf
  */
-public class AgentDlg extends JDialog implements ActionListener{
+public class AgentDlg extends JDialog implements ActionListener {
 
     private boolean save;
-    
-   public AgentDlg(java.awt.Frame parent) {
+
+    public AgentDlg(java.awt.Frame parent) {
         super(parent, "Agent Details", true);
         initComponents();
-        btnSave.addActionListener(this);        
+        btnSave.addActionListener(this);
 
         AbstractDocument doc;
         doc = (AbstractDocument) txtName.getDocument();
@@ -45,19 +46,25 @@ public class AgentDlg extends JDialog implements ActionListener{
         doc = (AbstractDocument) txtEmail.getDocument();
         doc = (AbstractDocument) txtRemark.getDocument();
         doc.setDocumentFilter(new DocumentSizeFilter(400));
-        
+
         doc = (AbstractDocument) txtOfficeId.getDocument();
         doc.setDocumentFilter(new DocumentSizeFilter(50));
-        
-        
+
+        CheckInput a = new CheckInput();
+        CheckInput b = new CheckInput();
+        CheckInput c = new CheckInput();
+
+        txtAtol.setDocument(a);
+        txtIATA.setDocument(b);
+        txtAbta.setDocument(c);
     }
 
     @Override
     public void actionPerformed(ActionEvent evt) {
         Object source = evt.getSource();
         if (source == btnSave) {
-            if (txtName.getText().isEmpty() || txtAddLine1.getText().isEmpty() 
-                    || txtPostCode.getText().isEmpty()|| txtTelNo.getText().isEmpty()) {
+            if (txtName.getText().isEmpty() || txtAddLine1.getText().isEmpty()
+                    || txtPostCode.getText().isEmpty() || txtTelNo.getText().isEmpty()) {
                 lblInfo.setText("Enter mendatory fields...");
             } else {
                 save = true;
@@ -86,18 +93,12 @@ public class AgentDlg extends JDialog implements ActionListener{
             txtAbta.setText(agent.getAbta());
             txtAtol.setText(agent.getAtol());
             txtOfficeId.setText(agent.getOfficeID());
-            
-            if (chkCreditCheck.isSelected()) {
-                agent.setcLimitOverInvoicing(true);
-            } else {
-                agent.setcLimitOverInvoicing(false);
-            }
-            
-            if (agent.getFullName()!= null) {
+            if (agent.getFullName() != null) {
                 txtAddLine1.requestFocusInWindow();
             } else {
                 txtName.requestFocusInWindow();
             }
+            chkActive.setSelected(agent.isIsActive());
         }
         save = false;
         setLocationRelativeTo(this);
@@ -114,20 +115,18 @@ public class AgentDlg extends JDialog implements ActionListener{
             agent.setTelNo(txtTelNo.getText().trim());
             agent.setFax(txtFax.getText().trim());
             agent.setMobile(txtMobile.getText().trim());
-            agent.setEmail(txtEmail.getText().trim());
-            agent.setRemark(txtRemark.getText().trim());
+            String email = txtEmail.getText().trim();
+            if(!email.isEmpty()){
+             agent.setEmail(email.toLowerCase());
+            }
             
+            agent.setRemark(txtRemark.getText().trim());
+
             agent.setAtol(txtAtol.getText().trim());
             agent.setIata(txtIATA.getText().trim());
             agent.setAbta(txtAbta.getText().trim());
             agent.setOfficeID(txtOfficeId.getText().trim());
-            
-            if(txtCreditLimit.getText() != null && !txtCreditLimit.getText().isEmpty()){
-             agent.setCreditLimit(new BigDecimal(txtCreditLimit.getText().trim()));
-            }else{
-             agent.setCreditLimit(new BigDecimal("0.00"));
-            }
-            
+            agent.setIsActive(chkActive.isSelected());
         }
         return save;
     }
@@ -170,16 +169,14 @@ public class AgentDlg extends JDialog implements ActionListener{
         txtRemark = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         txtAtol = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         txtIATA = new javax.swing.JTextField();
-        txtCreditLimit = new javax.swing.JTextField();
-        chkCreditCheck = new javax.swing.JCheckBox();
         jLabel17 = new javax.swing.JLabel();
         txtAbta = new javax.swing.JTextField();
         txtOfficeId = new javax.swing.JTextField();
+        chkActive = new javax.swing.JCheckBox();
         jSeparator1 = new javax.swing.JSeparator();
         btnSave = new javax.swing.JButton();
         btnClose = new javax.swing.JButton();
@@ -376,8 +373,6 @@ public class AgentDlg extends JDialog implements ActionListener{
 
         jLabel12.setText("Office ID");
 
-        jLabel14.setText("Credit Limit");
-
         jLabel15.setText("ATOL");
 
         txtAtol.addActionListener(new java.awt.event.ActionListener() {
@@ -388,9 +383,10 @@ public class AgentDlg extends JDialog implements ActionListener{
 
         jLabel16.setText("IATA");
 
-        chkCreditCheck.setText("Allow invoicing upon limit exceded");
-
         jLabel17.setText("ABTA");
+
+        chkActive.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        chkActive.setText("Active");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -408,17 +404,15 @@ public class AgentDlg extends JDialog implements ActionListener{
                         .addComponent(jLabel15)
                         .addGap(16, 16, 16)
                         .addComponent(txtAtol))
-                    .addComponent(chkCreditCheck, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel17)
                         .addGap(18, 18, 18)
                         .addComponent(txtAbta))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel14)
-                            .addComponent(txtCreditLimit, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(chkActive)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 106, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -440,13 +434,9 @@ public class AgentDlg extends JDialog implements ActionListener{
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtOfficeId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(87, 87, 87)
-                .addComponent(jLabel14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtCreditLimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(chkCreditCheck)
-                .addGap(50, 50, 50))
+                .addGap(177, 177, 177)
+                .addComponent(chkActive)
+                .addContainerGap())
         );
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
@@ -525,20 +515,19 @@ public class AgentDlg extends JDialog implements ActionListener{
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-       dispose();
+        dispose();
     }//GEN-LAST:event_btnCloseActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnSave;
-    private javax.swing.JCheckBox chkCreditCheck;
+    private javax.swing.JCheckBox chkActive;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
@@ -562,7 +551,6 @@ public class AgentDlg extends JDialog implements ActionListener{
     private javax.swing.JTextField txtAtol;
     private javax.swing.JTextField txtCity;
     private javax.swing.JTextField txtContactPerson;
-    private javax.swing.JTextField txtCreditLimit;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtFax;
     private javax.swing.JTextField txtIATA;

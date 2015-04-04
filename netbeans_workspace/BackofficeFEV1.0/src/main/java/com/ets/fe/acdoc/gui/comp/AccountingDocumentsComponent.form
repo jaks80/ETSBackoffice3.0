@@ -124,6 +124,9 @@
                   <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tblSalesMouseClicked"/>
+              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JXTable(){&#xd;&#xa;public Component prepareRenderer(TableCellRenderer renderer,int rowIndex, int vColIndex) &#xd;&#xa;{&#xd;&#xa;Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);&#xd;&#xa;String s = this.getModel().getValueAt(rowIndex, 5).toString();&#xd;&#xa;if(s.equalsIgnoreCase(&quot;VOID&quot;)){&#xd;&#xa;Map  attributes = c.getFont().getAttributes();&#xd;&#xa;attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);&#xd;&#xa;Font newFont = new Font(attributes);&#xd;&#xa;c.setFont(newFont);}&#xd;&#xa;return c;} &#xd;&#xa;}"/>
               </AuxValues>
@@ -195,6 +198,9 @@
                   <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tblPurchaseMouseClicked"/>
+              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JXTable(){&#xd;&#xa;public Component prepareRenderer(TableCellRenderer renderer,int rowIndex, int vColIndex) &#xd;&#xa;{&#xd;&#xa;Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);&#xd;&#xa;String s = this.getModel().getValueAt(rowIndex, 5).toString();&#xd;&#xa;if(s.equalsIgnoreCase(&quot;VOID&quot;)){&#xd;&#xa;Map  attributes = c.getFont().getAttributes();&#xd;&#xa;attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);&#xd;&#xa;Font newFont = new Font(attributes);&#xd;&#xa;c.setFont(newFont);}&#xd;&#xa;return c;} &#xd;&#xa;}"/>
               </AuxValues>

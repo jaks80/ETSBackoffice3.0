@@ -12,19 +12,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Yusuf
  */
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class Agent extends Contactable implements Serializable{
-    
+public class Agent extends Contactable implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    
+
     @XmlElement
     private String contactPerson;
     @XmlElement
     private String name;
     @XmlElement
-    private String web;    
+    private String web;
     @XmlElement
     private String atol;
     @XmlElement
@@ -32,15 +31,13 @@ public class Agent extends Contactable implements Serializable{
     @XmlElement
     private String abta;
     @XmlElement
-    private BigDecimal creditLimit = new BigDecimal("0.00");
-    @XmlElement
-    private boolean cLimitOverInvoicing;    
-    @XmlElement
     private String officeID;
-    
+    @XmlElement
+    private boolean isActive;
+
     public Agent() {
         super();
-        
+
     }
 
     public String getName() {
@@ -67,29 +64,13 @@ public class Agent extends Contactable implements Serializable{
         this.atol = atol;
     }
 
-    public BigDecimal getCreditLimit() {
-        return creditLimit;
-    }
-
-    public void setCreditLimit(BigDecimal creditLimit) {
-        this.creditLimit = creditLimit;
-    }
-
-    public boolean iscLimitOverInvoicing() {
-        return cLimitOverInvoicing;
-    }
-
-    public void setcLimitOverInvoicing(boolean cLimitOverInvoicing) {
-        this.cLimitOverInvoicing = cLimitOverInvoicing;
-    }
-
     public String getOfficeID() {
         return officeID;
     }
 
     public void setOfficeID(String officeID) {
         this.officeID = officeID;
-    } 
+    }
 
     public String getContactPerson() {
         return contactPerson;
@@ -113,10 +94,18 @@ public class Agent extends Contactable implements Serializable{
 
     public void setAbta(String abta) {
         this.abta = abta;
-    }   
-    
+    }
+
     @Override
     public String getFullName() {
         return this.name;
+    }
+
+    public boolean isIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 }

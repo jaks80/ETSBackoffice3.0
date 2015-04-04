@@ -169,7 +169,8 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                 if (s.getType().equals(AcDocType.PAYMENT)) {
                     amount = amount.abs();
                 }
-                model.insertRow(row, new Object[]{s.getType(), s.getReference(), DateUtil.dateToString(s.getDocIssueDate()), amount, "", s.getStatus()});
+                model.insertRow(row, new Object[]{s.getType(), s.getReference(), 
+                    DateUtil.dateToString(s.getDocIssueDate()), amount,s.getCreatedBy().getFullName(), s.getStatus()});
                 row++;
             }
         } else {
@@ -257,6 +258,11 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         });
         tblSales.setSortable(false);
         tblSales.getTableHeader().setReorderingAllowed(false);
+        tblSales.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSalesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblSales);
 
         tabAcDoc.addTab("Sales Documents", jScrollPane1);
@@ -279,6 +285,11 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         });
         tblPurchase.setSortable(false);
         tblPurchase.getTableHeader().setReorderingAllowed(false);
+        tblPurchase.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPurchaseMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblPurchase);
 
         tabAcDoc.addTab("Purchase Documents", jScrollPane2);
@@ -367,6 +378,18 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
        deleteDocument();
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void tblSalesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSalesMouseClicked
+        if (evt.getClickCount() == 2) {
+            getDocument();
+        }
+    }//GEN-LAST:event_tblSalesMouseClicked
+
+    private void tblPurchaseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPurchaseMouseClicked
+       if (evt.getClickCount() == 2) {
+            getDocument();
+        }
+    }//GEN-LAST:event_tblPurchaseMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

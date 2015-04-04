@@ -1,9 +1,10 @@
-package com.ets.fe.acdoc_o.gui;
+package com.ets.fe.accounts.gui.payment;
 
 import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.accounts.model.Payments;
 import com.ets.fe.accounts.task.PaymentTask;
+import com.ets.fe.acdoc_o.gui.OtherInvoiceDlg;
 import com.ets.fe.acdoc_o.model.OtherSalesAcDoc;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
@@ -11,6 +12,7 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +35,7 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
     private PaymentTask task;
     private JDesktopPane desktopPane;
 
-    public OtherSalesBatchPaymentReport(JDesktopPane desktopPane) {        
+    public OtherSalesBatchPaymentReport(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
         initComponents();
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
@@ -60,30 +62,36 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
             for (int i = 0; i < payments.size(); i++) {
                 Payment p = payments.get(i);
                 String date = DateUtil.dateToString(p.getoSalesAcDocuments().get(0).getDocIssueDate());
-                tableModel.insertRow(i, new Object[]{date, p.calculateTotalOtherPayment().abs(),p.getCreatedByName()});
+                tableModel.insertRow(i, new Object[]{date, p.calculateTotalOtherPayment().abs(), p.getCreatedByName()});
             }
         } else {
             tableModel.insertRow(0, new Object[]{"", ""});
         }
     }
 
-    private void populatePaymentDocuments(Payment payment){
-     DefaultTableModel tableModel = (DefaultTableModel) tblPaymentDocs.getModel();
+    private void populatePaymentDocuments(Payment payment) {
+        DefaultTableModel tableModel = (DefaultTableModel) tblPaymentDocs.getModel();
         tableModel.getDataVector().removeAllElements();
-        
+
         List<OtherSalesAcDoc> docs = payment.getoSalesAcDocuments();
+        BigDecimal total = new BigDecimal("0.00");
+
         if (docs.size() > 0) {
-            for (int i = 0; i < docs.size(); i++) {
+            int i = 0;
+            for (; i < docs.size(); i++) {
                 OtherSalesAcDoc doc = docs.get(i);
+                total = total.add(doc.getDocumentedAmount());
                 String date = DateUtil.dateToString(doc.getDocIssueDate());
-                tableModel.insertRow(i, new Object[]{i+1,doc.getReference(),DateUtil.dateToString(doc.getDocIssueDate()),
-                    doc.getRemark(),date,doc.getDocumentedAmount().abs()});
+                tableModel.insertRow(i, new Object[]{i + 1, doc.getReference(), DateUtil.dateToString(doc.getDocIssueDate()),
+                    doc.getRemark(), date, doc.getDocumentedAmount().abs()});
             }
+            tableModel.insertRow(i, new Object[]{"", "", "Total:", "", "", total.abs()});
         } else {
-            tableModel.insertRow(0, new Object[]{"", "","","",""});
+            tableModel.insertRow(0, new Object[]{"", "", "", "", ""});
         }
-        
+
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -104,8 +112,10 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
         jLabel7 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblPayment = new org.jdesktop.swingx.JXTable();
+        jPanel6 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblPaymentDocs = new org.jdesktop.swingx.JXTable();
         jPanel1 = new javax.swing.JPanel();
@@ -123,6 +133,8 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
         setMaximizable(true);
         setResizable(true);
         setTitle("History: Sales Payment for Other Invoices");
+        setMinimumSize(new java.awt.Dimension(1000, 500));
+        setPreferredSize(new java.awt.Dimension(1000, 500));
 
         jSplitPane1.setDividerLocation(200);
         jSplitPane1.setDividerSize(4);
@@ -179,12 +191,15 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
                 .addComponent(dtTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(documentSearchComponent, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(jPanel4);
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Payment", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        jPanel5.setLayout(new java.awt.GridLayout());
 
         tblPayment.setBackground(new java.awt.Color(204, 255, 255));
         tblPayment.setModel(new javax.swing.table.DefaultTableModel(
@@ -207,15 +222,17 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
         tblPayment.getSelectionModel().addListSelectionListener(tblPaymentListener);
         jScrollPane1.setViewportView(tblPayment);
 
+        jPanel5.add(jScrollPane1);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 0.2;
-        gridBagConstraints.weighty = 0.2;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel2.add(jScrollPane1, gridBagConstraints);
+        jPanel2.add(jPanel5, gridBagConstraints);
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Invoices", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        jPanel6.setLayout(new java.awt.GridLayout());
 
         tblPaymentDocs.setBackground(new java.awt.Color(255, 255, 204));
         tblPaymentDocs.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
@@ -236,15 +253,14 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
             tblPaymentDocs.getColumnModel().getColumn(0).setMaxWidth(60);
         }
 
+        jPanel6.add(jScrollPane2);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 0.8;
-        gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel2.add(jScrollPane2, gridBagConstraints);
+        jPanel2.add(jPanel6, gridBagConstraints);
 
         jSplitPane1.setRightComponent(jPanel2);
 
@@ -360,7 +376,7 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addComponent(jSplitPane1)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -380,7 +396,7 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
-       
+
     }//GEN-LAST:event_btnViewReportActionPerformed
 
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
@@ -392,8 +408,8 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
 
             Window w = SwingUtilities.getWindowAncestor(this);
             Frame owner = w instanceof Frame ? (Frame) w : null;
-            OtherInvoiceDlg dlg = new OtherInvoiceDlg(owner);            
-            dlg.showDialog(id);            
+            OtherInvoiceDlg dlg = new OtherInvoiceDlg(owner);
+            dlg.showDialog(id);
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
 
@@ -416,6 +432,8 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;

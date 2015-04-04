@@ -19,11 +19,11 @@ public class EventSource extends Observable implements Runnable {
 
             if (!air.exists()) {
                 break;
-            } else {
-                if (!errorAir.exists()) {
-                    errorAir.mkdir();
-                }
-            }
+            } //else {
+                //if (!errorAir.exists()) {
+                //    errorAir.mkdir();
+                //}
+            //}
 
             airs = air.listFiles();
             numberOfAirs = air.listFiles().length;

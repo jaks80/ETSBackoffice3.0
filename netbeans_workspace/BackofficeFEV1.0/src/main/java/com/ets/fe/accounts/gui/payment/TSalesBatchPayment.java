@@ -43,14 +43,14 @@ import org.jdesktop.swingx.JXTable;
 public class TSalesBatchPayment extends javax.swing.JInternalFrame implements PropertyChangeListener {
 
     private JDesktopPane desktopPane;
-    private DueInvoiceTask task;   
+    private DueInvoiceTask task;
     private NewPaymentTask paymentTask;
     private List<TicketingSalesAcDoc> invoices;
     //private InvoiceReport report;
     private String taskType;
 
     public TSalesBatchPayment(JDesktopPane desktopPane) {
-        this.desktopPane = desktopPane;        
+        this.desktopPane = desktopPane;
         initComponents();
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
         dtTo.setDate(DateUtil.getEndOfMonth());
@@ -63,14 +63,16 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
     }
 
     private void search() {
-        taskType = "SEARCH";
-        btnSearch.setEnabled(false);
         Long client_id = documentSearchComponent.getClient_id();
-        Date from = dtFrom.getDate();
-        Date to = dtTo.getDate();
-        task = new DueInvoiceTask(null,Enums.AcDocType.INVOICE, Enums.ClientType.AGENT, client_id, from, to, progressBar, "SALES");
-        task.addPropertyChangeListener(this);
-        task.execute();
+        if (client_id != null) {
+            taskType = "SEARCH";
+            btnSearch.setEnabled(false);
+            Date from = dtFrom.getDate();
+            Date to = dtTo.getDate();
+            task = new DueInvoiceTask(null, Enums.AcDocType.INVOICE, Enums.ClientType.AGENT, client_id, from, to, progressBar, "SALES");
+            task.addPropertyChangeListener(this);
+            task.execute();
+        }
     }
 
     public void processPayment() {
@@ -89,7 +91,7 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
 
             Payment payment = new Payment();
             payment.setPaymentType(type);
-            payment.setRemark(remark+"("+amount.toString()+")");
+            payment.setRemark(remark + "(" + amount.toString() + ")");
             payment.setCreatedBy(Application.getLoggedOnUser());
 
             int noOfRow = tblInvoices.getRowCount();
@@ -111,6 +113,7 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
                         doc.setCreatedBy(Application.getLoggedOnUser());
                         doc.setDocumentedAmount(newPayment.negate());//Payment saves as negative                      
                         doc.setParent(invoice);
+                        doc.setRemark("Batch payment: " + amountString);
                         payment.addTSalesDocument(doc);
                     }
                 }
@@ -163,7 +166,7 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
         lblOther.setText(totalOther.toString());
         lblPayment.setText(totalPayment.toString());
         lblDue.setText(totalDue.toString());
-        
+
         tableModel.addTableModelListener(new TableModelListener() {
 
             public void tableChanged(TableModelEvent e) {
@@ -314,6 +317,8 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
         setMaximizable(true);
         setResizable(true);
         setTitle("Sales: Batch Payment");
+        setMinimumSize(new java.awt.Dimension(1000, 500));
+        setPreferredSize(new java.awt.Dimension(1000, 500));
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel3.setMaximumSize(new java.awt.Dimension(32767, 24));
@@ -767,7 +772,7 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
     }//GEN-LAST:event_btnSubmitPaymentActionPerformed
 
     private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
-       
+
     }//GEN-LAST:event_btnViewReportActionPerformed
 
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
@@ -777,8 +782,8 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
 
             Window w = SwingUtilities.getWindowAncestor(this);
             Frame owner = w instanceof Frame ? (Frame) w : null;
-            SalesInvoiceDlg dlg = new SalesInvoiceDlg(owner);            
-            dlg.showDialog(id);            
+            SalesInvoiceDlg dlg = new SalesInvoiceDlg(owner);
+            dlg.showDialog(id);
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
 
@@ -827,12 +832,12 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
     private javax.swing.JTextField txtRef;
     // End of variables declaration//GEN-END:variables
 
-    private void resetPaymentComponent(){
-     btnSubmitPayment.setEnabled(true);
-     cmbTType.setSelectedIndex(0);
-     txtAmount.setText("");
-     txtRef.setText("");
-     chkReverseEntry.setSelected(false);
+    private void resetPaymentComponent() {
+        btnSubmitPayment.setEnabled(true);
+        cmbTType.setSelectedIndex(0);
+        txtAmount.setText("");
+        txtRef.setText("");
+        chkReverseEntry.setSelected(false);
     }
 
     private void setPaymentType() {
@@ -864,19 +869,22 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    if (null != taskType) switch (taskType) {
-                        case "SEARCH":
-                            invoices = new ArrayList<>();
-                            List<AccountingDocument> list = task.get();
-                            for (AccountingDocument doc : list) {
-                                invoices.add((TicketingSalesAcDoc) doc);
-                            }   populateTable();
-                            taskType = "";
-                            break;
-                        case "PAYMENT":
-                            resetPaymentComponent();
-                            search();                            
-                            break;
+                    if (null != taskType) {
+                        switch (taskType) {
+                            case "SEARCH":
+                                invoices = new ArrayList<>();
+                                List<AccountingDocument> list = task.get();
+                                for (AccountingDocument doc : list) {
+                                    invoices.add((TicketingSalesAcDoc) doc);
+                                }
+                                populateTable();
+                                taskType = "";
+                                break;
+                            case "PAYMENT":
+                                resetPaymentComponent();
+                                search();
+                                break;
+                        }
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(TSalesBatchPayment.class.getName()).log(Level.SEVERE, null, ex);

@@ -301,6 +301,11 @@
                                   <Component id="txtEmail" max="32767" attributes="0"/>
                                   <Component id="txtEmailPassword" max="32767" attributes="0"/>
                               </Group>
+                              <Group type="102" attributes="0">
+                                  <Component id="chkStarttls" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="chkSmtpAuth" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace pref="122" max="32767" attributes="0"/>
                       </Group>
@@ -329,7 +334,12 @@
                               <Component id="txtPort" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="185" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="chkStarttls" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="chkSmtpAuth" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="158" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -362,6 +372,16 @@
                 <Component class="javax.swing.JTextField" name="txtPort">
                 </Component>
                 <Component class="javax.swing.JPasswordField" name="txtEmailPassword">
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkSmtpAuth">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="SMTP Auth"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkStarttls">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="STARTTLS"/>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>

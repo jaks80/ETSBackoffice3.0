@@ -15,8 +15,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 public class UserProductivityReport {
-    
-   @XmlElement
+
+    @XmlElement
     private String title;
     @XmlElement
     private Enums.SaleType saleType;
@@ -26,7 +26,6 @@ public class UserProductivityReport {
     private String dateTo;
     @XmlElement
     private Map<String, String> productivityLine = new LinkedHashMap<>();
-
 
     public String getTitle() {
         return title;
@@ -67,5 +66,4 @@ public class UserProductivityReport {
     public void setSaleType(Enums.SaleType saleType) {
         this.saleType = saleType;
     }
-
 }

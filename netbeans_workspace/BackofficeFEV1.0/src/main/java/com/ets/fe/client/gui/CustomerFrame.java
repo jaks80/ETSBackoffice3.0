@@ -25,7 +25,7 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
     private CustomerSearchTask task;
     private Customers customers;
     private JDesktopPane desktopPane;
-            
+
     public CustomerFrame(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
         initComponents();
@@ -63,7 +63,7 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
         task.addPropertyChangeListener(this);
         task.execute();
     }
-        
+
     private void populateTblCustomer() {
         List<Customer> list = customers.getList();
         DefaultTableModel tableModel = (DefaultTableModel) tblCustomer.getModel();
@@ -122,6 +122,9 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
         jPanel3.setPreferredSize(new java.awt.Dimension(980, 30));
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
+        progressBar.setMaximumSize(new java.awt.Dimension(145, 17));
+        progressBar.setMinimumSize(new java.awt.Dimension(145, 17));
+        progressBar.setPreferredSize(new java.awt.Dimension(145, 17));
         progressBar.setStringPainted(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -183,6 +186,11 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
         jPanel1.add(jLabel5, gridBagConstraints);
 
         txtName.setToolTipText("Surname / ForeName(s)");
+        txtName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtNameFocusGained(evt);
+            }
+        });
         txtName.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtNameKeyReleased(evt);
@@ -197,6 +205,11 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtName, gridBagConstraints);
 
+        txtPostCode.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtPostCodeFocusGained(evt);
+            }
+        });
         txtPostCode.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtPostCodeKeyReleased(evt);
@@ -211,6 +224,11 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtPostCode, gridBagConstraints);
 
+        txtTelNo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtTelNoFocusGained(evt);
+            }
+        });
         txtTelNo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtTelNoKeyReleased(evt);
@@ -277,7 +295,7 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
         jPanel2.setBackground(new java.awt.Color(102, 102, 102));
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newClient18.png"))); // NOI18N
+        btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newclient18.png"))); // NOI18N
         btnNew.setToolTipText("New Agent");
         btnNew.setMaximumSize(new java.awt.Dimension(40, 22));
         btnNew.setMinimumSize(new java.awt.Dimension(40, 22));
@@ -383,19 +401,19 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
 
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
         Window w = SwingUtilities.getWindowAncestor(this);
-        Frame owner = w instanceof Frame ? (Frame)w : null;        
+        Frame owner = w instanceof Frame ? (Frame) w : null;
         CustomerDlg dlg = new CustomerDlg(owner);
         dlg.setLocationRelativeTo(this);
         dlg.setTitle("New Customer");
         Customer customer = new Customer();
         if (dlg.showDialog(customer)) {
             CustomerTask task = new CustomerTask(customer);
-            task.execute();            
+            task.execute();
         }
     }//GEN-LAST:event_btnNewActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-       Window w = SwingUtilities.getWindowAncestor(this);
+        Window w = SwingUtilities.getWindowAncestor(this);
         Frame owner = w instanceof Frame ? (Frame) w : null;
         CustomerDlg dlg = new CustomerDlg(owner);
         dlg.setLocationRelativeTo(this);
@@ -418,6 +436,24 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         search();
     }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void txtPostCodeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPostCodeFocusGained
+        txtName.setText("");
+        txtTelNo.setText("");
+        txtPostCode.selectAll();
+    }//GEN-LAST:event_txtPostCodeFocusGained
+
+    private void txtNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNameFocusGained
+        txtName.selectAll();
+        txtTelNo.setText("");
+        txtPostCode.setText("");
+    }//GEN-LAST:event_txtNameFocusGained
+
+    private void txtTelNoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTelNoFocusGained
+        txtName.setText("");
+        txtTelNo.selectAll();
+        txtPostCode.setText("");
+    }//GEN-LAST:event_txtTelNoFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -452,7 +488,7 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
                     customers = (Customers) task.get();
                     populateTblCustomer();
                 } catch (InterruptedException | ExecutionException ex) {
-                    System.out.println("Exception:"+ex);
+                    System.out.println("Exception:" + ex);
                 } finally {
                     btnSearch.setEnabled(true);
                 }

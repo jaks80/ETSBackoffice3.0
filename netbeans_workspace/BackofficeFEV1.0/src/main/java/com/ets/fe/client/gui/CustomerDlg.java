@@ -97,7 +97,11 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
             customer.setTelNo(txtTelNo.getText().trim());
             customer.setFax(txtFax.getText().trim());
             customer.setMobile(txtMobile.getText().trim());
-            customer.setEmail(txtEmail.getText().trim());
+             String email = txtEmail.getText().trim();
+            if(!email.isEmpty()){
+             customer.setEmail(email.toLowerCase());
+            }
+            
             customer.setRemark(txtRemark.getText().trim());
         }
         return save;
@@ -146,7 +150,6 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setAlwaysOnTop(true);
         setResizable(false);
 
         jPanel1.setLayout(new java.awt.GridBagLayout());

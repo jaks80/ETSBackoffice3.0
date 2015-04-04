@@ -218,6 +218,8 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
     setMaximizable(true);
     setResizable(true);
     setTitle("Purchase: Bill Payment");
+    setMinimumSize(new java.awt.Dimension(1000, 500));
+    setPreferredSize(new java.awt.Dimension(1000, 500));
 
     jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
     jPanel3.setMaximumSize(new java.awt.Dimension(32767, 24));
@@ -309,7 +311,7 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
             .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGap(2, 2, 2)
             .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(651, 651, 651))
+            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     jPanel1Layout.setVerticalGroup(
         jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -392,10 +394,12 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
     gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 2);
     jPanel2.add(jLabel9, gridBagConstraints);
 
+    jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel6.setText("Date From");
 
     dtFrom.setPreferredSize(new java.awt.Dimension(110, 20));
 
+    jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel8.setText("Date To");
 
     dtTo.setPreferredSize(new java.awt.Dimension(110, 20));
@@ -452,7 +456,7 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
     jPanel8.add(txtAmount, gridBagConstraints);
 
     btnSubmitPayment.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-    btnSubmitPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/payment24.png"))); // NOI18N
+    btnSubmitPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/payment18.png"))); // NOI18N
     btnSubmitPayment.setText("Submit");
     btnSubmitPayment.setPreferredSize(new java.awt.Dimension(135, 30));
     btnSubmitPayment.addActionListener(new java.awt.event.ActionListener() {
@@ -539,14 +543,14 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
         jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(jPanel5Layout.createSequentialGroup()
             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(0, 201, Short.MAX_VALUE))
+            .addGap(0, 222, Short.MAX_VALUE))
     );
     jPanel5Layout.setVerticalGroup(
         jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(jPanel5Layout.createSequentialGroup()
             .addGap(2, 2, 2)
             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(29, Short.MAX_VALUE))
+            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     jTabbedPane1.addTab("ADM/ACM", jPanel5);
@@ -556,25 +560,24 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
     layout.setHorizontalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(layout.createSequentialGroup()
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 991, Short.MAX_VALUE)
+            .addContainerGap())
+        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(4, 4, 4)
+            .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(4, 4, 4)
-                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(2, 2, 2)
-                            .addComponent(jTabbedPane1)))))
-            .addGap(2, 2, 2))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(2, 2, 2)
+                    .addComponent(jTabbedPane1))))
     );
     layout.setVerticalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -587,7 +590,7 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(16, 16, 16)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 397, Short.MAX_VALUE))
+                    .addGap(0, 379, Short.MAX_VALUE))
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(jTabbedPane1)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

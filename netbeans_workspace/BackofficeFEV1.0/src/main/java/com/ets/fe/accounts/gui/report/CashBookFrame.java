@@ -2,14 +2,10 @@ package com.ets.fe.accounts.gui.report;
 
 import com.ets.fe.accounts.model.CashBookLine;
 import com.ets.fe.accounts.model.CashBookReport;
-import com.ets.fe.accounts.model.Payment;
-import com.ets.fe.accounts.model.Payments;
 import com.ets.fe.accounts.task.CashBookTask;
-import com.ets.fe.accounts.task.PaymentTask;
 import com.ets.fe.settings.model.User;
 import com.ets.fe.settings.model.Users;
 import com.ets.fe.settings.task.UserTask;
-import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.Color;
 import java.awt.Component;
@@ -57,7 +53,7 @@ public class CashBookFrame extends javax.swing.JInternalFrame implements Propert
         setSaleType();
         loadUsers();
         dtFrom.setDate(new java.util.Date());
-        dtTo.setDate(new java.util.Date());  
+        dtTo.setDate(new java.util.Date());
     }
 
     private void setPaymentType() {
@@ -75,7 +71,7 @@ public class CashBookFrame extends javax.swing.JInternalFrame implements Propert
     }
 
     private void setSaleType() {
-        DefaultComboBoxModel model = new DefaultComboBoxModel(Enums.SaleType.values());        
+        DefaultComboBoxModel model = new DefaultComboBoxModel(Enums.SaleType.values());
         cmbSaleType.setModel(model);
         cmbSaleType.setSelectedIndex(0);
     }
@@ -106,20 +102,20 @@ public class CashBookFrame extends javax.swing.JInternalFrame implements Propert
         }
         clientType = documentSearchComponent.getContactableType();
         this.taskType = "CASHBOOK";
-        cashBookTask = new CashBookTask(userid, clientType, client_id, from, to, progressBar, saleType,paymentType);
+        cashBookTask = new CashBookTask(userid, clientType, client_id, from, to, progressBar, saleType, paymentType);
         cashBookTask.addPropertyChangeListener(this);
         cashBookTask.execute();
     }
 
-    private void populateSummery(CashBookReport report){
-     lblCash.setText(report.getTotalCash().toString());
-     lblCheque.setText(report.getTotalCheque().toString());
-     lblCCard.setText(report.getTotalCCard().toString());
-     lblDCard.setText(report.getTotalDCard().toString());
-     lblCTransfer.setText(report.getTotalCreditTransfer().toString());
-     lblBTransfer.setText(report.getTotalBankTransfer().toString());
+    private void populateSummery(CashBookReport report) {
+        lblCash.setText(report.getTotalCash().toString());
+        lblCheque.setText(report.getTotalCheque().toString());
+        lblCCard.setText(report.getTotalCCard().toString());
+        lblDCard.setText(report.getTotalDCard().toString());
+        lblCTransfer.setText(report.getTotalCreditTransfer().toString());
+        lblBTransfer.setText(report.getTotalBankTransfer().toString());
     }
-    
+
     private void populateTblPayment() {
 
         DefaultTableModel tableModel = (DefaultTableModel) tblPayment.getModel();
@@ -130,7 +126,7 @@ public class CashBookFrame extends javax.swing.JInternalFrame implements Propert
             for (int i = 0; i < cashbook_items.size(); i++) {
                 CashBookLine p = cashbook_items.get(i);
                 tableModel.insertRow(i, new Object[]{p.getDate(), p.getPaymentType(), p.getSaleType(),
-                    p.getAmount(), p.getReferenceSet(), p.getGdsPnrSet(), p.getClientName(), p.getPaymentremark(),p.getCashier().substring(0, 10)});
+                    p.getAmount(), p.getReferenceSet(), p.getGdsPnrSet(), p.getClientName(), p.getPaymentremark(), p.getCashier().substring(0, 10)});
             }
         } else {
             tableModel.insertRow(0, new Object[]{"", "", "", "", "", "", "", "", ""});
@@ -722,8 +718,8 @@ public class CashBookFrame extends javax.swing.JInternalFrame implements Propert
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(CashBookFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }finally{
-                 btnSearch.setEnabled(true);
+                } finally {
+                    btnSearch.setEnabled(true);
                 }
             }
         }

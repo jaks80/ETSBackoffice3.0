@@ -1,5 +1,6 @@
 package com.ets.fe.client.gui;
 
+import com.amadeus.air.AIR;
 import com.ets.fe.client.task.AgentTask;
 import com.ets.fe.client.task.AgentSearchTask;
 import com.ets.fe.client.collection.Agents;
@@ -10,6 +11,12 @@ import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -75,7 +82,8 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
                 Agent agent = list.get(i);
-                tableModel.insertRow(i, new Object[]{i + 1, agent.getFullName(), agent.getAddLine1(), agent.getPostCode(), agent.getTelNo(), agent.getEmail(), agent.getOfficeID()});
+                tableModel.insertRow(i, new Object[]{i + 1, agent.getId(),agent.getFullName(), agent.getAddLine1(), 
+                    agent.getPostCode(), agent.getTelNo(), agent.getEmail(), agent.getOfficeID(),agent.isIsActive()});
             }
         } else {
             tableModel.insertRow(0, new Object[]{});
@@ -92,6 +100,7 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        fileChooser = new javax.swing.JFileChooser();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -112,12 +121,18 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAgent = new org.jdesktop.swingx.JXTable();
+        jPanel4 = new javax.swing.JPanel();
+        txtFilePath = new javax.swing.JTextField();
+        btnImport = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtMessage = new javax.swing.JTextArea();
 
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
         setTitle("Travel Agents and Sub Agents Details");
-        setPreferredSize(new java.awt.Dimension(1000, 450));
+        setMinimumSize(new java.awt.Dimension(1000, 500));
+        setPreferredSize(new java.awt.Dimension(1000, 500));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Search", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
         jPanel1.setLayout(new java.awt.GridBagLayout());
@@ -148,6 +163,11 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         jPanel1.add(jLabel5, gridBagConstraints);
 
         txtName.setToolTipText("Surname / ForeName(s)");
+        txtName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtNameFocusGained(evt);
+            }
+        });
         txtName.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtNameKeyReleased(evt);
@@ -161,6 +181,11 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtName, gridBagConstraints);
 
+        txtPostCode.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtPostCodeFocusGained(evt);
+            }
+        });
         txtPostCode.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtPostCodeKeyReleased(evt);
@@ -175,6 +200,11 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         jPanel1.add(txtPostCode, gridBagConstraints);
 
         txtOfficeId.setToolTipText("Agent office Id(s), Separated by comma, Example: ABC123AB,CDE123CD");
+        txtOfficeId.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtOfficeIdFocusGained(evt);
+            }
+        });
         txtOfficeId.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtOfficeIdKeyReleased(evt);
@@ -209,6 +239,9 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         jPanel3.setPreferredSize(new java.awt.Dimension(980, 30));
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
+        progressBar.setMaximumSize(new java.awt.Dimension(145, 17));
+        progressBar.setMinimumSize(new java.awt.Dimension(145, 17));
+        progressBar.setPreferredSize(new java.awt.Dimension(145, 17));
         progressBar.setStringPainted(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -241,7 +274,7 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         jPanel2.setBackground(new java.awt.Color(102, 102, 102));
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newClient18.png"))); // NOI18N
+        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newclient18.png"))); // NOI18N
         btnViewInvoice.setToolTipText("New Agent");
         btnViewInvoice.setMaximumSize(new java.awt.Dimension(35, 22));
         btnViewInvoice.setMinimumSize(new java.awt.Dimension(35, 22));
@@ -301,12 +334,19 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
 
             },
             new String [] {
-                "", "Name", "Address", "Post Code", "Tel Number", "Email", "Office ID(s)"
+                "", "ID", "Name", "Address", "Post Code", "Tel Number", "Email", "Office ID(s)", "Active"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -317,18 +357,60 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         if (tblAgent.getColumnModel().getColumnCount() > 0) {
             tblAgent.getColumnModel().getColumn(0).setPreferredWidth(40);
             tblAgent.getColumnModel().getColumn(0).setMaxWidth(40);
+            tblAgent.getColumnModel().getColumn(8).setPreferredWidth(40);
+            tblAgent.getColumnModel().getColumn(8).setMaxWidth(40);
         }
 
         jTabbedPane1.addTab("Agent list", jScrollPane1);
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Import", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+
+        txtFilePath.setEditable(false);
+
+        btnImport.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnImport.setText("Import");
+        btnImport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImportActionPerformed(evt);
+            }
+        });
+
+        txtMessage.setEditable(false);
+        txtMessage.setColumns(16);
+        txtMessage.setFont(new java.awt.Font("Courier New", 0, 13)); // NOI18N
+        txtMessage.setRows(5);
+        jScrollPane2.setViewportView(txtMessage);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(txtFilePath)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnImport))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(txtFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4)
+                .addComponent(btnImport)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 984, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1009, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addComponent(jTabbedPane1))
             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -340,8 +422,10 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 187, Short.MAX_VALUE))
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE))
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -374,7 +458,7 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
-        
+
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
 
     private void txtNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameKeyReleased
@@ -392,31 +476,63 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
     }//GEN-LAST:event_txtPostCodeKeyReleased
 
     private void txtOfficeIdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOfficeIdKeyReleased
-       int key = evt.getKeyCode();
+        int key = evt.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
             search();
         }
     }//GEN-LAST:event_txtOfficeIdKeyReleased
 
+    private void btnImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportActionPerformed
+        //fileChooser.setVisible(true);
+        int returnVal = fileChooser.showOpenDialog(this);
+        File file = fileChooser.getSelectedFile();
+        txtFilePath.setText(file.getAbsolutePath());
+        create(convertCSV(file));
+    }//GEN-LAST:event_btnImportActionPerformed
+
+    private void txtNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNameFocusGained
+        txtName.selectAll();
+        txtOfficeId.setText("");
+        txtPostCode.setText("");
+    }//GEN-LAST:event_txtNameFocusGained
+
+    private void txtPostCodeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPostCodeFocusGained
+        txtName.setText("");
+        txtOfficeId.setText("");
+        txtPostCode.selectAll();
+    }//GEN-LAST:event_txtPostCodeFocusGained
+
+    private void txtOfficeIdFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtOfficeIdFocusGained
+        txtName.setText("");
+        txtOfficeId.selectAll();
+        txtPostCode.setText("");
+    }//GEN-LAST:event_txtOfficeIdFocusGained
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnEmail;
+    private javax.swing.JButton btnImport;
     private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnViewInvoice;
+    private javax.swing.JFileChooser fileChooser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblInfo;
     private javax.swing.JProgressBar progressBar;
     private org.jdesktop.swingx.JXTable tblAgent;
+    private javax.swing.JTextField txtFilePath;
+    private javax.swing.JTextArea txtMessage;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtOfficeId;
     private javax.swing.JTextField txtPostCode;
@@ -425,11 +541,14 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress" == evt.getPropertyName()) {
             int progress = (Integer) evt.getNewValue();
+
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    agents = (Agents) task.get();
-                    populateTblAgent();
+                    if(task!=null){
+                     agents = (Agents) task.get();
+                     populateTblAgent();
+                    }
                 } catch (InterruptedException ex) {
                     Logger.getLogger(AgentFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ExecutionException ex) {
@@ -439,5 +558,43 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
                 }
             }
         }
+    }
+
+    public void create(List<Agent> agents){
+     AgentTask updatetask = new AgentTask(agents);
+     updatetask.addPropertyChangeListener(this);
+     updatetask.execute();
+    }
+    
+    public List<Agent> convertCSV(File file) {
+        List<Agent> agents = new ArrayList<>();
+        try {
+            BufferedReader bf = null;
+            bf = new BufferedReader(new FileReader(file));
+            String line = null;
+            while ((line = bf.readLine()) != null) {
+                //NAME,WEB,ADDLINE1,ADDLINE2,CITY,EMAIL,FAX,MOBILE,POSTCODE,PROVINCE,TELNO,OFFICEID
+                String[] vals = line.split(",",-1);
+                Agent agent = new Agent();
+                agent.setName(vals[0]);
+                agent.setWeb(vals[1]);
+                agent.setAddLine1(vals[2]);
+                agent.setAddLine2(vals[3]);
+                agent.setCity(vals[4]);
+                agent.setEmail(vals[5]);
+                agent.setFax(vals[6]);
+                agent.setMobile(vals[7]);
+                agent.setPostCode(vals[8]);
+                agent.setProvince(vals[9]);
+                agent.setTelNo(vals[10]);
+                agent.setOfficeID(vals[11]);
+                agent.setIsActive(true);
+                agents.add(agent);
+            }
+        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
+        }
+
+        return agents;
     }
 }

@@ -43,13 +43,16 @@ public class UserProductivitylFrame extends javax.swing.JInternalFrame implement
         task = new UserProductivityTask(from, to, progressBar);
         task.addPropertyChangeListener(this);
         task.execute();
-    }    
+    }
 
     private void populateTableTicket() {
 
         DefaultTableModel tableModel = (DefaultTableModel) tblTicketing.getModel();
         tableModel.getDataVector().removeAllElements();
 
+        if (treport == null) {
+            return;
+        }
         Map<String, String> tlines = treport.getProductivityLine();
         if (tlines.size() > 0) {
             int i = 0;
@@ -65,6 +68,9 @@ public class UserProductivitylFrame extends javax.swing.JInternalFrame implement
         DefaultTableModel tableModel = (DefaultTableModel) tblOther.getModel();
         tableModel.getDataVector().removeAllElements();
 
+        if (oreport == null) {
+            return;
+        }
         Map<String, String> olines = oreport.getProductivityLine();
         if (olines.size() > 0) {
             int i = 0;
@@ -394,6 +400,10 @@ public class UserProductivitylFrame extends javax.swing.JInternalFrame implement
                     List<UserProductivityReport> reports = task.get();
 
                     for (UserProductivityReport r : reports) {
+                        if (r.getProductivityLine().isEmpty()) {
+                            continue;
+                        }
+
                         if (r.getSaleType().equals(Enums.SaleType.TKTSALES)) {
                             treport = r;
                         } else if (r.getSaleType().equals(Enums.SaleType.OTHERSALES)) {

@@ -19,7 +19,7 @@ public class SettingsDlg extends JDialog implements ActionListener {
     public SettingsDlg(Frame parent) {
         super(parent, true);
         initComponents();
-        btnSave.addActionListener(this);   
+        btnSave.addActionListener(this);        
     }
     
     public boolean showDialog(AppSettings settings) {
@@ -33,6 +33,9 @@ public class SettingsDlg extends JDialog implements ActionListener {
             txtMainAgentID.setText(settings.getMainAgentID());
             txtOtherInvTC.setText(settings.getoInvTAndC());
             txtTktInvTC.setText(settings.gettInvTAndC());
+            
+            chkSmtpAuth.setSelected(Boolean.valueOf(settings.getSmtp_auth()));
+            chkStarttls.setSelected(Boolean.valueOf(settings.getStarttls_enable()));
         }
         save = false;
         setLocationRelativeTo(this);
@@ -47,6 +50,8 @@ public class SettingsDlg extends JDialog implements ActionListener {
             settings.setMainAgentID(txtMainAgentID.getText().trim());
             settings.setoInvTAndC(txtOtherInvTC.getText().trim());
             settings.settInvTAndC(txtTktInvTC.getText().trim());
+            settings.setSmtp_auth(String.valueOf(chkSmtpAuth.isSelected()));
+            settings.setStarttls_enable(String.valueOf(chkStarttls.isSelected()));
         }
         return save;
     }
@@ -83,6 +88,8 @@ public class SettingsDlg extends JDialog implements ActionListener {
         txtSmtpServer = new javax.swing.JTextField();
         txtPort = new javax.swing.JTextField();
         txtEmailPassword = new javax.swing.JPasswordField();
+        chkSmtpAuth = new javax.swing.JCheckBox();
+        chkStarttls = new javax.swing.JCheckBox();
         btnSave = new javax.swing.JButton();
         btnClose = new javax.swing.JButton();
         lblInfo = new javax.swing.JLabel();
@@ -199,6 +206,10 @@ public class SettingsDlg extends JDialog implements ActionListener {
 
         jLabel4.setText("Port *");
 
+        chkSmtpAuth.setText("SMTP Auth");
+
+        chkStarttls.setText("STARTTLS");
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -216,7 +227,11 @@ public class SettingsDlg extends JDialog implements ActionListener {
                     .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(txtSmtpServer, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                         .addComponent(txtEmail)
-                        .addComponent(txtEmailPassword)))
+                        .addComponent(txtEmailPassword))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(chkStarttls)
+                        .addGap(18, 18, 18)
+                        .addComponent(chkSmtpAuth)))
                 .addContainerGap(122, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
@@ -238,7 +253,11 @@ public class SettingsDlg extends JDialog implements ActionListener {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addContainerGap(185, Short.MAX_VALUE))
+                .addGap(4, 4, 4)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chkStarttls)
+                    .addComponent(chkSmtpAuth))
+                .addContainerGap(158, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Email Settings", jPanel7);
@@ -310,15 +329,15 @@ public class SettingsDlg extends JDialog implements ActionListener {
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
         dispose();
     }//GEN-LAST:event_btnCloseActionPerformed
-
+    
     @Override
     public void actionPerformed(ActionEvent evt) {
         Object source = evt.getSource();
         if (source == btnSave) {
-            if (!txtEmail.getText().isEmpty() && 
-                    !txtEmailPassword.getText().isEmpty()&& 
-                    !txtPort.getText().isEmpty()&& 
-                    !txtSmtpServer.getText().isEmpty()) {
+            if (!txtEmail.getText().isEmpty()
+                    && !txtEmailPassword.getText().isEmpty()
+                    && !txtPort.getText().isEmpty()
+                    && !txtSmtpServer.getText().isEmpty()) {
                 save = true;
                 setVisible(false);                
             } else {
@@ -331,6 +350,8 @@ public class SettingsDlg extends JDialog implements ActionListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnSave;
+    private javax.swing.JCheckBox chkSmtpAuth;
+    private javax.swing.JCheckBox chkStarttls;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

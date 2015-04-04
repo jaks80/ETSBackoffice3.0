@@ -1,8 +1,6 @@
 package com.ets.fe.accounts.gui.payment;
 
 import com.ets.fe.acdoc.gui.PurchaseInvoiceDlg;
-import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
-import com.ets.fe.acdoc.gui.comp.ClientSearchComp;
 import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.accounts.model.Payments;
@@ -36,7 +34,7 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
     private PaymentTask task;
     private JDesktopPane desktopPane;
 
-    public TPurchaseBatchPaymentReport(JDesktopPane desktopPane) {        
+    public TPurchaseBatchPaymentReport(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
         initComponents();
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
@@ -63,17 +61,17 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
             for (int i = 0; i < payments.size(); i++) {
                 Payment p = payments.get(i);
                 String date = DateUtil.dateToString(p.gettPurchaseAcDocuments().get(0).getDocIssueDate());
-                tableModel.insertRow(i, new Object[]{date, p.calculateTotalPurchasePayment().abs(),p.getCreatedByName()});
+                tableModel.insertRow(i, new Object[]{date, p.calculateTotalPurchasePayment().abs(), p.getCreatedByName()});
             }
         } else {
             tableModel.insertRow(0, new Object[]{"", ""});
         }
     }
 
-    private void populatePaymentDocuments(Payment payment){
-     DefaultTableModel tableModel = (DefaultTableModel) tblPaymentDocs.getModel();
+    private void populatePaymentDocuments(Payment payment) {
+        DefaultTableModel tableModel = (DefaultTableModel) tblPaymentDocs.getModel();
         tableModel.getDataVector().removeAllElements();
-        
+
         List<TicketingPurchaseAcDoc> docs = payment.gettPurchaseAcDocuments();
         BigDecimal total = new BigDecimal("0.00");
         int i = 0;
@@ -82,14 +80,15 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
                 TicketingPurchaseAcDoc doc = docs.get(i);
                 total = total.add(doc.getDocumentedAmount());
                 String date = DateUtil.dateToString(doc.getDocIssueDate());
-                tableModel.insertRow(i, new Object[]{i+1,doc.getReference(),date,doc.getPnr().getGdsPnr(),doc.getPnr().getAirLineCode(),doc.getDocumentedAmount().abs()});
+                tableModel.insertRow(i, new Object[]{i + 1, doc.getReference(), date, doc.getPnr().getGdsPnr(), doc.getPnr().getAirLineCode(), doc.getDocumentedAmount().abs()});
             }
-            tableModel.insertRow(i, new Object[]{"", "","Total:","","",total});
+            tableModel.insertRow(i, new Object[]{"", "", "Total:", "", "", total.abs()});
         } else {
-            tableModel.insertRow(0, new Object[]{"", "","","","",""});
+            tableModel.insertRow(0, new Object[]{"", "", "", "", "", ""});
         }
-        
+
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -109,8 +108,10 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
         dtTo = new org.jdesktop.swingx.JXDatePicker();
         jLabel7 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblPayment = new org.jdesktop.swingx.JXTable();
+        jPanel6 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblPaymentDocs = new org.jdesktop.swingx.JXTable();
         jPanel1 = new javax.swing.JPanel();
@@ -128,6 +129,8 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
         setMaximizable(true);
         setResizable(true);
         setTitle("History: Purchase Payment");
+        setMinimumSize(new java.awt.Dimension(1000, 500));
+        setPreferredSize(new java.awt.Dimension(1000, 500));
 
         jSplitPane1.setDividerLocation(200);
         jSplitPane1.setDividerSize(4);
@@ -176,12 +179,15 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
                 .addComponent(dtTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(documentSearchComponent, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(82, Short.MAX_VALUE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(jPanel4);
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Payment", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        jPanel5.setLayout(new java.awt.GridLayout(1, 0));
 
         tblPayment.setBackground(new java.awt.Color(255, 255, 204));
         tblPayment.setModel(new javax.swing.table.DefaultTableModel(
@@ -204,15 +210,17 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
         tblPayment.getSelectionModel().addListSelectionListener(tblPaymentListener);
         jScrollPane1.setViewportView(tblPayment);
 
+        jPanel5.add(jScrollPane1);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 0.2;
-        gridBagConstraints.weighty = 0.2;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel2.add(jScrollPane1, gridBagConstraints);
+        jPanel2.add(jPanel5, gridBagConstraints);
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Invoices", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        jPanel6.setLayout(new java.awt.GridLayout(1, 0));
 
         tblPaymentDocs.setBackground(new java.awt.Color(204, 255, 204));
         tblPaymentDocs.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
@@ -244,15 +252,14 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
             tblPaymentDocs.getColumnModel().getColumn(4).setMaxWidth(60);
         }
 
+        jPanel6.add(jScrollPane2);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 0.8;
-        gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        jPanel2.add(jScrollPane2, gridBagConstraints);
+        jPanel2.add(jPanel6, gridBagConstraints);
 
         jSplitPane1.setRightComponent(jPanel2);
 
@@ -363,7 +370,7 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addComponent(jSplitPane1)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -391,8 +398,8 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
 
             Window w = SwingUtilities.getWindowAncestor(this);
             Frame owner = w instanceof Frame ? (Frame) w : null;
-            PurchaseInvoiceDlg dlg = new PurchaseInvoiceDlg(owner);            
-            dlg.showDialog(id);            
+            PurchaseInvoiceDlg dlg = new PurchaseInvoiceDlg(owner);
+            dlg.showDialog(id);
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
 
@@ -414,6 +421,8 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;

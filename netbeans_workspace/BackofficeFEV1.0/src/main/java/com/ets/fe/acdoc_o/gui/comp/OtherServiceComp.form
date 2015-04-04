@@ -56,7 +56,7 @@
                 <Column editable="false" title="" type="java.lang.Object"/>
                 <Column editable="true" title="Title" type="java.lang.Object"/>
                 <Column editable="true" title="Remark" type="java.lang.Object"/>
-                <Column editable="false" title="Gross" type="java.lang.Object"/>
+                <Column editable="true" title="Gross" type="java.lang.Object"/>
                 <Column editable="true" title="Disc" type="java.lang.Object"/>
                 <Column editable="true" title="Qty" type="java.lang.Object"/>
                 <Column editable="false" title="NetPayable" type="java.lang.Object"/>

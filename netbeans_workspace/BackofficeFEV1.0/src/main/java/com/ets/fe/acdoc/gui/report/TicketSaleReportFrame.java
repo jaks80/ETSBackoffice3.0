@@ -1,8 +1,11 @@
-package com.ets.fe.acdoc.gui;
+package com.ets.fe.acdoc.gui.report;
 
 import com.ets.fe.pnr.model.TicketSaleReport;
 import com.ets.fe.pnr.model.TicketSaleReport.SaleReportLine;
 import com.ets.fe.pnr.task.TicketSaleReportTask;
+import com.ets.fe.settings.model.User;
+import com.ets.fe.settings.model.Users;
+import com.ets.fe.settings.task.UserTask;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.Color;
@@ -11,6 +14,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -31,7 +35,10 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
 
     private JDesktopPane desktopPane;
     private TicketSaleReportTask task;
+    private UserTask userTask;
     private TicketSaleReport report;
+    private List<User> users;
+    private String taskType = "";
 
     public TicketSaleReportFrame(JDesktopPane desktopPane) {
         initComponents();
@@ -40,9 +47,10 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
         dtTo.setDate(DateUtil.getEndOfMonth());
         setIssueType();
         setTicketStatus();
-        int inset = 0;
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(inset, inset, screenSize.width / 2, screenSize.height / 2);
+        //int inset = 0;
+        //Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        //setBounds(inset, inset, screenSize.width / 2, screenSize.height / 2);
+        loadUsers();
     }
 
     private void search() {
@@ -77,6 +85,13 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
         task = new TicketSaleReportTask(ticketingType, ticketStatus, airLineCode, from, to, ticketingAgtOid);
         task.addPropertyChangeListener(this);
         task.execute();
+    }
+
+    private void loadUsers() {
+        taskType = "USER";
+        userTask = new UserTask();
+        userTask.addPropertyChangeListener(this);
+        userTask.execute();
     }
 
     private void populateTblTicket() {
@@ -153,6 +168,8 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     txtCareerCode = new javax.swing.JTextField();
     progressBar = new javax.swing.JProgressBar();
     jLabel2 = new javax.swing.JLabel();
+    cmbCashier = new javax.swing.JComboBox();
+    jLabel8 = new javax.swing.JLabel();
     jPanel4 = new javax.swing.JPanel();
     btnViewReport = new javax.swing.JButton();
     btnViewInvoice = new javax.swing.JButton();
@@ -165,6 +182,8 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     setMaximizable(true);
     setResizable(true);
     setTitle("Sale Report");
+    setMinimumSize(new java.awt.Dimension(1000, 500));
+    setPreferredSize(new java.awt.Dimension(1000, 500));
 
     jSplitPane1.setDividerLocation(165);
     jSplitPane1.setDividerSize(4);
@@ -197,11 +216,11 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     jPanel5.setLayout(jPanel5Layout);
     jPanel5Layout.setHorizontalGroup(
         jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
+        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
     );
     jPanel5Layout.setVerticalGroup(
         jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
+        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
     );
 
     jSplitPane1.setRightComponent(jPanel5);
@@ -209,6 +228,7 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Search", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
     jPanel1.setLayout(new java.awt.GridBagLayout());
 
+    jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel3.setText("Issue Type");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -226,6 +246,7 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     gridBagConstraints.insets = new java.awt.Insets(0, 4, 4, 4);
     jPanel1.add(cmbIssueType, gridBagConstraints);
 
+    jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel1.setText("Ticket Status");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -245,6 +266,7 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     gridBagConstraints.insets = new java.awt.Insets(0, 4, 4, 4);
     jPanel1.add(cmbTicketStatus, gridBagConstraints);
 
+    jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel4.setText("Date From");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -265,6 +287,7 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     gridBagConstraints.insets = new java.awt.Insets(0, 4, 4, 4);
     jPanel1.add(dtFrom, gridBagConstraints);
 
+    jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel5.setText("Date To");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -293,10 +316,10 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
     gridBagConstraints.weightx = 0.3;
-    gridBagConstraints.weighty = 1.0;
     gridBagConstraints.insets = new java.awt.Insets(0, 4, 4, 4);
     jPanel1.add(txtOfficeId, gridBagConstraints);
 
+    jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel6.setText("Career Code");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -306,6 +329,7 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
     jPanel1.add(jLabel6, gridBagConstraints);
 
+    jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel7.setText("Ticketed OfficeID");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -332,7 +356,7 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     progressBar.setStringPainted(true);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 14;
+    gridBagConstraints.gridy = 15;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_END;
     jPanel1.add(progressBar, gridBagConstraints);
 
@@ -340,10 +364,35 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     jLabel2.setText("Message:");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 13;
+    gridBagConstraints.gridy = 14;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_END;
     jPanel1.add(jLabel2, gridBagConstraints);
+
+    cmbCashier.setPreferredSize(new java.awt.Dimension(28, 19));
+    cmbCashier.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            cmbCashierActionPerformed(evt);
+        }
+    });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 13;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 4, 4, 4);
+    jPanel1.add(cmbCashier, gridBagConstraints);
+
+    jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+    jLabel8.setText("Cashier");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 12;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
+    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+    jPanel1.add(jLabel8, gridBagConstraints);
 
     jSplitPane1.setLeftComponent(jPanel1);
 
@@ -463,6 +512,10 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
         search();
     }//GEN-LAST:event_btnSearchActionPerformed
 
+    private void cmbCashierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCashierActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbCashierActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEmail;
@@ -470,6 +523,7 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnViewInvoice;
     private javax.swing.JButton btnViewReport;
+    private javax.swing.JComboBox cmbCashier;
     private javax.swing.JComboBox cmbIssueType;
     private javax.swing.JComboBox cmbTicketStatus;
     private org.jdesktop.swingx.JXDatePicker dtFrom;
@@ -481,6 +535,7 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -505,6 +560,20 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
         cmbIssueType.setSelectedIndex(0);
     }
 
+    private void populateUsers() {
+        List cmbElement = new ArrayList();
+
+        for (User user : users) {
+            cmbElement.add(user.getFullName() + "-" + user.getId());
+        }
+
+        DefaultComboBoxModel cmbContactableModel = new DefaultComboBoxModel(cmbElement.toArray());
+        cmbContactableModel.insertElementAt("All", 0);
+        cmbCashier.setModel(cmbContactableModel);
+        cmbCashier.setSelectedIndex(0);
+        cmbCashier.setEnabled(true);
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress".equals(evt.getPropertyName())) {
@@ -512,9 +581,17 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    report = task.get();
-                    populateTblTicket();
-                    btnSearch.setEnabled(true);
+                    if ("USER".equals(taskType)) {
+                        Users user_ = userTask.get();
+                        users = user_.getList();
+                        populateUsers();
+                        taskType = "";
+                    } else {
+
+                        report = task.get();
+                        populateTblTicket();
+                        btnSearch.setEnabled(true);
+                    }
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(TicketSaleReportFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }

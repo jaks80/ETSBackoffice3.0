@@ -3,10 +3,7 @@ package com.ets.fe.settings.model;
 import com.ets.fe.PersistentObject;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *

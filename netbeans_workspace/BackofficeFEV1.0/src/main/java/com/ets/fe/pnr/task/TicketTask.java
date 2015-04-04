@@ -1,6 +1,6 @@
 package com.ets.fe.pnr.task;
 
-import com.ets.fe.a_maintask.GlobalSearchTask;
+import com.ets.fe.a_maintask.PnrSearchTask;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.pnr.ws.PnrWSClient;
 import com.ets.fe.pnr.ws.TicketWSClient;

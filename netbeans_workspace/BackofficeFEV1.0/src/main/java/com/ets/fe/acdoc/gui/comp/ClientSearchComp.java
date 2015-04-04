@@ -133,6 +133,8 @@ public class ClientSearchComp extends javax.swing.JPanel implements PropertyChan
             if (cmbContactable.getSelectedIndex() > 0) {
                 data = cmbContactable.getSelectedItem().toString().split("-");
                 id = Long.parseLong(data[2]);
+            }else if(cmbContactable.getSelectedIndex() == 0){
+               txtClientDetails.setText("");
             }
 
             if (rdoAgent.isSelected()) {

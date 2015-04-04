@@ -127,7 +127,9 @@ public class AcDocHeaderComponent extends JPanel {
         add(jLabel4, gridBagConstraints);
 
         txtInvRef.setEditable(false);
-        txtInvRef.setBackground(new java.awt.Color(255, 255, 255));
+        txtInvRef.setBackground(new java.awt.Color(0, 51, 51));
+        txtInvRef.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        txtInvRef.setForeground(new java.awt.Color(255, 255, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -137,7 +139,9 @@ public class AcDocHeaderComponent extends JPanel {
         add(txtInvRef, gridBagConstraints);
 
         txtUser.setEditable(false);
-        txtUser.setBackground(new java.awt.Color(255, 255, 255));
+        txtUser.setBackground(new java.awt.Color(0, 51, 51));
+        txtUser.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        txtUser.setForeground(new java.awt.Color(255, 255, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -148,6 +152,7 @@ public class AcDocHeaderComponent extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(txtUser, gridBagConstraints);
 
+        cmbTerms.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         cmbTerms.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select", "End of Month", "Payment in Advance", "Cash with Order", "Cash on Delivery", "Net 7", "Net 10", "Net 60", "Net 90" }));
         cmbTerms.setMaximumSize(new java.awt.Dimension(32767, 19));
         cmbTerms.setMinimumSize(new java.awt.Dimension(28, 19));
@@ -169,6 +174,10 @@ public class AcDocHeaderComponent extends JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(lblVendorRef, gridBagConstraints);
+
+        txtVendorRef.setBackground(new java.awt.Color(0, 51, 51));
+        txtVendorRef.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        txtVendorRef.setForeground(new java.awt.Color(255, 255, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -180,7 +189,9 @@ public class AcDocHeaderComponent extends JPanel {
         add(txtVendorRef, gridBagConstraints);
 
         txtIssueDate.setEditable(false);
-        txtIssueDate.setBackground(new java.awt.Color(255, 255, 255));
+        txtIssueDate.setBackground(new java.awt.Color(0, 51, 51));
+        txtIssueDate.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        txtIssueDate.setForeground(new java.awt.Color(255, 255, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);

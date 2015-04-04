@@ -5,7 +5,6 @@ import com.ets.fe.Application;
 import com.ets.fe.accounts.gui.logic.PaymentLogic;
 import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.acdoc.model.*;
-import com.ets.fe.acdoc.task.DueInvoiceTask;
 import com.ets.fe.accounts.task.NewPaymentTask;
 import com.ets.fe.acdoc_o.model.OtherSalesAcDoc;
 import com.ets.fe.acdoc_o.task.OtherDueInvoiceTask;
@@ -114,6 +113,7 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
                         doc.setParent(invoice);
                         doc.setAgent(invoice.getAgent());
                         doc.setCustomer(invoice.getCustomer());
+                        doc.setRemark("Batch payment: "+amountString);
                         payment.addOtherDocument(doc);
                     }
                 }

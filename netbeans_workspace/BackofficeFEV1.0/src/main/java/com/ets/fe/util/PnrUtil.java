@@ -94,10 +94,10 @@ public class PnrUtil {
     }
 
     public static String calculatePartialName(String name) {
-        if (name.length() < 8) {
+        if (name.length() < 10) {
             return name;
         } else {
-            return name.substring(0, 8);
+            return name.substring(0, 10);
         }
     }
 

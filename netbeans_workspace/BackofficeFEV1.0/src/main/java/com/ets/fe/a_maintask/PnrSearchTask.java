@@ -14,10 +14,9 @@ import org.jdesktop.swingx.JXBusyLabel;
  *
  * @author Yusuf
  */
-public class GlobalSearchTask extends SwingWorker< Void, Integer> {
+public class PnrSearchTask extends SwingWorker< Void, Integer> {
 
-    private List<Pnr> pnrs = new ArrayList<>();
-
+    private List<Pnr> pnrs = new ArrayList<>();       
     private JXBusyLabel busyLabel;
     private JTable table;
     private String gdsPnr = null;
@@ -25,14 +24,13 @@ public class GlobalSearchTask extends SwingWorker< Void, Integer> {
     private String name = null;
     private String searchType = null;
 
-    public GlobalSearchTask(String searchType, JXBusyLabel busyLabel, JTable table) {
+    public PnrSearchTask(String searchType, JXBusyLabel busyLabel, JTable table) {
         this.searchType = searchType;
         this.busyLabel = busyLabel;
         this.table = table;
-
     }
 
-    public GlobalSearchTask(String searchType, JXBusyLabel busyLabel, JTable table, String gdsPnr, String invRef, String name) {
+    public PnrSearchTask(String searchType, JXBusyLabel busyLabel, JTable table, String gdsPnr, String invRef, String name) {
         this.searchType = searchType;
         this.busyLabel = busyLabel;
         this.table = table;
@@ -51,6 +49,10 @@ public class GlobalSearchTask extends SwingWorker< Void, Integer> {
                 pnrs = new ArrayList<>();
                 pnrs = client.getUninvoicedPnr();
                 break;
+            case "PNRTODAY":
+                pnrs = new ArrayList<>();
+                pnrs = client.getPnrsToday();
+                break;    
             case "QUERY_SEARCH":
                 pnrs = new ArrayList<>();
                 if (gdsPnr != null && !gdsPnr.isEmpty()) {
@@ -81,7 +83,7 @@ public class GlobalSearchTask extends SwingWorker< Void, Integer> {
         if (this.pnrs.size() > 0) {
             for (int i = 0; i < this.pnrs.size(); i++) {
                 Pnr p = this.pnrs.get(i);
-                tableModel.insertRow(i, new Object[]{p.getGdsPnr(), PnrUtil.calculatePartialName(PnrUtil.calculateLeadPaxName(p.getTickets())), p.getNoOfPax(),
+                tableModel.insertRow(i, new Object[]{i+1,p.getGdsPnr(), PnrUtil.calculatePartialName(PnrUtil.calculateLeadPaxName(p.getTickets())), p.getNoOfPax(),
                     p.getTicketingAgentSine(), p.getBookingAgtOid(), p.getTicketingAgtOid(), p.getAirLineCode()});
             }
         } else {

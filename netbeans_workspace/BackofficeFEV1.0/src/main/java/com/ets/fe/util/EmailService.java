@@ -18,6 +18,7 @@ public class EmailService {
 
     private JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
     private Properties properties = System.getProperties();
+    
     private static final String SMTP_AUTH_USER = Application.getAppSettings().getEmail();
     private static final String SMTP_AUTH_PWD = Application.getAppSettings().getEmailPassword();
     private static final String SMTP_HOST = Application.getAppSettings().getEmailHost();

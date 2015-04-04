@@ -77,6 +77,8 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
                 for (Agent a : agentlist) {
                     list.add(a.getFullName() + "-" + a.getId());
                 }
+                this.agent = null;
+                setTxtAgentDetails(this.getAgent());
                 setCmbSearchResult(list);
             }
         } else {
@@ -92,6 +94,8 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
                 for (Customer a : customerlist) {
                     list.add(a.getFullName() + "-" + a.getPostCode() + "-" + a.getId());
                 }
+                this.customer = null;
+                setTxtCustomerDetails(this.getCustomer());
                 setCmbSearchResult(list);
             }
         }
@@ -223,7 +227,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            txtContactableSearch.setText(clientName);
+            txtContactableSearch.setText(clientName.replaceAll("[^a-zA-Z0-9/]" , " "));
 
             if (cmbSearchResult.getItemCount() > 0) {
                 cmbSearchResult.removeAllItems();
@@ -380,13 +384,21 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
     }
 
     private void setTxtAgentDetails(Agent agent) {
-        txtContactableDetails.setText(agent.getFullName());
-        txtContactableDetails.append(agent.getFullAddressCRSeperated());
+        if (agent != null) {
+            txtContactableDetails.setText(agent.getFullName());
+            txtContactableDetails.append(agent.getFullAddressCRSeperated());
+        } else {
+            txtContactableDetails.setText("");
+        }
     }
 
     private void setTxtCustomerDetails(Customer customer) {
-        txtContactableDetails.setText(customer.getFullName());
-        txtContactableDetails.append(customer.getFullAddressCRSeperated());
+        if (customer != null) {
+            txtContactableDetails.setText(customer.getFullName());
+            txtContactableDetails.append(customer.getFullAddressCRSeperated());
+        } else {
+            txtContactableDetails.setText("");
+        }
     }
 
     @Override

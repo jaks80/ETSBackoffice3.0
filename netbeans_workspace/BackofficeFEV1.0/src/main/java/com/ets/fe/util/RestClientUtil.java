@@ -44,21 +44,21 @@ public class RestClientUtil {
             httpget.addHeader(AUTHORIZATION_PROPERTY, Application.getUserPassowrdEncoded());
             HttpResponse response = httpClient.execute(httpget);
             status = response.getStatusLine().getStatusCode();
-            System.out.println("HTTP Status:>>"+status);
-            
-            if(status == 401){
-             Main.getDlgLogin().showLoginDialog();             
+            System.out.println("HTTP Status:>>" + status);
+
+            if (status == 401) {
+                Main.getDlgLogin().showLoginDialog();
             }
-            
-            
+
             HttpEntity httpEntity = response.getEntity();
             if (httpEntity != null) {
-                apiOutput = EntityUtils.toString(httpEntity,"UTF-8");
+                apiOutput = EntityUtils.toString(httpEntity, "UTF-8");
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {}
-        
+        } finally {
+        }
+
         return apiOutput;
     }
 
@@ -124,7 +124,7 @@ public class RestClientUtil {
     }
 
     public synchronized static <T> Integer postEntityReturnStatus(final Class<T> type, String destUrl, T entity) {
-        
+
         Integer status = 0;
         HttpClient httpClient = HttpClientBuilder.create().build();
         try {
@@ -135,16 +135,16 @@ public class RestClientUtil {
             httppost.addHeader(AUTHORIZATION_PROPERTY, Application.getUserPassowrdEncoded());
 
             HttpResponse response = httpClient.execute(httppost);
-            
-             status = response.getStatusLine().getStatusCode();
-            
+
+            status = response.getStatusLine().getStatusCode();
+
         } catch (IOException e) {
             e.printStackTrace();
-        } 
-        
+        }
+
         return status;
     }
-    
+
     public synchronized static <T> T putEntity(final Class<T> type, String destUrl, T entity) {
         HttpClient httpClient = HttpClientBuilder.create().build();
         T persistentEntity = null;
@@ -172,6 +172,7 @@ public class RestClientUtil {
     }
 
     public synchronized static String buildURL(String destUrl) {
+        destUrl = replaceSpaceToPlus(destUrl);
         String url = domain + destUrl;
         System.out.println("URL: " + url);
         return url;
@@ -185,6 +186,7 @@ public class RestClientUtil {
 
         } catch (JAXBException ex) {
             System.out.println("Exception: xmlToObject");
+            ex.printStackTrace();
         }
         return entity;
     }
@@ -205,5 +207,10 @@ public class RestClientUtil {
         }
 
         return stringEntity;
+    }
+
+    public static String replaceSpaceToPlus(String url) {
+        url = url.replaceAll("\\s+", " ").trim();
+        return url.replaceAll(" ", "+");
     }
 }

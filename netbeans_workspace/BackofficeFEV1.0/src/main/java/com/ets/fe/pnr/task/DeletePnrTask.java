@@ -1,6 +1,6 @@
 package com.ets.fe.pnr.task;
 
-import com.ets.fe.a_maintask.GlobalSearchTask;
+import com.ets.fe.a_maintask.PnrSearchTask;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.ws.PnrWSClient;
 import javax.swing.JTable;
@@ -29,7 +29,7 @@ public class DeletePnrTask extends SwingWorker<Integer, Integer> {
         PnrWSClient client = new PnrWSClient();
         Integer status = client.delete(pnr.getId());
         
-        GlobalSearchTask globalSearchTask = new GlobalSearchTask("UNINVOICED_PNR",busyLabel, table);
+        PnrSearchTask globalSearchTask = new PnrSearchTask("UNINVOICED_PNR",busyLabel, table);
         globalSearchTask.execute();
         return status;
     }

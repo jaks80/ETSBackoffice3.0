@@ -13,16 +13,23 @@ public class CustomerWSClient {
 
     public Customers find(String surName, String foreName, String postCode, String telNo) {
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(APIConfig.get("ws.customer.customers"));
-        if (surName != null) {
+        StringBuilder sb = new StringBuilder(APIConfig.get("ws.customer.customers"));
+        
+        if (surName != null && foreName != null) {
             sb.append("?surName=").append(surName);
-        } else if (foreName != null) {
             sb.append("&foreName=").append(foreName);
-        } else if (postCode != null) {
-            sb.append("&postCode=").append(postCode);
-        } else if (telNo != null) {
-            sb.append("&telNo=").append(telNo);
+        }else if (surName != null ) {
+            sb.append("?surName=").append(surName);            
+        }else if (foreName != null) {
+            sb.append("?foreName=").append(foreName);
+        } 
+        
+        if (postCode != null) {
+            sb.append("?postCode=").append(postCode);
+        } 
+        
+        if (telNo != null) {
+            sb.append("?telNo=").append(telNo);
         }
 
         return RestClientUtil.getEntity(Customers.class, sb.toString(), new Customers());

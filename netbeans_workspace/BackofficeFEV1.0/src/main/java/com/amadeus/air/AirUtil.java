@@ -1,11 +1,13 @@
 package com.amadeus.air;
 
 import com.amadeus.reader.ResponseHandler;
+import com.ets.fe.util.DirectoryHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 import org.apache.log4j.Logger;
+
 /**
  *
  * @author Yusuf
@@ -51,13 +53,14 @@ public class AirUtil {
     }
 
     public static void backupAir(File airFile) {
-        File dir = new File("C://BKUP_AIR");
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-
+        /*
+         File dir = new File("C://BKUP_AIR");
+         if (!dir.exists()) {
+         dir.mkdir();
+         }
+         */
         try {
-            boolean backedUp = airFile.renameTo(new File("C://BKUP_AIR", getAirNo(airFile) + ".txt"));
+            boolean backedUp = airFile.renameTo(new File(DirectoryHandler.getBackup_air_dir(), getAirNo(airFile) + ".txt"));
             if (backedUp) {
                 System.out.println("BKUP Completed");
             } else {
@@ -75,10 +78,12 @@ public class AirUtil {
     }
 
     public static void sendAirToErrorDirectory(File airFile) {
-        File dir = new File("C://ERROR_AIR");
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
+        /*
+         File dir = new File("C://ERROR_AIR");
+         if (!dir.exists()) {
+         dir.mkdir();
+         }
+         */
         try {
             System.out.println("Sending air to error folder");
             boolean sent = airFile.renameTo(new File("C://ERROR_AIR", getAirNo(airFile) + ".txt"));

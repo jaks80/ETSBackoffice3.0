@@ -1,6 +1,7 @@
 package com.ets.fe.acdoc.bo;
 
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
+import com.ets.fe.acdoc_o.model.AccountingDocumentLine;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.util.Enums;
@@ -41,6 +42,18 @@ public class AcDocUtil {
             JOptionPane.showMessageDialog(null, "Selling fare validation failed! Check tickets bellow:\n\n"
                     + unvalidatedTicketNo + "\n\nCould not proceed to invoicing...", "Issue Invoice", JOptionPane.WARNING_MESSAGE);
             okToInvoice = false;
+        }
+        return okToInvoice;
+    }
+
+    public static boolean validateOtherSellingPrice(AccountingDocumentLine line) {
+        boolean okToInvoice = false;
+
+        if (line.calculateRevenue().signum() == -1 || line.calculateRevenue().signum() == 0) {
+            okToInvoice = false;
+            JOptionPane.showMessageDialog(null, "Negetive revenue error...", "Issue Invoice", JOptionPane.WARNING_MESSAGE);
+        } else {
+            okToInvoice = true;
         }
         return okToInvoice;
     }

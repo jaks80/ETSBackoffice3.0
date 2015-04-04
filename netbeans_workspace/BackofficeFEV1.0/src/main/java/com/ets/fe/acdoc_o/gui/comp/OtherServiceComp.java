@@ -1,5 +1,6 @@
 package com.ets.fe.acdoc_o.gui.comp;
 
+import com.ets.fe.acdoc.bo.AcDocUtil;
 import com.ets.fe.acdoc_o.gui.OtherInvoiceDlg;
 import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.acdoc_o.model.AccountingDocumentLine;
@@ -40,14 +41,14 @@ public class OtherServiceComp extends javax.swing.JPanel implements PropertyChan
     private boolean editable;
     private JDialog parent;
 
-    public OtherServiceComp() {        
+    public OtherServiceComp() {
         initComponents();
     }
-    
-    public void setParent(JDialog parent){
-     this.parent = parent;
+
+    public void setParent(JDialog parent) {
+        this.parent = parent;
     }
-    
+
     public void loadOtherService() {
         task = new OtherServiceTask(null);
         task.addPropertyChangeListener(this);
@@ -67,13 +68,15 @@ public class OtherServiceComp extends javax.swing.JPanel implements PropertyChan
     }
 
     private void initTblServices() {
-        TableColumn sTitle, disc, quantity;
+        TableColumn sTitle, gross, disc, quantity;
         sTitle = tblServices.getColumnModel().getColumn(1);
+        gross = tblServices.getColumnModel().getColumn(3);
         disc = tblServices.getColumnModel().getColumn(4);
         quantity = tblServices.getColumnModel().getColumn(5);
 
         JTextField jtf = new JTextField();
         jtf.setDocument(new CheckInput(CheckInput.FLOAT));
+        gross.setCellEditor(new DefaultCellEditor(jtf));
         disc.setCellEditor(new DefaultCellEditor(jtf));
         quantity.setCellEditor(new DefaultCellEditor(jtf));
 
@@ -89,7 +92,7 @@ public class OtherServiceComp extends javax.swing.JPanel implements PropertyChan
         cmbServices.setModel(cmbServicesModel);
         cmbServices.addActionListener(cmbServicesListener);
         sTitle.setCellEditor(new DefaultCellEditor(cmbServices));
-        
+
         tblServices.getModel().addTableModelListener(tableModelListener);
     }
 
@@ -103,10 +106,16 @@ public class OtherServiceComp extends javax.swing.JPanel implements PropertyChan
             OtherService s = line.getOtherService();
 
             servicesModel.insertRow(i, new Object[]{i + 1, s.getTitle(), line.getRemark(),
-                s.getSellingPrice(), line.getDiscount(), line.getQty(), line.calculateOServiceLineTotal()});
+                line.getAmount(), line.getDiscount(), line.getQty(), line.calculateOServiceLineTotal()});
         }
-        servicesModel.addRow(new Object[]{"", "", "", "", "", "", ""});        
+        servicesModel.addRow(new Object[]{"", "", "", "", "", "", ""});
         tblServices.getSelectionModel().clearSelection();//Never ever remove it.Add where ever use table model listener             
+
+        if (parent instanceof OtherInvoiceDlg) {
+            OtherInvoiceDlg dlg = (OtherInvoiceDlg) parent;
+            dlg.getInvoice().setAccountingDocumentLines(lines);
+            dlg.displayBalance(dlg.getInvoice());
+        }
     }
 
     TableModelListener tableModelListener = new TableModelListener() {
@@ -122,6 +131,18 @@ public class OtherServiceComp extends javax.swing.JPanel implements PropertyChan
                     String remark = tblServices.getValueAt(row, column).toString();
                     getLines().get(row).setRemark(remark);
                     //populatetblInvLine();
+                }
+
+                if (column == 3) {
+                    String gross = tblServices.getValueAt(row, column).toString();
+                    if (!gross.isEmpty() && getLines().size() > row) {
+                        BigDecimal oldVal = getLines().get(row).getAmount();
+                        getLines().get(row).setAmount(new BigDecimal(gross));
+                        if (!AcDocUtil.validateOtherSellingPrice(getLines().get(row))) {
+                            getLines().get(row).setAmount(oldVal);
+                        }
+                        populatetblInvLine();
+                    }
                 }
 
                 if (column == 4) {
@@ -141,6 +162,7 @@ public class OtherServiceComp extends javax.swing.JPanel implements PropertyChan
             }
         }
     };
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -166,7 +188,7 @@ public class OtherServiceComp extends javax.swing.JPanel implements PropertyChan
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, true, false, true, true, false
+                false, true, true, true, true, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -223,8 +245,8 @@ public class OtherServiceComp extends javax.swing.JPanel implements PropertyChan
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRemoveItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveItemActionPerformed
-        if(editable){
-         removeItem();
+        if (editable) {
+            removeItem();
         }
     }//GEN-LAST:event_btnRemoveItemActionPerformed
 
@@ -235,35 +257,30 @@ public class OtherServiceComp extends javax.swing.JPanel implements PropertyChan
     private javax.swing.JTable tblServices;
     // End of variables declaration//GEN-END:variables
 
-    private void removeItem(){
-     int index = tblServices.getSelectedRow();
-     if (index != -1) {
-      this.lines.remove(index);
-      populatetblInvLine();
-     }
-    }
-    
-    private ActionListener cmbServicesListener = new ActionListener() {
-         @Override
-        public void actionPerformed(ActionEvent e) {
-        int row = tblServices.getSelectedRow();
-        int cmbSTitleIndex = cmbServices.getSelectedIndex();
-
-        if (row != -1) {
-            AccountingDocumentLine line = new AccountingDocumentLine();
-            line.setAmount(services.get(cmbSTitleIndex).getSellingPrice());
-            line.setQty(1);
-            line.setOtherService(services.get(cmbSTitleIndex));
-            getLines().add(line);
+    private void removeItem() {
+        int index = tblServices.getSelectedRow();
+        if (index != -1) {
+            this.lines.remove(index);
             populatetblInvLine();
-
-            if (parent instanceof OtherInvoiceDlg) {
-                OtherInvoiceDlg dlg = (OtherInvoiceDlg) parent;
-                dlg.getInvoice().setAccountingDocumentLines(lines);
-                dlg.displayBalance(dlg.getInvoice());
-            }
-            tblServices.getSelectionModel().clearSelection();
         }
+    }
+
+    private ActionListener cmbServicesListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int row = tblServices.getSelectedRow();
+            int cmbSTitleIndex = cmbServices.getSelectedIndex();
+
+            if (row != -1) {
+                AccountingDocumentLine line = new AccountingDocumentLine();
+                line.setPurchaseAmount(services.get(cmbSTitleIndex).getPurchaseCost());
+                line.setAmount(services.get(cmbSTitleIndex).getSellingPrice());
+                line.setQty(1);
+                line.setOtherService(services.get(cmbSTitleIndex));
+                getLines().add(line);
+                populatetblInvLine();
+                tblServices.getSelectionModel().clearSelection();
+            }
         }
     };
 

@@ -204,6 +204,8 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             newTSalesDocumentTask = new NewTSalesDocumentTask(pnrId, progressBar);
             newTSalesDocumentTask.addPropertyChangeListener(this);
             newTSalesDocumentTask.execute();
+        }else{
+        btnCreateInvoice.setEnabled(true);
         }
     }
 
@@ -820,6 +822,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
                             editingLogic();
                             segments = pnr.getSegments();
                             populatePnr();
+                            ticketComponent.setTickets(pnr.getTickets());
                             ticketComponent.populateTblTicket(pnr.getTickets());
                             setPnrOwner();
                             SetTicketingAgent();
