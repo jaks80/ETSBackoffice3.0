@@ -76,21 +76,29 @@ public class Main extends JFrame implements PropertyChangeListener {
     }
 
     private void callDashBoard() {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                DashBoardFrame frame = new DashBoardFrame();
-                frame.setVisible(true);
-                desktopPane.add(frame);
-                try {
-                    frame.setMaximum(true);
-                    frame.setSelected(true);
-                } catch (PropertyVetoException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
+        DashBoardFrame frame = new DashBoardFrame();
+        try {            
+            frameAction(frame);
+            frame.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+//        SwingUtilities.invokeLater(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                DashBoardFrame frame = new DashBoardFrame();
+//                frame.setVisible(true);
+//                desktopPane.add(frame);
+//                try {
+//                    frame.setMaximum(true);
+//                    frame.setSelected(true);
+//                } catch (PropertyVetoException ex) {
+//                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        });
     }
 
     public void startFileReading() {
@@ -113,8 +121,11 @@ public class Main extends JFrame implements PropertyChangeListener {
 
         desktopPane = new javax.swing.JDesktopPane();
         jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
         btnNewCustomer = new javax.swing.JButton();
         btnNewOInvoice = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        btnCashBook = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -123,6 +134,8 @@ public class Main extends JFrame implements PropertyChangeListener {
         menuAirLine = new javax.swing.JMenuItem();
         menuAppSettings = new javax.swing.JMenuItem();
         menuMainAgent = new javax.swing.JMenuItem();
+        jMenu11 = new javax.swing.JMenu();
+        menuTktDiscrepancy = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         menuNewAgent = new javax.swing.JMenuItem();
         menuNewCustomer = new javax.swing.JMenuItem();
@@ -133,9 +146,8 @@ public class Main extends JFrame implements PropertyChangeListener {
         menuServiceManager = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         menuPnrHistory = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        menuGdsSaleReport = new javax.swing.JMenuItem();
+        menuSegmentHistory = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
         menuSalesInvoiceRpt = new javax.swing.JMenuItem();
         menuUnpaidFlight = new javax.swing.JMenuItem();
@@ -186,7 +198,18 @@ public class Main extends JFrame implements PropertyChangeListener {
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 2, 2));
 
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/home_18.png"))); // NOI18N
+        jButton1.setToolTipText("Dashboard");
+        jButton1.setPreferredSize(new java.awt.Dimension(45, 22));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1);
+
         btnNewCustomer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newclient18.png"))); // NOI18N
+        btnNewCustomer.setToolTipText("New Customer");
         btnNewCustomer.setFocusable(false);
         btnNewCustomer.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnNewCustomer.setMaximumSize(new java.awt.Dimension(45, 22));
@@ -211,6 +234,26 @@ public class Main extends JFrame implements PropertyChangeListener {
             }
         });
         jPanel1.add(btnNewOInvoice);
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/discpr18.png"))); // NOI18N
+        jButton2.setToolTipText("Ticketing Discrepency");
+        jButton2.setPreferredSize(new java.awt.Dimension(45, 22));
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton2);
+
+        btnCashBook.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cashbook18.png"))); // NOI18N
+        btnCashBook.setToolTipText("Cash Book");
+        btnCashBook.setPreferredSize(new java.awt.Dimension(45, 22));
+        btnCashBook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCashBookActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnCashBook);
 
         jMenu1.setText("File");
 
@@ -254,6 +297,18 @@ public class Main extends JFrame implements PropertyChangeListener {
         jMenu4.add(menuMainAgent);
 
         jMenuBar1.add(jMenu4);
+
+        jMenu11.setText("Tools");
+
+        menuTktDiscrepancy.setText("Ticketing Discrepancy");
+        menuTktDiscrepancy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuTktDiscrepancyActionPerformed(evt);
+            }
+        });
+        jMenu11.add(menuTktDiscrepancy);
+
+        jMenuBar1.add(jMenu11);
 
         jMenu5.setText("Client");
 
@@ -314,29 +369,21 @@ public class Main extends JFrame implements PropertyChangeListener {
         });
         jMenu3.add(menuPnrHistory);
 
-        jMenuItem2.setText("Ticket History");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        menuGdsSaleReport.setText("GDS Sale Report");
+        menuGdsSaleReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                menuGdsSaleReportActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem2);
+        jMenu3.add(menuGdsSaleReport);
 
-        jMenuItem3.setText("Segment History");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        menuSegmentHistory.setText("Segment History");
+        menuSegmentHistory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                menuSegmentHistoryActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem3);
-
-        jMenuItem4.setText("Ticketing Discrepancy");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        jMenu3.add(jMenuItem4);
+        jMenu3.add(menuSegmentHistory);
 
         jMenuBar1.add(jMenu3);
 
@@ -555,14 +602,7 @@ public class Main extends JFrame implements PropertyChangeListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menuPnrHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPnrHistoryActionPerformed
-        PnrHistoryFrame history = new PnrHistoryFrame();
-        desktopPane.add(history);
-        try {
-            history.setSelected(true);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        history.setVisible(true);
+        frameAction(new PnrHistoryFrame());
     }//GEN-LAST:event_menuPnrHistoryActionPerformed
 
     private void menuAirLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAirLineActionPerformed
@@ -570,36 +610,13 @@ public class Main extends JFrame implements PropertyChangeListener {
         dlg.showDialog();
     }//GEN-LAST:event_menuAirLineActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        SwingUtilities.invokeLater(new Runnable() {
+    private void menuGdsSaleReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGdsSaleReportActionPerformed
+        frameAction(new GDSSaleReportFrame());
+    }//GEN-LAST:event_menuGdsSaleReportActionPerformed
 
-            @Override
-            public void run() {
-                GDSSaleReportFrame frame = new GDSSaleReportFrame();
-                desktopPane.add(frame);
-                try {
-                    frame.setSelected(true);
-                } catch (PropertyVetoException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                frame.setVisible(true);
-            }
-        });
-
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
-
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void menuSegmentHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSegmentHistoryActionPerformed
         frameAction(new SegmentReportFrame(desktopPane));
-
-//        SegmentReportFrame frame = new SegmentReportFrame();
-//        desktopPane.add(frame);
-//        try {
-//            frame.setSelected(true);
-//        } catch (PropertyVetoException ex) {
-//            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        frame.setVisible(true);
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_menuSegmentHistoryActionPerformed
 
     private void btnNewCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewCustomerActionPerformed
         showCustomerDialogue();
@@ -726,9 +743,9 @@ public class Main extends JFrame implements PropertyChangeListener {
         frameAction(new OutstandingFlightReportingFrame(desktopPane));
     }//GEN-LAST:event_menuUnpaidFlightActionPerformed
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+    private void menuTktDiscrepancyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTktDiscrepancyActionPerformed
         frameAction(new TicketingDiscrepancyFrame());
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    }//GEN-LAST:event_menuTktDiscrepancyActionPerformed
 
     private void menuBSPBillingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBSPBillingActionPerformed
         frameAction(new BSPBillPayment(desktopPane));
@@ -750,6 +767,18 @@ public class Main extends JFrame implements PropertyChangeListener {
        OtherInvoiceDlg dlg = new OtherInvoiceDlg(this);
         dlg.showDialog(null);
     }//GEN-LAST:event_btnNewOInvoiceActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        frameAction(new TicketingDiscrepancyFrame());
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        callDashBoard();        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnCashBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCashBookActionPerformed
+        frameAction(new CashBookFrame(desktopPane));
+    }//GEN-LAST:event_btnCashBookActionPerformed
 
     /**
      * @param args the command line arguments
@@ -789,11 +818,15 @@ public class Main extends JFrame implements PropertyChangeListener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCashBook;
     private javax.swing.JButton btnNewCustomer;
     private javax.swing.JButton btnNewOInvoice;
     private javax.swing.JDesktopPane desktopPane;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu10;
+    private javax.swing.JMenu jMenu11;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
@@ -811,9 +844,6 @@ public class Main extends JFrame implements PropertyChangeListener {
     private javax.swing.JMenuItem jMenuItem14;
     private javax.swing.JMenuItem jMenuItem15;
     private javax.swing.JMenuItem jMenuItem16;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
@@ -838,13 +868,16 @@ public class Main extends JFrame implements PropertyChangeListener {
     private javax.swing.JMenuItem menuClientAccounts;
     private javax.swing.JMenuItem menuCustomerManagement;
     private javax.swing.JMenuItem menuDueOSalesInvoice;
+    private javax.swing.JMenuItem menuGdsSaleReport;
     private javax.swing.JMenuItem menuMainAgent;
     private javax.swing.JMenuItem menuNewAgent;
     private javax.swing.JMenuItem menuNewCustomer;
     private javax.swing.JMenuItem menuPReporting;
     private javax.swing.JMenuItem menuPnrHistory;
     private javax.swing.JMenuItem menuSalesInvoiceRpt;
+    private javax.swing.JMenuItem menuSegmentHistory;
     private javax.swing.JMenuItem menuServiceManager;
+    private javax.swing.JMenuItem menuTktDiscrepancy;
     private javax.swing.JMenuItem menuUnpaidFlight;
     private javax.swing.JMenuItem menuVendorAccounts;
     // End of variables declaration//GEN-END:variables

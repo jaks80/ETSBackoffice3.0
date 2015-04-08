@@ -280,6 +280,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         CommandPanel.setLayout(flowLayout1);
 
         btnNewDoc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newdoc18.png"))); // NOI18N
+        btnNewDoc.setToolTipText("New Debit/Credit Memo");
         btnNewDoc.setMaximumSize(new java.awt.Dimension(45, 22));
         btnNewDoc.setMinimumSize(new java.awt.Dimension(45, 22));
         btnNewDoc.setPreferredSize(new java.awt.Dimension(45, 22));
@@ -291,6 +292,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         CommandPanel.add(btnNewDoc);
 
         btnCreateInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/tinv18.png"))); // NOI18N
+        btnCreateInvoice.setToolTipText("New Invoice");
         btnCreateInvoice.setMaximumSize(new java.awt.Dimension(45, 22));
         btnCreateInvoice.setMinimumSize(new java.awt.Dimension(45, 22));
         btnCreateInvoice.setPreferredSize(new java.awt.Dimension(45, 22));
@@ -302,6 +304,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         CommandPanel.add(btnCreateInvoice);
 
         btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh18.png"))); // NOI18N
+        btnRefresh.setToolTipText("Refresh");
         btnRefresh.setMaximumSize(new java.awt.Dimension(45, 22));
         btnRefresh.setMinimumSize(new java.awt.Dimension(45, 22));
         btnRefresh.setPreferredSize(new java.awt.Dimension(45, 22));
@@ -313,6 +316,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         CommandPanel.add(btnRefresh);
 
         btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save18.png"))); // NOI18N
+        btnSave.setToolTipText("Save");
         btnSave.setMaximumSize(new java.awt.Dimension(45, 22));
         btnSave.setMinimumSize(new java.awt.Dimension(45, 22));
         btnSave.setPreferredSize(new java.awt.Dimension(45, 22));
@@ -324,6 +328,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         CommandPanel.add(btnSave);
 
         btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exit18.png"))); // NOI18N
+        btnClose.setToolTipText("Close PNR");
         btnClose.setMaximumSize(new java.awt.Dimension(45, 22));
         btnClose.setMinimumSize(new java.awt.Dimension(45, 22));
         btnClose.setPreferredSize(new java.awt.Dimension(45, 22));
@@ -658,7 +663,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             TicketPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(TicketPanelLayout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addComponent(tabsTicket, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE))
+                .addComponent(tabsTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 301, Short.MAX_VALUE))
         );
 
         innerSplitPane.setRightComponent(TicketPanel);

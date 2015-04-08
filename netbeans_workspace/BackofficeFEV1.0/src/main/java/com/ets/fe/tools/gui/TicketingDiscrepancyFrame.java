@@ -1,19 +1,85 @@
 package com.ets.fe.tools.gui;
 
+import com.ets.fe.pnr.gui.DlgTicketPurchase;
+import com.ets.fe.pnr.model.Ticket;
+import com.ets.fe.pnr.task.TicketTask;
+import com.ets.fe.tools.logic.TJQHelper;
+import java.awt.Frame;
+import java.awt.Window;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Yusuf
  */
-public class TicketingDiscrepancyFrame extends javax.swing.JInternalFrame implements PropertyChangeListener{
+public class TicketingDiscrepancyFrame extends javax.swing.JInternalFrame implements PropertyChangeListener {
+
+    private TJQTask tJQTask;
+    private TicketTask ticketTask;
+    private String taskType;
+
+    private int rowUpdating = 0;
+    private Ticket ticketUpdating;
 
     public TicketingDiscrepancyFrame() {
         initComponents();
+        dtFrom.setDate(new java.util.Date());
+        dtTo.setDate(new java.util.Date());
     }
 
-    
+    private void start() {
+        String[] lines = txtInput.getText().split("\\n");
+        TJQHelper tjq = new TJQHelper(lines);
+        List<Ticket> tickets = tjq.getIssuedTickets();
+
+        tJQTask = new TJQTask(txtStatus, progressBar, tblTicket, tblTjq, txtMenual,
+                tickets, dtFrom.getDate(), dtTo.getDate());
+        tJQTask.addPropertyChangeListener(this);
+        tJQTask.execute();
+    }
+
+    private void updateTicket(Ticket ticket) {
+        taskType = "UPDATETICKET";
+        ticketTask = new TicketTask(ticket, "UPDATEPURCHASE", null);
+        ticketTask.addPropertyChangeListener(this);
+        ticketTask.execute();
+    }
+
+    private void updateRow(int row, Ticket ticket) {
+        DefaultTableModel model = ((DefaultTableModel) tblTicket.getModel());
+        model.setValueAt(ticket.getTicketNo(), row, 0);
+        model.setValueAt(ticket.getBaseFare(), row, 2);
+        model.setValueAt(ticket.getTax(), row, 3);
+        model.setValueAt(ticket.getFee(), row, 4);
+        model.setValueAt(ticket.getCommission(), row, 5);
+    }
+
+    private ListSelectionListener tblTjqListener = new ListSelectionListener() {
+
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if (e.getValueIsAdjusting()) {
+                return;
+            }
+            int row = tblTjq.getSelectedRow();
+            if (row != -1) {
+                String ticket = (String) tblTjq.getValueAt(row, 0);
+                for (int i = 0; i < tblTicket.getRowCount(); i++) {
+                    if (tblTicket.getValueAt(i, 0).equals(ticket)) {
+                        tblTicket.setRowSelectionInterval(i, i);
+                    }
+                }
+            }
+        }
+    };
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -24,96 +90,44 @@ public class TicketingDiscrepancyFrame extends javax.swing.JInternalFrame implem
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel1 = new javax.swing.JPanel();
-        btnViewReport = new javax.swing.JButton();
-        btnViewInvoice = new javax.swing.JButton();
-        btnEmail = new javax.swing.JButton();
-        btnPrint = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
         btnStart = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        txtStatus = new javax.swing.JTextArea();
+        txtInput = new javax.swing.JTextArea();
         progressBar = new javax.swing.JProgressBar();
+        dtFrom = new org.jdesktop.swingx.JXDatePicker();
+        dtTo = new org.jdesktop.swingx.JXDatePicker();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblTicket = new org.jdesktop.swingx.JXTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblTjq = new org.jdesktop.swingx.JXTable();
+        tblTjq.getSelectionModel().addListSelectionListener(tblTjqListener);
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         txtMenual = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        txtStatus = new javax.swing.JTextArea();
+        jPanel3 = new javax.swing.JPanel();
+        btnViewInvoice = new javax.swing.JButton();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
 
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
         setTitle("Ticketing Discrepancy Analysis");
-        setMaximumSize(new java.awt.Dimension(40, 22));
         setMinimumSize(new java.awt.Dimension(40, 22));
-        setPreferredSize(new java.awt.Dimension(40, 22));
+        setPreferredSize(new java.awt.Dimension(1000, 500));
 
-        jPanel1.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
-        btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
-        btnViewReport.setMaximumSize(new java.awt.Dimension(40, 22));
-        btnViewReport.setMinimumSize(new java.awt.Dimension(40, 22));
-        btnViewReport.setPreferredSize(new java.awt.Dimension(40, 22));
-        btnViewReport.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewReportActionPerformed(evt);
-            }
-        });
-
-        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/acdoc18.png"))); // NOI18N
-        btnViewInvoice.setMaximumSize(new java.awt.Dimension(40, 22));
-        btnViewInvoice.setMinimumSize(new java.awt.Dimension(40, 22));
-        btnViewInvoice.setPreferredSize(new java.awt.Dimension(40, 22));
-        btnViewInvoice.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewInvoiceActionPerformed(evt);
-            }
-        });
-
-        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
-        btnEmail.setMaximumSize(new java.awt.Dimension(40, 22));
-        btnEmail.setMinimumSize(new java.awt.Dimension(40, 22));
-        btnEmail.setPreferredSize(new java.awt.Dimension(40, 22));
-
-        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
-        btnPrint.setMaximumSize(new java.awt.Dimension(40, 22));
-        btnPrint.setMinimumSize(new java.awt.Dimension(40, 22));
-        btnPrint.setPreferredSize(new java.awt.Dimension(40, 22));
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
-                .addComponent(btnViewReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
-                .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
-                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(710, 710, 710))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnViewReport, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-
-        jSplitPane1.setDividerLocation(180);
+        jSplitPane1.setDividerLocation(300);
         jSplitPane1.setDividerSize(4);
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
+        btnStart.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnStart.setText("Start");
         btnStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -128,16 +142,15 @@ public class TicketingDiscrepancyFrame extends javax.swing.JInternalFrame implem
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         jPanel2.add(btnStart, gridBagConstraints);
 
-        txtStatus.setEditable(false);
-        txtStatus.setColumns(16);
-        txtStatus.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
-        txtStatus.setLineWrap(true);
-        txtStatus.setRows(5);
-        jScrollPane1.setViewportView(txtStatus);
+        txtInput.setColumns(80);
+        txtInput.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        txtInput.setRows(5);
+        jScrollPane1.setViewportView(txtInput);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
@@ -146,14 +159,38 @@ public class TicketingDiscrepancyFrame extends javax.swing.JInternalFrame implem
         jPanel2.add(jScrollPane1, gridBagConstraints);
 
         progressBar.setMaximumSize(new java.awt.Dimension(32767, 18));
-        progressBar.setMinimumSize(new java.awt.Dimension(10, 18));
+        progressBar.setMinimumSize(new java.awt.Dimension(146, 18));
         progressBar.setPreferredSize(new java.awt.Dimension(146, 18));
         progressBar.setStringPainted(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         jPanel2.add(progressBar, gridBagConstraints);
+
+        dtFrom.setMaximumSize(new java.awt.Dimension(110, 21));
+        dtFrom.setMinimumSize(new java.awt.Dimension(110, 21));
+        dtFrom.setPreferredSize(new java.awt.Dimension(110, 21));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+        jPanel2.add(dtFrom, gridBagConstraints);
+
+        dtTo.setMaximumSize(new java.awt.Dimension(110, 21));
+        dtTo.setMinimumSize(new java.awt.Dimension(110, 21));
+        dtTo.setPreferredSize(new java.awt.Dimension(110, 21));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+        jPanel2.add(dtTo, gridBagConstraints);
 
         jSplitPane1.setLeftComponent(jPanel2);
 
@@ -164,25 +201,34 @@ public class TicketingDiscrepancyFrame extends javax.swing.JInternalFrame implem
 
             },
             new String [] {
-                "TicketNo", "Name", "BaseFare", "Tax", "Fees", "Com", "Status"
+                "TicketNo", "PNR", "BaseFare", "Tax", "Fees", "Com", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                true, true, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tblTicket.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        tblTicket.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         tblTicket.setSortable(false);
         tblTicket.getTableHeader().setReorderingAllowed(false);
+        tblTicket.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblTicketMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblTicket);
+        if (tblTicket.getColumnModel().getColumnCount() > 0) {
+            tblTicket.getColumnModel().getColumn(1).setMaxWidth(50);
+            tblTicket.getColumnModel().getColumn(6).setMaxWidth(55);
+        }
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
@@ -195,25 +241,29 @@ public class TicketingDiscrepancyFrame extends javax.swing.JInternalFrame implem
 
             },
             new String [] {
-                "Ticket No", "Name", "BaseFare", "Tax", "Fees", "Com"
+                "Ticket No", "PNR", "BaseFare", "Tax", "Fees", "Com", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, true, false, false, false, false
+                true, true, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tblTjq.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        tblTjq.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         tblTjq.setSortable(false);
         tblTjq.getTableHeader().setReorderingAllowed(false);
         jScrollPane3.setViewportView(tblTjq);
+        if (tblTjq.getColumnModel().getColumnCount() > 0) {
+            tblTjq.getColumnModel().getColumn(1).setMaxWidth(50);
+            tblTjq.getColumnModel().getColumn(6).setMaxWidth(50);
+        }
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
@@ -224,6 +274,8 @@ public class TicketingDiscrepancyFrame extends javax.swing.JInternalFrame implem
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("TJQ Report");
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
         jPanel4.add(jLabel1, gridBagConstraints);
@@ -231,6 +283,8 @@ public class TicketingDiscrepancyFrame extends javax.swing.JInternalFrame implem
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText("Tickets in Backoffice System");
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
         jPanel4.add(jLabel2, gridBagConstraints);
@@ -243,8 +297,7 @@ public class TicketingDiscrepancyFrame extends javax.swing.JInternalFrame implem
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 0.3;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 0);
@@ -254,10 +307,62 @@ public class TicketingDiscrepancyFrame extends javax.swing.JInternalFrame implem
         jLabel3.setText("Manual verification needed");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
         jPanel4.add(jLabel3, gridBagConstraints);
+
+        txtStatus.setEditable(false);
+        txtStatus.setBackground(new java.awt.Color(255, 255, 204));
+        txtStatus.setColumns(20);
+        txtStatus.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        txtStatus.setRows(5);
+        jScrollPane5.setViewportView(txtStatus);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 0);
+        jPanel4.add(jScrollPane5, gridBagConstraints);
+
+        jPanel3.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit18.png"))); // NOI18N
+        btnViewInvoice.setToolTipText("Edit Ticket");
+        btnViewInvoice.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnViewInvoice.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnViewInvoice.setPreferredSize(new java.awt.Dimension(40, 22));
+        btnViewInvoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewInvoiceActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(732, 732, 732)
+                .addComponent(filler1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(134, 134, 134))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(filler1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnViewInvoice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        jPanel4.add(jPanel3, gridBagConstraints);
 
         jSplitPane1.setRightComponent(jPanel4);
 
@@ -265,66 +370,90 @@ public class TicketingDiscrepancyFrame extends javax.swing.JInternalFrame implem
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1063, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE))
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
+    private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
+        start();
+    }//GEN-LAST:event_btnStartActionPerformed
 
-    }//GEN-LAST:event_btnViewReportActionPerformed
+    private void tblTicketMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTicketMouseClicked
+        if (evt.getClickCount() == 2) {
+            rowUpdating = tblTicket.getSelectedRow();
+            if (rowUpdating != -1) {
+
+                Ticket ticket = tJQTask.getDbTickets().get(rowUpdating);
+                if (ticket.getTicketingSalesAcDoc() == null) {
+                    Window w = SwingUtilities.getWindowAncestor(this);
+                    Frame owner = w instanceof Frame ? (Frame) w : null;
+
+                    ticketUpdating = ticket;
+                    DlgTicketPurchase dlgTicket = new DlgTicketPurchase(owner);
+                    if (dlgTicket.showDialog(ticketUpdating)) {
+                        updateTicket(ticketUpdating);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "It is not allowed to edit invoiced ticket.\n"
+                            + "Void invoice and edit ticket.", "Edit Ticket", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        }
+    }//GEN-LAST:event_tblTicketMouseClicked
 
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
-
+        //        int index = tblReport.getSelectedRow();
+        //        if (index != -1) {
+            //            viewDocument(report.getInvoices().get(index));
+            //        }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
-
-    private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
-        txtStatus.setText("");
-        TJQTask task = new TJQTask(txtStatus,progressBar,tblTicket,tblTjq,txtMenual);
-        task.addPropertyChangeListener(this);
-        task.execute();
-    }//GEN-LAST:event_btnStartActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnEmail;
-    private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnStart;
     private javax.swing.JButton btnViewInvoice;
-    private javax.swing.JButton btnViewReport;
+    private org.jdesktop.swingx.JXDatePicker dtFrom;
+    private org.jdesktop.swingx.JXDatePicker dtTo;
+    private javax.swing.Box.Filler filler1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JProgressBar progressBar;
     private org.jdesktop.swingx.JXTable tblTicket;
     private org.jdesktop.swingx.JXTable tblTjq;
+    private javax.swing.JTextArea txtInput;
     private javax.swing.JTextArea txtMenual;
     private javax.swing.JTextArea txtStatus;
     // End of variables declaration//GEN-END:variables
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
+        if ("progress".equals(evt.getPropertyName())) {
             int progress = (Integer) evt.getNewValue();
             progressBar.setValue(progress);
             if (progress == 100) {
-                
+
+                if ("UPDATETICKET".equals(taskType)) {
+                    int status = ticketTask.getStatus();
+                    if (status == 200) {
+                        updateRow(rowUpdating, ticketUpdating);
+                    }
+                    taskType = "";
+                }
             }
         }
     }

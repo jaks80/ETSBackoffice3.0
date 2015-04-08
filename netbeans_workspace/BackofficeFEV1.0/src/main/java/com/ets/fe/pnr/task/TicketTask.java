@@ -1,10 +1,7 @@
 package com.ets.fe.pnr.task;
 
-import com.ets.fe.a_maintask.PnrSearchTask;
 import com.ets.fe.pnr.model.Ticket;
-import com.ets.fe.pnr.ws.PnrWSClient;
 import com.ets.fe.pnr.ws.TicketWSClient;
-import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import org.jdesktop.swingx.JXBusyLabel;
 
@@ -34,6 +31,8 @@ public class TicketTask extends SwingWorker<Ticket, Integer> {
             ticket = client.update(ticket);
         } else if (taskType.equals("DELETE")) {
             status = client.delete(ticket.getId());
+        }else if (taskType.equals("UPDATEPURCHASE")) {
+            status = client.updatePurchase(ticket);
         }
 
         return ticket;

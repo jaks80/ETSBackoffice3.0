@@ -289,6 +289,10 @@ public class Ticket extends PersistentObject implements Serializable {
         return this.baseFare.add(this.tax).add(this.commission).add(this.fee);
     }
 
+    public BigDecimal calculateGrossPurchaseFare() {
+        return this.baseFare.add(this.tax).add(this.fee);
+    }
+        
     public BigDecimal calculateRevenue() {
         return this.grossFare.add(this.discount).subtract(this.calculateNetPurchaseFare());
     }

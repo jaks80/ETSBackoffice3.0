@@ -26,7 +26,7 @@
 <coolItem id="com.jaspersoft.studio.editor.JrxmlEditor.jasper" itemType="typePlaceholder" x="61" y="30"/>
 <coolItem id="com.jaspersoft.studio.editor.JrxmlEditor" itemType="typeToolBarContribution" x="61" y="30"/>
 <coolItem id="com.jaspersoft.studio.graphic.text" itemType="typeToolBarContribution" x="574" y="22"/>
-<coolItem id="com.jaspersoft.studio.graphic.size" itemType="typeToolBarContribution" x="84" y="22"/>
+<coolItem id="com.jaspersoft.studio.graphic.size" itemType="typeToolBarContribution" x="84" y="30"/>
 <coolItem id="com.jaspersoft.studio.components.tableactions" itemType="typeToolBarContribution" x="61" y="30"/>
 <coolItem id="com.jaspersoft.studio.graphic.image" itemType="typeToolBarContribution" x="38" y="30"/>
 <coolItem id="group.help" itemType="typeGroupMarker"/>
@@ -265,7 +265,7 @@
 </folder>
 </info>
 <info folder="true" part="org.eclipse.ui.internal.ViewStack@71d698a8" ratio="0.5" ratioLeft="536" ratioRight="536" relationship="2" relative="org.eclipse.ui.editorss">
-<folder appearance="2" expanded="0">
+<folder appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.ProgressView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>

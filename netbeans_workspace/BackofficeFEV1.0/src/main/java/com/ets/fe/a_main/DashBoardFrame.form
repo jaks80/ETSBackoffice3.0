@@ -35,7 +35,7 @@
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Component id="jPanel3" min="-2" pref="344" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="mainTabPane" max="32767" attributes="0"/>
+                  <Component id="mainTabPane" pref="1000" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
           </Group>
@@ -45,7 +45,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-              <Component id="mainTabPane" pref="490" max="32767" attributes="0"/>
+              <Component id="mainTabPane" pref="348" max="32767" attributes="0"/>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jPanel3" max="32767" attributes="0"/>
@@ -400,7 +400,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel2" min="-2" pref="258" max="-2" attributes="0"/>
-                          <EmptySpace pref="265" max="32767" attributes="0"/>
+                          <EmptySpace pref="279" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -581,7 +581,7 @@
                                 <Column editable="false" title="Type" type="java.lang.Object"/>
                                 <Column editable="false" title="Ref" type="java.lang.Object"/>
                                 <Column editable="false" title="Client" type="java.lang.Object"/>
-                                <Column editable="false" title="Airline" type="java.lang.Object"/>
+                                <Column editable="false" title="" type="java.lang.Object"/>
                                 <Column editable="false" title="Amount" type="java.lang.Object"/>
                                 <Column editable="false" title="Issue By" type="java.lang.Object"/>
                               </Table>
@@ -593,7 +593,12 @@
                                   <Editor/>
                                   <Renderer/>
                                 </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                                <Column maxWidth="120" minWidth="50" prefWidth="70" resizable="true">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
+                                <Column maxWidth="100" minWidth="55" prefWidth="65" resizable="true">
                                   <Title/>
                                   <Editor/>
                                   <Renderer/>
@@ -603,22 +608,17 @@
                                   <Editor/>
                                   <Renderer/>
                                 </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                                <Column maxWidth="35" minWidth="-1" prefWidth="-1" resizable="true">
                                   <Title/>
                                   <Editor/>
                                   <Renderer/>
                                 </Column>
-                                <Column maxWidth="50" minWidth="-1" prefWidth="-1" resizable="true">
+                                <Column maxWidth="150" minWidth="50" prefWidth="100" resizable="true">
                                   <Title/>
                                   <Editor/>
                                   <Renderer/>
                                 </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                                <Column maxWidth="130" minWidth="65" prefWidth="80" resizable="true">
                                   <Title/>
                                   <Editor/>
                                   <Renderer/>
@@ -796,12 +796,12 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="533" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="547" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="158" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="87" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>

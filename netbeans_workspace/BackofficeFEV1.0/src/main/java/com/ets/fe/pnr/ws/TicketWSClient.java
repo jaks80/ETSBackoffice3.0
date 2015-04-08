@@ -3,14 +3,11 @@ package com.ets.fe.pnr.ws;
 import com.ets.fe.pnr.model.GDSSaleReport;
 import com.ets.fe.util.RestClientUtil;
 import com.ets.fe.APIConfig;
-import com.ets.fe.pnr.model.Itinerary;
-import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.pnr.model.TicketSaleReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums.*;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -26,6 +23,14 @@ public class TicketWSClient {
         return ticket;
     }
 
+    public Integer updatePurchase(Ticket ticket) {
+        ticket.recordUpdateBy();
+
+        String url = APIConfig.get("ws.ticket.updatepurchase");
+        Integer status = RestClientUtil.postEntityReturnStatus(Ticket.class, url, ticket);
+        return status;
+    }
+        
     public Integer delete(long id) {
         String url = APIConfig.get("ws.ticket.delete") + id;
         Integer status = RestClientUtil.deleteById(url);

@@ -458,7 +458,7 @@ public class DashBoardFrame extends JInternalFrame {
             .addGroup(pnrSearchLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(265, Short.MAX_VALUE))
+                .addContainerGap(279, Short.MAX_VALUE))
         );
         pnrSearchLayout.setVerticalGroup(
             pnrSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -491,7 +491,7 @@ public class DashBoardFrame extends JInternalFrame {
 
             },
             new String [] {
-                "", "Type", "Ref", "Client", "Airline", "Amount", "Issue By"
+                "", "Type", "Ref", "Client", "", "Amount", "Issue By"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -513,7 +513,19 @@ public class DashBoardFrame extends JInternalFrame {
         jScrollPane9.setViewportView(tblSInvToday);
         if (tblSInvToday.getColumnModel().getColumnCount() > 0) {
             tblSInvToday.getColumnModel().getColumn(0).setMaxWidth(30);
-            tblSInvToday.getColumnModel().getColumn(4).setMaxWidth(50);
+            tblSInvToday.getColumnModel().getColumn(1).setMinWidth(50);
+            tblSInvToday.getColumnModel().getColumn(1).setPreferredWidth(70);
+            tblSInvToday.getColumnModel().getColumn(1).setMaxWidth(120);
+            tblSInvToday.getColumnModel().getColumn(2).setMinWidth(55);
+            tblSInvToday.getColumnModel().getColumn(2).setPreferredWidth(65);
+            tblSInvToday.getColumnModel().getColumn(2).setMaxWidth(100);
+            tblSInvToday.getColumnModel().getColumn(4).setMaxWidth(35);
+            tblSInvToday.getColumnModel().getColumn(5).setMinWidth(50);
+            tblSInvToday.getColumnModel().getColumn(5).setPreferredWidth(100);
+            tblSInvToday.getColumnModel().getColumn(5).setMaxWidth(150);
+            tblSInvToday.getColumnModel().getColumn(6).setMinWidth(65);
+            tblSInvToday.getColumnModel().getColumn(6).setPreferredWidth(80);
+            tblSInvToday.getColumnModel().getColumn(6).setMaxWidth(130);
         }
 
         tabInvoice.addTab("Ticketing Invoice", jScrollPane9);
@@ -615,11 +627,11 @@ public class DashBoardFrame extends JInternalFrame {
         pnlFlight.setLayout(pnlFlightLayout);
         pnlFlightLayout.setHorizontalGroup(
             pnlFlightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 533, Short.MAX_VALUE)
+            .addGap(0, 547, Short.MAX_VALUE)
         );
         pnlFlightLayout.setVerticalGroup(
             pnlFlightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 158, Short.MAX_VALUE)
+            .addGap(0, 87, Short.MAX_VALUE)
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -701,14 +713,14 @@ public class DashBoardFrame extends JInternalFrame {
                         .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(mainTabPane))
+                    .addComponent(mainTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE))
                 .addGap(2, 2, 2))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addComponent(mainTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
+                .addComponent(mainTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

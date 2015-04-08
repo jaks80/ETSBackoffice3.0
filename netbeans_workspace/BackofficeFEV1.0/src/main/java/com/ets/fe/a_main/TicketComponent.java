@@ -1105,7 +1105,7 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
         if (selectedRow < tblTicket.getRowCount() - 1) {
             selectedRow++;
             tblTicket.setRowSelectionInterval(selectedRow, selectedRow);
-        }        
+        }
     }//GEN-LAST:event_btnNextActionPerformed
 
     private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed

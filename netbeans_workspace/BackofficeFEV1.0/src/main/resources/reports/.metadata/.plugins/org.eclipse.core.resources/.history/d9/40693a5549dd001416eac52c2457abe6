@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2015-04-07T18:16:42 -->
+<!-- 2015-04-04T23:17:05 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Invoice" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4eedbb89-b4f6-4469-9ab6-f642a1688cf7">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TSalesInvoiceDataAdapter.xml"/>
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
@@ -151,8 +151,8 @@
 		<field name="arvTime_1" class="java.lang.String">
 			<fieldDescription><![CDATA[arvTime]]></fieldDescription>
 		</field>
-		<field name="airLineCode_1" class="java.lang.String">
-			<fieldDescription><![CDATA[airLineCode]]></fieldDescription>
+		<field name="airLineID_1" class="java.lang.String">
+			<fieldDescription><![CDATA[airLineID]]></fieldDescription>
 		</field>
 		<field name="flightNo_1" class="java.lang.String">
 			<fieldDescription><![CDATA[flightNo]]></fieldDescription>
@@ -484,7 +484,7 @@
 									<textElement textAlignment="Right" verticalAlignment="Middle">
 										<font fontName="Arial" size="8" isBold="true"/>
 									</textElement>
-									<text><![CDATA[Airline]]></text>
+									<text><![CDATA[AIRLine]]></text>
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell height="14" rowSpan="1">
@@ -499,7 +499,7 @@
 									<textElement textAlignment="Right" verticalAlignment="Middle">
 										<font fontName="Arial" size="8"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$F{airLineCode_1}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{airLineID_1}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>

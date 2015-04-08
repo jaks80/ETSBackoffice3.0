@@ -34,8 +34,8 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
 
     public GDSSaleReportFrame() {
         initComponents();
-        dtFrom.setDate(DateUtil.getBeginingOfMonth());
-        dtTo.setDate(DateUtil.getEndOfMonth());
+        dtFrom.setDate(new java.util.Date());
+        dtTo.setDate(new java.util.Date());
         setTicketStatus();
         setIssueType();
         
@@ -89,10 +89,11 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
 
         if (list.size() > 0) {
             for (Ticket t : list) {
-                tableModel.insertRow(row, new Object[]{t.getTktDateString(), t.getTktStatus(),
+                tableModel.insertRow(row, new Object[]{row+1,t.getTktDateString(), t.getTktStatus(),
                     t.getPnr().getGdsPnr(), t.getPnr().getBookingAgtOid(), t.getPnr().getTicketingAgtOid(),
                     t.getPnr().getAirLineCode(), t.getFullPaxNameWithPaxNo(), t.getFullTicketNo(),
-                    t.getBaseFare(), t.getTax(), t.getCommission(), t.getFee(), t.calculateNetPurchaseFare()});
+                    t.getBaseFare(), t.getTax(), t.getFee(), t.calculateGrossPurchaseFare(),t.getCommission(),
+                    t.calculateNetPurchaseFare()});
                 row++;
             }
         } else {
@@ -102,7 +103,7 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
         HTMLEditorKit kit = new HTMLEditorKit();
         StyleSheet s = kit.getStyleSheet();
 
-        s.addRule("body {font-family: Tahoma; font-size: 10 px;font-weight: bold;color : white;}");
+        s.addRule("body {font-family: Courier New; font-size: 11 px;font-weight: bold;color : white;}");
 
         txtSaleSummery.setEditorKit(kit);
         txtSaleSummery.setText(report.getSummery());
@@ -145,7 +146,7 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
             int rowIndex, int vColIndex) {
             Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);  
             String s = "";
-            Object o = tblTicket.getModel().getValueAt(rowIndex, 1);       
+            Object o = tblTicket.getModel().getValueAt(rowIndex, 2);       
             if(o!=null){
                 s = o.toString();
             }
@@ -179,15 +180,15 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     jLabel3.setText("Issue Type");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel1.add(jLabel3, gridBagConstraints);
 
     cmbIssueType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All", "Self Issue", "3rd Party Issue" }));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.weightx = 0.3;
-    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel1.add(cmbIssueType, gridBagConstraints);
 
     jLabel1.setText("Ticket Status");
@@ -195,25 +196,25 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel1.add(jLabel1, gridBagConstraints);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.weightx = 0.3;
-    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel1.add(cmbTicketStatus, gridBagConstraints);
 
     jLabel4.setText("Date From");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+    gridBagConstraints.insets = new java.awt.Insets(2, 6, 2, 2);
     jPanel1.add(jLabel4, gridBagConstraints);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.weightx = 0.3;
-    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel1.add(dtFrom, gridBagConstraints);
 
     jLabel5.setText("Date To");
@@ -221,48 +222,52 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     gridBagConstraints.gridx = 2;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+    gridBagConstraints.insets = new java.awt.Insets(2, 6, 2, 2);
     jPanel1.add(jLabel5, gridBagConstraints);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 3;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.weightx = 0.3;
-    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel1.add(dtTo, gridBagConstraints);
 
     txtOfficeId.setToolTipText("Ticketing agent office Id, Separated by comma, Example: ABC123AB,CDE123CD");
     txtOfficeId.setMinimumSize(new java.awt.Dimension(110, 22));
     txtOfficeId.setPreferredSize(new java.awt.Dimension(110, 22));
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 5;
-    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridx = 3;
+    gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.weightx = 0.3;
-    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel1.add(txtOfficeId, gridBagConstraints);
 
     jLabel6.setText("Career Code");
     gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel1.add(jLabel6, gridBagConstraints);
 
     jLabel7.setText("Ticketed OfficeID");
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 4;
-    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+    gridBagConstraints.insets = new java.awt.Insets(2, 6, 2, 2);
     jPanel1.add(jLabel7, gridBagConstraints);
 
     txtCareerCode.setToolTipText("Separated by comma, Example: SV,EK,BA");
     txtCareerCode.setMinimumSize(new java.awt.Dimension(110, 22));
     txtCareerCode.setPreferredSize(new java.awt.Dimension(110, 22));
     gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.weightx = 0.3;
-    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel1.add(txtCareerCode, gridBagConstraints);
 
     btnSearch.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -274,8 +279,9 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
         }
     });
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 6;
-    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridx = 3;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
     gridBagConstraints.weightx = 0.3;
     jPanel1.add(btnSearch, gridBagConstraints);
 
@@ -290,13 +296,14 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
 
     txtSaleSummery.setEditable(false);
     txtSaleSummery.setBackground(new java.awt.Color(0, 0, 0));
+    txtSaleSummery.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
     jScrollPane1.setViewportView(txtSaleSummery);
 
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
         jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
     );
     jPanel2Layout.setVerticalGroup(
         jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -367,11 +374,11 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
 
         },
         new String [] {
-            "Date", "Status", "Pnr", "B.Agent", "T.Agent", "Car", "Name", "TktNo", "Base Fare", "Tax", "Com", "Fee", "Total Fare", "NetFare"
+            "", "Date", "Status", "Pnr", "B.Agent", "T.Agent", "Car", "Name", "TktNo", "Base Fare", "Tax", "Fee", "Total Fare", "Com", "NetFare"
         }
     ) {
         boolean[] canEdit = new boolean [] {
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
         };
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -381,9 +388,10 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     tblTicket.getTableHeader().setReorderingAllowed(false);
     jScrollPane3.setViewportView(tblTicket);
     if (tblTicket.getColumnModel().getColumnCount() > 0) {
-        tblTicket.getColumnModel().getColumn(5).setMaxWidth(40);
-        tblTicket.getColumnModel().getColumn(6).setMinWidth(150);
-        tblTicket.getColumnModel().getColumn(7).setMinWidth(100);
+        tblTicket.getColumnModel().getColumn(0).setMaxWidth(40);
+        tblTicket.getColumnModel().getColumn(6).setMaxWidth(40);
+        tblTicket.getColumnModel().getColumn(7).setMinWidth(150);
+        tblTicket.getColumnModel().getColumn(8).setMinWidth(100);
     }
 
     gridBagConstraints = new java.awt.GridBagConstraints();
