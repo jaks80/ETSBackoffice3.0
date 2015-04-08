@@ -174,8 +174,15 @@ public class AIRToPNRConverter {
                 bfCurrencyCode = data[0].replaceAll("[^A-Z]", "").substring(1);
 
                 totalFare = new BigDecimal(data[12].replaceAll("[a-zA-Z]", "").trim());
+
                 if (totalFare.compareTo(BigDecimal.ONE) > 0) {
-                    baseFare = new BigDecimal((data[0].replaceAll("[a-zA-Z]", "").trim()));
+                    if (bfCurrencyCode.equals(localCurrencyCode)) {
+                        baseFare = new BigDecimal((data[0].replaceAll("[a-zA-Z]", "").trim()));
+                    } else {
+                        if (!data[1].isEmpty()) {
+                            baseFare = new BigDecimal(data[1].replaceAll("[a-zA-Z]", "").trim());
+                        }
+                    }
                 }
 
                 tax = totalFare.subtract(baseFare);
@@ -194,7 +201,13 @@ public class AIRToPNRConverter {
 
                 totalFare = new BigDecimal(data[12].replaceAll("[a-zA-Z]", "").trim());
                 if (totalFare.compareTo(BigDecimal.ONE) > 0) {
-                    baseFare = new BigDecimal((data[0].replaceAll("[a-zA-Z]", "").trim()));
+                    if (bfCurrencyCode.equals(localCurrencyCode)) {
+                        baseFare = new BigDecimal((data[0].replaceAll("[a-zA-Z]", "").trim()));
+                    } else {
+                        if (!data[1].isEmpty()) {
+                            baseFare = new BigDecimal(data[1].replaceAll("[a-zA-Z]", "").trim());
+                        }
+                    }
                 }
 
                 tax = totalFare.subtract(baseFare);

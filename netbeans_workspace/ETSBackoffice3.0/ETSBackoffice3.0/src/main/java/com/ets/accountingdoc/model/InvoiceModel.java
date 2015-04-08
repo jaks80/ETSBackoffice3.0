@@ -4,6 +4,7 @@ import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.pnr.domain.Itinerary;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
+import com.ets.pnr.model.SegmentModel;
 import com.ets.pnr.model.TicketModel;
 import com.ets.report.model.Letterhead;
 import com.ets.settings.service.AppSettingsService;
@@ -65,7 +66,7 @@ public class InvoiceModel implements Serializable{
     @XmlElement
     private String termsAndConditions;
     @XmlElement
-    private Set<Itinerary> segments;
+    private Set<SegmentModel> segments= new LinkedHashSet<>();
     @XmlElement
     private Set<TicketModel> tickets = new LinkedHashSet<>();
     @XmlElement
@@ -111,8 +112,11 @@ public class InvoiceModel implements Serializable{
             sum.setRemark(rd.getRemark());
             sum.setType(rd.getType().toString());
         }
-
-        model.setSegments(pnr.getSegments());
+        
+        Set<Itinerary> segments = pnr.getSegments();
+        for(Itinerary it: segments){
+         model.addSegmentModel(SegmentModel.segmentToModel(it));
+        }
 
         Set<Ticket> ticket_list = invoice.getTickets();
         
@@ -259,11 +263,11 @@ public class InvoiceModel implements Serializable{
         this.termsAndConditions = termsAndConditions;
     }
 
-    public Set<Itinerary> getSegments() {
+    public Set<SegmentModel> getSegments() {
         return segments;
     }
 
-    public void setSegments(Set<Itinerary> segments) {
+    public void setSegments(Set<SegmentModel> segments) {
         this.segments = segments;
     }
 
@@ -303,6 +307,10 @@ public class InvoiceModel implements Serializable{
         this.tickets.add(model);
     }
 
+    public void addSegmentModel(SegmentModel model){
+     this.segments.add(model);
+    }
+    
     public String getVendorRefference() {
         return vendorRefference;
     }

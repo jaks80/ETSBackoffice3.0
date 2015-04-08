@@ -29,6 +29,11 @@ public class TicketService {
         return ticket;
     }
 
+    public int updatePurchase(Ticket ticket) {
+        int status = dao.updatePurchase(ticket);
+        return status;
+    }
+
     public int _void(String pnr, String airlineCode, String tktno, String surname) {
         int status = dao.voidTicket(pnr, airlineCode, tktno, surname);
         return status;

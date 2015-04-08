@@ -12,6 +12,8 @@ import java.util.List;
  */
 public interface TicketDAO extends GenericDAO<Ticket, Long> {
 
+    public int updatePurchase(Ticket ticket);
+    
     public int voidTicket(String pnr, String airlineCode,String tktno, String surname);
 
     public Ticket findTicket(String pnr,String tktno, String surname);

@@ -14,7 +14,7 @@ import org.hibernate.Query;
  */
 public interface GenericDAO<T, Long extends Serializable> {
 
-    public void save(T entity);
+    public void save(T entity);        
 
     public void saveBulk(List<T> entityList);
 

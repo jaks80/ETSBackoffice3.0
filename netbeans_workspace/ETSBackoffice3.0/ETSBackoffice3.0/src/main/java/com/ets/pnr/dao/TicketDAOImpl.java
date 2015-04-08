@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.xml.bind.annotation.XmlElement;
 import org.hibernate.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,28 @@ public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements Ticke
 
     @Resource(name = "tPurchaseAcDocDAO")
     private TPurchaseAcDocDAO tPurchaseAcDocDAO;
-    
+
+    @Override
+    public int updatePurchase(Ticket ticket) {
+
+        String hql = "update Ticket t set t.tktStatus =:tktStatus,t.numericAirLineCode=:numericAirLineCode,"
+                + "t.ticketNo=:ticketNo,t.baseFare=:baseFare,t.tax=:tax,t.fee=:fee,t.commission =:commission "
+                + "where t.id=:id ";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameter("tktStatus", ticket.getTktStatus());
+        query.setParameter("numericAirLineCode", ticket.getNumericAirLineCode());
+        query.setParameter("ticketNo", ticket.getTicketNo());
+        query.setParameter("baseFare", ticket.getBaseFare());
+        query.setParameter("tax", ticket.getTax());
+        query.setParameter("fee", ticket.getFee());
+        query.setParameter("commission", ticket.getCommission());
+        query.setParameter("id", ticket.getId());
+        
+        int status = query.executeUpdate();
+        return status;
+    }
+
     @Override
     public Ticket findTicket(String pnr, String ticketNo, String surName) {
 
@@ -43,21 +65,21 @@ public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements Ticke
 
     @Override
     public int voidTicket(String pnr, String airlineCode, String ticketNo, String surName) {
-        Ticket ticket = findTicket(pnr, ticketNo, surName);        
+        Ticket ticket = findTicket(pnr, ticketNo, surName);
         ticket.setBaseFare(new BigDecimal("0.00"));
         ticket.setTax(new BigDecimal("0.00"));
         ticket.setFee(new BigDecimal("0.00"));
-        ticket.setCommission(new BigDecimal("0.00"));        
+        ticket.setCommission(new BigDecimal("0.00"));
         ticket.setGrossFare(new BigDecimal("0.00"));
         ticket.setAtolChg(new BigDecimal("0.00"));
         ticket.setDiscount(new BigDecimal("0.00"));
         ticket.setTktStatus(Enums.TicketStatus.VOID);
         save(ticket);
-        
-        if(ticket.getTicketingPurchaseAcDoc()!=null){
-         TicketingPurchaseAcDoc doc = tPurchaseAcDocDAO.getWithChildrenById(ticket.getTicketingPurchaseAcDoc().getId());
-         doc.setDocumentedAmount(doc.calculateDocumentedAmount());
-         tPurchaseAcDocDAO.save(doc);
+
+        if (ticket.getTicketingPurchaseAcDoc() != null) {
+            TicketingPurchaseAcDoc doc = tPurchaseAcDocDAO.getWithChildrenById(ticket.getTicketingPurchaseAcDoc().getId());
+            doc.setDocumentedAmount(doc.calculateDocumentedAmount());
+            tPurchaseAcDocDAO.save(doc);
         }
         return 1;
     }

@@ -8,3 +8,5 @@ http://blogs.sourceallies.com/2011/08/spring-injection-with-resource-and-autowir
 http://howtodoinjava.com/category/frameworks/rest/
 
 http://mojo.codehaus.org/webstart/webstart-maven-plugin/examples/simple_jnlp_download_servlet.html
+
+<property name="hbm2ddl.auto">create</property>

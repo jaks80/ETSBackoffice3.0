@@ -8,13 +8,7 @@ import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
 import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,6 +32,18 @@ public class TicketWS {
         return ticket;
     }
 
+    @POST
+    @Path("/updatepurchase")
+    @RolesAllowed("GS")
+    public Response updatePurchase(Ticket ticket) {
+        int status = service.updatePurchase(ticket);
+        if (status == 1) {
+            return Response.status(200).build();
+        } else {
+            return Response.status(500).build();
+        }
+    }
+
     @PUT
     @Path("/void")
     @RolesAllowed("SM")
@@ -45,10 +51,10 @@ public class TicketWS {
             @QueryParam("airlinecode") String airlineCode,
             @QueryParam("tktno") String tktno,
             @QueryParam("surname") String surname) {
-        service._void(pnr, airlineCode,tktno, surname);
+        service._void(pnr, airlineCode, tktno, surname);
         return Response.status(200).build();
     }
-    
+
     @DELETE
     @Path("/delete/{id}")
     @RolesAllowed("SM")
