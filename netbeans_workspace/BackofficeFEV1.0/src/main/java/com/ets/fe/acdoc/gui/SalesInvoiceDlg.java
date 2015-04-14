@@ -167,6 +167,12 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     }
 
     public void createInvoice() {
+        if (this.tickets.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Error creating invoice!!!"
+                    + "\nPlease close this window,refresh PNR and create invoice again.", "New Invoice", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         btnCreateDocument.setEnabled(false);
         createOtherChargeLine();
         tInvoice.setAdditionalChargeLines(chargeLines);
@@ -1043,7 +1049,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     }//GEN-LAST:event_btnAppyCreditActionPerformed
 
     private void btnOfficeCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOfficeCopyActionPerformed
-       MyJasperReport report = new MyJasperReport();
+        MyJasperReport report = new MyJasperReport();
         report.reportInvoice(tInvoice.getId(), Enums.SaleType.TKTSALES, "VIEW");
     }//GEN-LAST:event_btnOfficeCopyActionPerformed
 

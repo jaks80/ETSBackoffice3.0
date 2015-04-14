@@ -205,7 +205,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             newTSalesDocumentTask.addPropertyChangeListener(this);
             newTSalesDocumentTask.execute();
         }else{
-        btnCreateInvoice.setEnabled(true);
+         btnCreateInvoice.setEnabled(true);
         }
     }
 

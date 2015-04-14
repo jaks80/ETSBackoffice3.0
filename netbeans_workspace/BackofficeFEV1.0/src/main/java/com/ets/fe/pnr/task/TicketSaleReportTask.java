@@ -18,12 +18,14 @@ public class TicketSaleReportTask extends SwingWorker<TicketSaleReport, Integer>
     private Date issueDateFrom;
     private Date issueDateTo;
     private String ticketingAgtOid;
-    
+    private Long userid;
+
     private TicketingType ticketingType;
 
-    public TicketSaleReportTask(TicketingType ticketingType,TicketStatus ticketStatus, String airLineCode,
-            Date issueDateFrom, Date issueDateTo, String ticketingAgtOid) {
-        
+    public TicketSaleReportTask(Long userid, TicketingType ticketingType, TicketStatus ticketStatus,
+            String airLineCode, Date issueDateFrom, Date issueDateTo, String ticketingAgtOid) {
+
+        this.userid = userid;
         this.ticketingType = ticketingType;
         this.ticketStatus = ticketStatus;
         this.airLineCode = airLineCode;
@@ -36,7 +38,7 @@ public class TicketSaleReportTask extends SwingWorker<TicketSaleReport, Integer>
     protected TicketSaleReport doInBackground() {
 
         TicketWSClient client = new TicketWSClient();
-        report = client.saleReport(ticketingType,ticketStatus, airLineCode, issueDateFrom, issueDateTo, ticketingAgtOid);
+        report = client.saleReport(userid,ticketingType, ticketStatus, airLineCode, issueDateFrom, issueDateTo, ticketingAgtOid);
         return report;
     }
 

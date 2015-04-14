@@ -445,7 +445,7 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtAirlineCode, gridBagConstraints);
 
-        txtBaseFare.setBackground(new java.awt.Color(255, 255, 204));
+        txtBaseFare.setBackground(new java.awt.Color(204, 255, 204));
         txtBaseFare.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtBaseFare.setMinimumSize(new java.awt.Dimension(70, 20));
         txtBaseFare.setPreferredSize(new java.awt.Dimension(70, 20));
@@ -469,7 +469,7 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtBaseFare, gridBagConstraints);
 
-        txtTax.setBackground(new java.awt.Color(255, 255, 204));
+        txtTax.setBackground(new java.awt.Color(204, 255, 204));
         txtTax.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtTax.setMinimumSize(new java.awt.Dimension(70, 20));
         txtTax.setPreferredSize(new java.awt.Dimension(70, 20));
@@ -493,7 +493,7 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtTax, gridBagConstraints);
 
-        txtBspCom.setBackground(new java.awt.Color(255, 255, 204));
+        txtBspCom.setBackground(new java.awt.Color(204, 255, 204));
         txtBspCom.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtBspCom.setMinimumSize(new java.awt.Dimension(70, 20));
         txtBspCom.setPreferredSize(new java.awt.Dimension(70, 20));
@@ -699,7 +699,7 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanel1.add(jLabel13, gridBagConstraints);
 
-        txtFees.setBackground(new java.awt.Color(255, 255, 204));
+        txtFees.setBackground(new java.awt.Color(204, 255, 204));
         txtFees.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtFees.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -1178,6 +1178,7 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
             txtTax.setEditable(true);
             txtFees.setEditable(true);
             txtBspCom.setEditable(true);
+            
             txtGrossFare.setEditable(true);
             txtDisc.setEditable(true);
             txtAtol.setEditable(true);

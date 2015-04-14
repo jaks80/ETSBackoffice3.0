@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import org.jdesktop.swingx.JXTable;
@@ -89,6 +90,12 @@ public class SalesTktdMemoDlg extends JDialog implements PropertyChangeListener 
     }
 
     public void createDocument() {
+        if (this.tickets.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Error creating document!!!"
+                    + "\nPlease close this window,refresh PNR and create again.", "New Document", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         String terms = (String) AcDocHeaderComponent.cmbTerms.getSelectedItem();
         if (!"Select".equals(terms)) {
             taskType = "CREATE";

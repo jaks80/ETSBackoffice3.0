@@ -85,6 +85,7 @@
               <Image iconType="3" name="/icons/createInvoice.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Create New Invoice"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -99,6 +100,7 @@
               <Image iconType="3" name="/icons/print18.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Print"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -113,6 +115,7 @@
               <Image iconType="3" name="/icons/email18.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Email Invoice"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
@@ -127,10 +130,14 @@
               <Image iconType="3" name="/icons/print18.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Print Office Copy"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOfficeCopyActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

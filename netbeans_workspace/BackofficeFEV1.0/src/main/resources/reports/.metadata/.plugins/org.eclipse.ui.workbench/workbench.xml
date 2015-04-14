@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="16" version="2.0">
+<workbench progressCount="6" version="2.0">
 <workbenchAdvisor/>
 <window height="728" maximized="true" width="1024" x="104" y="0">
 <fastViewData fastViewLocation="1024">
@@ -27,7 +27,7 @@
 <coolItem id="com.jaspersoft.studio.editor.JrxmlEditor" itemType="typeToolBarContribution" x="61" y="30"/>
 <coolItem id="com.jaspersoft.studio.graphic.text" itemType="typeToolBarContribution" x="574" y="22"/>
 <coolItem id="com.jaspersoft.studio.graphic.size" itemType="typeToolBarContribution" x="84" y="30"/>
-<coolItem id="com.jaspersoft.studio.components.tableactions" itemType="typeToolBarContribution" x="61" y="30"/>
+<coolItem id="com.jaspersoft.studio.components.tableactions" itemType="typeToolBarContribution" x="107" y="30"/>
 <coolItem id="com.jaspersoft.studio.graphic.image" itemType="typeToolBarContribution" x="38" y="30"/>
 <coolItem id="group.help" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.workbench.help" itemType="typeToolBarContribution" x="-1" y="-1"/>
@@ -40,15 +40,23 @@
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
 <part id="1"/>
+<part id="2"/>
+<part id="3"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor activePart="true" focus="true" id="com.jaspersoft.studio.editor.JrxmlEditor" name="Invoice.jrxml" partName="Invoice.jrxml" path="E:/Development/netbeans_workspace/BackofficeFEV1.0/src/main/resources/reports/MyReports/Invoice.jrxml" title="Invoice.jrxml" tooltip="MyReports/Invoice.jrxml" workbook="DefaultEditorWorkbook">
+<editor id="com.jaspersoft.studio.editor.JrxmlEditor" name="Invoice.jrxml" partName="Invoice.jrxml" path="E:/Development/netbeans_workspace/BackofficeFEV1.0/src/main/resources/reports/MyReports/Invoice.jrxml" title="Invoice.jrxml" tooltip="MyReports/Invoice.jrxml" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/MyReports/Invoice.jrxml"/>
 </editor>
 <editor id="com.jaspersoft.studio.editor.JrxmlEditor" name="acDoc.jrxml" partName="acDoc.jrxml" path="E:/Development/netbeans_workspace/ETSBackofficeV2.1/src/etsbackoffice/report/acDoc.jrxml" title="acDoc.jrxml" tooltip="MyReports/acDoc.jrxml" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/MyReports/acDoc.jrxml"/>
+</editor>
+<editor id="com.jaspersoft.studio.data.DataAdapterEditorPart" name="OSalesInvDateAdapter.xml" partName="OSalesInvDateAdapter.xml" path="E:/Development/netbeans_workspace/BackofficeFEV1.0/src/main/resources/reports/MyReports/os/OSalesInvDateAdapter.xml" title="OSalesInvDateAdapter.xml" tooltip="MyReports/os/OSalesInvDateAdapter.xml" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/MyReports/os/OSalesInvDateAdapter.xml"/>
+</editor>
+<editor activePart="true" focus="true" id="com.jaspersoft.studio.editor.JrxmlEditor" name="OtherInvoice.jrxml" partName="OtherInvoice.jrxml" path="E:/Development/netbeans_workspace/BackofficeFEV1.0/src/main/resources/reports/MyReports/os/OtherInvoice.jrxml" title="OtherInvoice.jrxml" tooltip="MyReports/os/OtherInvoice.jrxml" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/MyReports/os/OtherInvoice.jrxml"/>
 </editor>
 </editors>
 <views>
@@ -160,7 +168,7 @@
 </mainWindow>
 </layout>
 </perspective>
-<perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
+<perspective editorAreaTrimState="1" editorAreaVisible="1" fixed="0" version="0.016">
 <descriptor class="org.eclipse.ui.internal.ide.application.ResourcePerspective" id="org.eclipse.ui.resourcePerspective" label="Resource"/>
 <alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
 <alwaysOnActionSet id="org.eclipse.search.searchActionSet"/>
@@ -191,10 +199,8 @@
 <hide_toolbar_item_id id="org.eclipse.debug.ui.commands.RunToLine"/>
 <hide_toolbar_item_id id="org.eclipse.jdt.ui.actions.OpenProjectWizard"/>
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
-<view id="org.eclipse.ui.navigator.ProjectExplorer"/>
-<view id="org.eclipse.ui.views.ContentOutline"/>
 <fastViews>
-<view id="org.eclipse.pde.runtime.LogView" ratio="0.29977462"/>
+<view id="org.eclipse.pde.runtime.LogView" ratio="0.29907975"/>
 </fastViews>
 <fastViewBars>
 <fastViewBar fastViewLocation="131072" id="org.eclipse.ui.internal.ViewStack@71d698a8" orientation="512" selectedTabId="org.eclipse.ui.views.ProgressView" style="0">
@@ -202,9 +208,19 @@
 <view id="org.eclipse.ui.views.ProgressView" ratio="0.3"/>
 </fastViews>
 </fastViewBar>
+<fastViewBar fastViewLocation="16384" id="bottomLeft" orientation="512" selectedTabId="org.eclipse.ui.views.ContentOutline" style="1">
+<fastViews>
+<view id="org.eclipse.ui.views.ContentOutline" ratio="0.18174846"/>
+</fastViews>
+</fastViewBar>
 <fastViewBar fastViewLocation="1024" id="bottomRight" orientation="256" selectedTabId="org.eclipse.ui.views.TaskList" style="0">
 <fastViews>
 <view id="org.eclipse.ui.views.TaskList" ratio="0.3"/>
+</fastViews>
+</fastViewBar>
+<fastViewBar fastViewLocation="16384" id="topLeft" orientation="512" selectedTabId="org.eclipse.ui.navigator.ProjectExplorer" style="1">
+<fastViews>
+<view id="org.eclipse.ui.navigator.ProjectExplorer" ratio="0.29984662"/>
 </fastViews>
 </fastViewBar>
 <fastViewBar fastViewLocation="1024" id="org.eclipse.ui.internal.ViewStack@473d1d69" orientation="256" selectedTabId="com.jaspersoft.studio.editor.preview.reportstate" style="0">
@@ -214,24 +230,22 @@
 </fastViewBar>
 <fastViewBar fastViewLocation="131072" id="org.eclipse.ui.internal.ViewStack@4e224f5d" orientation="512" selectedTabId="org.eclipse.ui.views.PropertySheet" style="0">
 <fastViews>
-<view id="org.eclipse.ui.views.PropertySheet" ratio="0.29977462"/>
-<view id="com.jaspersoft.studio.Repository" ratio="0.29984662"/>
+<view id="org.eclipse.ui.views.PropertySheet" ratio="0.29907975"/>
+<view id="com.jaspersoft.studio.Repository" ratio="0.29977462"/>
 </fastViews>
 </fastViewBar>
 </fastViewBars>
 <layout>
 <mainWindow>
 <info folder="true" part="topLeft">
-<folder activePageID="org.eclipse.ui.navigator.ProjectExplorer" appearance="2" expanded="2">
-<page content="org.eclipse.ui.navigator.ProjectExplorer" label="Project Explorer"/>
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.ui.navigator.ProjectExplorer" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.BookmarkView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.views.ResourceNavigator" label="LabelNotFound"/>
 <page content="org.eclipse.team.ccvs.ui.RepositoriesView" label="LabelNotFound"/>
 <page content="org.tigris.subversion.subclipse.ui.repository.RepositoriesView" label="LabelNotFound"/>
 <page content="org.tigris.subversion.subclipse.ui.annotations.AnnotateView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
-</presentation>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
 <info folder="true" part="org.eclipse.ui.internal.ViewStack@473d1d69" ratio="0.7491857" ratioLeft="460" ratioRight="154" relationship="4" relative="topLeft">
@@ -271,12 +285,10 @@
 </folder>
 </info>
 <info folder="true" part="bottomLeft" ratio="0.5" ratioLeft="307" ratioRight="307" relationship="4" relative="topLeft">
-<folder activePageID="org.eclipse.ui.views.ContentOutline" appearance="2" expanded="2">
-<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
 <page content="org.eclipse.ant.ui.views.AntView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
-</presentation>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
 </mainWindow>
@@ -287,53 +299,76 @@
 <navigationHistory>
 <editors>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" path="/MyReports/Invoice.jrxml"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" path="/MyReports/os/OtherInvoice.jrxml"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="" path="/MyReports/os/OtherInvoice.jrxml"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" path="/MyReports/acDoc.jrxml"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="" path="/MyReports/Invoice.jrxml"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.data.DataAdapterEditorPart" path="/MyReports/TSalesInvoiceDataAdapter.xml"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.data.DataAdapterEditorPart" path="/MyReports/os/OSalesInvDateAdapter.xml"/>
 </editors>
 <item historyLabel="Invoice.jrxml" index="0"/>
-<item historyLabel="acDoc.jrxml" index="1"/>
+<item historyLabel="OtherInvoice.jrxml" index="1">
+<position info="not_deleted" x="41326" y="0"/>
+</item>
+<item historyLabel="OtherInvoice.jrxml" index="2">
+<position info="not_deleted" x="41326" y="0"/>
+</item>
 <item historyLabel="Invoice.jrxml" index="0"/>
-<item historyLabel="acDoc.jrxml" index="1"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="acDoc.jrxml" index="3"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
 <item historyLabel="Invoice.jrxml" index="0"/>
-<item historyLabel="acDoc.jrxml" index="1"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
 <item historyLabel="Invoice.jrxml" index="0"/>
-<item historyLabel="acDoc.jrxml" index="1"/>
-<item historyLabel="Invoice.jrxml" index="0">
-<position info="not_deleted" x="74928" y="0"/>
-</item>
-<item historyLabel="Invoice.jrxml" index="2">
-<position info="not_deleted" x="74928" y="0"/>
-</item>
-<item historyLabel="Invoice.jrxml" index="2">
-<position info="not_deleted" x="74928" y="0"/>
-</item>
-<item historyLabel="Invoice.jrxml" index="2">
-<position info="not_deleted" x="74928" y="0"/>
-</item>
-<item historyLabel="Invoice.jrxml" index="2">
-<position info="not_deleted" x="74928" y="0"/>
-</item>
-<item historyLabel="Invoice.jrxml" index="2">
-<position info="not_deleted" x="74928" y="0"/>
-</item>
-<item historyLabel="Invoice.jrxml" index="2">
-<position info="not_deleted" x="74928" y="0"/>
-</item>
-<item historyLabel="Invoice.jrxml" index="2">
-<position info="not_deleted" x="74928" y="0"/>
-</item>
-<item historyLabel="Invoice.jrxml" index="2">
-<position info="not_deleted" x="74928" y="0"/>
-</item>
-<item active="true" historyLabel="Invoice.jrxml" index="2">
-<position info="not_deleted" x="74928" y="0"/>
-</item>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="Invoice.jrxml" index="0"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="Invoice.jrxml" index="0"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="Invoice.jrxml" index="0"/>
+<item historyLabel="acDoc.jrxml" index="3"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="Invoice.jrxml" index="0"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="acDoc.jrxml" index="3"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="Invoice.jrxml" index="0"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="Invoice.jrxml" index="0"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="Invoice.jrxml" index="0"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="Invoice.jrxml" index="0"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="Invoice.jrxml" index="0"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="acDoc.jrxml" index="3"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="Invoice.jrxml" index="0"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="Invoice.jrxml" index="0"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="TSalesInvoiceDataAdapter.xml" index="4"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="OSalesInvDateAdapter.xml" index="5"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="OSalesInvDateAdapter.xml" index="5"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="OSalesInvDateAdapter.xml" index="5"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="Invoice.jrxml" index="0"/>
+<item historyLabel="OtherInvoice.jrxml" index="1"/>
+<item historyLabel="Invoice.jrxml" index="0"/>
+<item active="true" historyLabel="OtherInvoice.jrxml" index="1"/>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>
 <workbenchWindowAdvisor/>
 <actionBarAdvisor/>
 <trimLayout>
+<trimArea IMemento.internal.id="16384">
+<trimItem IMemento.internal.id="topLeft"/>
+<trimItem IMemento.internal.id="bottomLeft"/>
+</trimArea>
 <trimArea IMemento.internal.id="131072">
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.ViewStack@4e224f5d"/>
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.ViewStack@71d698a8"/>
@@ -351,6 +386,15 @@
 </trimLayout>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="OtherInvoice.jrxml" tooltip="MyReports/os/OtherInvoice.jrxml">
+<persistable path="/MyReports/os/OtherInvoice.jrxml"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.data.DataAdapterEditorPart" name="OSalesInvDateAdapter.xml" tooltip="MyReports/os/OSalesInvDateAdapter.xml">
+<persistable path="/MyReports/os/OSalesInvDateAdapter.xml"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.data.DataAdapterEditorPart" name="TSalesInvoiceDataAdapter.xml" tooltip="MyReports/TSalesInvoiceDataAdapter.xml">
+<persistable path="/MyReports/TSalesInvoiceDataAdapter.xml"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="acDoc.jrxml" tooltip="MyReports/acDoc.jrxml">
 <persistable path="/MyReports/acDoc.jrxml"/>
 </file>
@@ -359,9 +403,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor.jasper" name="TAcDocReport.jasper" tooltip="MyReports/TAcDocReport.jasper">
 <persistable path="/MyReports/TAcDocReport.jasper"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="OtherInvoice.jrxml" tooltip="MyReports/OtherInvoice.jrxml">
-<persistable path="/MyReports/OtherInvoice.jrxml"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="OtherAcDocReport.jrxml" tooltip="MyReports/OtherAcDocReport.jrxml">
 <persistable path="/MyReports/OtherAcDocReport.jrxml"/>
@@ -389,12 +430,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="Blank_A4.jrxml" tooltip="MyReports/Blank_A4.jrxml">
 <persistable path="/MyReports/Blank_A4.jrxml"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="Invoice_1.jrxml" tooltip="MyReports/Invoice_1.jrxml">
-<persistable path="/MyReports/Invoice_1.jrxml"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.jaspersoft.studio.editor.JrxmlEditor" name="Invoice_2.jrxml" tooltip="MyReports/Invoice_2.jrxml">
-<persistable path="/MyReports/Invoice_2.jrxml"/>
 </file>
 </mruList>
 </workbench>

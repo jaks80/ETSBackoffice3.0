@@ -306,6 +306,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
 
         btnCreateDocument.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/createInvoice.png"))); // NOI18N
         btnCreateDocument.setToolTipText("Create New Invoice");
+        btnCreateDocument.setEnabled(false);
         btnCreateDocument.setFocusable(false);
         btnCreateDocument.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCreateDocument.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -317,6 +318,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
 
         btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
         btnPrint.setToolTipText("Print");
+        btnPrint.setEnabled(false);
         btnPrint.setFocusable(false);
         btnPrint.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnPrint.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -328,6 +330,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
 
         btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
         btnEmail.setToolTipText("Email Invoice");
+        btnEmail.setEnabled(false);
         btnEmail.setFocusable(false);
         btnEmail.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnEmail.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -339,9 +342,15 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
 
         btnOfficeCopy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
         btnOfficeCopy.setToolTipText("Print Office Copy");
+        btnOfficeCopy.setEnabled(false);
         btnOfficeCopy.setFocusable(false);
         btnOfficeCopy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnOfficeCopy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnOfficeCopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOfficeCopyActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -950,7 +959,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         String refference = this.invoice.getReference().toString();
         if (receipent != null) {
             MyJasperReport report = new MyJasperReport(receipent, subject, body, refference);
-            report.reportInvoice(invoice.getId(), Enums.SaleType.TKTSALES, "EMAIL");
+            report.reportInvoice(invoice.getId(), Enums.SaleType.OTHERSALES, "EMAIL");
         } else {
             JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
         }
@@ -965,6 +974,11 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
          resetPaymentComponent();
         }
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void btnOfficeCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOfficeCopyActionPerformed
+       MyJasperReport report = new MyJasperReport();
+        report.reportInvoice(invoice.getId(), Enums.SaleType.OTHERSALES, "VIEW");
+    }//GEN-LAST:event_btnOfficeCopyActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

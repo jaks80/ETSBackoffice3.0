@@ -66,7 +66,7 @@ public class TicketWSClient {
         return report;
     }
 
-    public TicketSaleReport saleReport(TicketingType ticketingType, TicketStatus ticketStatus, String airLineCode,
+    public TicketSaleReport saleReport(Long userid,TicketingType ticketingType, TicketStatus ticketStatus, String airLineCode,
             Date issueDateFrom, Date issueDateTo, String ticketingAgtOid) {
 
         String dateFrom = DateUtil.dateToString(issueDateFrom, "ddMMMyyyy");
@@ -91,6 +91,10 @@ public class TicketWSClient {
             sb.append("&ticketingAgtOid=").append(ticketingAgtOid);
         }
 
+        if (userid != null) {
+            sb.append("&userid=").append(userid);
+        }
+        
         TicketSaleReport report = RestClientUtil.getEntity(TicketSaleReport.class, sb.toString(), new TicketSaleReport());
         return report;
     }

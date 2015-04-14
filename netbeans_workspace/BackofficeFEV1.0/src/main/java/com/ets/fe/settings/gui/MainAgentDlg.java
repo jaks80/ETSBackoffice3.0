@@ -166,7 +166,6 @@ public class MainAgentDlg extends JDialog implements ActionListener{
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Main Agent Company Profile");
-        setAlwaysOnTop(true);
         setResizable(false);
 
         jPanel1.setLayout(new java.awt.GridBagLayout());

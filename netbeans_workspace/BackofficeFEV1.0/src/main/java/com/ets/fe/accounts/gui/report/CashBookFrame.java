@@ -488,9 +488,8 @@ public class CashBookFrame extends javax.swing.JInternalFrame implements Propert
             tblPayment.getColumnModel().getColumn(3).setMinWidth(110);
             tblPayment.getColumnModel().getColumn(3).setPreferredWidth(110);
             tblPayment.getColumnModel().getColumn(3).setMaxWidth(110);
-            tblPayment.getColumnModel().getColumn(8).setMinWidth(70);
-            tblPayment.getColumnModel().getColumn(8).setPreferredWidth(70);
-            tblPayment.getColumnModel().getColumn(8).setMaxWidth(70);
+            tblPayment.getColumnModel().getColumn(8).setPreferredWidth(80);
+            tblPayment.getColumnModel().getColumn(8).setMaxWidth(140);
         }
 
         jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));

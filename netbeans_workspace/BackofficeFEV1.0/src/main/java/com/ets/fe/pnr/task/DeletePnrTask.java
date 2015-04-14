@@ -15,28 +15,26 @@ public class DeletePnrTask extends SwingWorker<Integer, Integer> {
 
     private final Pnr pnr;
     private JXBusyLabel busyLabel;
-    private JTable table;
-    
-    public DeletePnrTask(Pnr pnr,JXBusyLabel busyLabel, JTable table) {
-        this.pnr = pnr;        
+
+    public DeletePnrTask(Pnr pnr, JXBusyLabel busyLabel) {
+        this.pnr = pnr;
         this.busyLabel = busyLabel;
-        this.table = table;
     }
 
     @Override
-    protected Integer doInBackground() {        
+    protected Integer doInBackground() {
 
         PnrWSClient client = new PnrWSClient();
         Integer status = client.delete(pnr.getId());
-        
-        PnrSearchTask globalSearchTask = new PnrSearchTask("UNINVOICED_PNR",busyLabel, table);
+
+        PnrSearchTask globalSearchTask = new PnrSearchTask("UNINVOICED_PNR", busyLabel);
         globalSearchTask.execute();
         return status;
     }
 
     @Override
     protected void done() {
-     
-        setProgress(100);       
+
+        setProgress(100);
     }
 }

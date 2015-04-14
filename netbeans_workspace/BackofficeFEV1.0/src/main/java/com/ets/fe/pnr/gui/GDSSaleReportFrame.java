@@ -4,6 +4,7 @@ import com.ets.fe.pnr.task.GDSSalesReportTask;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.pnr.model.GDSSaleReport;
 import com.ets.fe.util.DateUtil;
+import com.ets.fe.util.DocumentSizeFilter;
 import com.ets.fe.util.Enums;
 import java.awt.Color;
 import java.awt.Component;
@@ -19,6 +20,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JInternalFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import org.jdesktop.swingx.JXTable;
@@ -39,14 +41,18 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
         setTicketStatus();
         setIssueType();
         
-        int inset = 0;
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(inset, inset, screenSize.width / 2, screenSize.height / 2);
+        AbstractDocument doc;
+        doc = (AbstractDocument) txtCareerCode.getDocument();
+        doc.setDocumentFilter(new DocumentSizeFilter(35));
+        doc = (AbstractDocument) txtOfficeId.getDocument();
+        doc.setDocumentFilter(new DocumentSizeFilter(49));
+                
 
     }
 
-    private void buttonSearchActionPerformed(ActionEvent event) {
-
+    private void search() {
+        btnSearch.setEnabled(false);
+        txtStatistics.setText("");
         Enums.TicketingType ticketingType = (Enums.TicketingType) cmbIssueType.getSelectedItem();
         Enums.TicketStatus ticketStatus = null;
         
@@ -107,9 +113,17 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
 
         txtSaleSummery.setEditorKit(kit);
         txtSaleSummery.setText(report.getSummery());
+        populateStatistics(report);
         btnSearch.setEnabled(true);
     }
 
+    private void populateStatistics(GDSSaleReport report){
+     txtStatistics.append("Total Issue  : "+report.getTotalIssue()+"\n");
+     txtStatistics.append("Total ReIssue: "+report.getTotalReIssue()+"\n");
+     txtStatistics.append("Total Refund : "+report.getTotalRefund()+"\n");
+     txtStatistics.append("Total Void   : "+report.getTotalVoid()+"\n");
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -135,6 +149,8 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
         txtCareerCode = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtStatistics = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtSaleSummery = new javax.swing.JTextPane();
         jPanel3 = new javax.swing.JPanel();
@@ -185,6 +201,14 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     jPanel1.add(jLabel3, gridBagConstraints);
 
     cmbIssueType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All", "Self Issue", "3rd Party Issue" }));
+    cmbIssueType.setToolTipText("Self Ticketing or 3rd Party Ticketing");
+    cmbIssueType.setMinimumSize(new java.awt.Dimension(99, 19));
+    cmbIssueType.setPreferredSize(new java.awt.Dimension(99, 19));
+    cmbIssueType.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            cmbIssueTypeActionPerformed(evt);
+        }
+    });
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.weightx = 0.3;
@@ -198,6 +222,10 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     jPanel1.add(jLabel1, gridBagConstraints);
+
+    cmbTicketStatus.setToolTipText("Book, Issue, ReIssue or Refund");
+    cmbTicketStatus.setMinimumSize(new java.awt.Dimension(99, 19));
+    cmbTicketStatus.setPreferredSize(new java.awt.Dimension(99, 19));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 1;
@@ -211,6 +239,10 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.insets = new java.awt.Insets(2, 6, 2, 2);
     jPanel1.add(jLabel4, gridBagConstraints);
+
+    dtFrom.setToolTipText("Issue date from");
+    dtFrom.setMinimumSize(new java.awt.Dimension(104, 20));
+    dtFrom.setPreferredSize(new java.awt.Dimension(104, 20));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.weightx = 0.3;
@@ -224,6 +256,10 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.insets = new java.awt.Insets(2, 6, 2, 2);
     jPanel1.add(jLabel5, gridBagConstraints);
+
+    dtTo.setToolTipText("Issue date to");
+    dtTo.setMinimumSize(new java.awt.Dimension(104, 20));
+    dtTo.setPreferredSize(new java.awt.Dimension(104, 20));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 3;
     gridBagConstraints.gridy = 1;
@@ -235,6 +271,11 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     txtOfficeId.setToolTipText("Ticketing agent office Id, Separated by comma, Example: ABC123AB,CDE123CD");
     txtOfficeId.setMinimumSize(new java.awt.Dimension(110, 22));
     txtOfficeId.setPreferredSize(new java.awt.Dimension(110, 22));
+    txtOfficeId.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(java.awt.event.FocusEvent evt) {
+            txtOfficeIdFocusGained(evt);
+        }
+    });
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 3;
     gridBagConstraints.gridy = 2;
@@ -262,6 +303,11 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     txtCareerCode.setToolTipText("Separated by comma, Example: SV,EK,BA");
     txtCareerCode.setMinimumSize(new java.awt.Dimension(110, 22));
     txtCareerCode.setPreferredSize(new java.awt.Dimension(110, 22));
+    txtCareerCode.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(java.awt.event.FocusEvent evt) {
+            txtCareerCodeFocusGained(evt);
+        }
+    });
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 2;
@@ -273,6 +319,7 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     btnSearch.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
     btnSearch.setText("Search");
+    btnSearch.setToolTipText("Search ticekts");
     btnSearch.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             btnSearchActionPerformed(evt);
@@ -294,6 +341,12 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
 
     jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Summery", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
+    txtStatistics.setEditable(false);
+    txtStatistics.setColumns(25);
+    txtStatistics.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+    txtStatistics.setRows(5);
+    jScrollPane2.setViewportView(txtStatistics);
+
     txtSaleSummery.setEditable(false);
     txtSaleSummery.setBackground(new java.awt.Color(0, 0, 0));
     txtSaleSummery.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
@@ -303,12 +356,16 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
         jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+        .addGroup(jPanel2Layout.createSequentialGroup()
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
     );
     jPanel2Layout.setVerticalGroup(
         jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(jPanel2Layout.createSequentialGroup()
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(jScrollPane1)
+        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGap(0, 0, Short.MAX_VALUE))
     );
 
@@ -409,9 +466,20 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        buttonSearchActionPerformed(evt);
-        btnSearch.setEnabled(false);
+        search();        
     }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void cmbIssueTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbIssueTypeActionPerformed
+       txtOfficeId.setText("");
+    }//GEN-LAST:event_cmbIssueTypeActionPerformed
+
+    private void txtOfficeIdFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtOfficeIdFocusGained
+       txtOfficeId.selectAll();
+    }//GEN-LAST:event_txtOfficeIdFocusGained
+
+    private void txtCareerCodeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCareerCodeFocusGained
+       txtCareerCode.selectAll();
+    }//GEN-LAST:event_txtCareerCodeFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -431,6 +499,7 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JProgressBar progressBar;
@@ -438,6 +507,7 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
     private javax.swing.JTextField txtCareerCode;
     private javax.swing.JTextField txtOfficeId;
     private javax.swing.JTextPane txtSaleSummery;
+    private javax.swing.JTextArea txtStatistics;
     // End of variables declaration//GEN-END:variables
     private void setTicketStatus() {
         DefaultComboBoxModel model = new DefaultComboBoxModel(Enums.TicketStatus.values());
@@ -454,7 +524,7 @@ public class GDSSaleReportFrame extends JInternalFrame implements PropertyChange
         
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
+        if ("progress".equals(evt.getPropertyName())) {
             int progress = (Integer) evt.getNewValue();
             progressBar.setValue(progress);
             if (progress == 100) {

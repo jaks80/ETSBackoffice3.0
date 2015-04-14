@@ -59,7 +59,7 @@ public class PnrWSClient {
     public List<Pnr> searchPnrByName(String surName, String foreName) {
         String url = APIConfig.get("ws.pnr.bypaxname") + "?surName=" + surName;
 
-        if (foreName != null && foreName.isEmpty()) {
+        if (foreName != null && !foreName.isEmpty()) {
             url = url + "&foreName=" + foreName;
         }
 

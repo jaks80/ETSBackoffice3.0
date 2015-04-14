@@ -5,7 +5,6 @@ import com.ets.fe.util.CheckInput;
 import com.ets.fe.util.DocumentSizeFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
 import javax.swing.JDialog;
 import javax.swing.text.AbstractDocument;
 
@@ -43,9 +42,9 @@ public class AgentDlg extends JDialog implements ActionListener {
         doc.setDocumentFilter(new DocumentSizeFilter(15));
         doc = (AbstractDocument) txtMobile.getDocument();
         doc.setDocumentFilter(new DocumentSizeFilter(15));
-        doc = (AbstractDocument) txtEmail.getDocument();
-        doc = (AbstractDocument) txtRemark.getDocument();
-        doc.setDocumentFilter(new DocumentSizeFilter(400));
+        //doc = (AbstractDocument) txtEmail.getDocument();
+        //doc = (AbstractDocument) txtRemark.getDocument();
+        //doc.setDocumentFilter(new DocumentSizeFilter(400));
 
         doc = (AbstractDocument) txtOfficeId.getDocument();
         doc.setDocumentFilter(new DocumentSizeFilter(50));
@@ -93,6 +92,7 @@ public class AgentDlg extends JDialog implements ActionListener {
             txtAbta.setText(agent.getAbta());
             txtAtol.setText(agent.getAtol());
             txtOfficeId.setText(agent.getOfficeID());
+            txtRemark.setText(agent.getRemark());
             if (agent.getFullName() != null) {
                 txtAddLine1.requestFocusInWindow();
             } else {

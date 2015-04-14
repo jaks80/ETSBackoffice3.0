@@ -1,29 +1,47 @@
 package com.ets.fe.a_main;
 
 import com.ets.fe.Application;
-import com.ets.fe.a_maintask.InvoiceSearchTask;
+import com.ets.fe.a_maintask.TodayTInvoiceSearchTask;
 import com.ets.fe.a_maintask.PnrSearchTask;
+import com.ets.fe.acdoc.model.report.InvoiceReport;
+import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
+import com.ets.fe.acdoc_o.model.InvoiceReportOther;
+import com.ets.fe.acdoc_o.model.OtherInvoiceSummery;
 import com.ets.fe.pnr.task.DeletePnrTask;
 import com.ets.fe.pnr.model.Pnr;
+import com.ets.fe.util.PnrUtil;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
+import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Yusuf
  */
-public class DashBoardFrame extends JInternalFrame {
+public class DashBoardFrame extends JInternalFrame implements PropertyChangeListener {
 
     private PnrSearchTask pnrSearchTask;
-    private InvoiceSearchTask invoiceSearchTask;
+    private TodayTInvoiceSearchTask invoiceSearchTask;
+    private String taskType = null;
+
     private final List<PnrPanel> pnrTabs = new ArrayList<>();
+    private List<TktingInvoiceSummery> tsinvlist_today = new ArrayList<>();
+    private List<OtherInvoiceSummery> osinvlist_today = new ArrayList<>();
+
+    private List<Pnr> pnrs = new ArrayList<>();
 
     public DashBoardFrame() {
         initComponents();
@@ -49,8 +67,10 @@ public class DashBoardFrame extends JInternalFrame {
 
         if (index != -1) {
             if (choice == JOptionPane.YES_OPTION) {
-                Pnr pnr = pnrSearchTask.getPnrs().get(index);
-                DeletePnrTask task = new DeletePnrTask(pnr, pnrBusyLabel, tblUninvoicedPnr);
+                Pnr pnr = this.pnrs.get(index);
+                this.taskType = "DELETE_PNR";
+                DeletePnrTask task = new DeletePnrTask(pnr, pnrBusyLabel);
+                task.addPropertyChangeListener(this);
                 task.execute();
             }
         }
@@ -63,7 +83,6 @@ public class DashBoardFrame extends JInternalFrame {
                 return pnrTabs.get(i);
             }
         }
-
         return null;
     }
 
@@ -71,34 +90,43 @@ public class DashBoardFrame extends JInternalFrame {
         String name = txtName.getText();
         String pnr = txtPnr.getText();
         String invRef = txtInvRef.getText();
-        pnrSearchTask = new PnrSearchTask("QUERY_SEARCH", pnrBusyLabel, tblUninvoicedPnr, pnr, invRef, name);
+        taskType = "QUERY_SEARCH";
+        pnrSearchTask = new PnrSearchTask(taskType, pnrBusyLabel, pnr, invRef, name);
+        pnrSearchTask.addPropertyChangeListener(this);
         pnrSearchTask.execute();
     }
 
     public void pnrTask() {
         if (tabPnr.getSelectedIndex() == 0) {
-            pnrSearchTask = new PnrSearchTask("UNINVOICED_PNR", pnrBusyLabel, tblUninvoicedPnr);
+            taskType = "UNINVOICED_PNR";
+            pnrSearchTask = new PnrSearchTask(taskType, pnrBusyLabel);
+            pnrSearchTask.addPropertyChangeListener(this);
             pnrSearchTask.execute();
         } else if (tabPnr.getSelectedIndex() == 1) {
-            pnrSearchTask = new PnrSearchTask("PNRTODAY", pnrBusyLabel, tblUninvoicedPnr);
+            taskType = "PNRTODAY";
+            pnrSearchTask = new PnrSearchTask(taskType, pnrBusyLabel);
+            pnrSearchTask.addPropertyChangeListener(this);
             pnrSearchTask.execute();
         }
     }
 
     public void invoiceTask() {
         if (tabInvoice.getSelectedIndex() == 0) {
-            invoiceSearchTask = new InvoiceSearchTask("TSINVOICE_TODAY", invoiceBusyLabel, tblSInvToday);
+            taskType = "TSINVOICE_TODAY";
+            invoiceSearchTask = new TodayTInvoiceSearchTask(taskType, invoiceBusyLabel);
         } else if (tabInvoice.getSelectedIndex() == 1) {
-            invoiceSearchTask = new InvoiceSearchTask("OSINVOICE_TODAY", invoiceBusyLabel, tblOInvToday);
+            taskType = "OSINVOICE_TODAY";
+            invoiceSearchTask = new TodayTInvoiceSearchTask(taskType, invoiceBusyLabel);
         }
+        invoiceSearchTask.addPropertyChangeListener(this);
         invoiceSearchTask.execute();
     }
 
     private void viewPnrFromInvoice() {
-        int index = tblSInvToday.getSelectedRow();
+        int index = tblSTktInvToday.getSelectedRow();
         if (index != -1) {
-            Long id = invoiceSearchTask.getTsinv_today().get(index).getPnr_id();
-            String gdspnr = invoiceSearchTask.getTsinv_today().get(index).getGdsPnr();
+            Long id = tsinvlist_today.get(index).getPnr_id();
+            String gdspnr = tsinvlist_today.get(index).getGdsPnr();
             Pnr pnr = new Pnr();
             pnr.setId(id);
             pnr.setGdsPnr(gdspnr);
@@ -106,34 +134,62 @@ public class DashBoardFrame extends JInternalFrame {
         }
     }
 
-    private ChangeListener tabListener = new ChangeListener() {
+    private void populatePnrTable() {
 
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            if (mainTabPane.getSelectedIndex() == 0) {
-                pnrTask();
-                invoiceTask();
-            } else {
+        JTable table = null;
 
+        if (tabPnr.getSelectedIndex() == 1) {
+            table = tblPnrToday;
+        } else {
+            table = tblUninvoicedPnr;
+        }
+
+        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+        tableModel.getDataVector().removeAllElements();
+
+        if (this.pnrs.size() > 0) {
+            for (int i = 0; i < this.pnrs.size(); i++) {
+                Pnr p = this.pnrs.get(i);
+                tableModel.insertRow(i, new Object[]{i + 1, p.getGdsPnr(), PnrUtil.calculatePartialName(PnrUtil.calculateLeadPaxName(p.getTickets())), p.getNoOfPax(),
+                    p.getTicketingAgentSine(), p.getBookingAgtOid(), p.getTicketingAgtOid(), p.getAirLineCode()});
             }
+        } else {
+            tableModel.insertRow(0, new Object[]{});
         }
-    };
+        table.setRowSelectionInterval(0, 0);
+    }
 
-    private ChangeListener tabPnrListener = new ChangeListener() {
+    private void populateTktInvoiceTable() {
+        DefaultTableModel tableModel = (DefaultTableModel) tblSTktInvToday.getModel();
+        tableModel.getDataVector().removeAllElements();
 
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            pnrTask();
+        if (tsinvlist_today.size() > 0) {
+            for (int i = 0; i < tsinvlist_today.size(); i++) {
+                TktingInvoiceSummery p = tsinvlist_today.get(i);
+                tableModel.insertRow(i, new Object[]{i + 1, p.getType(), p.getReference(), p.getClientName(),
+                    p.getAirLine(), p.getDocumentedAmount(), PnrUtil.calculatePartialName(p.getInvBy())});
+            }
+        } else {
+            tableModel.insertRow(0, new Object[]{});
         }
-    };
+        tblSTktInvToday.setRowSelectionInterval(0, 0);
+    }
 
-    private ChangeListener tabInvoiceListener = new ChangeListener() {
+    private void populateOtherInvoiceTable() {
+        DefaultTableModel tableModel = (DefaultTableModel) tblOInvToday.getModel();
+        tableModel.getDataVector().removeAllElements();
 
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            invoiceTask();
+        if (osinvlist_today.size() > 0) {
+            for (int i = 0; i < osinvlist_today.size(); i++) {
+                OtherInvoiceSummery p = osinvlist_today.get(i);
+                tableModel.insertRow(i, new Object[]{i + 1, p.getType(), p.getReference(), p.getClientName(),
+                    p.getDocumentedAmount(), PnrUtil.calculatePartialName(p.getInvBy())});
+            }
+        } else {
+            tableModel.insertRow(0, new Object[]{});
         }
-    };
+        tblOInvToday.setRowSelectionInterval(0, 0);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -172,7 +228,7 @@ public class DashBoardFrame extends JInternalFrame {
         tabInvoice = new javax.swing.JTabbedPane();
         tabInvoice.addChangeListener(tabInvoiceListener);
         jScrollPane9 = new javax.swing.JScrollPane();
-        tblSInvToday = new org.jdesktop.swingx.JXTable();
+        tblSTktInvToday = new org.jdesktop.swingx.JXTable();
         jScrollPane10 = new javax.swing.JScrollPane();
         tblOInvToday = new org.jdesktop.swingx.JXTable();
         btnRefreshInvoice = new javax.swing.JButton();
@@ -486,7 +542,7 @@ public class DashBoardFrame extends JInternalFrame {
 
         jScrollPane9.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        tblSInvToday.setModel(new javax.swing.table.DefaultTableModel(
+        tblSTktInvToday.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -502,30 +558,30 @@ public class DashBoardFrame extends JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblSInvToday.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
-        tblSInvToday.setSortable(false);
-        tblSInvToday.getTableHeader().setReorderingAllowed(false);
-        tblSInvToday.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblSTktInvToday.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        tblSTktInvToday.setSortable(false);
+        tblSTktInvToday.getTableHeader().setReorderingAllowed(false);
+        tblSTktInvToday.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblSInvTodayMouseClicked(evt);
+                tblSTktInvTodayMouseClicked(evt);
             }
         });
-        jScrollPane9.setViewportView(tblSInvToday);
-        if (tblSInvToday.getColumnModel().getColumnCount() > 0) {
-            tblSInvToday.getColumnModel().getColumn(0).setMaxWidth(30);
-            tblSInvToday.getColumnModel().getColumn(1).setMinWidth(50);
-            tblSInvToday.getColumnModel().getColumn(1).setPreferredWidth(70);
-            tblSInvToday.getColumnModel().getColumn(1).setMaxWidth(120);
-            tblSInvToday.getColumnModel().getColumn(2).setMinWidth(55);
-            tblSInvToday.getColumnModel().getColumn(2).setPreferredWidth(65);
-            tblSInvToday.getColumnModel().getColumn(2).setMaxWidth(100);
-            tblSInvToday.getColumnModel().getColumn(4).setMaxWidth(35);
-            tblSInvToday.getColumnModel().getColumn(5).setMinWidth(50);
-            tblSInvToday.getColumnModel().getColumn(5).setPreferredWidth(100);
-            tblSInvToday.getColumnModel().getColumn(5).setMaxWidth(150);
-            tblSInvToday.getColumnModel().getColumn(6).setMinWidth(65);
-            tblSInvToday.getColumnModel().getColumn(6).setPreferredWidth(80);
-            tblSInvToday.getColumnModel().getColumn(6).setMaxWidth(130);
+        jScrollPane9.setViewportView(tblSTktInvToday);
+        if (tblSTktInvToday.getColumnModel().getColumnCount() > 0) {
+            tblSTktInvToday.getColumnModel().getColumn(0).setMaxWidth(30);
+            tblSTktInvToday.getColumnModel().getColumn(1).setMinWidth(50);
+            tblSTktInvToday.getColumnModel().getColumn(1).setPreferredWidth(70);
+            tblSTktInvToday.getColumnModel().getColumn(1).setMaxWidth(120);
+            tblSTktInvToday.getColumnModel().getColumn(2).setMinWidth(55);
+            tblSTktInvToday.getColumnModel().getColumn(2).setPreferredWidth(65);
+            tblSTktInvToday.getColumnModel().getColumn(2).setMaxWidth(100);
+            tblSTktInvToday.getColumnModel().getColumn(4).setMaxWidth(35);
+            tblSTktInvToday.getColumnModel().getColumn(5).setMinWidth(50);
+            tblSTktInvToday.getColumnModel().getColumn(5).setPreferredWidth(100);
+            tblSTktInvToday.getColumnModel().getColumn(5).setMaxWidth(150);
+            tblSTktInvToday.getColumnModel().getColumn(6).setMinWidth(65);
+            tblSTktInvToday.getColumnModel().getColumn(6).setPreferredWidth(80);
+            tblSTktInvToday.getColumnModel().getColumn(6).setMaxWidth(130);
         }
 
         tabInvoice.addTab("Ticketing Invoice", jScrollPane9);
@@ -738,13 +794,13 @@ public class DashBoardFrame extends JInternalFrame {
         if (tabPnr.getSelectedIndex() == 0) {
             int index = tblUninvoicedPnr.getSelectedRow();
             if (index != -1) {
-                Pnr pnr = pnrSearchTask.getPnrs().get(index);
+                Pnr pnr = this.pnrs.get(index);
                 showPnrPanel(pnr, this);
             }
         } else if (tabPnr.getSelectedIndex() == 0) {
             int index = tblPnrToday.getSelectedRow();
             if (index != -1) {
-                Pnr pnr = pnrSearchTask.getPnrs().get(index);
+                Pnr pnr = this.pnrs.get(index);
                 showPnrPanel(pnr, this);
             }
         }
@@ -787,7 +843,7 @@ public class DashBoardFrame extends JInternalFrame {
         if (evt.getClickCount() == 2) {
             int index = tblUninvoicedPnr.getSelectedRow();
             if (index != -1) {
-                Pnr pnr = pnrSearchTask.getPnrs().get(index);
+                Pnr pnr = this.pnrs.get(index);
                 showPnrPanel(pnr, this);
             }
         }
@@ -801,11 +857,11 @@ public class DashBoardFrame extends JInternalFrame {
         viewPnrFromInvoice();
     }//GEN-LAST:event_btnPnrDetails1ActionPerformed
 
-    private void tblSInvTodayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSInvTodayMouseClicked
+    private void tblSTktInvTodayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSTktInvTodayMouseClicked
         if (evt.getClickCount() == 2) {
             viewPnrFromInvoice();
         }
-    }//GEN-LAST:event_tblSInvTodayMouseClicked
+    }//GEN-LAST:event_tblSTktInvTodayMouseClicked
 
     private void txtPnrFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPnrFocusGained
         txtPnr.selectAll();
@@ -859,12 +915,52 @@ public class DashBoardFrame extends JInternalFrame {
     private javax.swing.JTabbedPane tabPnr;
     private org.jdesktop.swingx.JXTable tblOInvToday;
     private javax.swing.JTable tblPnrToday;
-    private org.jdesktop.swingx.JXTable tblSInvToday;
+    private org.jdesktop.swingx.JXTable tblSTktInvToday;
     private javax.swing.JTable tblUninvoicedPnr;
     private javax.swing.JTextField txtInvRef;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtPnr;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("progress".equals(evt.getPropertyName())) {
+            int progress = (Integer) evt.getNewValue();
+            progressBar.setValue(progress);
+            if (progress == 100) {
+                try {
+                    switch (taskType) {
+                        case "UNINVOICED_PNR":
+                        case "QUERY_SEARCH":
+                        case "PNRTODAY":
+                            pnrs = new ArrayList<>();
+                            pnrs = pnrSearchTask.get();
+                            populatePnrTable();
+                            taskType = "";
+                            break;
+                        case "DELETE_PNR":
+                            pnrTask();
+                        case "TSINVOICE_TODAY":
+                        case "OSINVOICE_TODAY":
+                            Object obj = invoiceSearchTask.get();
+                            if (obj instanceof InvoiceReport) {
+                                InvoiceReport rpt = (InvoiceReport) invoiceSearchTask.get();
+                                tsinvlist_today = rpt.getInvoices();
+                                populateTktInvoiceTable();
+                            } else {
+                                InvoiceReportOther rpt1 = (InvoiceReportOther) invoiceSearchTask.get();
+                                osinvlist_today = rpt1.getInvoices();
+                                populateOtherInvoiceTable();
+                            }
+                            taskType = "";
+                        default:
+                    }
+                } catch (InterruptedException | ExecutionException ex) {
+                    Logger.getLogger(DashBoardFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
 
     private void remove_title_bar() {
         putClientProperty("JInternalFrame.isPalette", Boolean.TRUE);
@@ -878,4 +974,33 @@ public class DashBoardFrame extends JInternalFrame {
         pnrTabs.remove(panel);
         mainTabPane.remove(panel);
     }
+
+    private ChangeListener tabListener = new ChangeListener() {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            if (mainTabPane.getSelectedIndex() == 0) {
+                pnrTask();
+                invoiceTask();
+            } else {
+
+            }
+        }
+    };
+
+    private ChangeListener tabPnrListener = new ChangeListener() {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            pnrTask();
+        }
+    };
+
+    private ChangeListener tabInvoiceListener = new ChangeListener() {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            invoiceTask();
+        }
+    };
 }

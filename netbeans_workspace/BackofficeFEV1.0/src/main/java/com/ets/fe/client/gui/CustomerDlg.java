@@ -17,7 +17,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
     public CustomerDlg(java.awt.Frame parent) {
         super(parent, "New Customer", true);
         initComponents();
-        btnSave.addActionListener(this);        
+        btnSave.addActionListener(this);
 
         AbstractDocument doc;
         doc = (AbstractDocument) txtSurName.getDocument();
@@ -40,9 +40,9 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         doc.setDocumentFilter(new DocumentSizeFilter(15));
         doc = (AbstractDocument) txtMobile.getDocument();
         doc.setDocumentFilter(new DocumentSizeFilter(15));
-        doc = (AbstractDocument) txtEmail.getDocument();
-        doc = (AbstractDocument) txtRemark.getDocument();
-        doc.setDocumentFilter(new DocumentSizeFilter(400));
+        //doc = (AbstractDocument) txtEmail.getDocument();
+        //doc = (AbstractDocument) txtRemark.getDocument();
+        //doc.setDocumentFilter(new DocumentSizeFilter(400));
     }
 
     @Override
@@ -75,7 +75,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
             txtMobile.setText(customer.getMobile());
             txtEmail.setText(customer.getEmail());
             txtFax.setText(customer.getFax());
-
+            txtRemark.setText(customer.getRemark());
             if (customer.getForeName() != null) {
                 txtAddLine1.requestFocusInWindow();
             } else {
@@ -97,11 +97,11 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
             customer.setTelNo(txtTelNo.getText().trim());
             customer.setFax(txtFax.getText().trim());
             customer.setMobile(txtMobile.getText().trim());
-             String email = txtEmail.getText().trim();
-            if(!email.isEmpty()){
-             customer.setEmail(email.toLowerCase());
+            String email = txtEmail.getText().trim();
+            if (!email.isEmpty()) {
+                customer.setEmail(email.toLowerCase());
             }
-            
+
             customer.setRemark(txtRemark.getText().trim());
         }
         return save;

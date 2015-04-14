@@ -5,46 +5,41 @@ import com.ets.fe.pnr.ws.PnrWSClient;
 import com.ets.fe.util.PnrUtil;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JTable;
 import javax.swing.SwingWorker;
-import javax.swing.table.DefaultTableModel;
 import org.jdesktop.swingx.JXBusyLabel;
 
 /**
  *
  * @author Yusuf
  */
-public class PnrSearchTask extends SwingWorker< Void, Integer> {
+public class PnrSearchTask extends SwingWorker< List<Pnr>, Integer> {
 
-    private List<Pnr> pnrs = new ArrayList<>();       
     private JXBusyLabel busyLabel;
-    private JTable table;
     private String gdsPnr = null;
     private String invRef = null;
     private String name = null;
-    private String searchType = null;
+    private String taskType = null;
 
-    public PnrSearchTask(String searchType, JXBusyLabel busyLabel, JTable table) {
-        this.searchType = searchType;
+    public PnrSearchTask(String searchType, JXBusyLabel busyLabel) {
+        this.taskType = searchType;
         this.busyLabel = busyLabel;
-        this.table = table;
     }
 
-    public PnrSearchTask(String searchType, JXBusyLabel busyLabel, JTable table, String gdsPnr, String invRef, String name) {
-        this.searchType = searchType;
+    public PnrSearchTask(String searchType, JXBusyLabel busyLabel, String gdsPnr, String invRef, String name) {
+        this.taskType = searchType;
         this.busyLabel = busyLabel;
-        this.table = table;
         this.gdsPnr = gdsPnr;
         this.invRef = invRef;
         this.name = name;
     }
 
     @Override
-    protected Void doInBackground() {
+    protected List<Pnr> doInBackground() {
         busyLabel.setBusy(true);
         PnrWSClient client = new PnrWSClient();
+        List<Pnr> pnrs = new ArrayList<>();
 
-        switch (searchType) {
+        switch (taskType) {
             case "UNINVOICED_PNR":
                 pnrs = new ArrayList<>();
                 pnrs = client.getUninvoicedPnr();
@@ -52,7 +47,7 @@ public class PnrSearchTask extends SwingWorker< Void, Integer> {
             case "PNRTODAY":
                 pnrs = new ArrayList<>();
                 pnrs = client.getPnrsToday();
-                break;    
+                break;
             case "QUERY_SEARCH":
                 pnrs = new ArrayList<>();
                 if (gdsPnr != null && !gdsPnr.isEmpty()) {
@@ -67,32 +62,12 @@ public class PnrSearchTask extends SwingWorker< Void, Integer> {
             default:
         }
 
-        return null;
+        return pnrs;
     }
 
     @Override
     protected void done() {
         busyLabel.setBusy(false);
-        populateTable();
-    }
-
-    private void populateTable() {
-        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-        tableModel.getDataVector().removeAllElements();
-
-        if (this.pnrs.size() > 0) {
-            for (int i = 0; i < this.pnrs.size(); i++) {
-                Pnr p = this.pnrs.get(i);
-                tableModel.insertRow(i, new Object[]{i+1,p.getGdsPnr(), PnrUtil.calculatePartialName(PnrUtil.calculateLeadPaxName(p.getTickets())), p.getNoOfPax(),
-                    p.getTicketingAgentSine(), p.getBookingAgtOid(), p.getTicketingAgtOid(), p.getAirLineCode()});
-            }
-        } else {
-            tableModel.insertRow(0, new Object[]{});
-        }
-        table.setRowSelectionInterval(0, 0);
-    }
-
-    public List<Pnr> getPnrs() {
-        return pnrs;
+        setProgress(100);
     }
 }

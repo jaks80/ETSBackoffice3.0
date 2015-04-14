@@ -37,8 +37,14 @@ public class GDSSaleReport {
     private BigDecimal refundBalance;
     @XmlElement
     private BigDecimal comBalance;
+        @XmlElement
+    private int totalBooking = 0;
     @XmlElement
     private int totalIssue = 0;
+    @XmlElement
+    private int totalReIssue = 0;
+    @XmlElement
+    private int totalVoid = 0;
     @XmlElement
     private int totalRefund = 0;
 
@@ -103,6 +109,78 @@ public class GDSSaleReport {
 
     public String getSummery() {
         return summery;
+    }
+
+    public void setTotalIssuedFare(BigDecimal totalIssuedFare) {
+        this.totalIssuedFare = totalIssuedFare;
+    }
+
+    public void setTotalRefundFare(BigDecimal totalRefundFare) {
+        this.totalRefundFare = totalRefundFare;
+    }
+
+    public void setTotalTax(BigDecimal totalTax) {
+        this.totalTax = totalTax;
+    }
+
+    public void setTotalTaxRefund(BigDecimal totalTaxRefund) {
+        this.totalTaxRefund = totalTaxRefund;
+    }
+
+    public void setTotalBSPCom(BigDecimal totalBSPCom) {
+        this.totalBSPCom = totalBSPCom;
+    }
+
+    public void setTotalBSPComRefund(BigDecimal totalBSPComRefund) {
+        this.totalBSPComRefund = totalBSPComRefund;
+    }
+
+    public void setSaleBalance(BigDecimal saleBalance) {
+        this.saleBalance = saleBalance;
+    }
+
+    public void setRefundBalance(BigDecimal refundBalance) {
+        this.refundBalance = refundBalance;
+    }
+
+    public void setComBalance(BigDecimal comBalance) {
+        this.comBalance = comBalance;
+    }
+
+    public int getTotalBooking() {
+        return totalBooking;
+    }
+
+    public void setTotalBooking(int totalBooking) {
+        this.totalBooking = totalBooking;
+    }
+
+    public void setTotalIssue(int totalIssue) {
+        this.totalIssue = totalIssue;
+    }
+
+    public int getTotalReIssue() {
+        return totalReIssue;
+    }
+
+    public void setTotalReIssue(int totalReIssue) {
+        this.totalReIssue = totalReIssue;
+    }
+
+    public int getTotalVoid() {
+        return totalVoid;
+    }
+
+    public void setTotalVoid(int totalVoid) {
+        this.totalVoid = totalVoid;
+    }
+
+    public void setTotalRefund(int totalRefund) {
+        this.totalRefund = totalRefund;
+    }
+
+    public void setSummery(String summery) {
+        this.summery = summery;
     }
     
     

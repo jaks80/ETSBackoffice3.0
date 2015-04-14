@@ -168,7 +168,7 @@ public abstract class Contactable extends PersistentObject implements Serializab
         String fullAddress = "";
 
         if (this.getAddLine1() != null && !this.getAddLine1().isEmpty()) {
-            fullAddress = fullAddress.concat("\n" + this.getAddLine1());
+            fullAddress = fullAddress.concat(this.getAddLine1());
         }
         if (this.getAddLine2() != null && !this.getAddLine2().isEmpty()) {
             fullAddress = fullAddress.concat("\n" + this.getAddLine2());
@@ -196,7 +196,7 @@ public abstract class Contactable extends PersistentObject implements Serializab
         String fullAddress = "";
 
         if (this.getAddLine1() != null && !this.getAddLine1().isEmpty()) {
-            fullAddress = fullAddress.concat("\n" + this.getAddLine1());
+            fullAddress = fullAddress.concat(this.getAddLine1());
         }
         if (this.getAddLine2() != null && !this.getAddLine2().isEmpty()) {
             fullAddress = fullAddress.concat("\n" + this.getAddLine2());

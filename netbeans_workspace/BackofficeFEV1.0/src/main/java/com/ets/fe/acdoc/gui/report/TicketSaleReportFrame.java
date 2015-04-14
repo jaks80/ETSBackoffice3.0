@@ -40,6 +40,14 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     private List<User> users;
     private String taskType = "";
 
+    private Long userid;
+    private Enums.TicketingType ticketingType;
+    private Enums.TicketStatus ticketStatus = null;
+    private String airLineCode = null;
+    private String ticketingAgtOid = null;
+    private Date from = null;
+    private Date to = null;
+
     public TicketSaleReportFrame(JDesktopPane desktopPane) {
         initComponents();
         this.desktopPane = desktopPane;
@@ -55,18 +63,17 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
 
     private void search() {
         btnSearch.setEnabled(false);
-        Enums.TicketingType ticketingType = (Enums.TicketingType) cmbIssueType.getSelectedItem();
-        Enums.TicketStatus ticketStatus = null;
+        ticketingType = (Enums.TicketingType) cmbIssueType.getSelectedItem();
 
         if (cmbTicketStatus.getSelectedIndex() > 0) {
             ticketStatus = (Enums.TicketStatus) cmbTicketStatus.getSelectedItem();
         }
 
-        String airLineCode = txtCareerCode.getText();
-        String ticketingAgtOid = txtOfficeId.getText();
+        airLineCode = txtCareerCode.getText();
+        ticketingAgtOid = txtOfficeId.getText();
 
-        Date from = dtFrom.getDate();
-        Date to = dtTo.getDate();
+        from = dtFrom.getDate();
+        to = dtTo.getDate();
 
         if ("All".equals(ticketStatus)) {
             ticketStatus = null;
@@ -80,9 +87,17 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
             airLineCode = null;
         }
 
+        if (cmbCashier.getSelectedIndex() > 0) {
+            User user = users.get(cmbCashier.getSelectedIndex() - 1);
+            if (user != null) {
+                userid = user.getId();
+            }
+        } else {
+            userid = null;
+        }
         progressBar.setValue(0);
 
-        task = new TicketSaleReportTask(ticketingType, ticketStatus, airLineCode, from, to, ticketingAgtOid);
+        task = new TicketSaleReportTask(userid,ticketingType, ticketStatus, airLineCode, from, to, ticketingAgtOid);
         task.addPropertyChangeListener(this);
         task.execute();
     }
