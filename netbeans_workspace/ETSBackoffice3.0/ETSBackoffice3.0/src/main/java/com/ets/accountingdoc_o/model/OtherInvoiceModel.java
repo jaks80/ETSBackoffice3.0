@@ -76,6 +76,7 @@ public class OtherInvoiceModel implements Serializable {
         model.setRefference(invoice.getReference().toString());
         model.setDate(DateUtil.dateToString(invoice.getDocIssueDate()));
         model.setTerms(invoice.getTerms());
+        model.setDocumentBy(invoice.getCreatedBy().calculateFullName());
         model.setSubTotal(invoice.calculateOtherServiceSubTotal().toString());
         
         model.setAdditionalChg(invoice.calculateAddChargesSubTotal().toString());

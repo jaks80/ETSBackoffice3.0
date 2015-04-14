@@ -2,14 +2,15 @@ package com.ets.pnr.dao;
 
 import com.ets.GenericDAOImpl;
 import com.ets.accountingdoc.dao.TPurchaseAcDocDAO;
+import com.ets.accountingdoc.dao.TSalesAcDocDAO;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
+import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
-import javax.xml.bind.annotation.XmlElement;
 import org.hibernate.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements TicketDAO {
 
-    @Resource(name = "tPurchaseAcDocDAO")
-    private TPurchaseAcDocDAO tPurchaseAcDocDAO;
+//    @Resource(name = "tPurchaseAcDocDAO")
+//    private TPurchaseAcDocDAO tPurchaseAcDocDAO;
+    @Resource(name = "tSalesAcDocDAO")
+    private TSalesAcDocDAO tSalesAcDocDAO;
 
     @Override
     public int updatePurchase(Ticket ticket) {
@@ -76,16 +79,27 @@ public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements Ticke
         ticket.setTktStatus(Enums.TicketStatus.VOID);
         save(ticket);
 
-        if (ticket.getTicketingPurchaseAcDoc() != null) {
-            TicketingPurchaseAcDoc doc = tPurchaseAcDocDAO.getWithChildrenById(ticket.getTicketingPurchaseAcDoc().getId());
-            doc.setDocumentedAmount(doc.calculateDocumentedAmount());
-            tPurchaseAcDocDAO.save(doc);
+        //One void ticket will void entire Sales Document.
+        //ATTN: If there is related documents like payment and adm/acm,what will happen to that!!!
+        TicketingSalesAcDoc sales_doc = tSalesAcDocDAO.getByTicketId(ticket.getId());
+        if(sales_doc!=null && !sales_doc.getStatus().equals(Enums.AcDocStatus.VOID)){
+         tSalesAcDocDAO.voidTicketedDocument(sales_doc);
         }
+        
+        //Bellow code is redundant. Because voiding sales document deletes purchase doc anyway.
+        
+//        if (ticket.getTicketingPurchaseAcDoc() != null) {
+//            TicketingPurchaseAcDoc doc = tPurchaseAcDocDAO.getWithChildrenById(ticket.getTicketingPurchaseAcDoc().getId());
+//            doc.setDocumentedAmount(doc.calculateDocumentedAmount());
+//            tPurchaseAcDocDAO.save(doc);
+//        }
         return 1;
     }
 
     @Override
-    public List<Ticket> saleReport(Enums.TicketingType ticketingType, Enums.TicketStatus ticketStatus, String[] airLineCode, Date from, Date to, String... ticketingAgtOid) {
+    @Transactional(readOnly = true)
+    public List<Ticket> saleReport(Enums.TicketStatus ticketStatus, String[] airLineCode, 
+            Date from, Date to, String... ticketingAgtOid) {
 
         String airLineCodeQuery = "";
         String ticketingAgtOidQuery = "";
@@ -131,25 +145,32 @@ public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements Ticke
     }
 
     @Override
-    public List<Ticket> saleRevenueReport(Enums.TicketingType ticketingType, Enums.TicketStatus ticketStatus, String[] airLineCode, Date from, Date to, String... ticketingAgtOid) {
+    @Transactional(readOnly = true)
+    public List<Ticket> saleRevenueReport(Long userid,Enums.TicketStatus ticketStatus, String[] airLineCode, Date from, Date to, String... ticketingAgtOid) {
         String airLineCodeQuery = "";
         String ticketingAgtOidQuery = "";
-
+        String userQuery = "";
+        
         if (airLineCode != null) {
             airLineCodeQuery = "p.airLineCode in (:airLineCode) and ";
         }
         if (ticketingAgtOid != null) {
             ticketingAgtOidQuery = "p.ticketingAgtOid in (:ticketingAgtOid) and ";
         }
+        
+        if(userid!=null){
+          userQuery = "sdoc.createdBy.id =:userid and ";
+        }
+        
         String hql = "select distinct t from Ticket as t "
                 + "left join fetch t.pnr as p "
                 + "left join fetch p.agent as agt "
                 + "left join fetch p.customer as cust "
                 + "left join fetch p.ticketing_agent as vendor "
-                + "left join fetch t.ticketingSalesAcDoc "
+                + "left join fetch t.ticketingSalesAcDoc as sdoc "
                 + "left join fetch t.ticketingPurchaseAcDoc "
                 + "where (t.tktStatus <> 0) and "
-                + airLineCodeQuery + ticketingAgtOidQuery
+                + airLineCodeQuery + ticketingAgtOidQuery + userQuery
                 + "t.docIssuedate >= :from and t.docIssuedate <= :to and "
                 + "(:ticketStatus is null or t.tktStatus = :ticketStatus) "
                 + "order by t.id";
@@ -172,6 +193,9 @@ public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements Ticke
             query.setParameterList("ticketingAgtOid", ticketingAgtOid);
         }
 
+        if(userid!=null){
+          query.setParameter("userid", userid);
+        }
         List result = query.list();
         return result;
     }

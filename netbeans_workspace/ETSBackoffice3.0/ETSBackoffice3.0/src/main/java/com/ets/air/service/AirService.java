@@ -11,6 +11,7 @@ import com.ets.pnr.service.TicketService;
 import com.ets.util.PnrUtil;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Resource;
@@ -109,7 +110,7 @@ public class AirService {
 
             Airline airline = airlineService.find(persistedPnr.getAirLineCode());
             if (airline != null) {
-                setBspCommission(persistedPnr.getTickets(), airline);
+                setBspCommission(new LinkedHashSet<>(tobePersisted), airline);
             }
 
             PnrUtil.initPnrInTickets(persistedPnr, tobePersisted);

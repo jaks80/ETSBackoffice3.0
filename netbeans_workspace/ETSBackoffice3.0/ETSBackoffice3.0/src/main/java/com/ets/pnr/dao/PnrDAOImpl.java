@@ -7,6 +7,7 @@ import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -71,7 +72,7 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
+    @Override    
     public List<Pnr> find(Date from, Date to, String[] ticketingAgtOid, String[] bookingAgtOid) {
 
         String bookingAgtOidQuery = "";
@@ -243,5 +244,14 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
         }
 
         return list;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Set<String> findTicketingOIDs() {
+        String hql = "select p.ticketingAgtOid from Pnr p group by p.ticketingAgtOid";
+        Query query = getSession().createQuery(hql);
+        List results = query.list();        
+        return new HashSet<>(results);
     }
 }

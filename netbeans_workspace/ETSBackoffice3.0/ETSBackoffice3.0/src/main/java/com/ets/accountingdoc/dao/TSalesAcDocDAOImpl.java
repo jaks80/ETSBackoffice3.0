@@ -259,6 +259,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     public TicketingSalesAcDoc voidTicketedDocument(TicketingSalesAcDoc doc) {
         Set<Ticket> tickets = doc.getTickets();
 
+        //1. Release tickets from Purchase document, before deleting purchase doc.
         TicketingPurchaseAcDoc purchaseDoc = null;
         if (!tickets.isEmpty()) {
             purchaseDoc = tPurchaseAcDocDAO.getByTicketId(tickets.iterator().next().getId());
@@ -267,15 +268,18 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
             }
         }
 
+        //2. Undefine documents from tickets
         for (Ticket t : tickets) {
             t.setTicketingSalesAcDoc(null);
             t.setTicketingPurchaseAcDoc(null);
         }
-
+        
+        //3. Save tickets
         if (!tickets.isEmpty()) {
             ticketDAO.saveBulk(new ArrayList(tickets));
         }
 
+        //4. Delete additional lines.
         Set<AdditionalChargeLine> additionalChargeLines = doc.getAdditionalChargeLines();
 
         if (!additionalChargeLines.isEmpty()) {
@@ -284,6 +288,8 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         }
         doc.setStatus(Enums.AcDocStatus.VOID);
         save(doc);
+        
+        //5. Delete purchase doc as its goin to be created agian while saving sales document.
         if (purchaseDoc != null) {
             tPurchaseAcDocDAO.delete(purchaseDoc);
         }
@@ -417,5 +423,22 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
             map.put((String) objects[0], (BigDecimal) objects[1]);
         }
         return map;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TicketingSalesAcDoc getByTicketId(Long ticketId) {
+        String hql = "select distinct a from TicketingSalesAcDoc as a "
+                + "left join fetch a.additionalChargeLines as adl "
+                + "left join fetch adl.additionalCharge "
+                + "left join a.tickets as t "
+                + "left join fetch a.relatedDocuments as a1 "
+                + "left join fetch a1.payment as p "
+                + "where t.id = :ticketId";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameter("ticketId", ticketId);
+        TicketingSalesAcDoc result = (TicketingSalesAcDoc) query.uniqueResult();
+        return result;
     }
 }

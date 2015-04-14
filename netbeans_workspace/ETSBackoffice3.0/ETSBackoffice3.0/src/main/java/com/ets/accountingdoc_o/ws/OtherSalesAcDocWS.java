@@ -101,7 +101,7 @@ public class OtherSalesAcDocWS {
     
     @GET
     @Path("/model/byid/{id}")
-    @RolesAllowed("GS")
+    @RolesAllowed("GS")    
     public OtherInvoiceModel getModelbyId(@PathParam("id") long id) {
         OtherInvoiceModel model = service.getModelbyId(id);
         return model;

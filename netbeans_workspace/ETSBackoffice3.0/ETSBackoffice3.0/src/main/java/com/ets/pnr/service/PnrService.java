@@ -11,8 +11,8 @@ import com.ets.util.PnrUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Resource;
-import javax.ws.rs.QueryParam;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,6 +31,10 @@ public class PnrService {
         PnrUtil.undefinePnrChildren(pnr);
     }
 
+    public Set<String> findTicketingOIDs() {
+     return dao.findTicketingOIDs();
+    }
+    
     public boolean delete(Long id) {
         Pnr pnr = getByIdWithChildren(id);
         dao.delete(pnr);
@@ -57,7 +61,9 @@ public class PnrService {
 
     public Pnr getByIdWithChildren(long id) {
         Pnr pnr = dao.getByIdWithChildren(id);
-        PnrUtil.undefinePnrChildren(pnr);
+        if(pnr !=null){
+         PnrUtil.undefinePnrChildren(pnr);
+        }
         return pnr;
     }
 

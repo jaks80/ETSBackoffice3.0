@@ -2,7 +2,6 @@ package com.ets.accountingdoc.dao;
 
 import com.ets.GenericDAO;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
-import com.ets.client.domain.Agent;
 import com.ets.settings.domain.User;
 import com.ets.util.Enums;
 import java.math.BigDecimal;
@@ -19,6 +18,8 @@ public interface TSalesAcDocDAO extends GenericDAO<TicketingSalesAcDoc, Long> {
     public Long getNewAcDocRef();        
 
     public TicketingSalesAcDoc getWithChildrenById(Long id);
+    
+     public TicketingSalesAcDoc getByTicketId(Long ticketId);
 
     public List<TicketingSalesAcDoc> findAllById(Long... id);
     

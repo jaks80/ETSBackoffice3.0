@@ -18,9 +18,9 @@ public interface TicketDAO extends GenericDAO<Ticket, Long> {
 
     public Ticket findTicket(String pnr,String tktno, String surname);
     
-    public List<Ticket> saleRevenueReport(Enums.TicketingType ticketingType, Enums.TicketStatus ticketStatus, String[] airLineCode, Date from, Date to, String... ticketingAgtOid);
+    public List<Ticket> saleRevenueReport(Long userid,Enums.TicketStatus ticketStatus, String[] airLineCode, Date from, Date to, String... ticketingAgtOid);
 
-    public List<Ticket> saleReport(Enums.TicketingType ticketingType, Enums.TicketStatus ticketStatus, String[] airLineCode, Date from, Date to, String... ticketingAgtOid);
+    public List<Ticket> saleReport(Enums.TicketStatus ticketStatus, String[] airLineCode, Date from, Date to, String... ticketingAgtOid);
 
     public List<Ticket> saleReportDetails(int ticketingType, Integer gdsId, Long tktingAgtID,
             Enums.TicketStatus tktStatus, String career, Date from, Date to, String bookingOid);

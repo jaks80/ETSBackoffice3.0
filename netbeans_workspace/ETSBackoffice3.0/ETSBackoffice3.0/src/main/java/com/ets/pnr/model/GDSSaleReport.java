@@ -37,7 +37,13 @@ public class GDSSaleReport {
     @XmlElement
     private BigDecimal comBalance;
     @XmlElement
+    private int totalBooking = 0;
+    @XmlElement
     private int totalIssue = 0;
+    @XmlElement
+    private int totalReIssue = 0;
+    @XmlElement
+    private int totalVoid = 0;
     @XmlElement
     private int totalRefund = 0;
 
@@ -72,16 +78,24 @@ public class GDSSaleReport {
     public void generate() {
 
         for (Ticket t : list) {
-            if (t.getTktStatus() == TicketStatus.ISSUE || t.getTktStatus() == TicketStatus.REFUND) {
+            if (t.getTktStatus() == TicketStatus.ISSUE || t.getTktStatus() == TicketStatus.REISSUE) {
                 totalIssuedFare = totalIssuedFare.add(t.getBaseFare());
                 totalTax = totalTax.add(t.getTax());
                 totalBSPCom = totalBSPCom.add(t.getCommission());
-                ++totalIssue;
+                if (t.getTktStatus() == TicketStatus.ISSUE) {
+                    ++totalIssue;
+                } else if (t.getTktStatus() == TicketStatus.REISSUE) {
+                    ++totalReIssue;
+                }
             } else if (t.getTktStatus() == TicketStatus.REFUND) {
                 totalRefundFare = totalRefundFare.add(t.getBaseFare()).add(t.getFee());
                 totalTaxRefund = totalTaxRefund.add(t.getTax());
                 totalBSPComRefund = totalBSPComRefund.add(t.getCommission());
                 ++totalRefund;
+            } else if (t.getTktStatus() == TicketStatus.BOOK) {
+                ++totalBooking;
+            } else if (t.getTktStatus() == TicketStatus.VOID) {
+                ++totalVoid;
             }
         }
 
@@ -157,8 +171,8 @@ public class GDSSaleReport {
                 + "</tr>"
                 + "</table>"
                 + "</html>";
-        
-        summery=html;
+
+        summery = html;
     }
 
     public List<Ticket> getList() {
@@ -215,5 +229,37 @@ public class GDSSaleReport {
 
     public String getSummery() {
         return summery;
+    }
+
+    public int getTotalBooking() {
+        return totalBooking;
+    }
+
+    public void setTotalBooking(int totalBooking) {
+        this.totalBooking = totalBooking;
+    }
+
+    public void setTotalIssue(int totalIssue) {
+        this.totalIssue = totalIssue;
+    }
+
+    public int getTotalReIssue() {
+        return totalReIssue;
+    }
+
+    public void setTotalReIssue(int totalReIssue) {
+        this.totalReIssue = totalReIssue;
+    }
+
+    public int getTotalVoid() {
+        return totalVoid;
+    }
+
+    public void setTotalVoid(int totalVoid) {
+        this.totalVoid = totalVoid;
+    }
+
+    public void setTotalRefund(int totalRefund) {
+        this.totalRefund = totalRefund;
     }
 }

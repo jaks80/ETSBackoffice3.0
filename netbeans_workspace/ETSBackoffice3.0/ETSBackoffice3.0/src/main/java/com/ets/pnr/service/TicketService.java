@@ -5,9 +5,12 @@ import com.ets.pnr.dao.TicketDAO;
 import com.ets.pnr.domain.Ticket;
 import com.ets.pnr.model.GDSSaleReport;
 import com.ets.pnr.model.TicketSaleReport;
+import com.ets.settings.service.AppSettingsService;
 import com.ets.util.Enums;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,8 @@ public class TicketService {
     private TicketDAO dao;
     @Autowired
     TPurchaseAcDocService tPurchaseAcDocService;
+    @Autowired
+    private PnrService pnrService;
 
     public Ticket update(Ticket ticket) {
         dao.save(ticket);
@@ -59,17 +64,34 @@ public class TicketService {
             airLineCodes = airLineCode.split(",");
         }
 
-        if (ticketingAgtOid != null) {
+            if (ticketingAgtOid != null) {
             tktedOIDs = ticketingAgtOid.split(",");
+        } else {
+            if (ticketingType.equals(Enums.TicketingType.IATA)) {
+                tktedOIDs = AppSettingsService.mainAgent.getOfficeIDCollection();
+            } else {
+                String mainagentoid = AppSettingsService.mainAgent.getOfficeID();
+                Set<String> oidset = pnrService.findTicketingOIDs();//All tkting oid
+                //Remove Main agent office ids
+                Iterator<String> sit = oidset.iterator();
+                while (sit.hasNext()) {                    
+                    if (mainagentoid.matches(sit.next())) {
+                        sit.remove();                       
+                    }
+                }
+
+                tktedOIDs = oidset.toArray(new String[oidset.size()]);
+            }
         }
 
-        List<Ticket> tickets = dao.saleReport(ticketingType, ticketStatus, airLineCodes, issueDateFrom, issueDateTo, tktedOIDs);
+        List<Ticket> tickets = dao.saleReport(ticketStatus, airLineCodes, issueDateFrom, issueDateTo, tktedOIDs);
         GDSSaleReport report = new GDSSaleReport(tickets);
 
         return report;
     }
 
-    public TicketSaleReport saleRevenueReport(Enums.TicketingType ticketingType, Enums.TicketStatus ticketStatus, String airLineCode,
+    public TicketSaleReport saleRevenueReport(Long userid,Enums.TicketingType ticketingType, 
+            Enums.TicketStatus ticketStatus, String airLineCode,
             Date issueDateFrom, Date issueDateTo, String ticketingAgtOid) {
 
         String[] tktedOIDs = null;
@@ -83,7 +105,7 @@ public class TicketService {
             tktedOIDs = ticketingAgtOid.split(",");
         }
 
-        List<Ticket> tickets = dao.saleRevenueReport(ticketingType, ticketStatus, airLineCodes, issueDateFrom, issueDateTo, tktedOIDs);
+        List<Ticket> tickets = dao.saleRevenueReport(userid,ticketStatus, airLineCodes, issueDateFrom, issueDateTo, tktedOIDs);
         TicketSaleReport report = TicketSaleReport.serializeToSalesSummery(tickets, issueDateFrom, issueDateTo);
         report.setReportTitle("Sale Report: AIR Ticket");
         return report;

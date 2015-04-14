@@ -4,6 +4,7 @@ import com.ets.GenericDAO;
 import com.ets.pnr.domain.Pnr;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -13,6 +14,8 @@ public interface PnrDAO extends GenericDAO<Pnr, Long> {
     
     public Pnr getByIdWithChildren(Long id);
 
+    public Set<String> findTicketingOIDs();
+    
     public List<Pnr> searchByTktNo(String tktNo);
 
     public List<Pnr> getByGDSPnr(String gdsPnr);

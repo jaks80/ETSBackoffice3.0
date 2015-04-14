@@ -37,7 +37,7 @@ public class PnrUtil {
     }
 
     public static void undefinePnrChildren(Pnr pnr) {
-        if (pnr.getRemarks() != null) {
+        if (pnr.getRemarks() != null && !pnr.getRemarks().isEmpty()) {
             PnrUtil.undefinePnrInRemark(pnr, pnr.getRemarks());
         }
         PnrUtil.undefinePnrInTickets(pnr, pnr.getTickets());

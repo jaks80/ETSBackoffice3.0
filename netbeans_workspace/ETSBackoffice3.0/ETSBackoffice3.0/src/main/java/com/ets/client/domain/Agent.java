@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.*;
 
 /**
@@ -42,6 +43,17 @@ public class Agent extends Contactable implements Serializable {
     public Agent() {
         super();
 
+    }
+
+    @Transient
+    public String[] getOfficeIDCollection() {
+
+        if (this.officeID.contains(",")) {
+            return this.officeID.split(",");
+        } else {
+            String[] oids = {this.officeID};
+            return oids;
+        }
     }
 
     public String getName() {
