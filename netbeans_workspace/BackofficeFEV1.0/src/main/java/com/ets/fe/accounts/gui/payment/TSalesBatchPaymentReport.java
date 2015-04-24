@@ -1,10 +1,13 @@
 package com.ets.fe.accounts.gui.payment;
 
+import com.ets.fe.Application;
 import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
-import com.ets.fe.accounts.model.Payment;
-import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
-import com.ets.fe.accounts.model.Payments;
-import com.ets.fe.accounts.task.PaymentTask;
+import com.ets.fe.accounts.model.TransactionReceipt;
+import com.ets.fe.accounts.model.TransactionReceipts;
+import com.ets.fe.accounts.task.ReceiptTask;
+import com.ets.fe.acdoc.model.report.InvoiceReport;
+import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
+import com.ets.fe.report.BeanJasperReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.Frame;
@@ -19,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -30,8 +34,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame implements PropertyChangeListener {
 
-    private List<Payment> payments;
-    private PaymentTask task;
+    private List<TransactionReceipt> payments;
+    private ReceiptTask task;
     private JDesktopPane desktopPane;
 
     public TSalesBatchPaymentReport(JDesktopPane desktopPane) {
@@ -47,7 +51,7 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
 
-        task = new PaymentTask(Enums.ClientType.AGENT, client_id, from, to, Enums.SaleType.TKTSALES, progressBar);
+        task = new ReceiptTask(Enums.ClientType.AGENT, client_id, from, to, Enums.SaleType.TKTSALES, progressBar);
         task.addPropertyChangeListener(this);
         task.execute();
     }
@@ -59,29 +63,29 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
 
         if (payments.size() > 0) {
             for (int i = 0; i < payments.size(); i++) {
-                Payment p = payments.get(i);
-                String date = DateUtil.dateToString(p.gettSalesAcDocuments().get(0).getDocIssueDate());
-                tableModel.insertRow(i, new Object[]{date, p.calculateTotalSalesPayment().abs(), p.getCreatedByName()});
+                TransactionReceipt p = payments.get(i);
+
+                tableModel.insertRow(i, new Object[]{p.getPaymentDate(), p.getTotalAmount(), p.getCashier()});
             }
         } else {
             tableModel.insertRow(0, new Object[]{"", ""});
         }
     }
 
-    private void populatePaymentDocuments(Payment payment) {
+    private void populatePaymentDocuments(TransactionReceipt payment) {
         DefaultTableModel tableModel = (DefaultTableModel) tblPaymentDocs.getModel();
         tableModel.getDataVector().removeAllElements();
 
-        List<TicketingSalesAcDoc> docs = payment.gettSalesAcDocuments();
+        List<TktingInvoiceSummery> docs = payment.getLines();
         BigDecimal total = new BigDecimal("0.00");
         int i = 0;
         if (docs.size() > 0) {
             for (; i < docs.size(); i++) {
-                TicketingSalesAcDoc doc = docs.get(i);
+                TktingInvoiceSummery doc = docs.get(i);
                 total = total.add(doc.getDocumentedAmount());
-                String date = DateUtil.dateToString(doc.getDocIssueDate());
-                tableModel.insertRow(i, new Object[]{i + 1, doc.getReference(), date, doc.getPnr().getGdsPnr(),
-                    doc.getPnr().getAirLineCode(), doc.getDocumentedAmount().abs()});
+
+                tableModel.insertRow(i, new Object[]{i + 1, doc.getReference(), doc.getGdsPnr(),
+                    doc.getAirLine(), doc.getDocumentedAmount()});
             }
             tableModel.insertRow(i, new Object[]{"", "", "Total:", "", "", total.abs()});
         } else {
@@ -232,7 +236,7 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
 
             },
             new String [] {
-                "", "Inv Reference", "Date", "PNR", "Airline", "Amount"
+                "", "Inv Reference", "PNR", "Airline", "Amount"
             }
         ));
         tblPaymentDocs.setSortable(false);
@@ -242,9 +246,9 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
             tblPaymentDocs.getColumnModel().getColumn(0).setMinWidth(40);
             tblPaymentDocs.getColumnModel().getColumn(0).setPreferredWidth(40);
             tblPaymentDocs.getColumnModel().getColumn(0).setMaxWidth(60);
-            tblPaymentDocs.getColumnModel().getColumn(4).setMinWidth(60);
-            tblPaymentDocs.getColumnModel().getColumn(4).setPreferredWidth(60);
-            tblPaymentDocs.getColumnModel().getColumn(4).setMaxWidth(60);
+            tblPaymentDocs.getColumnModel().getColumn(3).setMinWidth(60);
+            tblPaymentDocs.getColumnModel().getColumn(3).setPreferredWidth(60);
+            tblPaymentDocs.getColumnModel().getColumn(3).setMaxWidth(60);
         }
 
         jPanel6.add(jScrollPane2);
@@ -262,6 +266,7 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
+        btnViewReport.setToolTipText("View Report");
         btnViewReport.setMaximumSize(new java.awt.Dimension(35, 22));
         btnViewReport.setMinimumSize(new java.awt.Dimension(35, 22));
         btnViewReport.setPreferredSize(new java.awt.Dimension(35, 22));
@@ -283,16 +288,29 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
         });
 
         btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
+        btnEmail.setToolTipText("Email Report");
         btnEmail.setMaximumSize(new java.awt.Dimension(35, 22));
         btnEmail.setMinimumSize(new java.awt.Dimension(35, 22));
         btnEmail.setPreferredSize(new java.awt.Dimension(35, 22));
+        btnEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmailActionPerformed(evt);
+            }
+        });
 
         btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
+        btnPrint.setToolTipText("Print Report");
         btnPrint.setMaximumSize(new java.awt.Dimension(35, 22));
         btnPrint.setMinimumSize(new java.awt.Dimension(35, 22));
         btnPrint.setPreferredSize(new java.awt.Dimension(35, 22));
+        btnPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintActionPerformed(evt);
+            }
+        });
 
         btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
+        btnSearch.setToolTipText("Search");
         btnSearch.setMaximumSize(new java.awt.Dimension(35, 22));
         btnSearch.setMinimumSize(new java.awt.Dimension(35, 22));
         btnSearch.setPreferredSize(new java.awt.Dimension(35, 22));
@@ -391,7 +409,7 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
-
+        report("VIEW");
     }//GEN-LAST:event_btnViewReportActionPerformed
 
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
@@ -399,7 +417,7 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
         int index_doc = tblPaymentDocs.getSelectedRow();
 
         if (index_pay != -1 && index_doc != -1) {
-            Long id = payments.get(index_pay).gettSalesAcDocuments().get(index_doc).getParent().getId();
+            Long id = payments.get(index_pay).getLines().get(index_doc).getParentId();
 
             Window w = SwingUtilities.getWindowAncestor(this);
             Frame owner = w instanceof Frame ? (Frame) w : null;
@@ -407,6 +425,31 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
             dlg.showDialog(id);
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
+
+    private void btnEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmailActionPerformed
+
+        int index = tblPayment.getSelectedRow();
+        if (index != -1) {
+            TransactionReceipt receipt = payments.get(index);
+            String receipent = receipt.getEmail();
+            String subject = receipt.getReportTitle().concat(" From").concat(Application.getMainAgent().getName());
+            String body = receipt.getReportTitle().concat(" From").concat(Application.getMainAgent().getName());
+            String refference = "report";
+
+            if (receipent != null) {
+                BeanJasperReport jasperreport = new BeanJasperReport(receipent, subject, body, refference);
+                List<TransactionReceipt> list = new ArrayList<>();
+                list.add(receipt);
+                jasperreport.transactionReceipt(list, Enums.SaleType.TKTSALES, "EMAIL");
+            } else {
+                JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnEmailActionPerformed
+
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+        report("PRINT");
+    }//GEN-LAST:event_btnPrintActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -444,7 +487,7 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
             if (progress == 100) {
                 try {
                     payments = new ArrayList<>();
-                    Payments pays = task.get();
+                    TransactionReceipts pays = task.get();
                     payments = pays.getList();
                     populateTblPayment();
                 } catch (InterruptedException | ExecutionException ex) {
@@ -456,6 +499,18 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
         }
     }
 
+    private void report(String action) {
+        int index = tblPayment.getSelectedRow();
+        if (index != -1) {
+            BeanJasperReport report = new BeanJasperReport();
+            List<TransactionReceipt> collection = new ArrayList<>();
+            collection.add(payments.get(index));
+            report.transactionReceipt(collection, Enums.SaleType.TKTSALES, action);
+        } else {
+            JOptionPane.showMessageDialog(null, "Select a Payment", "Transaction Report", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
     private ListSelectionListener tblPaymentListener = new ListSelectionListener() {
 
         public void valueChanged(ListSelectionEvent e) {
@@ -464,7 +519,7 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
             }
             int selectedRow = tblPayment.getSelectedRow();
             if (selectedRow != -1) {
-                Payment payment = payments.get(selectedRow);
+                TransactionReceipt payment = payments.get(selectedRow);
                 populatePaymentDocuments(payment);
             }
         }

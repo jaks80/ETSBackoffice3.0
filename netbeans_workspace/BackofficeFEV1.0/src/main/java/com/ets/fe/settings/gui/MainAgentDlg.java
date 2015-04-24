@@ -68,7 +68,7 @@ public class MainAgentDlg extends JDialog implements ActionListener{
 
     public boolean showDialog(MainAgent agent) {
         if (agent != null) {
-            txtName.setText(agent.getFullName());
+            txtName.setText(agent.calculateFullName());
             txtContactPerson.setText(agent.getContactPerson());
             txtAddLine1.setText(agent.getAddLine1());
             txtAddLine2.setText(agent.getAddLine2());
@@ -85,7 +85,7 @@ public class MainAgentDlg extends JDialog implements ActionListener{
             txtAtol.setText(agent.getAtol());
             txtOfficeId.setText(agent.getOfficeID());
             
-            if (agent.getFullName()!= null) {
+            if (agent.calculateFullName()!= null) {
                 txtAddLine1.requestFocusInWindow();
             } else {
                 txtName.requestFocusInWindow();

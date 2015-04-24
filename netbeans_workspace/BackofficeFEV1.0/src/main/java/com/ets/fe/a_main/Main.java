@@ -3,7 +3,7 @@ package com.ets.fe.a_main;
 import com.ets.fe.client.task.AgentTask;
 import com.ets.fe.client.task.CustomerTask;
 import com.ets.fe.tools.gui.TicketingDiscrepancyFrame;
-import com.ets.fe.acdoc.gui.report.TicketSaleReportFrame;
+import com.ets.fe.accounts.gui.revenue.TicketSaleReportFrame;
 import com.ets.fe.accounts.gui.payment.*;
 import com.amadeus.reader.EventSource;
 import com.amadeus.reader.ResponseHandler;
@@ -19,7 +19,7 @@ import com.ets.fe.settings.model.AppSettings;
 import com.ets.fe.client.gui.*;
 import com.ets.fe.client.model.*;
 import com.ets.fe.os.gui.OtherServiceFrame;
-import com.ets.fe.acdoc_o.gui.OtherServiceSaleReportFrame;
+import com.ets.fe.accounts.gui.revenue.OtherServiceSaleReportFrame;
 import com.ets.fe.pnr.gui.*;
 import com.ets.fe.productivity.gui.UserProductivitylFrame;
 import com.ets.fe.settings.gui.*;
@@ -61,6 +61,7 @@ public class Main extends JFrame implements PropertyChangeListener {
 
     public Main() {
         initComponents();
+        initMenu();
         aPIConfig = new APIConfig();
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -77,13 +78,13 @@ public class Main extends JFrame implements PropertyChangeListener {
 
     private void callDashBoard() {
         DashBoardFrame frame = new DashBoardFrame();
-        try {            
+        try {
             frameAction(frame);
             frame.setMaximum(true);
         } catch (PropertyVetoException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
 //        SwingUtilities.invokeLater(new Runnable() {
 //
 //            @Override
@@ -130,10 +131,10 @@ public class Main extends JFrame implements PropertyChangeListener {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
+        menuSettings = new javax.swing.JMenu();
         menuAirLine = new javax.swing.JMenuItem();
         menuAppSettings = new javax.swing.JMenuItem();
-        menuMainAgent = new javax.swing.JMenuItem();
+        menuCompanyProfile = new javax.swing.JMenuItem();
         jMenu11 = new javax.swing.JMenu();
         menuTktDiscrepancy = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
@@ -270,15 +271,15 @@ public class Main extends JFrame implements PropertyChangeListener {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu4.setText("Settings");
+        menuSettings.setText("Settings");
 
-        menuAirLine.setText("Air Lines");
+        menuAirLine.setText("BSP Com Settings");
         menuAirLine.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuAirLineActionPerformed(evt);
             }
         });
-        jMenu4.add(menuAirLine);
+        menuSettings.add(menuAirLine);
 
         menuAppSettings.setText("Application Settings");
         menuAppSettings.addActionListener(new java.awt.event.ActionListener() {
@@ -286,17 +287,17 @@ public class Main extends JFrame implements PropertyChangeListener {
                 menuAppSettingsActionPerformed(evt);
             }
         });
-        jMenu4.add(menuAppSettings);
+        menuSettings.add(menuAppSettings);
 
-        menuMainAgent.setText("Company Profile");
-        menuMainAgent.addActionListener(new java.awt.event.ActionListener() {
+        menuCompanyProfile.setText("Company Profile");
+        menuCompanyProfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuMainAgentActionPerformed(evt);
+                menuCompanyProfileActionPerformed(evt);
             }
         });
-        jMenu4.add(menuMainAgent);
+        menuSettings.add(menuCompanyProfile);
 
-        jMenuBar1.add(jMenu4);
+        jMenuBar1.add(menuSettings);
 
         jMenu11.setText("Tools");
 
@@ -471,7 +472,7 @@ public class Main extends JFrame implements PropertyChangeListener {
         jMenu7.add(menu3rdPartyBillPayment);
         jMenu7.add(jSeparator3);
 
-        jMenuItem7.setText("History: Billing Payment");
+        jMenuItem7.setText("History: Bill Payment");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem7ActionPerformed(evt);
@@ -648,7 +649,7 @@ public class Main extends JFrame implements PropertyChangeListener {
         }
     }//GEN-LAST:event_menuAppSettingsActionPerformed
 
-    private void menuMainAgentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuMainAgentActionPerformed
+    private void menuCompanyProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCompanyProfileActionPerformed
         MainAgentDlg dlg = new MainAgentDlg(this);
         MainAgent agent = Application.getMainAgent();
         if (agent == null) {
@@ -660,7 +661,7 @@ public class Main extends JFrame implements PropertyChangeListener {
             task.execute();
             taskType = "SETTINGS";
         }
-    }//GEN-LAST:event_menuMainAgentActionPerformed
+    }//GEN-LAST:event_menuCompanyProfileActionPerformed
 
     private void menuSalesInvoiceRptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSalesInvoiceRptActionPerformed
         frameAction(new TSalesInvoiceReportingFrame(desktopPane));
@@ -760,11 +761,11 @@ public class Main extends JFrame implements PropertyChangeListener {
     }//GEN-LAST:event_menuNewCustomerActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        
+
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void btnNewOInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewOInvoiceActionPerformed
-       OtherInvoiceDlg dlg = new OtherInvoiceDlg(this);
+        OtherInvoiceDlg dlg = new OtherInvoiceDlg(this);
         dlg.showDialog(null);
     }//GEN-LAST:event_btnNewOInvoiceActionPerformed
 
@@ -773,7 +774,7 @@ public class Main extends JFrame implements PropertyChangeListener {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        callDashBoard();        
+        callDashBoard();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnCashBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCashBookActionPerformed
@@ -829,7 +830,6 @@ public class Main extends JFrame implements PropertyChangeListener {
     private javax.swing.JMenu jMenu11;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
@@ -866,10 +866,10 @@ public class Main extends JFrame implements PropertyChangeListener {
     private javax.swing.JMenuItem menuBatchTransRpt;
     private javax.swing.JMenuItem menuBatchTransaction;
     private javax.swing.JMenuItem menuClientAccounts;
+    private javax.swing.JMenuItem menuCompanyProfile;
     private javax.swing.JMenuItem menuCustomerManagement;
     private javax.swing.JMenuItem menuDueOSalesInvoice;
     private javax.swing.JMenuItem menuGdsSaleReport;
-    private javax.swing.JMenuItem menuMainAgent;
     private javax.swing.JMenuItem menuNewAgent;
     private javax.swing.JMenuItem menuNewCustomer;
     private javax.swing.JMenuItem menuPReporting;
@@ -877,6 +877,7 @@ public class Main extends JFrame implements PropertyChangeListener {
     private javax.swing.JMenuItem menuSalesInvoiceRpt;
     private javax.swing.JMenuItem menuSegmentHistory;
     private javax.swing.JMenuItem menuServiceManager;
+    private javax.swing.JMenu menuSettings;
     private javax.swing.JMenuItem menuTktDiscrepancy;
     private javax.swing.JMenuItem menuUnpaidFlight;
     private javax.swing.JMenuItem menuVendorAccounts;
@@ -945,6 +946,16 @@ public class Main extends JFrame implements PropertyChangeListener {
         if (dlg.showAgentDialog(agent)) {
             AgentTask task = new AgentTask(agent);
             task.execute();
+        }
+    }
+
+    private void initMenu() {
+        Application.getLoggedOnUser();
+        if (Application.getLoggedOnUser().isAdmin()) {
+            menuSettings.setVisible(true);
+            
+        } else {
+            menuSettings.setVisible(false);
         }
     }
 }

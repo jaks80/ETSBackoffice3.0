@@ -185,6 +185,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/details18.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="View Report"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[40, 22]"/>
             </Property>
@@ -204,6 +205,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/acdoc18.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="View Invoice"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[40, 22]"/>
             </Property>
@@ -223,6 +225,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/email18.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Email Report"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[40, 22]"/>
             </Property>
@@ -242,6 +245,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/print18.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Print Report"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[40, 22]"/>
             </Property>
@@ -261,6 +265,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/search18.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Search"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[40, 22]"/>
             </Property>

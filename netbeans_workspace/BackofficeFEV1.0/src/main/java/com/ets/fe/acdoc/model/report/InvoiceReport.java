@@ -1,13 +1,12 @@
 package com.ets.fe.acdoc.model.report;
 
 
+import com.ets.fe.Application;
+import com.ets.fe.report.model.Letterhead;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -18,6 +17,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class InvoiceReport implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    @XmlElement
+    private Letterhead letterhead = Application.getLetterhead();
+    @XmlElement
+    private String reportDate;
+    
     @XmlElement
     private String title;
     @XmlElement
@@ -193,5 +197,21 @@ public class InvoiceReport implements Serializable {
 
     public void setTotalInvoice(String totalInvoice) {
         this.totalInvoice = totalInvoice;
+    }
+
+    public Letterhead getLetterhead() {
+        return letterhead;
+    }
+
+    public void setLetterhead(Letterhead letterhead) {
+        this.letterhead = letterhead;
+    }
+
+    public String getReportDate() {
+        return reportDate;
+    }
+
+    public void setReportDate(String reportDate) {
+        this.reportDate = reportDate;
     }
 }

@@ -36,7 +36,7 @@ public abstract class PersistentObject implements Serializable {
     public String getCreatedByName() {
         String initial = "";
         if (this.createdBy != null) {
-            initial = this.createdBy.getFullName();
+            initial = this.createdBy.calculateFullName();
         }
         return initial;
     }

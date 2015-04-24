@@ -100,14 +100,14 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
             index = tblSales.getSelectedRow();
             saleType = SaleType.TKTSALES;
             if (index != -1) {
-                doc = tSAcDocList.get(index);                
+                doc = tSAcDocList.get(index);
                 doc.recordUpdateBy();
             }
-        }else if (tabAcDoc.getSelectedIndex() == 1) {
+        } else if (tabAcDoc.getSelectedIndex() == 1) {
             index = tblPurchase.getSelectedRow();
             saleType = SaleType.TKTPURCHASE;
             if (index != -1) {
-                doc = tPAcDocList.get(index);                
+                doc = tPAcDocList.get(index);
                 doc.recordUpdateBy();
             }
         }
@@ -169,8 +169,8 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                 if (s.getType().equals(AcDocType.PAYMENT)) {
                     amount = amount.abs();
                 }
-                model.insertRow(row, new Object[]{s.getType(), s.getReference(), 
-                    DateUtil.dateToString(s.getDocIssueDate()), amount,s.getCreatedBy().getFullName(), s.getStatus()});
+                model.insertRow(row, new Object[]{s.getType(), s.getReference(),
+                    DateUtil.dateToString(s.getDocIssueDate()), amount, s.getCreatedBy().calculateFullName(), s.getStatus()});
                 row++;
             }
         } else {
@@ -376,7 +376,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
     }//GEN-LAST:event_btnVoidActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-       deleteDocument();
+        deleteDocument();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void tblSalesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSalesMouseClicked
@@ -386,7 +386,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
     }//GEN-LAST:event_tblSalesMouseClicked
 
     private void tblPurchaseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPurchaseMouseClicked
-       if (evt.getClickCount() == 2) {
+        if (evt.getClickCount() == 2) {
             getDocument();
         }
     }//GEN-LAST:event_tblPurchaseMouseClicked
@@ -440,7 +440,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
 
                     } else if ("COMPLETE".equals(taskType)) {
                         AccountingDocument doc = accountingDocTask.get();
-
+                        taskType = "";
                         if (doc instanceof TicketingSalesAcDoc) {
                             ticketingSalesAcDoc = (TicketingSalesAcDoc) doc;
                             if (ticketingSalesAcDoc.getType().equals(AcDocType.INVOICE)) {
@@ -469,8 +469,8 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                                 }
                             }
                         }
-                        taskType = "";
-                    } else if ("VOID".equals(taskType)|| "DELETE".equals(taskType)) {
+                        
+                    } else if ("VOID".equals(taskType) || "DELETE".equals(taskType)) {
                         parent.loadCompletePnr();
                     }
                 } catch (InterruptedException | ExecutionException ex) {

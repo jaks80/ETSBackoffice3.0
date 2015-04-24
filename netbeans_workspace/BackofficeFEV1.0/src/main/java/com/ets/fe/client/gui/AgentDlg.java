@@ -76,7 +76,7 @@ public class AgentDlg extends JDialog implements ActionListener {
 
     public boolean showAgentDialog(Agent agent) {
         if (agent != null) {
-            txtName.setText(agent.getFullName());
+            txtName.setText(agent.calculateFullName());
             txtContactPerson.setText(agent.getContactPerson());
             txtAddLine1.setText(agent.getAddLine1());
             txtAddLine2.setText(agent.getAddLine2());
@@ -93,7 +93,7 @@ public class AgentDlg extends JDialog implements ActionListener {
             txtAtol.setText(agent.getAtol());
             txtOfficeId.setText(agent.getOfficeID());
             txtRemark.setText(agent.getRemark());
-            if (agent.getFullName() != null) {
+            if (agent.calculateFullName() != null) {
                 txtAddLine1.requestFocusInWindow();
             } else {
                 txtName.requestFocusInWindow();

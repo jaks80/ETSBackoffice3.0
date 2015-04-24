@@ -1,9 +1,9 @@
 package com.ets.fe.accounts.gui.payment;
 
-import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.accounts.model.Payments;
 import com.ets.fe.accounts.task.PaymentTask;
+import com.ets.fe.accounts.task.ReceiptTask;
 import com.ets.fe.acdoc_o.gui.OtherInvoiceDlg;
 import com.ets.fe.acdoc_o.model.OtherSalesAcDoc;
 import com.ets.fe.util.DateUtil;

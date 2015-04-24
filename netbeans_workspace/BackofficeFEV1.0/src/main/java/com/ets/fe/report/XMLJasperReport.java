@@ -22,7 +22,7 @@ import org.w3c.dom.Document;
  *
  * @author Yusuf
  */
-public class MyJasperReport {
+public class XMLJasperReport {
 
     //public static final String domain = APIConfig.get("ws.domain");
 
@@ -31,7 +31,7 @@ public class MyJasperReport {
     private String body;
     private String refference;
 
-    public MyJasperReport() {
+    public XMLJasperReport() {
     }
 
     /**
@@ -42,7 +42,7 @@ public class MyJasperReport {
      * @param body
      * @param refference
      */
-    public MyJasperReport(String recepeintAddress, String subject, String body, String refference) {
+    public XMLJasperReport(String recepeintAddress, String subject, String body, String refference) {
         this.recepeintAddress = recepeintAddress;
         this.subject = subject;
         this.body = body;
@@ -62,7 +62,7 @@ public class MyJasperReport {
     public void ticketingInvoiceReport(Enums.SaleType saletype, Enums.AcDocType doctype, Enums.ClientType clienttype,
             Long clientid, Date _dateFrom, Date _dateTo, String actionType) {
 
-        InputStream template = template = MyJasperReport.class.getResourceAsStream("/reports/MyReports/TAcDocReport.jasper");;
+        InputStream template = XMLJasperReport.class.getResourceAsStream("/reports/MyReports/TAcDocReport.jasper");
         String url = "";
         String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
         String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
@@ -91,7 +91,7 @@ public class MyJasperReport {
     public void otherInvoiceReport(Enums.AcDocType doctype, Enums.ClientType clienttype,
             Long clientid, Date _dateFrom, Date _dateTo, String actionType) {
 
-        InputStream template = template = MyJasperReport.class.getResourceAsStream("/reports/MyReports/os/OtherAcDocReport.jasper");;
+        InputStream template = XMLJasperReport.class.getResourceAsStream("/reports/MyReports/os/OtherAcDocReport.jasper");
         String url = "";
         String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
         String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
@@ -121,13 +121,13 @@ public class MyJasperReport {
 
         if (sale_type.equals(Enums.SaleType.TKTSALES)) {
             url = url + APIConfig.get("ws.tsacdoc.model") + id;
-            template = MyJasperReport.class.getResourceAsStream("/reports/MyReports/Invoice.jasper");
+            template = XMLJasperReport.class.getResourceAsStream("/reports/MyReports/Invoice.jasper");
         } else if (sale_type.equals(Enums.SaleType.TKTPURCHASE)) {
             url = url + APIConfig.get("ws.tpacdoc.model") + id;
-            template = MyJasperReport.class.getResourceAsStream("/reports/MyReports/Invoice.jasper");
+            template = XMLJasperReport.class.getResourceAsStream("/reports/MyReports/Invoice.jasper");
         } else if (sale_type.equals(Enums.SaleType.OTHERSALES)) {
             url = url + APIConfig.get("ws.osacdoc.model") + id;
-            template = MyJasperReport.class.getResourceAsStream("/reports/MyReports/os/OtherInvoice.jasper");
+            template = XMLJasperReport.class.getResourceAsStream("/reports/MyReports/os/OtherInvoice.jasper");
         }
         System.out.println("URL: " + url);
 

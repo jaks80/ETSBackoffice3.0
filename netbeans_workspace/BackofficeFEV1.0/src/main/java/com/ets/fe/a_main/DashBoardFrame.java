@@ -10,6 +10,8 @@ import com.ets.fe.acdoc_o.model.OtherInvoiceSummery;
 import com.ets.fe.pnr.task.DeletePnrTask;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.util.PnrUtil;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -31,11 +33,11 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Yusuf
  */
-public class DashBoardFrame extends JInternalFrame implements PropertyChangeListener {
+public class DashBoardFrame extends JInternalFrame {
 
-    private PnrSearchTask pnrSearchTask;
-    private TodayTInvoiceSearchTask invoiceSearchTask;
-    private String taskType = null;
+    private boolean firstResize = true;
+    private PnrSearch pnrSearch = new PnrSearch();
+    private InvoiceSearch invoiceSearch = new InvoiceSearch();;
 
     private final List<PnrPanel> pnrTabs = new ArrayList<>();
     private List<TktingInvoiceSummery> tsinvlist_today = new ArrayList<>();
@@ -46,7 +48,9 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
     public DashBoardFrame() {
         initComponents();
         remove_title_bar();
-        lblUser.setText("User: " + Application.getLoggedOnUser().getFullName());
+        lblUser.setText("User: " + Application.getLoggedOnUser().calculateFullName());          
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        splitPaneDashBoard.setDividerLocation(screenSize.width/2);        
     }
 
     private void showPnrPanel(Pnr pnr, DashBoardFrame parent) {
@@ -61,21 +65,6 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
         }
     }
 
-    private void deletePnr() {
-        int index = tblUninvoicedPnr.getSelectedRow();
-        int choice = JOptionPane.showConfirmDialog(null, "Delete pnr permanently?", "Delete PNR", JOptionPane.YES_NO_OPTION);
-
-        if (index != -1) {
-            if (choice == JOptionPane.YES_OPTION) {
-                Pnr pnr = this.pnrs.get(index);
-                this.taskType = "DELETE_PNR";
-                DeletePnrTask task = new DeletePnrTask(pnr, pnrBusyLabel);
-                task.addPropertyChangeListener(this);
-                task.execute();
-            }
-        }
-    }
-
     private PnrPanel getPanel(String pnr) {
         for (int i = 0; i < pnrTabs.size(); i++) {
             String _title = mainTabPane.getTitleAt(i + 1);//0 is already dashboard
@@ -84,42 +73,6 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
             }
         }
         return null;
-    }
-
-    private void searchPnr() {
-        String name = txtName.getText();
-        String pnr = txtPnr.getText();
-        String invRef = txtInvRef.getText();
-        taskType = "QUERY_SEARCH";
-        pnrSearchTask = new PnrSearchTask(taskType, pnrBusyLabel, pnr, invRef, name);
-        pnrSearchTask.addPropertyChangeListener(this);
-        pnrSearchTask.execute();
-    }
-
-    public void pnrTask() {
-        if (tabPnr.getSelectedIndex() == 0) {
-            taskType = "UNINVOICED_PNR";
-            pnrSearchTask = new PnrSearchTask(taskType, pnrBusyLabel);
-            pnrSearchTask.addPropertyChangeListener(this);
-            pnrSearchTask.execute();
-        } else if (tabPnr.getSelectedIndex() == 1) {
-            taskType = "PNRTODAY";
-            pnrSearchTask = new PnrSearchTask(taskType, pnrBusyLabel);
-            pnrSearchTask.addPropertyChangeListener(this);
-            pnrSearchTask.execute();
-        }
-    }
-
-    public void invoiceTask() {
-        if (tabInvoice.getSelectedIndex() == 0) {
-            taskType = "TSINVOICE_TODAY";
-            invoiceSearchTask = new TodayTInvoiceSearchTask(taskType, invoiceBusyLabel);
-        } else if (tabInvoice.getSelectedIndex() == 1) {
-            taskType = "OSINVOICE_TODAY";
-            invoiceSearchTask = new TodayTInvoiceSearchTask(taskType, invoiceBusyLabel);
-        }
-        invoiceSearchTask.addPropertyChangeListener(this);
-        invoiceSearchTask.execute();
     }
 
     private void viewPnrFromInvoice() {
@@ -188,7 +141,7 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
         } else {
             tableModel.insertRow(0, new Object[]{});
         }
-        tblOInvToday.setRowSelectionInterval(0, 0);
+        tblOInvToday.setRowSelectionInterval(0, 0);        
     }
 
     /**
@@ -204,6 +157,18 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
         mainTabPane = new javax.swing.JTabbedPane();
         mainTabPane.addChangeListener(tabListener);
         jPanel1 = new javax.swing.JPanel();
+        splitPaneDashBoard = new javax.swing.JSplitPane();
+        LeftPanel = new javax.swing.JPanel();
+        pnlInvoice = new javax.swing.JPanel();
+        tabInvoice = new javax.swing.JTabbedPane();
+        tabInvoice.addChangeListener(tabInvoiceListener);
+        jScrollPane9 = new javax.swing.JScrollPane();
+        tblSTktInvToday = new org.jdesktop.swingx.JXTable();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        tblOInvToday = new org.jdesktop.swingx.JXTable();
+        btnRefreshInvoice = new javax.swing.JButton();
+        btnPnrDetails1 = new javax.swing.JButton();
+        invoiceBusyLabel = new org.jdesktop.swingx.JXBusyLabel();
         pnlTask = new javax.swing.JPanel();
         tabPnr = new javax.swing.JTabbedPane();
         tabPnr.addChangeListener(tabPnrListener);
@@ -215,7 +180,8 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
         btnPnrDetails = new javax.swing.JButton();
         btnDeletePnr = new javax.swing.JButton();
         pnrBusyLabel = new org.jdesktop.swingx.JXBusyLabel();
-        pnrSearch = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        pnlPnrSearch = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         txtPnr = new javax.swing.JTextField();
@@ -224,17 +190,7 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
         jLabel4 = new javax.swing.JLabel();
         txtName = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
-        pnlInvoice = new javax.swing.JPanel();
-        tabInvoice = new javax.swing.JTabbedPane();
-        tabInvoice.addChangeListener(tabInvoiceListener);
-        jScrollPane9 = new javax.swing.JScrollPane();
-        tblSTktInvToday = new org.jdesktop.swingx.JXTable();
-        jScrollPane10 = new javax.swing.JScrollPane();
-        tblOInvToday = new org.jdesktop.swingx.JXTable();
-        btnRefreshInvoice = new javax.swing.JButton();
-        btnPnrDetails1 = new javax.swing.JButton();
-        invoiceBusyLabel = new org.jdesktop.swingx.JXBusyLabel();
-        pnlFlight = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         progressBar = new javax.swing.JProgressBar();
         jSeparator2 = new javax.swing.JSeparator();
@@ -251,7 +207,142 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
             }
         });
 
-        jPanel1.setLayout(new java.awt.GridBagLayout());
+        splitPaneDashBoard.setDividerLocation(500);
+        splitPaneDashBoard.setDividerSize(4);
+        splitPaneDashBoard.setToolTipText("");
+        splitPaneDashBoard.setPreferredSize(new java.awt.Dimension(1000, 400));
+
+        pnlInvoice.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
+        pnlInvoice.setPreferredSize(new java.awt.Dimension(366, 250));
+        pnlInvoice.setLayout(new java.awt.GridBagLayout());
+
+        tabInvoice.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+
+        jScrollPane9.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        tblSTktInvToday.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "", "Type", "Ref", "Client", "", "Amount", "Issue By"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblSTktInvToday.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        tblSTktInvToday.setSortable(false);
+        tblSTktInvToday.getTableHeader().setReorderingAllowed(false);
+        tblSTktInvToday.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSTktInvTodayMouseClicked(evt);
+            }
+        });
+        jScrollPane9.setViewportView(tblSTktInvToday);
+        if (tblSTktInvToday.getColumnModel().getColumnCount() > 0) {
+            tblSTktInvToday.getColumnModel().getColumn(0).setMaxWidth(30);
+            tblSTktInvToday.getColumnModel().getColumn(1).setMinWidth(50);
+            tblSTktInvToday.getColumnModel().getColumn(1).setPreferredWidth(70);
+            tblSTktInvToday.getColumnModel().getColumn(1).setMaxWidth(120);
+            tblSTktInvToday.getColumnModel().getColumn(2).setMinWidth(55);
+            tblSTktInvToday.getColumnModel().getColumn(2).setPreferredWidth(65);
+            tblSTktInvToday.getColumnModel().getColumn(2).setMaxWidth(100);
+            tblSTktInvToday.getColumnModel().getColumn(4).setMaxWidth(35);
+            tblSTktInvToday.getColumnModel().getColumn(5).setMinWidth(50);
+            tblSTktInvToday.getColumnModel().getColumn(5).setPreferredWidth(100);
+            tblSTktInvToday.getColumnModel().getColumn(5).setMaxWidth(150);
+            tblSTktInvToday.getColumnModel().getColumn(6).setMinWidth(65);
+            tblSTktInvToday.getColumnModel().getColumn(6).setPreferredWidth(80);
+            tblSTktInvToday.getColumnModel().getColumn(6).setMaxWidth(130);
+        }
+
+        tabInvoice.addTab("Ticketing Invoice", jScrollPane9);
+
+        jScrollPane10.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        tblOInvToday.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "", "Type", "Ref", "Client", "Amount", "Issued By"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblOInvToday.setSortable(false);
+        tblOInvToday.getTableHeader().setReorderingAllowed(false);
+        jScrollPane10.setViewportView(tblOInvToday);
+        if (tblOInvToday.getColumnModel().getColumnCount() > 0) {
+            tblOInvToday.getColumnModel().getColumn(0).setMaxWidth(30);
+        }
+
+        tabInvoice.addTab("Other Invoice", jScrollPane10);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        pnlInvoice.add(tabInvoice, gridBagConstraints);
+
+        btnRefreshInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh18.png"))); // NOI18N
+        btnRefreshInvoice.setBorderPainted(false);
+        btnRefreshInvoice.setMaximumSize(new java.awt.Dimension(35, 25));
+        btnRefreshInvoice.setMinimumSize(new java.awt.Dimension(35, 25));
+        btnRefreshInvoice.setPreferredSize(new java.awt.Dimension(35, 25));
+        btnRefreshInvoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshInvoiceActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        pnlInvoice.add(btnRefreshInvoice, gridBagConstraints);
+
+        btnPnrDetails1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
+        btnPnrDetails1.setBorderPainted(false);
+        btnPnrDetails1.setMaximumSize(new java.awt.Dimension(35, 25));
+        btnPnrDetails1.setMinimumSize(new java.awt.Dimension(35, 25));
+        btnPnrDetails1.setPreferredSize(new java.awt.Dimension(35, 25));
+        btnPnrDetails1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnPnrDetails1MouseClicked(evt);
+            }
+        });
+        btnPnrDetails1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPnrDetails1ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        pnlInvoice.add(btnPnrDetails1, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 4, 0);
+        pnlInvoice.add(invoiceBusyLabel, gridBagConstraints);
 
         pnlTask.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         pnlTask.setLayout(new java.awt.GridBagLayout());
@@ -386,18 +477,25 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 4, 0);
         pnlTask.add(pnrBusyLabel, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        jPanel1.add(pnlTask, gridBagConstraints);
+        javax.swing.GroupLayout LeftPanelLayout = new javax.swing.GroupLayout(LeftPanel);
+        LeftPanel.setLayout(LeftPanelLayout);
+        LeftPanelLayout.setHorizontalGroup(
+            LeftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnlTask, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
+            .addComponent(pnlInvoice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        LeftPanelLayout.setVerticalGroup(
+            LeftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(LeftPanelLayout.createSequentialGroup()
+                .addComponent(pnlTask, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(pnlInvoice, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
+        );
 
-        pnrSearch.setBorder(javax.swing.BorderFactory.createTitledBorder("Search"));
-        pnrSearch.setPreferredSize(new java.awt.Dimension(457, 250));
+        splitPaneDashBoard.setLeftComponent(LeftPanel);
+
+        pnlPnrSearch.setBorder(javax.swing.BorderFactory.createTitledBorder("Search"));
+        pnlPnrSearch.setPreferredSize(new java.awt.Dimension(457, 250));
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
@@ -507,198 +605,64 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel2.add(btnSearch, gridBagConstraints);
 
-        javax.swing.GroupLayout pnrSearchLayout = new javax.swing.GroupLayout(pnrSearch);
-        pnrSearch.setLayout(pnrSearchLayout);
-        pnrSearchLayout.setHorizontalGroup(
-            pnrSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnrSearchLayout.createSequentialGroup()
+        javax.swing.GroupLayout pnlPnrSearchLayout = new javax.swing.GroupLayout(pnlPnrSearch);
+        pnlPnrSearch.setLayout(pnlPnrSearchLayout);
+        pnlPnrSearchLayout.setHorizontalGroup(
+            pnlPnrSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlPnrSearchLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(279, Short.MAX_VALUE))
-        );
-        pnrSearchLayout.setVerticalGroup(
-            pnrSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnrSearchLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        jPanel1.add(pnrSearch, gridBagConstraints);
-
-        pnlInvoice.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
-        pnlInvoice.setPreferredSize(new java.awt.Dimension(366, 250));
-        pnlInvoice.setLayout(new java.awt.GridBagLayout());
-
-        tabInvoice.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-
-        jScrollPane9.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
-        tblSTktInvToday.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "", "Type", "Ref", "Client", "", "Amount", "Issue By"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblSTktInvToday.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
-        tblSTktInvToday.setSortable(false);
-        tblSTktInvToday.getTableHeader().setReorderingAllowed(false);
-        tblSTktInvToday.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblSTktInvTodayMouseClicked(evt);
-            }
-        });
-        jScrollPane9.setViewportView(tblSTktInvToday);
-        if (tblSTktInvToday.getColumnModel().getColumnCount() > 0) {
-            tblSTktInvToday.getColumnModel().getColumn(0).setMaxWidth(30);
-            tblSTktInvToday.getColumnModel().getColumn(1).setMinWidth(50);
-            tblSTktInvToday.getColumnModel().getColumn(1).setPreferredWidth(70);
-            tblSTktInvToday.getColumnModel().getColumn(1).setMaxWidth(120);
-            tblSTktInvToday.getColumnModel().getColumn(2).setMinWidth(55);
-            tblSTktInvToday.getColumnModel().getColumn(2).setPreferredWidth(65);
-            tblSTktInvToday.getColumnModel().getColumn(2).setMaxWidth(100);
-            tblSTktInvToday.getColumnModel().getColumn(4).setMaxWidth(35);
-            tblSTktInvToday.getColumnModel().getColumn(5).setMinWidth(50);
-            tblSTktInvToday.getColumnModel().getColumn(5).setPreferredWidth(100);
-            tblSTktInvToday.getColumnModel().getColumn(5).setMaxWidth(150);
-            tblSTktInvToday.getColumnModel().getColumn(6).setMinWidth(65);
-            tblSTktInvToday.getColumnModel().getColumn(6).setPreferredWidth(80);
-            tblSTktInvToday.getColumnModel().getColumn(6).setMaxWidth(130);
-        }
-
-        tabInvoice.addTab("Ticketing Invoice", jScrollPane9);
-
-        jScrollPane10.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
-        tblOInvToday.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "", "Type", "Ref", "Client", "Amount", "Issued By"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblOInvToday.setSortable(false);
-        tblOInvToday.getTableHeader().setReorderingAllowed(false);
-        jScrollPane10.setViewportView(tblOInvToday);
-        if (tblOInvToday.getColumnModel().getColumnCount() > 0) {
-            tblOInvToday.getColumnModel().getColumn(0).setMaxWidth(30);
-        }
-
-        tabInvoice.addTab("Other Invoice", jScrollPane10);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        pnlInvoice.add(tabInvoice, gridBagConstraints);
-
-        btnRefreshInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh18.png"))); // NOI18N
-        btnRefreshInvoice.setBorderPainted(false);
-        btnRefreshInvoice.setMaximumSize(new java.awt.Dimension(35, 25));
-        btnRefreshInvoice.setMinimumSize(new java.awt.Dimension(35, 25));
-        btnRefreshInvoice.setPreferredSize(new java.awt.Dimension(35, 25));
-        btnRefreshInvoice.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRefreshInvoiceActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        pnlInvoice.add(btnRefreshInvoice, gridBagConstraints);
-
-        btnPnrDetails1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
-        btnPnrDetails1.setBorderPainted(false);
-        btnPnrDetails1.setMaximumSize(new java.awt.Dimension(35, 25));
-        btnPnrDetails1.setMinimumSize(new java.awt.Dimension(35, 25));
-        btnPnrDetails1.setPreferredSize(new java.awt.Dimension(35, 25));
-        btnPnrDetails1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnPnrDetails1MouseClicked(evt);
-            }
-        });
-        btnPnrDetails1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPnrDetails1ActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        pnlInvoice.add(btnPnrDetails1, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 4, 0);
-        pnlInvoice.add(invoiceBusyLabel, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        jPanel1.add(pnlInvoice, gridBagConstraints);
-
-        pnlFlight.setBorder(javax.swing.BorderFactory.createTitledBorder("Flight Today"));
-        pnlFlight.setPreferredSize(new java.awt.Dimension(366, 250));
-
-        javax.swing.GroupLayout pnlFlightLayout = new javax.swing.GroupLayout(pnlFlight);
-        pnlFlight.setLayout(pnlFlightLayout);
-        pnlFlightLayout.setHorizontalGroup(
-            pnlFlightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 547, Short.MAX_VALUE)
-        );
-        pnlFlightLayout.setVerticalGroup(
-            pnlFlightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 87, Short.MAX_VALUE)
+        pnlPnrSearchLayout.setVerticalGroup(
+            pnlPnrSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlPnrSearchLayout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 10, Short.MAX_VALUE))
         );
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        jPanel1.add(pnlFlight, gridBagConstraints);
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Unpaid Flight"));
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 205, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(pnlPnrSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 82, Short.MAX_VALUE))
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(pnlPnrSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        splitPaneDashBoard.setRightComponent(jPanel5);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(splitPaneDashBoard, javax.swing.GroupLayout.DEFAULT_SIZE, 877, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(splitPaneDashBoard, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
+        );
 
         mainTabPane.addTab("Dashboard", jPanel1);
 
@@ -769,14 +733,14 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
                         .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(mainTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE))
+                    .addComponent(mainTabPane))
                 .addGap(2, 2, 2))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addComponent(mainTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
+                .addComponent(mainTabPane)
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -787,7 +751,7 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRefreshPnrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshPnrActionPerformed
-        pnrTask();
+        pnrSearch.pnrTask();
     }//GEN-LAST:event_btnRefreshPnrActionPerformed
 
     private void btnPnrDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPnrDetailsActionPerformed
@@ -807,36 +771,36 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
     }//GEN-LAST:event_btnPnrDetailsActionPerformed
 
     private void btnDeletePnrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletePnrActionPerformed
-        deletePnr();
+        pnrSearch.deletePnr();
     }//GEN-LAST:event_btnDeletePnrActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        searchPnr();
+        pnrSearch.querySearch();
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void txtPnrKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPnrKeyReleased
         int key = evt.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
-            searchPnr();
+            pnrSearch.querySearch();
         }
     }//GEN-LAST:event_txtPnrKeyReleased
 
     private void txtInvRefKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtInvRefKeyReleased
         int key = evt.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
-            searchPnr();
+            pnrSearch.querySearch();
         }
     }//GEN-LAST:event_txtInvRefKeyReleased
 
     private void txtNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameKeyReleased
         int key = evt.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
-            searchPnr();
+            pnrSearch.querySearch();
         }
     }//GEN-LAST:event_txtNameKeyReleased
 
     private void btnRefreshInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshInvoiceActionPerformed
-        invoiceTask();
+        invoiceSearch.invoiceTask();
     }//GEN-LAST:event_btnRefreshInvoiceActionPerformed
 
     private void tblUninvoicedPnrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUninvoicedPnrMouseClicked
@@ -883,6 +847,7 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel LeftPanel;
     private javax.swing.JButton btnDeletePnr;
     private javax.swing.JButton btnPnrDetails;
     private javax.swing.JButton btnPnrDetails1;
@@ -898,6 +863,8 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
@@ -905,12 +872,12 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lblUser;
     private javax.swing.JTabbedPane mainTabPane;
-    private javax.swing.JPanel pnlFlight;
     private javax.swing.JPanel pnlInvoice;
+    private javax.swing.JPanel pnlPnrSearch;
     private javax.swing.JPanel pnlTask;
     private org.jdesktop.swingx.JXBusyLabel pnrBusyLabel;
-    private javax.swing.JPanel pnrSearch;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JSplitPane splitPaneDashBoard;
     private javax.swing.JTabbedPane tabInvoice;
     private javax.swing.JTabbedPane tabPnr;
     private org.jdesktop.swingx.JXTable tblOInvToday;
@@ -921,46 +888,6 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtPnr;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress".equals(evt.getPropertyName())) {
-            int progress = (Integer) evt.getNewValue();
-            progressBar.setValue(progress);
-            if (progress == 100) {
-                try {
-                    switch (taskType) {
-                        case "UNINVOICED_PNR":
-                        case "QUERY_SEARCH":
-                        case "PNRTODAY":
-                            pnrs = new ArrayList<>();
-                            pnrs = pnrSearchTask.get();
-                            populatePnrTable();
-                            taskType = "";
-                            break;
-                        case "DELETE_PNR":
-                            pnrTask();
-                        case "TSINVOICE_TODAY":
-                        case "OSINVOICE_TODAY":
-                            Object obj = invoiceSearchTask.get();
-                            if (obj instanceof InvoiceReport) {
-                                InvoiceReport rpt = (InvoiceReport) invoiceSearchTask.get();
-                                tsinvlist_today = rpt.getInvoices();
-                                populateTktInvoiceTable();
-                            } else {
-                                InvoiceReportOther rpt1 = (InvoiceReportOther) invoiceSearchTask.get();
-                                osinvlist_today = rpt1.getInvoices();
-                                populateOtherInvoiceTable();
-                            }
-                            taskType = "";
-                        default:
-                    }
-                } catch (InterruptedException | ExecutionException ex) {
-                    Logger.getLogger(DashBoardFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-    }
 
     private void remove_title_bar() {
         putClientProperty("JInternalFrame.isPalette", Boolean.TRUE);
@@ -980,8 +907,8 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
         @Override
         public void stateChanged(ChangeEvent e) {
             if (mainTabPane.getSelectedIndex() == 0) {
-                pnrTask();
-                invoiceTask();
+                pnrSearch.pnrTask();
+                invoiceSearch.invoiceTask();
             } else {
 
             }
@@ -992,7 +919,7 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            pnrTask();
+            pnrSearch.pnrTask();
         }
     };
 
@@ -1000,7 +927,127 @@ public class DashBoardFrame extends JInternalFrame implements PropertyChangeList
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            invoiceTask();
+            invoiceSearch.invoiceTask();
         }
     };
+
+    private class InvoiceSearch implements PropertyChangeListener {
+
+        private TodayTInvoiceSearchTask invoiceSearchTask;
+        private String taskType = null;
+
+        public void invoiceTask() {
+            if (tabInvoice.getSelectedIndex() == 0) {
+                taskType = "TSINVOICE_TODAY";
+                invoiceSearchTask = new TodayTInvoiceSearchTask(taskType, invoiceBusyLabel);
+            } else if (tabInvoice.getSelectedIndex() == 1) {
+                taskType = "OSINVOICE_TODAY";
+                invoiceSearchTask = new TodayTInvoiceSearchTask(taskType, invoiceBusyLabel);
+            }
+            invoiceSearchTask.addPropertyChangeListener(this);
+            invoiceSearchTask.execute();
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if ("progress".equals(evt.getPropertyName())) {
+                int progress = (Integer) evt.getNewValue();
+                progressBar.setValue(progress);
+                if (progress == 100) {
+                    try {
+                        switch (taskType) {
+                            case "TSINVOICE_TODAY":
+                            case "OSINVOICE_TODAY":
+                                Object obj = invoiceSearchTask.get();
+                                if (obj instanceof InvoiceReport) {
+                                    InvoiceReport rpt = (InvoiceReport) invoiceSearchTask.get();
+                                    tsinvlist_today = rpt.getInvoices();
+                                    populateTktInvoiceTable();
+                                } else {
+                                    InvoiceReportOther rpt1 = (InvoiceReportOther) invoiceSearchTask.get();
+                                    osinvlist_today = rpt1.getInvoices();
+                                    populateOtherInvoiceTable();
+                                }
+                                taskType = "";
+                            default:
+                        }
+                    } catch (InterruptedException | ExecutionException ex) {
+                        Logger.getLogger(DashBoardFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+    }
+
+    private class PnrSearch implements PropertyChangeListener {
+
+        private PnrSearchTask pnrSearchTask;
+        private String taskType = null;
+
+        private void querySearch() {
+            String name = txtName.getText();
+            String pnr = txtPnr.getText();
+            String invRef = txtInvRef.getText();
+            taskType = "QUERY_SEARCH";
+            pnrSearchTask = new PnrSearchTask(taskType, pnrBusyLabel, pnr, invRef, name);
+            pnrSearchTask.addPropertyChangeListener(this);
+            pnrSearchTask.execute();
+        }
+
+        private void deletePnr() {
+            int index = tblUninvoicedPnr.getSelectedRow();
+            int choice = JOptionPane.showConfirmDialog(null, "Delete pnr permanently?", "Delete PNR", JOptionPane.YES_NO_OPTION);
+
+            if (index != -1) {
+                if (choice == JOptionPane.YES_OPTION) {
+                    Pnr pnr = pnrs.get(index);
+                    this.taskType = "DELETE_PNR";
+                    DeletePnrTask task = new DeletePnrTask(pnr, pnrBusyLabel);
+                    task.addPropertyChangeListener(this);
+                    task.execute();
+                }
+            }
+        }
+
+        public void pnrTask() {
+            if (tabPnr.getSelectedIndex() == 0) {
+                taskType = "UNINVOICED_PNR";
+                pnrSearchTask = new PnrSearchTask(taskType, pnrBusyLabel);
+                pnrSearchTask.addPropertyChangeListener(this);
+                pnrSearchTask.execute();
+            } else if (tabPnr.getSelectedIndex() == 1) {
+                taskType = "PNRTODAY";
+                pnrSearchTask = new PnrSearchTask(taskType, pnrBusyLabel);
+                pnrSearchTask.addPropertyChangeListener(this);
+                pnrSearchTask.execute();
+            }
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if ("progress".equals(evt.getPropertyName())) {
+                int progress = (Integer) evt.getNewValue();
+                progressBar.setValue(progress);
+                if (progress == 100) {
+                    try {
+                        switch (taskType) {
+                            case "UNINVOICED_PNR":
+                            case "QUERY_SEARCH":
+                            case "PNRTODAY":
+                                pnrs = new ArrayList<>();
+                                pnrs = pnrSearchTask.get();
+                                populatePnrTable();
+                                taskType = "";
+                                break;
+                            case "DELETE_PNR":
+                                pnrTask();
+                            default:
+                        }
+                    } catch (InterruptedException | ExecutionException ex) {
+                        Logger.getLogger(DashBoardFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+    }
 }

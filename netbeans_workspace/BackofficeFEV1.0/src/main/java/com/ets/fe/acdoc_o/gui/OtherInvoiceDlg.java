@@ -12,7 +12,7 @@ import com.ets.fe.accounts.gui.payment.DlgOtherSalesCreditTransfer;
 import com.ets.fe.acdoc_o.task.AccountingDocTaskOther;
 import com.ets.fe.client.model.Contactable;
 import com.ets.fe.os.model.*;
-import com.ets.fe.report.MyJasperReport;
+import com.ets.fe.report.XMLJasperReport;
 import com.ets.fe.util.*;
 import java.awt.Frame;
 import java.awt.Window;
@@ -187,10 +187,10 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         busyLabel.setBusy(true);
         btnSubmitPayment.setEnabled(false);
         String amountString = txtAmount.getText();
-        String remark = txtRef.getText();
-        Enums.PaymentType type = (Enums.PaymentType) cmbTType.getSelectedItem();
+        String remark = txtRef.getText();        
 
         if (!amountString.isEmpty() && !remark.isEmpty() && cmbTType.getSelectedIndex() > 0) {
+            Enums.PaymentType type = (Enums.PaymentType) cmbTType.getSelectedItem();
             BigDecimal amount = new BigDecimal(amountString.trim());
             PaymentLogicOther logic = new PaymentLogicOther();
 
@@ -948,7 +948,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
     }//GEN-LAST:event_txtOtherFocusLost
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        MyJasperReport report = new MyJasperReport();
+        XMLJasperReport report = new XMLJasperReport();
         report.reportInvoice(invoice.getId(), Enums.SaleType.OTHERSALES, "PRINT");
     }//GEN-LAST:event_btnPrintActionPerformed
 
@@ -958,7 +958,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         String body = "Invoice".concat(" From ").concat(Application.getMainAgent().getName());
         String refference = this.invoice.getReference().toString();
         if (receipent != null) {
-            MyJasperReport report = new MyJasperReport(receipent, subject, body, refference);
+            XMLJasperReport report = new XMLJasperReport(receipent, subject, body, refference);
             report.reportInvoice(invoice.getId(), Enums.SaleType.OTHERSALES, "EMAIL");
         } else {
             JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
@@ -976,7 +976,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void btnOfficeCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOfficeCopyActionPerformed
-       MyJasperReport report = new MyJasperReport();
+       XMLJasperReport report = new XMLJasperReport();
         report.reportInvoice(invoice.getId(), Enums.SaleType.OTHERSALES, "VIEW");
     }//GEN-LAST:event_btnOfficeCopyActionPerformed
 

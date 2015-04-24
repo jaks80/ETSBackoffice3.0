@@ -1,13 +1,9 @@
 package com.ets.fe.settings.model;
 
-
 import com.ets.fe.client.model.Contactable;
 import com.ets.fe.util.Enums;
 import java.io.Serializable;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -15,10 +11,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class User extends Contactable implements Serializable{
-    
+public class User extends Contactable implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    
+
     @XmlElement
     private String loginID;
     @XmlElement
@@ -33,9 +29,41 @@ public class User extends Contactable implements Serializable{
     private boolean isActive;
     @XmlElement
     private String sessionId;
-    
-    public User(){
-    
+
+    public User() {
+
+    }
+
+    public boolean isAdmin() {
+        if (userType.equals(Enums.UserType.AD)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isMan() {
+        if (userType.equals(Enums.UserType.SM)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isGs() {
+        if (userType.equals(Enums.UserType.GS)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isSu() {
+        if (userType.equals(Enums.UserType.SU)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public String getLoginID() {
@@ -68,7 +96,7 @@ public class User extends Contactable implements Serializable{
 
     public void setForeName(String foreName) {
         this.foreName = foreName;
-    }        
+    }
 
     public boolean isIsActive() {
         return isActive;
@@ -77,10 +105,10 @@ public class User extends Contactable implements Serializable{
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
-    
+
     @Override
-    public String getFullName() {
-      return this.getSurName() + "/" + this.getForeName();
+    public String calculateFullName() {
+        return this.getSurName() + "/" + this.getForeName();
     }
 
     public Enums.UserType getUserType() {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2015-02-17T13:06:39 -->
+<!-- Created with Jaspersoft Studio version 6.0.4.final using JasperReports Library version 6.0.4  -->
+<!-- 2015-04-19T16:37:22 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TAcDocReport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7a4fb428-6b43-4186-8d22-57604c4e976a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Data Adapter AcDocReporting"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -385,6 +385,15 @@
 							</datasetParameter>
 							<datasetParameter name="XML_PASSWORD">
 								<datasetParameterExpression><![CDATA[$P{XML_PASSWORD}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="XML_INPUT_STREAM">
+								<datasetParameterExpression><![CDATA[$P{XML_INPUT_STREAM}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="XML_FILE">
+								<datasetParameterExpression><![CDATA[$P{XML_FILE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="net.sf.jasperreports.xml.source">
+								<datasetParameterExpression><![CDATA[$P{net.sf.jasperreports.xml.source}]]></datasetParameterExpression>
 							</datasetParameter>
 							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 						</datasetRun>

@@ -5,7 +5,7 @@ import com.ets.fe.acdoc.gui.report.TSalesInvoiceReportingFrame;
 import com.ets.fe.acdoc_o.model.*;
 import com.ets.fe.acdoc_o.task.AccountingDocTaskOther;
 import com.ets.fe.acdoc_o.task.OtherAcDocReportingTask;
-import com.ets.fe.report.MyJasperReport;
+import com.ets.fe.report.XMLJasperReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.*;
@@ -103,7 +103,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
                 if (s.getAgent() != null) {
                     clientName = s.getAgent().getName();
                 } else {
-                    clientName = s.getCustomer().getFullName();
+                    clientName = s.getCustomer().calculateFullName();
                 }
 
                 tableModel.insertRow(i, new Object[]{i + 1, s.getDocIssueDate(), s.getReference(), clientName,
@@ -690,7 +690,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
-        MyJasperReport report = new MyJasperReport();
+        XMLJasperReport report = new XMLJasperReport();
         report.otherInvoiceReport(doc_type, client_type, client_id, from, to, "VIEW");
     }//GEN-LAST:event_btnViewReportActionPerformed
 
@@ -715,7 +715,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         String body = report.getTitle().concat(" From").concat(Application.getMainAgent().getName());
         String refference = "report";
         if (receipent != null) {
-            MyJasperReport report = new MyJasperReport(receipent, subject, body, refference);
+            XMLJasperReport report = new XMLJasperReport(receipent, subject, body, refference);
             report.otherInvoiceReport(doc_type, client_type, client_id, from, to, "EMAIL");
         } else {
             JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
@@ -723,7 +723,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
     }//GEN-LAST:event_btnEmailActionPerformed
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        MyJasperReport report = new MyJasperReport();
+        XMLJasperReport report = new XMLJasperReport();
         report.otherInvoiceReport(doc_type, client_type, client_id, from, to, "PRINT");
     }//GEN-LAST:event_btnPrintActionPerformed
 

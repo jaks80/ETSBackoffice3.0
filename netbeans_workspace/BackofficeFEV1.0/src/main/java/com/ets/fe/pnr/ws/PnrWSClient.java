@@ -76,6 +76,14 @@ public class PnrWSClient {
         return pnrs.getList();
     }
 
+    public List<Pnr> getPnrByInvRef(String invref) {
+        String url = APIConfig.get("ws.pnr.byginvref") + "?invref=" + invref;
+
+        Pnrs pnrs = new Pnrs();
+        pnrs = RestClientUtil.getEntity(Pnrs.class, url, pnrs);
+        return pnrs.getList();
+    }
+        
     public List<Pnr> searchPnrHistory(String bookingAgt, String ticketingAgt, Date from, Date to) {
 
         String dateFrom = DateUtil.dateToString(from, "ddMMMyyyy");

@@ -21,6 +21,8 @@ public class TktingInvoiceSummery implements Serializable {
     @XmlElement
     private Long id;
     @XmlElement
+    private Long parentId;
+    @XmlElement
     private Long pnr_id;
     @XmlElement
     private Long reference;
@@ -49,11 +51,11 @@ public class TktingInvoiceSummery implements Serializable {
     @XmlElement
     private String outBoundDetails;
     @XmlElement
-    private String leadPsgr;   
+    private String leadPsgr;
     @XmlElement
-    private String airLine;  
+    private String airLine;
     @XmlElement
-    private String invBy; 
+    private String invBy;
 
     public Long getReference() {
         return reference;
@@ -197,6 +199,14 @@ public class TktingInvoiceSummery implements Serializable {
 
     public void setInvBy(String invBy) {
         this.invBy = invBy;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
 }

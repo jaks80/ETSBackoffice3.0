@@ -1,9 +1,11 @@
 package com.ets.fe.acdoc.gui.report;
 
+import com.ets.fe.Application;
 import com.ets.fe.acdoc.gui.PurchaseInvoiceDlg;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
 import com.ets.fe.acdoc.task.PurchaseAcDocReportingTask;
+import com.ets.fe.report.BeanJasperReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.Color;
@@ -12,12 +14,14 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -192,11 +196,18 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
+        btnViewReport.setToolTipText("View Report");
         btnViewReport.setMaximumSize(new java.awt.Dimension(40, 22));
         btnViewReport.setMinimumSize(new java.awt.Dimension(40, 22));
         btnViewReport.setPreferredSize(new java.awt.Dimension(40, 22));
+        btnViewReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewReportActionPerformed(evt);
+            }
+        });
 
         btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/acdoc18.png"))); // NOI18N
+        btnViewInvoice.setToolTipText("View Invoice");
         btnViewInvoice.setMaximumSize(new java.awt.Dimension(40, 22));
         btnViewInvoice.setMinimumSize(new java.awt.Dimension(40, 22));
         btnViewInvoice.setPreferredSize(new java.awt.Dimension(40, 22));
@@ -207,16 +218,29 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
         });
 
         btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
+        btnEmail.setToolTipText("Email Report");
         btnEmail.setMaximumSize(new java.awt.Dimension(40, 22));
         btnEmail.setMinimumSize(new java.awt.Dimension(40, 22));
         btnEmail.setPreferredSize(new java.awt.Dimension(40, 22));
+        btnEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmailActionPerformed(evt);
+            }
+        });
 
         btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
+        btnPrint.setToolTipText("Print Report");
         btnPrint.setMaximumSize(new java.awt.Dimension(40, 22));
         btnPrint.setMinimumSize(new java.awt.Dimension(40, 22));
         btnPrint.setPreferredSize(new java.awt.Dimension(40, 22));
+        btnPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintActionPerformed(evt);
+            }
+        });
 
         btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
+        btnSearch.setToolTipText("Search");
         btnSearch.setMaximumSize(new java.awt.Dimension(40, 22));
         btnSearch.setMinimumSize(new java.awt.Dimension(40, 22));
         btnSearch.setPreferredSize(new java.awt.Dimension(40, 22));
@@ -539,6 +563,45 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
             dlg.showDialog(id);            
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
+
+    private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
+        if (report == null) {
+            return;
+        }
+        BeanJasperReport jasperreport = new BeanJasperReport();
+        List<InvoiceReport> list = new ArrayList<>();
+        list.add(report);
+        jasperreport.invoiceReport(list, Enums.SaleType.TKTPURCHASE, "VIEW");
+    }//GEN-LAST:event_btnViewReportActionPerformed
+
+    private void btnEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmailActionPerformed
+       if (report == null) {
+            return;
+        }
+
+        String receipent = report.getEmail();
+        String subject = report.getTitle().concat(" From").concat(Application.getMainAgent().getName());
+        String body = report.getTitle().concat(" From").concat(Application.getMainAgent().getName());
+        String refference = "report";
+        if (receipent != null) {
+            BeanJasperReport jasperreport = new BeanJasperReport(receipent, subject, body, refference);
+            List<InvoiceReport> list = new ArrayList<>();
+            list.add(report);
+            jasperreport.invoiceReport(list, Enums.SaleType.TKTPURCHASE, "EMAIL");
+        } else {
+            JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEmailActionPerformed
+
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+       if (report == null) {
+            return;
+        }
+        BeanJasperReport jasperreport = new BeanJasperReport();
+        List<InvoiceReport> list = new ArrayList<>();
+        list.add(report);
+        jasperreport.invoiceReport(list, Enums.SaleType.TKTPURCHASE, "PRINT");
+    }//GEN-LAST:event_btnPrintActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

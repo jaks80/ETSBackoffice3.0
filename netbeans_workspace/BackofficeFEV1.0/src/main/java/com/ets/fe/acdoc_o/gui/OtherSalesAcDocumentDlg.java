@@ -67,9 +67,9 @@ public class OtherSalesAcDocumentDlg extends javax.swing.JDialog implements Prop
 
         controllComponent();
         if (document.getAgent() != null) {
-            txtAcDocFor.setText(document.getAgent().getFullName() + document.getAgent().getAddressCRSeperated());
+            txtAcDocFor.setText(document.getAgent().calculateFullName() + document.getAgent().getFullAddressCRSeperated());
         } else {
-            txtAcDocFor.setText(document.getCustomer().getFullName() + document.getCustomer().getAddressCRSeperated());
+            txtAcDocFor.setText(document.getCustomer().calculateFullName() + document.getCustomer().getFullAddressCRSeperated());
         }
         if (document.getDocumentedAmount() != null) {
             txtAmount.setText(document.getDocumentedAmount().toString());
@@ -176,7 +176,7 @@ public class OtherSalesAcDocumentDlg extends javax.swing.JDialog implements Prop
 
         txtAcDocFor.setEditable(false);
         txtAcDocFor.setColumns(20);
-        txtAcDocFor.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        txtAcDocFor.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtAcDocFor.setLineWrap(true);
         txtAcDocFor.setRows(5);
         jScrollPane5.setViewportView(txtAcDocFor);

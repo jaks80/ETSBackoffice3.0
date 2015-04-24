@@ -14,7 +14,7 @@ import com.ets.fe.client.model.Contactable;
 import com.ets.fe.os.model.AdditionalCharge;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
-import com.ets.fe.report.MyJasperReport;
+import com.ets.fe.report.XMLJasperReport;
 import com.ets.fe.util.*;
 import java.awt.Color;
 import java.awt.Component;
@@ -108,10 +108,10 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
 
         if (pnr.getAgent() != null) {
             client = pnr.getAgent();
-            txtAcDocFor.setText(pnr.getAgent().getFullName() + pnr.getAgent().getAddressCRSeperated());
+            txtAcDocFor.setText(pnr.getAgent().calculateFullName() + pnr.getAgent().getFullAddressCRSeperated());
         } else {
             client = pnr.getCustomer();
-            txtAcDocFor.setText(pnr.getCustomer().getFullName() + pnr.getCustomer().getAddressCRSeperated());
+            txtAcDocFor.setText(pnr.getCustomer().calculateFullName() + pnr.getCustomer().getFullAddressCRSeperated());
         }
     }
 
@@ -262,10 +262,10 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         busyLabel.setBusy(true);
         btnSubmitPayment.setEnabled(false);
         String amountString = txtAmount.getText();
-        String remark = txtRef.getText();
-        Enums.PaymentType type = (Enums.PaymentType) cmbTType.getSelectedItem();
+        String remark = txtRef.getText();        
 
         if (!amountString.isEmpty() && !remark.isEmpty() && cmbTType.getSelectedIndex() > 0) {
+            Enums.PaymentType type = (Enums.PaymentType) cmbTType.getSelectedItem();
             BigDecimal amount = new BigDecimal(amountString.trim());
             PaymentLogic logic = new PaymentLogic();
 
@@ -873,8 +873,9 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Invoice For", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
+        txtAcDocFor.setEditable(false);
         txtAcDocFor.setColumns(20);
-        txtAcDocFor.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        txtAcDocFor.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtAcDocFor.setLineWrap(true);
         txtAcDocFor.setRows(5);
         jScrollPane5.setViewportView(txtAcDocFor);
@@ -1021,7 +1022,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     }//GEN-LAST:event_txtOtherFocusGained
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        MyJasperReport report = new MyJasperReport();
+        XMLJasperReport report = new XMLJasperReport();
         report.reportInvoice(tInvoice.getId(), Enums.SaleType.TKTSALES, "PRINT");
     }//GEN-LAST:event_btnPrintActionPerformed
 
@@ -1031,7 +1032,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         String body = "Invoice".concat(" From ").concat(Application.getMainAgent().getName());
         String refference = this.tInvoice.getReference().toString();
         if (receipent != null) {
-            MyJasperReport report = new MyJasperReport(receipent, subject, body, refference);
+            XMLJasperReport report = new XMLJasperReport(receipent, subject, body, refference);
             report.reportInvoice(tInvoice.getId(), Enums.SaleType.TKTSALES, "EMAIL");
         } else {
             JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
@@ -1049,7 +1050,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     }//GEN-LAST:event_btnAppyCreditActionPerformed
 
     private void btnOfficeCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOfficeCopyActionPerformed
-        MyJasperReport report = new MyJasperReport();
+        XMLJasperReport report = new XMLJasperReport();
         report.reportInvoice(tInvoice.getId(), Enums.SaleType.TKTSALES, "VIEW");
     }//GEN-LAST:event_btnOfficeCopyActionPerformed
 

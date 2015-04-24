@@ -148,7 +148,7 @@ public class OtherSalesAcDoc extends AccountingDocument implements Serializable 
         if (this.getAgent() != null) {
             name = this.getAgent().getName();
         } else {
-            name = this.getCustomer().getFullName();
+            name = this.getCustomer().calculateFullName();
         }
         return name;
     }

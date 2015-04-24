@@ -24,14 +24,14 @@
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenu4">
+        <Menu class="javax.swing.JMenu" name="menuSettings">
           <Properties>
             <Property name="text" type="java.lang.String" value="Settings"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuAirLine">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Air Lines"/>
+                <Property name="text" type="java.lang.String" value="BSP Com Settings"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuAirLineActionPerformed"/>
@@ -45,12 +45,12 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuAppSettingsActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="menuMainAgent">
+            <MenuItem class="javax.swing.JMenuItem" name="menuCompanyProfile">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Company Profile"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuMainAgentActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuCompanyProfileActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -249,7 +249,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem7">
               <Properties>
-                <Property name="text" type="java.lang.String" value="History: Billing Payment"/>
+                <Property name="text" type="java.lang.String" value="History: Bill Payment"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem7ActionPerformed"/>

@@ -63,13 +63,13 @@ public class TicketingAgentComponent extends javax.swing.JPanel implements Prope
 
         List<String> list = new ArrayList<>();
         for (Agent a : agentlist) {
-            list.add(a.getFullName());
+            list.add(a.calculateFullName());
         }
         setCmbVendors(list);
     }
 
     private void setTxtAgentDetails(Agent agent) {
-        txtVendorDetails.setText(agent.getFullName());
+        txtVendorDetails.setText(agent.calculateFullName()+"\n");
         txtVendorDetails.append(agent.getFullAddressCRSeperated());
     }
 
@@ -78,7 +78,7 @@ public class TicketingAgentComponent extends javax.swing.JPanel implements Prope
         if (pnr.getTicketing_agent() != null) {
             DefaultComboBoxModel model = new DefaultComboBoxModel(list.toArray());
             cmbVendor.setModel(model);
-            cmbVendor.setSelectedItem(pnr.getTicketing_agent().getFullName());
+            cmbVendor.setSelectedItem(pnr.getTicketing_agent().calculateFullName());
         } else {
             DefaultComboBoxModel model = new DefaultComboBoxModel(list.toArray());
             cmbVendor.setModel(model);

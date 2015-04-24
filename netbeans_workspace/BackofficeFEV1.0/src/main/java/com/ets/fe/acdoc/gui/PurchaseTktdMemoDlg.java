@@ -75,9 +75,9 @@ public class PurchaseTktdMemoDlg extends JDialog implements PropertyChangeListen
         displayBalance(document);
         controllComponent(document);
         if (pnr.getAgent() != null) {
-            txtAcDocFor.setText(pnr.getAgent().getFullName() + pnr.getAgent().getAddressCRSeperated());
+            txtAcDocFor.setText(pnr.getAgent().calculateFullName() + pnr.getAgent().getFullAddressCRSeperated());
         } else {
-            txtAcDocFor.setText(pnr.getCustomer().getFullName() + pnr.getCustomer().getAddressCRSeperated());
+            txtAcDocFor.setText(pnr.getCustomer().calculateFullName() + pnr.getCustomer().getFullAddressCRSeperated());
         }
     }
 
@@ -374,7 +374,7 @@ public class PurchaseTktdMemoDlg extends JDialog implements PropertyChangeListen
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Agent/Customer", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         txtAcDocFor.setColumns(20);
-        txtAcDocFor.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        txtAcDocFor.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtAcDocFor.setLineWrap(true);
         txtAcDocFor.setRows(5);
         jScrollPane5.setViewportView(txtAcDocFor);

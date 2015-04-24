@@ -52,7 +52,7 @@ public class ClientSearchComp extends javax.swing.JPanel implements PropertyChan
         List cmbElement = new ArrayList();
 
         for (Agent agent : agentList) {
-            cmbElement.add(agent.getFullName() + "-" + agent.getPostCode()
+            cmbElement.add(agent.calculateFullName() + "-" + agent.getPostCode()
                     + "-" + agent.getId());
         }
 
@@ -141,7 +141,7 @@ public class ClientSearchComp extends javax.swing.JPanel implements PropertyChan
                 loop:
                 for (Agent a : agentList) {
                     if (a.getId() == id) {
-                        txtClientDetails.setText(a.getFullName());
+                        txtClientDetails.setText(a.calculateFullName());
                         txtClientDetails.append(a.getFullAddressCRSeperated());
                         break loop;
                     }
@@ -150,7 +150,7 @@ public class ClientSearchComp extends javax.swing.JPanel implements PropertyChan
                 loop:
                 for (Customer c : customerList) {
                     if (c.getId() == id) {
-                        txtClientDetails.setText(c.getFullName());
+                        txtClientDetails.setText(c.calculateFullName());
                         txtClientDetails.append(c.getFullAddressCRSeperated());
                         break loop;
                     }

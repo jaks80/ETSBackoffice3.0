@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beanDataAdapter class="net.sf.jasperreports.data.bean.BeanDataAdapterImpl"><name>PaymentAdapter</name><factoryClass>com.ets.fe.report.model.FactoryBean</factoryClass><methodName>getPaymentCollection</methodName><useFieldDescription>false</useFieldDescription><classpath>E:\Development\netbeans_workspace\BackofficeFEV1.0\target\BackofficeFEV1.0-1.0-SNAPSHOT.jar</classpath></beanDataAdapter>

@@ -27,6 +27,7 @@ public class TodayTInvoiceSearchTask extends SwingWorker< Object, Integer> {
 
         InvoiceReport report = null;
         InvoiceReportOther oreport = null;
+        setProgress(10);
         switch (searchType) {
             case "TSINVOICE_TODAY":
                 TicketingSAcDocWSClient client = new TicketingSAcDocWSClient();
@@ -38,7 +39,7 @@ public class TodayTInvoiceSearchTask extends SwingWorker< Object, Integer> {
                 break;
             default:
         }
-
+        setProgress(50);
         if (report != null) {
             return report;
         } else {

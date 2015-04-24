@@ -5,7 +5,7 @@ import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
 import com.ets.fe.acdoc.task.SalesAcDocReportingTask;
-import com.ets.fe.report.MyJasperReport;
+import com.ets.fe.report.BeanJasperReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import com.ets.fe.util.PnrUtil;
@@ -15,6 +15,7 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -42,7 +43,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
     private Date to;
     private Enums.AcDocType doc_type;
     private String reportType;
-    
+
     public TSalesInvoiceReportingFrame(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
         initComponents();
@@ -63,15 +64,15 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         if (rdoDueInvoice.isSelected()) {
             doc_type = Enums.AcDocType.INVOICE;
             reportType = "OUTSTANDING";
-            task = new SalesAcDocReportingTask(reportType,doc_type, client_type, client_id, from, to, progressBar);
+            task = new SalesAcDocReportingTask(reportType, doc_type, client_type, client_id, from, to, progressBar);
         } else if (rdoDueRefund.isSelected()) {
             reportType = "OUTSTANDING";
             doc_type = Enums.AcDocType.REFUND;
-            task = new SalesAcDocReportingTask(reportType,doc_type, client_type, client_id, from, to, progressBar);
+            task = new SalesAcDocReportingTask(reportType, doc_type, client_type, client_id, from, to, progressBar);
         } else if (rdoInvHistory.isSelected()) {
             reportType = "HISTORY";
             doc_type = null;
-            task = new SalesAcDocReportingTask(reportType,doc_type, client_type, client_id, from, to, progressBar);
+            task = new SalesAcDocReportingTask(reportType, doc_type, client_type, client_id, from, to, progressBar);
         }
 
         task.addPropertyChangeListener(this);
@@ -97,10 +98,10 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
                 TktingInvoiceSummery s = invoices.get(i);
                 tableModel.insertRow(i, new Object[]{i + 1, s.getDocIssueDate(), s.getReference(), s.getClientName(),
                     s.getGdsPnr(), s.getNoOfPax(), s.getOutBoundDetails(), s.getLeadPsgr(),
-                    s.getDocumentedAmount(), s.getPayment(), s.getOtherAmount(), s.getDue(),PnrUtil.calculatePartialName(s.getInvBy())});
+                    s.getDocumentedAmount(), s.getPayment(), s.getOtherAmount(), s.getDue(), PnrUtil.calculatePartialName(s.getInvBy())});
             }
         } else {
-            tableModel.insertRow(0, new Object[]{"", "", "", "", "", "", "", "", "", "", "",""});
+            tableModel.insertRow(0, new Object[]{"", "", "", "", "", "", "", "", "", "", "", ""});
         }
         populateSummery(report);
     }
@@ -210,6 +211,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
+        btnViewReport.setToolTipText("View Report");
         btnViewReport.setMaximumSize(new java.awt.Dimension(40, 22));
         btnViewReport.setMinimumSize(new java.awt.Dimension(40, 22));
         btnViewReport.setPreferredSize(new java.awt.Dimension(40, 22));
@@ -220,6 +222,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         });
 
         btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/acdoc18.png"))); // NOI18N
+        btnViewInvoice.setToolTipText("View Invoice");
         btnViewInvoice.setMaximumSize(new java.awt.Dimension(40, 22));
         btnViewInvoice.setMinimumSize(new java.awt.Dimension(40, 22));
         btnViewInvoice.setPreferredSize(new java.awt.Dimension(40, 22));
@@ -230,6 +233,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         });
 
         btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
+        btnEmail.setToolTipText("Email Report");
         btnEmail.setMaximumSize(new java.awt.Dimension(40, 22));
         btnEmail.setMinimumSize(new java.awt.Dimension(40, 22));
         btnEmail.setPreferredSize(new java.awt.Dimension(40, 22));
@@ -240,6 +244,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         });
 
         btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
+        btnPrint.setToolTipText("Print Report");
         btnPrint.setMaximumSize(new java.awt.Dimension(40, 22));
         btnPrint.setMinimumSize(new java.awt.Dimension(40, 22));
         btnPrint.setPreferredSize(new java.awt.Dimension(40, 22));
@@ -250,6 +255,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         });
 
         btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
+        btnSearch.setToolTipText("Search");
         btnSearch.setMaximumSize(new java.awt.Dimension(40, 22));
         btnSearch.setMinimumSize(new java.awt.Dimension(40, 22));
         btnSearch.setPreferredSize(new java.awt.Dimension(40, 22));
@@ -562,8 +568,13 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
-        MyJasperReport report = new MyJasperReport();
-        report.ticketingInvoiceReport(Enums.SaleType.TKTSALES, doc_type, client_type, client_id, from, to,"VIEW");
+        if (report == null) {
+            return;
+        }
+        BeanJasperReport jasperreport = new BeanJasperReport();
+        List<InvoiceReport> list = new ArrayList<>();
+        list.add(report);
+        jasperreport.invoiceReport(list, Enums.SaleType.TKTSALES, "VIEW");
     }//GEN-LAST:event_btnViewReportActionPerformed
 
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
@@ -579,21 +590,32 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
 
     private void btnEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmailActionPerformed
+        if (report == null) {
+            return;
+        }
+
         String receipent = report.getEmail();
         String subject = report.getTitle().concat(" From").concat(Application.getMainAgent().getName());
         String body = report.getTitle().concat(" From").concat(Application.getMainAgent().getName());
         String refference = "report";
-         if(receipent!=null){
-        MyJasperReport report = new MyJasperReport(receipent,subject,body,refference);
-        report.ticketingInvoiceReport(Enums.SaleType.TKTSALES, doc_type, client_type, client_id, from, to,"EMAIL");
-        }else{
-        JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
+        if (receipent != null) {
+            BeanJasperReport jasperreport = new BeanJasperReport(receipent, subject, body, refference);
+            List<InvoiceReport> list = new ArrayList<>();
+            list.add(report);
+            jasperreport.invoiceReport(list, Enums.SaleType.TKTSALES, "EMAIL");
+        } else {
+            JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnEmailActionPerformed
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        MyJasperReport report = new MyJasperReport();
-        report.ticketingInvoiceReport(Enums.SaleType.TKTSALES, doc_type, client_type, client_id, from, to,"PRINT");
+        if (report == null) {
+            return;
+        }
+        BeanJasperReport jasperreport = new BeanJasperReport();
+        List<InvoiceReport> list = new ArrayList<>();
+        list.add(report);
+        jasperreport.invoiceReport(list, Enums.SaleType.TKTSALES, "PRINT");
     }//GEN-LAST:event_btnPrintActionPerformed
 
 

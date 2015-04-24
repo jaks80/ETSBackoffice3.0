@@ -102,7 +102,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
         controllComponent(tInvoice);
 
         if (pnr.getTicketing_agent() != null) {
-            txtAcDocFor.setText(pnr.getTicketing_agent().getFullName() + pnr.getTicketing_agent().getAddressCRSeperated());
+            txtAcDocFor.setText(pnr.getTicketing_agent().calculateFullName() + pnr.getTicketing_agent().getFullAddressCRSeperated());
         }
     }
 
@@ -281,10 +281,10 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
         busyLabel.setBusy(true);
         btnSubmitPayment.setEnabled(false);
         String amountString = txtAmount.getText();
-        String remark = txtRef.getText();
-        Enums.PaymentType type = (Enums.PaymentType) cmbTType.getSelectedItem();
+        String remark = txtRef.getText();        
 
         if (!amountString.isEmpty() && !remark.isEmpty() && cmbTType.getSelectedIndex() > 0) {
+            Enums.PaymentType type = (Enums.PaymentType) cmbTType.getSelectedItem();
             BigDecimal amount = new BigDecimal(amountString.trim());
             PaymentLogic logic = new PaymentLogic();
 
@@ -895,7 +895,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Vendor Details", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         txtAcDocFor.setColumns(20);
-        txtAcDocFor.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        txtAcDocFor.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtAcDocFor.setLineWrap(true);
         txtAcDocFor.setRows(5);
         jScrollPane5.setViewportView(txtAcDocFor);

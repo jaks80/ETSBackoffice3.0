@@ -687,7 +687,7 @@ public class CashBookFrame extends javax.swing.JInternalFrame implements Propert
         List cmbElement = new ArrayList();
 
         for (User user : users) {
-            cmbElement.add(user.getFullName() + "-" + user.getId());
+            cmbElement.add(user.calculateFullName() + "-" + user.getId());
         }
 
         DefaultComboBoxModel cmbContactableModel = new DefaultComboBoxModel(cmbElement.toArray());

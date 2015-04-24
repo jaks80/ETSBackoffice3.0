@@ -56,7 +56,7 @@ public class PurchaseAcDocumentDlg extends javax.swing.JDialog implements Proper
 
         controllComponent(document);
         if (pnr.getTicketing_agent()!= null) {
-            txtAcDocFor.setText(pnr.getTicketing_agent().getFullName() + pnr.getTicketing_agent().getAddressCRSeperated());
+            txtAcDocFor.setText(pnr.getTicketing_agent().calculateFullName() + pnr.getTicketing_agent().getFullAddressCRSeperated());
         } 
         if (document.getDocumentedAmount() != null) {
             txtAmount.setText(document.getDocumentedAmount().toString());
@@ -144,7 +144,7 @@ public class PurchaseAcDocumentDlg extends javax.swing.JDialog implements Proper
 
         txtAcDocFor.setEditable(false);
         txtAcDocFor.setColumns(20);
-        txtAcDocFor.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        txtAcDocFor.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtAcDocFor.setLineWrap(true);
         txtAcDocFor.setRows(5);
         jScrollPane5.setViewportView(txtAcDocFor);

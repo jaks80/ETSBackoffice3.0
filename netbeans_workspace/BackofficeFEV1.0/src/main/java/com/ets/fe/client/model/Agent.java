@@ -97,7 +97,7 @@ public class Agent extends Contactable implements Serializable {
     }
 
     @Override
-    public String getFullName() {
+    public String calculateFullName() {
         return this.name;
     }
 

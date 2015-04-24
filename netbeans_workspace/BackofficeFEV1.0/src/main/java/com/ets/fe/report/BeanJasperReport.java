@@ -1,0 +1,120 @@
+package com.ets.fe.report;
+
+import com.ets.fe.report.gui.ReportViewerFrame;
+import com.ets.fe.util.*;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
+/**
+ *
+ * @author Yusuf
+ */
+public class BeanJasperReport {
+
+    //public static final String domain = APIConfig.get("ws.domain");
+    private String recepeintAddress;
+    private String subject;
+    private String body;
+    private String refference;
+
+    public BeanJasperReport() {
+    }
+
+    /**
+     * This constructor is for email
+     *
+     * @param recepeintAddress
+     * @param subject
+     * @param body
+     * @param refference
+     */
+    public BeanJasperReport(String recepeintAddress, String subject, String body, String refference) {
+        this.recepeintAddress = recepeintAddress;
+        this.subject = subject;
+        this.body = body;
+        this.refference = refference;
+    }
+
+    public void invoiceReport(Collection<?> beanCollection, Enums.SaleType saletype, String actionType) {
+
+        InputStream template =null;
+        if (saletype.equals(Enums.SaleType.OTHERSALES)) {
+        template = BeanJasperReport.class.getResourceAsStream("");
+        }else{
+         template = BeanJasperReport.class.getResourceAsStream("/Report/tinvoice/TAcDocumentReport.jasper");
+        }
+        
+        JasperPrint jasperPrint = prepareReport(template, beanCollection);
+        takeAction(actionType, jasperPrint);
+    }
+
+    public void transactionReceipt(Collection<?> beanCollection, Enums.SaleType sale_type, String actionType) {
+
+        InputStream template = null;
+        
+        if (sale_type.equals(Enums.SaleType.OTHERSALES)) {
+
+        }else{
+         template = BeanJasperReport.class.getResourceAsStream("/Report/payment/TicketingTransReceipt.jasper");
+        }
+
+        JasperPrint jasperPrint = prepareReport(template, beanCollection);
+        takeAction(actionType, jasperPrint);
+    }
+
+    private void takeAction(String actionType, JasperPrint jasperPrint) {
+        if ("VIEW".equals(actionType)) {
+            viewReport(jasperPrint);
+        } else if ("EMAIL".equals(actionType)) {
+            emailReport(this.recepeintAddress, this.subject, this.body, this.refference, jasperPrint);
+        } else if ("PRINT".equals(actionType)) {
+            printReport(jasperPrint);
+        }
+    }
+
+    private void viewReport(JasperPrint jasperPrint) {
+        ReportViewerFrame rptViewer = new ReportViewerFrame();
+        rptViewer.viewReport(jasperPrint, "Report Viewer");
+    }
+
+    private void printReport(JasperPrint jasperPrint) {
+        try {
+            JasperPrintManager.printReport(jasperPrint, true);
+        } catch (JRException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void emailReport(String recipientAddress, String subject, String body,
+            String attachmentName, JasperPrint jasperPrint) {
+
+        try {
+            byte[] attachment = JasperExportManager.exportReportToPdf(jasperPrint);
+            EmailService emailService = new EmailService();
+            emailService.SendMail(recipientAddress, subject, body, attachment, attachmentName);
+        } catch (JRException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private JasperPrint prepareReport(InputStream template, Collection<?> beanCollection) {
+
+        JasperPrint jasperPrint = null;
+        try {
+            Map parameters = new HashMap();
+            parameters.put("ReportTitle", "Address Report");
+            parameters.put("DataFile", "PaymentFactoryBean.java - Bean Collection");
+            jasperPrint = JasperFillManager.fillReport(template, parameters,
+                    new JRBeanCollectionDataSource(beanCollection));
+
+        } catch (JRException ex) {
+            ex.printStackTrace();
+        }
+
+        return jasperPrint;
+    }
+}

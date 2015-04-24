@@ -46,7 +46,7 @@ public abstract class Contactable extends PersistentObject implements Serializab
     
     }
     
-    public abstract String getFullName();
+    public abstract String calculateFullName();
 
     public String getAddLine1() {
         return addLine1;

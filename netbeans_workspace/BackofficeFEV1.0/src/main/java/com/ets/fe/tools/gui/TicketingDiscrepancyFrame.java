@@ -123,7 +123,8 @@ public class TicketingDiscrepancyFrame extends javax.swing.JInternalFrame implem
         setPreferredSize(new java.awt.Dimension(1000, 500));
 
         jSplitPane1.setDividerLocation(300);
-        jSplitPane1.setDividerSize(4);
+        jSplitPane1.setDividerSize(12);
+        jSplitPane1.setOneTouchExpandable(true);
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 

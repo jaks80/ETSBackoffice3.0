@@ -5,7 +5,7 @@ import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
 import com.ets.fe.acdoc.task.SalesAcDocReportingTask;
-import com.ets.fe.report.MyJasperReport;
+import com.ets.fe.report.XMLJasperReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.Color;
@@ -490,7 +490,7 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
-        MyJasperReport report = new MyJasperReport();
+        XMLJasperReport report = new XMLJasperReport();
         report.ticketingInvoiceReport(Enums.SaleType.TKTSALES, doc_type, client_type, client_id, from, to, "VIEW");
     }//GEN-LAST:event_btnViewReportActionPerformed
 
@@ -512,7 +512,7 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
         String body = report.getTitle().concat(" From").concat(Application.getMainAgent().getName());
         String refference = "report";
         if (receipent != null) {
-            MyJasperReport report = new MyJasperReport(receipent, subject, body, refference);
+            XMLJasperReport report = new XMLJasperReport(receipent, subject, body, refference);
             report.ticketingInvoiceReport(Enums.SaleType.TKTSALES, doc_type, client_type, client_id, from, to, "EMAIL");
         } else {
             JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
@@ -520,7 +520,7 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
     }//GEN-LAST:event_btnEmailActionPerformed
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        MyJasperReport report = new MyJasperReport();
+        XMLJasperReport report = new XMLJasperReport();
         report.ticketingInvoiceReport(Enums.SaleType.TKTSALES, doc_type, client_type, client_id, from, to, "PRINT");
     }//GEN-LAST:event_btnPrintActionPerformed
 

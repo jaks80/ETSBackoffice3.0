@@ -1,4 +1,4 @@
-package com.ets.fe.acdoc_o.gui;
+package com.ets.fe.accounts.gui.revenue;
 
 import com.ets.fe.acdoc_o.model.ServicesSaleReport;
 import com.ets.fe.acdoc_o.model.ServicesSaleReport.SaleReportLine;

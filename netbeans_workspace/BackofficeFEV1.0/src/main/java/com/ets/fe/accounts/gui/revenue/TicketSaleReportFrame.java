@@ -1,4 +1,4 @@
-package com.ets.fe.acdoc.gui.report;
+package com.ets.fe.accounts.gui.revenue;
 
 import com.ets.fe.pnr.model.TicketSaleReport;
 import com.ets.fe.pnr.model.TicketSaleReport.SaleReportLine;
@@ -10,8 +10,6 @@ import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -109,6 +107,14 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
         userTask.execute();
     }
 
+    private void populateSummery(){
+     lblTktQty.setText(String.valueOf(report.getTktQty()));
+     lblTotalPurchase.setText(report.getTotalNetPurchaseFare());
+     lblTotalSelling.setText(report.getTotalNetSellingFare());
+     lblTotalRevenue.setText(report.getTotalRevenue());
+     
+    }
+    
     private void populateTblTicket() {
         List<SaleReportLine> lines = report.getSaleReportLines();
         DefaultTableModel tableModel = (DefaultTableModel) tblTicket.getModel();
@@ -118,7 +124,7 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
 
         if (lines.size() > 0) {
             for (SaleReportLine t : lines) {
-                tableModel.insertRow(row, new Object[]{t.getDocIssuedate(), t.getTktStatus(),
+                tableModel.insertRow(row, new Object[]{row+1,t.getDocIssuedate(), t.getTktStatus(),
                     t.getGdsPnr(), t.getClient(), t.getTicketingAgent(),
                     t.getAirLineCode(), t.getTicketNo(), t.getSellingRefference(),
                     t.getNetPurchaseFare(), t.getNetSellingFare(), t.getRevenue(), t.getAtolChg()});
@@ -129,6 +135,8 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
         } else {
             tableModel.insertRow(0, new Object[]{});
         }
+        
+        populateSummery();
     }
 
     /**
@@ -148,7 +156,7 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
             int rowIndex, int vColIndex) {
             Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);  
             String s = "";
-            Object o = tblTicket.getModel().getValueAt(rowIndex, 1);       
+            Object o = tblTicket.getModel().getValueAt(rowIndex, 2);       
             if(o!=null){
                 s = o.toString();
             }
@@ -168,6 +176,15 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
             return c;
         }
     };
+    jPanel2 = new javax.swing.JPanel();
+    jLabel9 = new javax.swing.JLabel();
+    jLabel10 = new javax.swing.JLabel();
+    jLabel11 = new javax.swing.JLabel();
+    jLabel12 = new javax.swing.JLabel();
+    lblTktQty = new javax.swing.JLabel();
+    lblTotalPurchase = new javax.swing.JLabel();
+    lblTotalSelling = new javax.swing.JLabel();
+    lblTotalRevenue = new javax.swing.JLabel();
     jPanel1 = new javax.swing.JPanel();
     jLabel3 = new javax.swing.JLabel();
     cmbIssueType = new javax.swing.JComboBox();
@@ -200,7 +217,7 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     setMinimumSize(new java.awt.Dimension(1000, 500));
     setPreferredSize(new java.awt.Dimension(1000, 500));
 
-    jSplitPane1.setDividerLocation(165);
+    jSplitPane1.setDividerLocation(180);
     jSplitPane1.setDividerSize(4);
 
     tblTicket.setBackground(new java.awt.Color(0, 0, 0));
@@ -209,11 +226,11 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
 
         },
         new String [] {
-            "Date", "Status", "Pnr", "B.Agent", "T.Agent", "AirLine", "TktNo", "SalesInv", "NetPurchase", "NetSelling", "Revenue", "ATOL"
+            "", "Date", "Status", "Pnr", "B.Agent", "T.Agent", "AirLine", "TktNo", "SalesInv", "NetPurchase", "NetSelling", "Revenue", "ATOL"
         }
     ) {
         boolean[] canEdit = new boolean [] {
-            false, false, false, false, false, false, false, false, false, false, false, false
+            false, false, false, false, false, false, false, false, false, false, false, false, false
         };
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -223,19 +240,98 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     tblTicket.getTableHeader().setReorderingAllowed(false);
     jScrollPane3.setViewportView(tblTicket);
     if (tblTicket.getColumnModel().getColumnCount() > 0) {
-        tblTicket.getColumnModel().getColumn(5).setMaxWidth(55);
-        tblTicket.getColumnModel().getColumn(6).setMinWidth(100);
+        tblTicket.getColumnModel().getColumn(0).setMaxWidth(30);
+        tblTicket.getColumnModel().getColumn(6).setMaxWidth(55);
+        tblTicket.getColumnModel().getColumn(7).setMinWidth(100);
     }
+
+    jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+    jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+    jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+    jLabel9.setText("No Of Tickets:");
+
+    jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+    jLabel10.setText("Total Net PurchaseFare:");
+
+    jLabel11.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+    jLabel11.setText("Total Net Selling:");
+
+    jLabel12.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+    jLabel12.setText("Total Revenue:");
+
+    lblTktQty.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+    lblTktQty.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+    lblTktQty.setText("0.00");
+
+    lblTotalPurchase.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+    lblTotalPurchase.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+    lblTotalPurchase.setText("0.00");
+
+    lblTotalSelling.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+    lblTotalSelling.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+    lblTotalSelling.setText("0.00");
+
+    lblTotalRevenue.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+    lblTotalRevenue.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+    lblTotalRevenue.setText("0.00");
+
+    javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+    jPanel2.setLayout(jPanel2Layout);
+    jPanel2Layout.setHorizontalGroup(
+        jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel2Layout.createSequentialGroup()
+            .addContainerGap()
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addComponent(lblTktQty, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+                .addComponent(lblTotalPurchase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblTotalSelling, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblTotalRevenue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addContainerGap(20, Short.MAX_VALUE))
+    );
+    jPanel2Layout.setVerticalGroup(
+        jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel2Layout.createSequentialGroup()
+            .addContainerGap()
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel9)
+                .addComponent(lblTktQty))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel10)
+                .addComponent(lblTotalPurchase))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel11)
+                .addComponent(lblTotalSelling))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel12)
+                .addComponent(lblTotalRevenue))
+            .addContainerGap(28, Short.MAX_VALUE))
+    );
 
     javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
     jPanel5.setLayout(jPanel5Layout);
     jPanel5Layout.setHorizontalGroup(
         jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
+        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 799, Short.MAX_VALUE)
+        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
     jPanel5Layout.setVerticalGroup(
         jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
+        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE))
     );
 
     jSplitPane1.setRightComponent(jPanel5);
@@ -500,7 +596,7 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(layout.createSequentialGroup()
             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGap(0, 0, 0)
             .addComponent(jSplitPane1))
     );
 
@@ -544,6 +640,9 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     private org.jdesktop.swingx.JXDatePicker dtFrom;
     private org.jdesktop.swingx.JXDatePicker dtTo;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -551,11 +650,17 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JLabel lblTktQty;
+    private javax.swing.JLabel lblTotalPurchase;
+    private javax.swing.JLabel lblTotalRevenue;
+    private javax.swing.JLabel lblTotalSelling;
     private javax.swing.JProgressBar progressBar;
     private org.jdesktop.swingx.JXTable tblTicket;
     private javax.swing.JTextField txtCareerCode;
@@ -579,7 +684,7 @@ public class TicketSaleReportFrame extends JInternalFrame implements PropertyCha
         List cmbElement = new ArrayList();
 
         for (User user : users) {
-            cmbElement.add(user.getFullName() + "-" + user.getId());
+            cmbElement.add(user.calculateFullName() + "-" + user.getId());
         }
 
         DefaultComboBoxModel cmbContactableModel = new DefaultComboBoxModel(cmbElement.toArray());

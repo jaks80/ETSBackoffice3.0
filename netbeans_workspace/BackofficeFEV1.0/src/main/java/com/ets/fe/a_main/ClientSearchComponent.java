@@ -75,7 +75,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
                 cmbSearchResult.setEnabled(true);
                 List<String> list = new ArrayList<>();
                 for (Agent a : agentlist) {
-                    list.add(a.getFullName() + "-" + a.getId());
+                    list.add(a.calculateFullName() + "-" + a.getId());
                 }
                 this.agent = null;
                 setTxtAgentDetails(this.getAgent());
@@ -92,7 +92,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
                 cmbSearchResult.setEnabled(true);
                 List<String> list = new ArrayList<>();
                 for (Customer a : customerlist) {
-                    list.add(a.getFullName() + "-" + a.getPostCode() + "-" + a.getId());
+                    list.add(a.calculateFullName() + "-" + a.getPostCode() + "-" + a.getId());
                 }
                 this.customer = null;
                 setTxtCustomerDetails(this.getCustomer());
@@ -385,7 +385,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
 
     private void setTxtAgentDetails(Agent agent) {
         if (agent != null) {
-            txtContactableDetails.setText(agent.getFullName());
+            txtContactableDetails.setText(agent.calculateFullName()+"\n");
             txtContactableDetails.append(agent.getFullAddressCRSeperated());
         } else {
             txtContactableDetails.setText("");
@@ -394,7 +394,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
 
     private void setTxtCustomerDetails(Customer customer) {
         if (customer != null) {
-            txtContactableDetails.setText(customer.getFullName());
+            txtContactableDetails.setText(customer.calculateFullName()+"\n");
             txtContactableDetails.append(customer.getFullAddressCRSeperated());
         } else {
             txtContactableDetails.setText("");

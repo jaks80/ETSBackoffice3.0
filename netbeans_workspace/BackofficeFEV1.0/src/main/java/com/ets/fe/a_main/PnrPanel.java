@@ -812,7 +812,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
                 try {
                     if ("AC_DOCUMENT".equals(taskType)) {
                         TicketingSalesAcDoc draftDocument = newTSalesDocumentTask.get();
-                        System.out.println("asdad");
+                        
                         if (draftDocument != null) {
                             if (draftDocument.getType().equals(Enums.AcDocType.INVOICE)) {
                                 showTSalesInvoiceDlg(draftDocument);

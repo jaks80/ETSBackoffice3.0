@@ -4,7 +4,7 @@ import com.ets.fe.settings.model.AppSettings;
 import com.ets.fe.settings.model.User;
 import com.ets.fe.client.model.MainAgent;
 import com.ets.fe.os.model.AdditionalCharge;
-import com.ets.fe.os.model.AdditionalCharges;
+import com.ets.fe.report.model.Letterhead;
 import com.ets.fe.settings.ws.ApplicationWSClient;
 import com.itextpdf.xmp.impl.Base64;
 import java.io.IOException;
@@ -21,6 +21,7 @@ import java.util.logging.Logger;
  */
 public class Application {
 
+    private static Letterhead letterhead;
     private static User loggedOnUser;
     private static MainAgent mainAgent;
     private static AppSettings appSettings;
@@ -33,6 +34,28 @@ public class Application {
         setAppSettings(client.getSettings());
         setAdditionalCharges(client.getAdditionalCharges().getList());
         loadProperties();
+        
+        if (mainAgent != null) {
+            letterhead = new Letterhead();
+            getLetterhead().setCompanyName(mainAgent.getName());
+            getLetterhead().setAddress(mainAgent.getFullAddressCRSeperated());
+
+            StringBuilder sb = new StringBuilder();
+            if (mainAgent.getAtol() != null && !mainAgent.getAtol().isEmpty()) {
+                sb.append("ATOL: ").append(mainAgent.getAtol()).append(" ");
+            }
+
+            if (mainAgent.getIata() != null && !mainAgent.getIata().isEmpty()) {
+                sb.append("IATA: ").append(mainAgent.getIata()).append(" ");
+            }
+
+            if (mainAgent.getAbta() != null && !mainAgent.getAbta().isEmpty()) {
+                sb.append("ABTA: ").append(mainAgent.getAbta()).append(" ");
+            }
+            getLetterhead().setFooter(sb.toString());
+            getLetterhead().settInvTAndC(appSettings.gettInvTAndC());
+            getLetterhead().setoInvTAndC(appSettings.getoInvTAndC());
+        }
     }
 
     public static void loadProperties() {
@@ -134,5 +157,9 @@ public class Application {
 
     public static void setAdditionalCharges(List<AdditionalCharge> aAdditionalCharges) {
         additionalCharges = aAdditionalCharges;
+    }
+
+    public static Letterhead getLetterhead() {
+        return letterhead;
     }
 }

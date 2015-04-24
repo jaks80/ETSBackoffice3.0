@@ -38,7 +38,7 @@ public class PnrSearchTask extends SwingWorker< List<Pnr>, Integer> {
         busyLabel.setBusy(true);
         PnrWSClient client = new PnrWSClient();
         List<Pnr> pnrs = new ArrayList<>();
-
+        setProgress(10);
         switch (taskType) {
             case "UNINVOICED_PNR":
                 pnrs = new ArrayList<>();
@@ -56,12 +56,12 @@ public class PnrSearchTask extends SwingWorker< List<Pnr>, Integer> {
                     String[] names = PnrUtil.splitName(name);
                     pnrs = client.searchPnrByName(names[0], names[1]);
                 } else if (invRef != null && !invRef.isEmpty()) {
-
+                    pnrs = client.getPnrByInvRef(invRef);
                 }
                 break;
             default:
         }
-
+        setProgress(50);
         return pnrs;
     }
 

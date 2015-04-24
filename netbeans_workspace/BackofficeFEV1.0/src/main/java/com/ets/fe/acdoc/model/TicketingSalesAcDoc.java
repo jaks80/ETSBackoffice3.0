@@ -9,10 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -143,7 +140,7 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         if (this.pnr.getAgent() != null) {
             name = this.pnr.getAgent().getName();
         } else {
-            name = this.pnr.getCustomer().getFullName();
+            name = this.pnr.getCustomer().calculateFullName();
         }
         return name;
     }

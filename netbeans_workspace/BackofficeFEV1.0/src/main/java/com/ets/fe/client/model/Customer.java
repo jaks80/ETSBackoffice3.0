@@ -44,7 +44,7 @@ public class Customer extends Contactable implements Serializable{
                 
    
     @Override
-    public String getFullName() {
+    public String calculateFullName() {
       return this.surName + "/" + this.foreName;
     }
 }

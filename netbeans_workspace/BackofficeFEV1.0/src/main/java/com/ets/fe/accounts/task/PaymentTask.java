@@ -16,15 +16,15 @@ import javax.swing.SwingWorker;
  */
 public class PaymentTask extends SwingWorker<Payments, Integer> {
 
-    private JProgressBar progressBar;    
+    private JProgressBar progressBar;
     private Enums.ClientType clienttype = null;
     private Long clientid = null;
     private Date dateFrom = null;
     private Date dateTo = null;
     private Enums.SaleType saleType;
 
-    public PaymentTask(Enums.ClientType clienttype,Long clientid, Date dateFrom, Date dateTo,Enums.SaleType saleType, JProgressBar progressBar) {
-        
+    public PaymentTask(Enums.ClientType clienttype, Long clientid, Date dateFrom, Date dateTo, Enums.SaleType saleType, JProgressBar progressBar) {
+
         this.clienttype = clienttype;
         this.clientid = clientid;
         this.dateFrom = dateFrom;
@@ -40,11 +40,10 @@ public class PaymentTask extends SwingWorker<Payments, Integer> {
         Progress p = new Progress();
         Thread t = new Thread(p);
         t.start();
-        
-        
-        PaymentWSClient client = new PaymentWSClient();        
-        Payments payments = client.findTSPaymentHistory(clienttype, clientid, dateFrom, dateTo,saleType);
-                
+
+        PaymentWSClient client = new PaymentWSClient();
+        Payments payments = client.findTSPaymentHistory(clienttype, clientid, dateFrom, dateTo, saleType);
+
         p.cancel();
         return payments;
     }
