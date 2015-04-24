@@ -7,17 +7,8 @@ import com.ets.pnr.service.PnrService;
 import com.ets.util.DateUtil;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -64,7 +55,6 @@ public class PnrWS {
     }
 
     @GET
-    @Produces("application/xml")
     @Path("/history")
     @RolesAllowed("SM")
     public Pnrs getHistory(@QueryParam("bookingAgtOid") String bookingAgtOid,
@@ -76,7 +66,6 @@ public class PnrWS {
     }
 
     @GET
-    @Produces("application/xml")
     @Path("/byid/{id}")
     @RolesAllowed("GS")
     public Pnr getById(@PathParam("id") long id) {
@@ -84,17 +73,14 @@ public class PnrWS {
     }
 
     @GET
-    @Produces("application/xml")
     @Path("/atolcertbyid")
-    //@RolesAllowed("GS")
-    @PermitAll
+    @RolesAllowed("GS")
     public ATOLCertificate getAtolCertificate(@QueryParam("id") long id, @QueryParam("issuedate") String issuedate) {
         Date date = DateUtil.stringToDate(issuedate, "ddMMMyyyy");
         return service.getAtolCertificate(id, date);
     }
 
     @GET
-    @Produces("application/xml")
     @Path("/withchildren/{id}")
     @RolesAllowed("GS")
     public Pnr getByIdWithChildren(@PathParam("id") long id) {
@@ -102,7 +88,6 @@ public class PnrWS {
     }
 
     @GET
-    @Produces("application/xml")
     @Path("/bytkt/{tktNo}/{surName}")
     @RolesAllowed("GS")
     public Pnrs getPnrByTktNo(@QueryParam("tktNo") String tktNo, @QueryParam("surName") String surName) {
@@ -110,7 +95,6 @@ public class PnrWS {
     }
 
     @GET
-    @Produces("application/xml")
     @Path("/bypaxname")
     @RolesAllowed("GS")
     public Pnrs getPnrByName(@QueryParam("surName") String surName, @QueryParam("foreName") String foreName) {
@@ -121,7 +105,6 @@ public class PnrWS {
     }
 
     @GET
-    @Produces("application/xml")
     @Path("/bygdsPnr")
     @RolesAllowed("GS")
     public Pnrs getPnrBygdsPnr(@QueryParam("gdsPnr") String gdsPnr) {
@@ -132,7 +115,16 @@ public class PnrWS {
     }
 
     @GET
-    @Produces("application/xml")
+    @Path("/byginvref")
+    @RolesAllowed("GS")
+    public Pnrs getPnrByInvRef(@QueryParam("invref") String invref) {
+        List<Pnr> list = service.getByInvRef(invref);
+        Pnrs pnrs = new Pnrs();
+        pnrs.setList(list);
+        return pnrs;
+    }
+
+    @GET
     @Path("/uninvoicedpnr")
     @RolesAllowed("GS")
     public Pnrs getUninvoicedPnr() {
@@ -145,7 +137,6 @@ public class PnrWS {
     }
 
     @GET
-    @Produces("application/xml")
     @Path("/pnrtoday")
     @RolesAllowed("GS")
     public Pnrs getPnrsToday(@QueryParam("date") String date) {

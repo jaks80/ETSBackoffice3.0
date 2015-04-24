@@ -27,25 +27,23 @@ import javax.xml.bind.annotation.*;
 public class InvoiceReport implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @XmlElement
-    private Letterhead letterhead = AppSettingsService.getLetterhead();
+    
     @XmlElement
     private String title;
     @XmlElement
     private String totalInvoice;
     @XmlElement
-    private String totalInvAmount = new String("0.00");
+    private String totalInvAmount = "0.00";
     @XmlElement
-    private String totalDMAmount = new String("0.00");
+    private String totalDMAmount = "0.00";
     @XmlElement
-    private String totalCMAmount = new String("0.00");
+    private String totalCMAmount = "0.00";
     @XmlElement
-    private String totalDue = new String("0.00");
+    private String totalDue = "0.00";
     @XmlElement
-    private String totalPayment = new String("0.00");
+    private String totalPayment = "0.00";
     @XmlElement
-    private String totalRefund = new String("0.00");
+    private String totalRefund = "0.00";
     @XmlElement
     private List<TktingInvoiceSummery> invoices = new ArrayList<>();
 
@@ -179,6 +177,9 @@ public class InvoiceReport implements Serializable {
             invSummery.setDocIssueDate(DateUtil.dateToString(invoice.getDocIssueDate()));
             invSummery.setGdsPnr(invoice.getPnr().getGdsPnr());
             invSummery.setNoOfPax(invoice.getPnr().getNoOfPax());
+            invSummery.setLeadPsgr(PnrUtil.calculatePartialName(PnrUtil.calculateLeadPaxName(
+                    invoice.getTickets())));
+            invSummery.setAirLine(invoice.getPnr().getAirLineCode());
             invSummery.setPnr_id(invoice.getPnr().getId());
             invSummery.setReference(invoice.getReference());
             invSummery.setStatus(invoice.getStatus());
@@ -186,7 +187,7 @@ public class InvoiceReport implements Serializable {
             invSummery.setOutBoundDetails(PnrUtil.getOutBoundFlightSummery(invoice.getPnr().getSegments()));
             invSummery.setDocumentedAmount(invoice.getDocumentedAmount());
             invSummery.setOtherAmount(invoice.calculateTotalDebitMemo().add(invoice.calculateTotalCreditMemo()));
-            invSummery.setPayment(invoice.calculateTotalPayment().add(invoice.calculateTotalRefund()));
+            invSummery.setPayment(invoice.calculateTotalPayment().add(invoice.calculateTotalRefund()).abs());
             invSummery.setDue(invoice.calculateDueAmount());
 
             totalInvAmount = totalInvAmount.add(invoice.getDocumentedAmount());
@@ -350,14 +351,6 @@ public class InvoiceReport implements Serializable {
 
     public void setDateTo(String dateTo) {
         this.dateTo = dateTo;
-    }
-
-    public Letterhead getLetterhead() {
-        return letterhead;
-    }
-
-    public void setLetterhead(Letterhead letterhead) {
-        this.letterhead = letterhead;
     }
 
     public String getTitle() {

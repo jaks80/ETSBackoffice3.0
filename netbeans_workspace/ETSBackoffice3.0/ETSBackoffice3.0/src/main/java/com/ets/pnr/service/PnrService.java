@@ -32,9 +32,9 @@ public class PnrService {
     }
 
     public Set<String> findTicketingOIDs() {
-     return dao.findTicketingOIDs();
+        return dao.findTicketingOIDs();
     }
-    
+
     public boolean delete(Long id) {
         Pnr pnr = getByIdWithChildren(id);
         dao.delete(pnr);
@@ -44,6 +44,15 @@ public class PnrService {
     public List<Pnr> getByGDSPnr(String gdsPnr) {
         List<Pnr> list = new ArrayList<>();
         list = dao.getByGDSPnr(gdsPnr);
+        for (Pnr p : list) {
+            PnrUtil.undefinePnrInTickets(p, p.getTickets());
+        }
+        return list;
+    }
+
+    public List<Pnr> getByInvRef(String invref) {
+        List<Pnr> list = new ArrayList<>();
+        list = dao.getByInvRef(invref);
         for (Pnr p : list) {
             PnrUtil.undefinePnrInTickets(p, p.getTickets());
         }
@@ -61,8 +70,8 @@ public class PnrService {
 
     public Pnr getByIdWithChildren(long id) {
         Pnr pnr = dao.getByIdWithChildren(id);
-        if(pnr !=null){
-         PnrUtil.undefinePnrChildren(pnr);
+        if (pnr != null) {
+            PnrUtil.undefinePnrChildren(pnr);
         }
         return pnr;
     }
@@ -70,8 +79,8 @@ public class PnrService {
     public ATOLCertificate getAtolCertificate(long id, Date issueDate) {
         Pnr pnr = getByIdWithChildren(id);
         MainAgent mainAgent = AppSettingsService.mainAgent;
-        ATOLCertificate certificate = 
-                ATOLCertificate.serializeToCertificate(DateUtil.dateToString(issueDate, "mm/dd/yyyy").toString(), 
+        ATOLCertificate certificate
+                = ATOLCertificate.serializeToCertificate(DateUtil.dateToString(issueDate, "mm/dd/yyyy").toString(),
                         mainAgent, pnr);
         return certificate;
     }

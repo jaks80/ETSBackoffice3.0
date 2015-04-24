@@ -34,9 +34,14 @@ public class PaymentDAOImpl extends GenericDAOImpl<Payment, Long> implements Pay
     @Override
     public Payment findById(Long id) {
         String hql = "select distinct p from Payment as p "
-                + "left join fetch p.tSalesPayments as sp "
-                + "left join fetch p.tPurchasePayments as pp "
-                + "left join fetch p.oSalesPayments as op "
+                + "left join fetch p.tSalesAcDocuments as sp "
+                + "left join fetch sp.pnr as pnr "
+                + "left join fetch pnr.agent "
+                + "left join fetch pnr.customer "
+                + "left join fetch p.tPurchaseAcDocuments as pp "
+                + "left join fetch pp.pnr as pnr1 "
+                + "left join fetch pnr1.ticketing_agent "
+                + "left join fetch p.oSalesAcDocuments as op "
                 + "where p.id = :id";
 
         Query query = getSession().createQuery(hql);

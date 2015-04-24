@@ -40,16 +40,15 @@ public class PaymentWS {
     public Payment newBSPPayment(@QueryParam("userid") Long userid,
             @QueryParam("agentid") Long agentid,
             @QueryParam("dateStart") String dateStart,
-            @QueryParam("dateEnd") String dateEnd,@QueryParam("dateEnd") String paymentDate) {
-        
-        
+            @QueryParam("dateEnd") String dateEnd, @QueryParam("dateEnd") String paymentDate) {
+
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
         Date _paymentDate = DateUtil.stringToDate(paymentDate, "ddMMMyyyy");
 
-        return service.newBSPPayment(agentid, dateFrom, dateTo,userid,_paymentDate);
+        return service.newBSPPayment(agentid, dateFrom, dateTo, userid, _paymentDate);
     }
-    
+
     @POST
     @Path("/newctransfer")
     @RolesAllowed("GS")
@@ -57,12 +56,29 @@ public class PaymentWS {
         service.createCreditTransfer(creditTransfer);
         return Response.status(200).build();
     }
-    
+
     @GET
-    @Path("/byid/{id}")
-    @RolesAllowed("GS")
-    public Payment getById(@PathParam("id") Long id) {
-        return service.findById(id);
+    @Path("/tsales_pay_byid/{id}")
+    //@RolesAllowed("GS")
+    @PermitAll
+    public Payment getTSalesPaymentById(@PathParam("id") Long id) {
+        return service.findTSalesPaymentById(id);
+    }
+
+    @GET
+    @Path("/tpurch_pay_byid/{id}")
+    //@RolesAllowed("GS")
+    @PermitAll
+    public Payment getTPurchasePaymentById(@PathParam("id") Long id) {
+        return service.findTPurchasePaymentById(id);
+    }
+
+    @GET
+    @Path("/other_pay_byid/{id}")
+    //@RolesAllowed("GS")
+    @PermitAll
+    public Payment getOSalesPaymentById(@PathParam("id") Long id) {
+        return service.findOSalesPaymentById(id);
     }
 
     @GET
@@ -90,7 +106,26 @@ public class PaymentWS {
         payments.setList(payment_history);
         return payments;
     }
-    
+
+    @GET
+    @Path("/treceipts_history")
+    @RolesAllowed("SM")
+    public TransactionReceipts ticketingPaymentReceipts(
+            @QueryParam("clienttype") Enums.ClientType clienttype,
+            @QueryParam("clientid") Long clientid,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd,
+            @QueryParam("saleType") Enums.SaleType saleType) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        List<TransactionReceipt> list_receipt = service.findTicketingPaymentReceipts(clienttype, clientid, dateFrom, dateTo, saleType);
+        TransactionReceipts receipts = new TransactionReceipts();
+        receipts.setList(list_receipt);
+        return receipts;
+    }
+
     @GET
     @Path("/opayment_history")
     @RolesAllowed("SM")
@@ -109,7 +144,7 @@ public class PaymentWS {
         payments.setList(payment_history);
         return payments;
     }
-    
+
     @GET
     @Path("/cashbook")
     @PermitAll
@@ -119,13 +154,13 @@ public class PaymentWS {
             @QueryParam("clientid") Long clientid,
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd,
-            @QueryParam("saleType") Enums.SaleType saleType, 
+            @QueryParam("saleType") Enums.SaleType saleType,
             @QueryParam("paymentType") Enums.PaymentType paymentType) {
 
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
 
-        CashBookReport report = service.findCashBookReport(dateFrom, dateTo, userid, clienttype, clientid, saleType,paymentType);
+        CashBookReport report = service.findCashBookReport(dateFrom, dateTo, userid, clienttype, clientid, saleType, paymentType);
         return report;
     }
 }

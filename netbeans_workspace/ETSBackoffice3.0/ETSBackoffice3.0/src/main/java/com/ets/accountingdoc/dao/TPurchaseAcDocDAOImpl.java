@@ -110,6 +110,7 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
 
         String hql = "select distinct a from TicketingPurchaseAcDoc as a "
                 + "left join fetch a.relatedDocuments as r "
+                + "left join fetch a.tickets as t "
                 + "left join fetch a.pnr as p "
                 + "left join fetch p.segments "
                 + "inner join fetch p.ticketing_agent as tktingagent "
@@ -189,6 +190,7 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
 
         String hql = "select distinct a from TicketingPurchaseAcDoc as a "
                 + "left join fetch a.relatedDocuments as r "
+                + "left join fetch a.tickets as t "
                 + "left join fetch a.pnr as p "
                 + "left join fetch p.segments "
                 + "inner join fetch p.ticketing_agent as tktingagent "
@@ -228,6 +230,7 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
 
         String hql = "select distinct a from TicketingPurchaseAcDoc as a "
                 + "left join fetch a.payment as payment "
+                + "left join fetch a.tickets as t "
                 + "left join fetch a.pnr as p "
                 + "inner join fetch p.ticketing_agent as tktingagent "
                 + "left join fetch p.segments "

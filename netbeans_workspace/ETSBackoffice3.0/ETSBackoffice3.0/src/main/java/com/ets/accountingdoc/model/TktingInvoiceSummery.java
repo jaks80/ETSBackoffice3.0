@@ -3,10 +3,7 @@ package com.ets.accountingdoc.model;
 import com.ets.util.Enums;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -20,6 +17,8 @@ public class TktingInvoiceSummery implements Serializable {
 
     @XmlElement
     private Long id;
+    @XmlElement
+    private Long parentId;
     @XmlElement
     private Long pnr_id;
     @XmlElement
@@ -197,6 +196,14 @@ public class TktingInvoiceSummery implements Serializable {
 
     public void setInvBy(String invBy) {
         this.invBy = invBy;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
 }

@@ -84,7 +84,9 @@ public class TicketingSalesAcDocWS {
     @Path("/newdoc")
     @RolesAllowed("GS")
     public TicketingSalesAcDoc createNewDocument(TicketingSalesAcDoc ticketingSalesAcDoc) {
-        TicketingSalesAcDoc doc = service.newDocument(ticketingSalesAcDoc);
+        service.newDocument(ticketingSalesAcDoc);
+        TicketingSalesAcDoc doc = service.getWithChildrenById(ticketingSalesAcDoc.getId());
+        
         return doc;
     }
 
@@ -220,19 +222,19 @@ public class TicketingSalesAcDocWS {
         return report;
     }
 
-    @GET
-    @Path("/agentduereport")
-    //@RolesAllowed("SM")
-    @PermitAll
-    public UserProductivityReport agentDueReport(
-            @QueryParam("dateStart") String dateStart,
-            @QueryParam("dateEnd") String dateEnd) {
-
-        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
-        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
-
-        UserProductivityReport report = service.agentOutstandingReport(dateFrom, dateTo);
-
-        return report;
-    }
+//    @GET
+//    @Path("/agentduereport")
+//    //@RolesAllowed("SM")
+//    @PermitAll
+//    public UserProductivityReport agentDueReport(
+//            @QueryParam("dateStart") String dateStart,
+//            @QueryParam("dateEnd") String dateEnd) {
+//
+//        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+//        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+//
+//        UserProductivityReport report = service.agentOutstandingReport(dateFrom, dateTo);
+//
+//        return report;
+//    }
 }

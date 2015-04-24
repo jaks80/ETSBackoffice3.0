@@ -72,7 +72,7 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override    
+    @Override
     public List<Pnr> find(Date from, Date to, String[] ticketingAgtOid, String[] bookingAgtOid) {
 
         String bookingAgtOidQuery = "";
@@ -209,6 +209,38 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
 
     @Override
     @Transactional(readOnly = true)
+    public List<Pnr> getByInvRef(String invref) {
+        String hql = "select t,p from Ticket t "
+                + "inner join t.pnr as p "                
+                + "where t.ticketingSalesAcDoc.reference =:invref "
+                + "group by p.id";
+
+        Query query = getSession().createQuery(hql);
+        query.setLong("invref", Long.valueOf(invref));
+        List results = query.list();
+        Iterator it = results.iterator();
+        List<Pnr> list = new ArrayList<>();
+
+        while (it.hasNext()) {
+            Object[] objects = (Object[]) it.next();
+            Ticket leadPaxTicket = (Ticket) objects[0];
+            Pnr pnr = (Pnr) objects[1];
+            pnr.setSegments(null);
+            pnr.setRemarks(null);
+            pnr.setAgent(null);
+            pnr.setCustomer(null);
+            pnr.setTicketing_agent(null);
+            Set<Ticket> tickets = new LinkedHashSet<>();
+            tickets.add(leadPaxTicket);
+            pnr.setTickets(tickets);
+            list.add(pnr);
+        }
+
+        return list;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Pnr> searchByPaxName(String surName, String foreName) {
         surName = nullToEmptyValue(surName).concat("%");
         foreName = nullToEmptyValue(foreName).concat("%");
@@ -251,7 +283,7 @@ public class PnrDAOImpl extends GenericDAOImpl<Pnr, Long> implements PnrDAO {
     public Set<String> findTicketingOIDs() {
         String hql = "select p.ticketingAgtOid from Pnr p group by p.ticketingAgtOid";
         Query query = getSession().createQuery(hql);
-        List results = query.list();        
+        List results = query.list();
         return new HashSet<>(results);
     }
 }

@@ -20,6 +20,8 @@ public interface PnrDAO extends GenericDAO<Pnr, Long> {
 
     public List<Pnr> getByGDSPnr(String gdsPnr);
     
+    public List<Pnr> getByInvRef(String invref);
+    
     public List<Pnr> searchByPaxName(String surName, String foreName);
 
     public List<Pnr> bookedPnrs();

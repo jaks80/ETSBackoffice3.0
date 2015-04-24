@@ -2,7 +2,6 @@ package com.ets.accountingdoc.service;
 
 import com.ets.accountingdoc.dao.TPurchaseAcDocDAO;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
-import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accountingdoc.model.BSPReport;
 import com.ets.pnr.domain.Ticket;
 import com.ets.accountingdoc.model.InvoiceReport;
@@ -179,7 +178,9 @@ public class TPurchaseAcDocService {
     public InvoiceReport invoiceHistoryReport(Long agentid, Date dateStart, Date dateEnd) {
         List<TicketingPurchaseAcDoc> invoice_history = dao.findInvoiceHistory(agentid, dateStart, dateEnd);
 
-        return InvoiceReport.serializeToPurchaseSummery(agentid, invoice_history, dateStart, dateEnd);
+        InvoiceReport report = InvoiceReport.serializeToPurchaseSummery(agentid, invoice_history, dateStart, dateEnd);
+        report.setTitle("3rdParty Invoice History");
+        return report;
     }
 
     public List<TicketingPurchaseAcDoc> dueThirdPartyInvoices(Enums.AcDocType type, Long agentid, Date dateStart, Date dateEnd) {
@@ -194,9 +195,8 @@ public class TPurchaseAcDocService {
                 related.setRelatedDocuments(null);
                 related.setParent(null);
             }
-            inv.setAdditionalChargeLines(null);
-            inv.setTickets(null);
-            //inv.setRelatedDocuments(null);
+            AcDocUtil.undefineTPAcDoc(inv, inv.getTickets());
+            inv.setAdditionalChargeLines(null);            
             inv.getPnr().setTickets(null);
             inv.getPnr().setRemarks(null);
             PnrUtil.undefinePnrInSegments(inv.getPnr(), inv.getPnr().getSegments());
@@ -263,6 +263,9 @@ public class TPurchaseAcDocService {
     public InvoiceReport dueInvoiceReport(Enums.AcDocType type, Long agentid, Date dateStart, Date dateEnd) {
 
         List<TicketingPurchaseAcDoc> dueInvoices = dueThirdPartyInvoices(type, agentid, dateStart, dateEnd);
-        return InvoiceReport.serializeToPurchaseSummery(agentid, dueInvoices, dateStart, dateEnd);
+
+        InvoiceReport report = InvoiceReport.serializeToPurchaseSummery(agentid, dueInvoices, dateStart, dateEnd);
+        report.setTitle("Vendor Due Invoice Report");
+        return report;
     }
 }

@@ -44,7 +44,7 @@ public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements Ticke
         query.setParameter("fee", ticket.getFee());
         query.setParameter("commission", ticket.getCommission());
         query.setParameter("id", ticket.getId());
-        
+
         int status = query.executeUpdate();
         return status;
     }
@@ -63,12 +63,20 @@ public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements Ticke
         query.setParameter("pnr", pnr);
 
         List<Ticket> tickets = query.list();
-        return tickets.get(0);
+        if (!tickets.isEmpty()) {
+            return tickets.get(0);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public int voidTicket(String pnr, String airlineCode, String ticketNo, String surName) {
         Ticket ticket = findTicket(pnr, ticketNo, surName);
+        if(ticket == null){
+         return 0;
+        }
+        
         ticket.setBaseFare(new BigDecimal("0.00"));
         ticket.setTax(new BigDecimal("0.00"));
         ticket.setFee(new BigDecimal("0.00"));
@@ -82,12 +90,11 @@ public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements Ticke
         //One void ticket will void entire Sales Document.
         //ATTN: If there is related documents like payment and adm/acm,what will happen to that!!!
         TicketingSalesAcDoc sales_doc = tSalesAcDocDAO.getByTicketId(ticket.getId());
-        if(sales_doc!=null && !sales_doc.getStatus().equals(Enums.AcDocStatus.VOID)){
-         tSalesAcDocDAO.voidTicketedDocument(sales_doc);
+        if (sales_doc != null && !sales_doc.getStatus().equals(Enums.AcDocStatus.VOID)) {
+            tSalesAcDocDAO.voidTicketedDocument(sales_doc);
         }
-        
+
         //Bellow code is redundant. Because voiding sales document deletes purchase doc anyway.
-        
 //        if (ticket.getTicketingPurchaseAcDoc() != null) {
 //            TicketingPurchaseAcDoc doc = tPurchaseAcDocDAO.getWithChildrenById(ticket.getTicketingPurchaseAcDoc().getId());
 //            doc.setDocumentedAmount(doc.calculateDocumentedAmount());
@@ -98,7 +105,7 @@ public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements Ticke
 
     @Override
     @Transactional(readOnly = true)
-    public List<Ticket> saleReport(Enums.TicketStatus ticketStatus, String[] airLineCode, 
+    public List<Ticket> saleReport(Enums.TicketStatus ticketStatus, String[] airLineCode,
             Date from, Date to, String... ticketingAgtOid) {
 
         String airLineCodeQuery = "";
@@ -146,22 +153,22 @@ public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements Ticke
 
     @Override
     @Transactional(readOnly = true)
-    public List<Ticket> saleRevenueReport(Long userid,Enums.TicketStatus ticketStatus, String[] airLineCode, Date from, Date to, String... ticketingAgtOid) {
+    public List<Ticket> saleRevenueReport(Long userid, Enums.TicketStatus ticketStatus, String[] airLineCode, Date from, Date to, String... ticketingAgtOid) {
         String airLineCodeQuery = "";
         String ticketingAgtOidQuery = "";
         String userQuery = "";
-        
+
         if (airLineCode != null) {
             airLineCodeQuery = "p.airLineCode in (:airLineCode) and ";
         }
         if (ticketingAgtOid != null) {
             ticketingAgtOidQuery = "p.ticketingAgtOid in (:ticketingAgtOid) and ";
         }
-        
-        if(userid!=null){
-          userQuery = "sdoc.createdBy.id =:userid and ";
+
+        if (userid != null) {
+            userQuery = "sdoc.createdBy.id =:userid and ";
         }
-        
+
         String hql = "select distinct t from Ticket as t "
                 + "left join fetch t.pnr as p "
                 + "left join fetch p.agent as agt "
@@ -193,8 +200,8 @@ public class TicketDAOImpl extends GenericDAOImpl<Ticket, Long> implements Ticke
             query.setParameterList("ticketingAgtOid", ticketingAgtOid);
         }
 
-        if(userid!=null){
-          query.setParameter("userid", userid);
+        if (userid != null) {
+            query.setParameter("userid", userid);
         }
         List result = query.list();
         return result;

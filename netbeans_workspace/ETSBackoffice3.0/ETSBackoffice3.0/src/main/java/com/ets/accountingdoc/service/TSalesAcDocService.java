@@ -69,6 +69,7 @@ public class TSalesAcDocService {
         } else if (invoice.getStatus().equals(Enums.AcDocStatus.VOID)) {
             Set<Ticket> uninvoicedTicket = PnrUtil.getUnInvoicedTicket(pnr);
             draftDocument = logic.newTicketingDraftInvoice(invoice, uninvoicedTicket);
+            draftDocument.setRelatedDocuments(null);
         } else {
 
             Set<Ticket> reIssuedTickets = PnrUtil.getUnInvoicedReIssuedTicket(pnr, Enums.SaleType.TKTSALES);
@@ -123,7 +124,7 @@ public class TSalesAcDocService {
 
         doc.setStatus(Enums.AcDocStatus.ACTIVE);
         dao.save(doc);
-
+        
         AcDocUtil.undefineTSAcDoc(doc, doc.getTickets());
         AcDocUtil.undefineTPAcDoc(p_doc, doc.getTickets());
         if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
@@ -261,10 +262,12 @@ public class TSalesAcDocService {
 
         Set<TicketingSalesAcDoc> relatedDocs = doc.getRelatedDocuments();
         if (doc.getType().equals(Enums.AcDocType.INVOICE) && !relatedDocs.isEmpty()) {
+            doc = getWithChildrenById(doc.getId());
             return doc;
         } else {
 
             dao.voidTicketedDocument(undefineChildren(doc));
+            doc = getWithChildrenById(doc.getId());
             return doc;
         }
     }
@@ -351,20 +354,20 @@ public class TSalesAcDocService {
         return report;
     }
 
-    public UserProductivityReport agentOutstandingReport(Date from, Date to) {
-
-        Map<String, BigDecimal> productivityLine = dao.agentOutstandingReport(from, to);
-
-        UserProductivityReport report = new UserProductivityReport();
-        report.setTitle("Agent Outstanding Report");
-        report.setDateFrom(DateUtil.dateToString(from));
-        report.setDateTo(DateUtil.dateToString(to));
-        report.setSaleType(Enums.SaleType.TKTSALES);
-
-        for (String key : productivityLine.keySet()) {
-            report.getProductivityLine().put(key, productivityLine.get(key).toString());
-        }
-
-        return report;
-    }
+//    public UserProductivityReport agentOutstandingReport(Date from, Date to) {
+//
+//        Map<String, BigDecimal> productivityLine = dao.agentOutstandingReport(from, to);
+//
+//        UserProductivityReport report = new UserProductivityReport();
+//        report.setTitle("Outstanding Invoice Report");
+//        report.setDateFrom(DateUtil.dateToString(from));
+//        report.setDateTo(DateUtil.dateToString(to));
+//        report.setSaleType(Enums.SaleType.TKTSALES);
+//
+//        for (String key : productivityLine.keySet()) {
+//            report.getProductivityLine().put(key, productivityLine.get(key).toString());
+//        }
+//
+//        return report;
+//    }
 }

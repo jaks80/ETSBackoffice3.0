@@ -47,7 +47,7 @@ public class VOIDTest {
         Ticket t1 = new Ticket();
         
         t1.setNumericAirLineCode("229");
-        t1.setTicketNo("2797312568");        
+        t1.setTicketNo("2797312568-69");        
         t1.setPassengerNo(1);
         t1.setForeName("RAHENA MRS");
         t1.setSurName("BEGUM CHOWDHURY");        

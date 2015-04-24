@@ -325,7 +325,13 @@ public class AIRToPNRConverter {
                 if (data[0] != null && data[0].length() > 3) {
                     ticket.setNumericAirLineCode(data[0].substring(1, 4).trim());
                 }
-                ticket.setTicketNo(data[1]);
+                
+                if (data.length == 3) {
+                    ticket.setTicketNo(data[1] + "-" + data[2]);
+                } else {
+                    ticket.setTicketNo(data[1]);
+                }
+                
                 ticket.setTktStatus(TicketStatus.REFUND);
             } else if (s.startsWith("R-")) {
                 String[] data = AIRLineParser.parseRLine(s);
@@ -370,7 +376,13 @@ public class AIRToPNRConverter {
                 if (data[0] != null && data[0].length() > 3) {
                     ticket.setNumericAirLineCode(data[0].substring(1, 4).trim());
                 }
-                ticket.setTicketNo(data[1]);
+                
+                if (data.length == 3) {
+                    ticket.setTicketNo(data[1] + "-" + data[2]);
+                } else {
+                    ticket.setTicketNo(data[1]);
+                }
+                                
                 ticket.setTktStatus(TicketStatus.VOID);
             }
         }

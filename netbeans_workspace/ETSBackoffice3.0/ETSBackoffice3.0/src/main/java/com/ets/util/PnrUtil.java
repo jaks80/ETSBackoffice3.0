@@ -190,18 +190,18 @@ public class PnrUtil {
         Set<Ticket> refundTickets = new LinkedHashSet<>();
 
         for (Ticket t : pnr.getTickets()) {
-            
-            if (t.getTktStatus().equals(Enums.TicketStatus.REFUND)&&
-                    saleType.equals(Enums.SaleType.TKTSALES) && 
-                    t.getTicketingSalesAcDoc() == null&& 
-                    t.getGrossFare().compareTo(new BigDecimal("0.00")) != 0) {
-                    refundTickets.add(t);
-                } else if (t.getTktStatus().equals(Enums.TicketStatus.REFUND)&&
-                    saleType.equals(Enums.SaleType.TKTPURCHASE) && 
-                    t.getTicketingPurchaseAcDoc()== null) {
-                    refundTickets.add(t);
-                }
-            
+
+            if (t.getTktStatus().equals(Enums.TicketStatus.REFUND)
+                    && saleType.equals(Enums.SaleType.TKTSALES)
+                    && t.getTicketingSalesAcDoc() == null
+                    && t.getGrossFare().compareTo(new BigDecimal("0.00")) != 0) {
+                refundTickets.add(t);
+            } else if (t.getTktStatus().equals(Enums.TicketStatus.REFUND)
+                    && saleType.equals(Enums.SaleType.TKTPURCHASE)
+                    && t.getTicketingPurchaseAcDoc() == null) {
+                refundTickets.add(t);
+            }
+
             if (t.getTktStatus().equals(Enums.TicketStatus.REFUND) && t.getTicketingSalesAcDoc() == null && t.getGrossFare().compareTo(new BigDecimal("0.00")) != 0) {
                 refundTickets.add(t);
             }
@@ -244,7 +244,7 @@ public class PnrUtil {
 
                 if (saleType.equals(Enums.SaleType.TKTSALES) && t.getTicketingSalesAcDoc() == null) {
                     tickets.add(t);
-                } else if (saleType.equals(Enums.SaleType.TKTPURCHASE) && t.getTicketingPurchaseAcDoc()== null) {
+                } else if (saleType.equals(Enums.SaleType.TKTPURCHASE) && t.getTicketingPurchaseAcDoc() == null) {
                     tickets.add(t);
                 }
             }
@@ -267,12 +267,18 @@ public class PnrUtil {
 
     public static String getOutBoundFlightSummery(Set<Itinerary> segments) {
         StringBuilder sb = new StringBuilder();
-        Itinerary fs = getFirstSegment(segments);
 
-        sb.append(fs.getDeptDate() + "/");
-        sb.append(fs.getDeptFrom() + "-" + fs.getDeptTo() + "/");
-        sb.append(fs.getAirLineCode());
-
+        for (int i = 0; i < segments.size(); i++) {
+            Itinerary seg = segments.iterator().next();
+            sb.append(DateUtil.dateTOddmm(seg.getDeptDate())).append("/");
+            sb.append(seg.getDeptFrom()).append("-").append(seg.getDeptTo()).append("/");
+            sb.append(seg.getAirLineCode());
+            if (i == 3) {
+                break;
+            } else {
+                sb.append(",");
+            }
+        }
         return sb.toString();
     }
 
@@ -325,7 +331,7 @@ public class PnrUtil {
             return name.substring(0, 8);
         }
     }
-    
+
     public static Date getEarliestDate(Set<Date> dates) {
 
         Date date = new java.util.Date();
