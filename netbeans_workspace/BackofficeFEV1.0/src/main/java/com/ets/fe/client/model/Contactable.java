@@ -2,10 +2,7 @@ package com.ets.fe.client.model;
 
 import com.ets.fe.PersistentObject;
 import java.io.Serializable;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -146,11 +143,9 @@ public abstract class Contactable extends PersistentObject implements Serializab
             fullAddress = fullAddress.concat("," + this.getAddLine2());
         }
         if (this.getCity() != null && !this.getCity().isEmpty()) {
-            fullAddress = fullAddress.concat("," + this.getCity());
+            fullAddress = fullAddress.concat("," + this.getCity()+" " + this.getPostCode());
         }
-        if (this.getPostCode() != null && !this.getPostCode().isEmpty()) {
-            fullAddress = fullAddress.concat("," + this.getPostCode());
-        }
+
         if (this.getTelNo() != null && !this.getTelNo().isEmpty()) {
             fullAddress = fullAddress.concat("," + "Tel: " + this.getTelNo());
         }
@@ -174,11 +169,9 @@ public abstract class Contactable extends PersistentObject implements Serializab
             fullAddress = fullAddress.concat("\n" + this.getAddLine2());
         }
         if (this.getCity() != null && !this.getCity().isEmpty()) {
-            fullAddress = fullAddress.concat("\n" + this.getCity());
+            fullAddress = fullAddress.concat("\n" + this.getCity()+" " + this.getPostCode());
         }
-        if (this.getPostCode() != null && !this.getPostCode().isEmpty()) {
-            fullAddress = fullAddress.concat("\n" + this.getPostCode());
-        }
+
         if (this.getTelNo() != null && !this.getTelNo().isEmpty()) {
             fullAddress = fullAddress.concat("\n" + "Tel: " + this.getTelNo());
         }
@@ -202,10 +195,7 @@ public abstract class Contactable extends PersistentObject implements Serializab
             fullAddress = fullAddress.concat("\n" + this.getAddLine2());
         }
         if (this.getCity() != null && !this.getCity().isEmpty()) {
-            fullAddress = fullAddress.concat("\n" + this.getCity());
-        }
-        if (this.getPostCode() != null && !this.getPostCode().isEmpty()) {
-            fullAddress = fullAddress.concat(", " + this.getPostCode());
+            fullAddress = fullAddress.concat("\n" + this.getCity()+" " + this.getPostCode());
         }
         
         return fullAddress;

@@ -922,7 +922,9 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace pref="698" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="btnATOLFront" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                   <Component id="btnCreateDocument" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                   <Component id="btnPrint" min="-2" max="-2" attributes="0"/>
@@ -939,6 +941,7 @@
               <Component id="btnPrint" min="-2" pref="25" max="-2" attributes="0"/>
               <Component id="btnEmail" min="-2" pref="25" max="-2" attributes="0"/>
               <Component id="btnOfficeCopy" min="-2" pref="25" max="-2" attributes="0"/>
+              <Component id="btnATOLFront" alignment="1" min="-2" pref="25" max="-2" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -997,6 +1000,15 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOfficeCopyActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnATOLFront">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="ATOL"/>
+            <Property name="toolTipText" type="java.lang.String" value="Print ATOL Certificate"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnATOLFrontActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

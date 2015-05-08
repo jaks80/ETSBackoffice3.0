@@ -3,7 +3,7 @@ package com.ets.fe.productivity.task;
 import com.ets.fe.acdoc.ws.TicketingSAcDocWSClient;
 import com.ets.fe.acdoc_o.ws.OtherSAcDocWSClient;
 import com.ets.fe.client.task.AgentSearchTask;
-import com.ets.fe.productivity.model.UserProductivityReport;
+import com.ets.fe.productivity.model.ProductivityReport;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +16,7 @@ import javax.swing.SwingWorker;
  *
  * @author Yusuf
  */
-public class UserProductivityTask extends SwingWorker<List<UserProductivityReport>, Integer> {
+public class UserProductivityTask extends SwingWorker<List<ProductivityReport>, Integer> {
 
     private JProgressBar progressBar;    
     private Date dateFrom = null;
@@ -29,7 +29,7 @@ public class UserProductivityTask extends SwingWorker<List<UserProductivityRepor
     }
 
     @Override
-    protected List<UserProductivityReport> doInBackground() throws Exception {
+    protected List<ProductivityReport> doInBackground() throws Exception {
         setProgress(10);
         Progress p = new Progress();
         Thread t = new Thread(p);
@@ -38,10 +38,10 @@ public class UserProductivityTask extends SwingWorker<List<UserProductivityRepor
         OtherSAcDocWSClient oclient = new OtherSAcDocWSClient();
         TicketingSAcDocWSClient tclient = new TicketingSAcDocWSClient();
 
-        UserProductivityReport treport = tclient.userProducivityReport(dateFrom, dateTo);
-        UserProductivityReport oreport = oclient.userProducivityReport(dateFrom, dateTo);
+        ProductivityReport treport = tclient.userProducivityReport(dateFrom, dateTo);
+        ProductivityReport oreport = oclient.userProducivityReport(dateFrom, dateTo);
 
-        List<UserProductivityReport> list = new ArrayList<>();
+        List<ProductivityReport> list = new ArrayList<>();
         list.add(treport);
         list.add(oreport);
         p.cancel();

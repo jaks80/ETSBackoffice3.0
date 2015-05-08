@@ -34,25 +34,14 @@ public class Application {
         setAppSettings(client.getSettings());
         setAdditionalCharges(client.getAdditionalCharges().getList());
         loadProperties();
-        
+
         if (mainAgent != null) {
             letterhead = new Letterhead();
             getLetterhead().setCompanyName(mainAgent.getName());
             getLetterhead().setAddress(mainAgent.getFullAddressCRSeperated());
 
-            StringBuilder sb = new StringBuilder();
-            if (mainAgent.getAtol() != null && !mainAgent.getAtol().isEmpty()) {
-                sb.append("ATOL: ").append(mainAgent.getAtol()).append(" ");
-            }
-
-            if (mainAgent.getIata() != null && !mainAgent.getIata().isEmpty()) {
-                sb.append("IATA: ").append(mainAgent.getIata()).append(" ");
-            }
-
-            if (mainAgent.getAbta() != null && !mainAgent.getAbta().isEmpty()) {
-                sb.append("ABTA: ").append(mainAgent.getAbta()).append(" ");
-            }
-            getLetterhead().setFooter(sb.toString());
+            getLetterhead().settInvFooter(appSettings.gettInvFooter());
+            getLetterhead().setoInvFooter(appSettings.getoInvFooter());
             getLetterhead().settInvTAndC(appSettings.gettInvTAndC());
             getLetterhead().setoInvTAndC(appSettings.getoInvTAndC());
         }

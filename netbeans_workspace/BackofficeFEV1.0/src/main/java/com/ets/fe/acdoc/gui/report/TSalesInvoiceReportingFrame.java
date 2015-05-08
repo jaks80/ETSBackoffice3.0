@@ -1,6 +1,7 @@
 package com.ets.fe.acdoc.gui.report;
 
 import com.ets.fe.Application;
+import com.ets.fe.accounts.model.TransactionReceipt;
 import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
@@ -571,10 +572,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         if (report == null) {
             return;
         }
-        BeanJasperReport jasperreport = new BeanJasperReport();
-        List<InvoiceReport> list = new ArrayList<>();
-        list.add(report);
-        jasperreport.invoiceReport(list, Enums.SaleType.TKTSALES, "VIEW");
+        report("VIEW");
     }//GEN-LAST:event_btnViewReportActionPerformed
 
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
@@ -612,10 +610,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         if (report == null) {
             return;
         }
-        BeanJasperReport jasperreport = new BeanJasperReport();
-        List<InvoiceReport> list = new ArrayList<>();
-        list.add(report);
-        jasperreport.invoiceReport(list, Enums.SaleType.TKTSALES, "PRINT");
+        report("PRINT");
     }//GEN-LAST:event_btnPrintActionPerformed
 
 
@@ -674,5 +669,12 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
                 }
             }
         }
+    }
+
+    private void report(String action) {
+        BeanJasperReport jasperreport = new BeanJasperReport();
+        List<InvoiceReport> list = new ArrayList<>();
+        list.add(report);
+        jasperreport.invoiceReport(list, Enums.SaleType.TKTSALES, action);
     }
 }

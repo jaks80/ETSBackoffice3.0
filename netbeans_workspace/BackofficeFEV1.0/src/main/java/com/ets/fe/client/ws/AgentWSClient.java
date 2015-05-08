@@ -58,7 +58,7 @@ public class AgentWSClient {
 
     public Integer delete(long id) {
         String url = APIConfig.get("ws.agent.delete");
-        Integer status = RestClientUtil.deleteById(url);
+        Integer status = RestClientUtil.deleteById(url+id);
         return status;
     }
 }

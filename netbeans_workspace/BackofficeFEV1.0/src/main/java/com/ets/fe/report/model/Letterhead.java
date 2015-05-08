@@ -1,5 +1,7 @@
 package com.ets.fe.report.model;
 
+import com.ets.fe.Application;
+import java.io.ByteArrayInputStream;
 import javax.xml.bind.annotation.*;
 
 /**
@@ -9,13 +11,15 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 public class Letterhead {
-    
+
     @XmlElement
     private String companyName;
     @XmlElement
     private String address;
+       @XmlElement
+    private String tInvFooter;
     @XmlElement
-    private String footer;
+    private String oInvFooter;
     @XmlElement
     private String tInvTAndC;
     @XmlElement
@@ -37,14 +41,6 @@ public class Letterhead {
         this.address = address;
     }
 
-    public String getFooter() {
-        return footer;
-    }
-
-    public void setFooter(String footer) {
-        this.footer = footer;
-    }        
-
     public String gettInvTAndC() {
         return tInvTAndC;
     }
@@ -59,5 +55,41 @@ public class Letterhead {
 
     public void setoInvTAndC(String oInvTAndC) {
         this.oInvTAndC = oInvTAndC;
+    }
+
+    public ByteArrayInputStream getCompanyLogo() {
+        ByteArrayInputStream bis = new ByteArrayInputStream(Application.getAppSettings().getCompanyLogo());
+        return bis;
+    }
+
+    public ByteArrayInputStream getAtolLogo() {
+        ByteArrayInputStream bis = new ByteArrayInputStream(Application.getAppSettings().getAtolLogo());
+        return bis;
+    }
+
+    public ByteArrayInputStream getIataLogo() {
+        ByteArrayInputStream bis = new ByteArrayInputStream(Application.getAppSettings().getIataLogo());
+        return bis;
+    }
+
+    public ByteArrayInputStream getOtherLogo() {
+        ByteArrayInputStream bis = new ByteArrayInputStream(Application.getAppSettings().getOtherLogo());
+        return bis;
+    }
+
+    public String gettInvFooter() {
+        return tInvFooter;
+    }
+
+    public void settInvFooter(String tInvFooter) {
+        this.tInvFooter = tInvFooter;
+    }
+
+    public String getoInvFooter() {
+        return oInvFooter;
+    }
+
+    public void setoInvFooter(String oInvFooter) {
+        this.oInvFooter = oInvFooter;
     }
 }

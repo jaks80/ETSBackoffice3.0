@@ -82,17 +82,20 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
                 setCmbSearchResult(list);
             }
         } else {
-            if (customerlist.size() == 1) {
-                cmbSearchResult.setEnabled(false);
+            if (customerlist.size() == 1) {                
                 this.agent = null;
                 this.customer = this.customerlist.get(0);
                 setTxtCustomerDetails(this.getCustomer());
-
+                
+                //If this is not the customer, allow to add one
+                cmbSearchResult.setEnabled(true);
+                List<String> list = new ArrayList<>();
+                setCmbSearchResult(list);
             } else {
                 cmbSearchResult.setEnabled(true);
                 List<String> list = new ArrayList<>();
                 for (Customer a : customerlist) {
-                    list.add(a.calculateFullName() + "-" + a.getPostCode() + "-" + a.getId());
+                    list.add(a.calculateFullName() + "-" + a.getPostCode());
                 }
                 this.customer = null;
                 setTxtCustomerDetails(this.getCustomer());

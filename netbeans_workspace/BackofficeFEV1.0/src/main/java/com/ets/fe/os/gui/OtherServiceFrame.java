@@ -1,19 +1,27 @@
 package com.ets.fe.os.gui;
 
+import com.ets.fe.os.model.Category;
 import com.ets.fe.os.task.OtherServiceUpdateTask;
 import com.ets.fe.os.task.OtherServiceTask;
 import com.ets.fe.os.model.OtherService;
 import com.ets.fe.os.model.OtherServices;
+import com.ets.fe.os.ws.CategoryWSClient;
 import java.awt.Frame;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
@@ -22,43 +30,56 @@ import javax.swing.table.DefaultTableModel;
 public class OtherServiceFrame extends JInternalFrame implements PropertyChangeListener {
 
     private OtherServiceTask task;
-    private OtherServices services;
     private JDesktopPane desktopPane;
     private String action;
+
+    private List<Category> categories = new ArrayList<>();
+    private List<OtherService> services = new ArrayList<>();
+
+    private Long categoryId;
 
     public OtherServiceFrame(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
         initComponents();
+        loadCategory();
     }
 
     public void search() {
-        action="search";
-        task = new OtherServiceTask(null);
+        action = "search";
+        String keyword = txtKeyword.getText();
+        
+        if(keyword.isEmpty()){
+         keyword = null;
+        }else{
+        categoryId = null;
+        }
+        
+        task = new OtherServiceTask(categoryId,keyword);
         task.addPropertyChangeListener(this);
         task.execute();
     }
 
     private void populateTable() {
-        List<OtherService> list = services.getList();
+
         DefaultTableModel tableModel = (DefaultTableModel) tblService.getModel();
         tableModel.getDataVector().removeAllElements();
-                        
-        if (list.size() > 0) {
-            for (int i = 0; i < list.size(); i++) {
-                OtherService os = list.get(i);
-                String vat="NO";
+
+        if (services.size() > 0) {
+            for (int i = 0; i < services.size(); i++) {
+                OtherService os = services.get(i);
+                String vat = "NO";
                 String archive = "No";
-                if(os.isVatable()==1){
-                vat = "YES";
+                if (os.isVatable() == 1) {
+                    vat = "YES";
                 }
-                if(os.getIsActive()==1){
-                archive = "YES";
+                if (os.getIsActive() == 1) {
+                    archive = "YES";
                 }
-                String category="";
-                if(os.getCategory()!= null){
-                category = os.getCategory().getTitle();
+                String category = "";
+                if (os.getCategory() != null) {
+                    category = os.getCategory().getTitle();
                 }
-                tableModel.insertRow(i, new Object[]{i + 1, os.getTitle(),os.getPurchaseCost(),os.getSellingPrice(),vat,archive,category});
+                tableModel.insertRow(i, new Object[]{i + 1, os.getTitle(), os.getPurchaseCost(), os.getSellingPrice(), vat, archive, category});
             }
             tblService.setRowSelectionInterval(0, 0);
         } else {
@@ -74,124 +95,111 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel3 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        cmbCategory = new javax.swing.JComboBox();
+        cmbCategory.addActionListener(cmbCategoryListener);
+        AutoCompleteDecorator.decorate(cmbCategory);
+        jLabel1 = new javax.swing.JLabel();
+        lblMessage = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
         jSeparator1 = new javax.swing.JSeparator();
-        lblMessage = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        btnLoad = new javax.swing.JButton();
-        btnNew = new javax.swing.JButton();
-        btnView = new javax.swing.JButton();
-        btnEdit = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        txtKeyword = new javax.swing.JTextField();
+        btnSearch1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblService = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
+        btnEdit = new javax.swing.JButton();
+        btnView = new javax.swing.JButton();
+        btnNew = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
         setTitle("Service Manager");
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jPanel3.setMaximumSize(new java.awt.Dimension(32767, 30));
-        jPanel3.setPreferredSize(new java.awt.Dimension(980, 30));
-        jPanel3.setLayout(new java.awt.GridBagLayout());
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        cmbCategory.setEditable(true);
+        cmbCategory.setMaximumSize(new java.awt.Dimension(67, 19));
+        cmbCategory.setMinimumSize(new java.awt.Dimension(67, 19));
+        cmbCategory.setPreferredSize(new java.awt.Dimension(67, 19));
+
+        jLabel1.setText("Category");
+
+        lblMessage.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblMessage.setText("Message:");
 
         progressBar.setMaximumSize(new java.awt.Dimension(140, 17));
         progressBar.setMinimumSize(new java.awt.Dimension(140, 17));
         progressBar.setPreferredSize(new java.awt.Dimension(140, 17));
         progressBar.setStringPainted(true);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(1, 2, 1, 1);
-        jPanel3.add(progressBar, gridBagConstraints);
 
-        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
-        jPanel3.add(jSeparator1, gridBagConstraints);
+        jLabel3.setText("Keyword");
 
-        lblMessage.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblMessage.setText("Message:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(1, 2, 1, 2);
-        jPanel3.add(lblMessage, gridBagConstraints);
-
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        btnLoad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh18.png"))); // NOI18N
-        btnLoad.setToolTipText("Load items");
-        btnLoad.setPreferredSize(new java.awt.Dimension(60, 35));
-        btnLoad.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLoadActionPerformed(evt);
+        txtKeyword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtKeywordKeyReleased(evt);
             }
         });
 
-        btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/plus18.png"))); // NOI18N
-        btnNew.setToolTipText("Add new service");
-        btnNew.setPreferredSize(new java.awt.Dimension(60, 35));
-        btnNew.addActionListener(new java.awt.event.ActionListener() {
+        btnSearch1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnSearch1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
+        btnSearch1.setText("Search");
+        btnSearch1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNewActionPerformed(evt);
-            }
-        });
-
-        btnView.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
-        btnView.setToolTipText("");
-        btnView.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewActionPerformed(evt);
-            }
-        });
-
-        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit18.png"))); // NOI18N
-        btnEdit.setToolTipText("Select item and Edit");
-        btnEdit.setPreferredSize(new java.awt.Dimension(60, 35));
-        btnEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditActionPerformed(evt);
+                btnSearch1ActionPerformed(evt);
             }
         });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26))
+            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                .addGap(2, 2, 2)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addGap(8, 8, 8)
+                            .addComponent(btnSearch1))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(txtKeyword)
+                        .addComponent(jSeparator1)
+                        .addComponent(cmbCategory, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                .addComponent(lblMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnEdit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLoad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNew, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnView, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(2, 2, 2))
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(4, 4, 4)
+                .addComponent(cmbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtKeyword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSearch1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(lblMessage)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         tblService.setModel(new javax.swing.table.DefaultTableModel(
@@ -213,13 +221,71 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
         tblService.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblService);
         if (tblService.getColumnModel().getColumnCount() > 0) {
-            tblService.getColumnModel().getColumn(0).setMaxWidth(20);
+            tblService.getColumnModel().getColumn(0).setMaxWidth(30);
             tblService.getColumnModel().getColumn(1).setMinWidth(250);
             tblService.getColumnModel().getColumn(2).setPreferredWidth(40);
             tblService.getColumnModel().getColumn(3).setPreferredWidth(40);
             tblService.getColumnModel().getColumn(4).setPreferredWidth(10);
             tblService.getColumnModel().getColumn(5).setPreferredWidth(10);
         }
+
+        jPanel2.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit18.png"))); // NOI18N
+        btnEdit.setToolTipText("Select item and Edit");
+        btnEdit.setPreferredSize(new java.awt.Dimension(40, 22));
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
+
+        btnView.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
+        btnView.setToolTipText("");
+        btnView.setPreferredSize(new java.awt.Dimension(40, 22));
+        btnView.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewActionPerformed(evt);
+            }
+        });
+
+        btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/plus18.png"))); // NOI18N
+        btnNew.setToolTipText("Add new service");
+        btnNew.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnNew.setPreferredSize(new java.awt.Dimension(40, 22));
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(648, 648, 648)
+                .addComponent(filler1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(134, 134, 134))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnView, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNew, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -228,31 +294,27 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 860, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(15, 15, 15)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
-        search();
-    }//GEN-LAST:event_btnLoadActionPerformed
-
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
-        action="update";
+        action = "update";
         Window w = SwingUtilities.getWindowAncestor(this);
         Frame owner = w instanceof Frame ? (Frame) w : null;
         OtherServiceDlg dlg = new OtherServiceDlg(owner);
@@ -267,20 +329,20 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
     }//GEN-LAST:event_btnNewActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        action="update";
+        action = "update";
         int index = tblService.getSelectedRow();
-        if(index != -1){
-        Window w = SwingUtilities.getWindowAncestor(this);
-        Frame owner = w instanceof Frame ? (Frame) w : null;
-        OtherServiceDlg dlg = new OtherServiceDlg(owner);
-        dlg.setLocationRelativeTo(this);
-        dlg.setTitle("New Service");
-        OtherService service = this.services.getList().get(index);
-        if (dlg.showServiceDialog(service)) {
-            OtherServiceUpdateTask task = new OtherServiceUpdateTask(service);
-            task.addPropertyChangeListener(this);
-            task.execute();
-        }
+        if (index != -1) {
+            Window w = SwingUtilities.getWindowAncestor(this);
+            Frame owner = w instanceof Frame ? (Frame) w : null;
+            OtherServiceDlg dlg = new OtherServiceDlg(owner);
+            dlg.setLocationRelativeTo(this);
+            dlg.setTitle("New Service");
+            OtherService service = this.services.get(index);
+            if (dlg.showServiceDialog(service)) {
+                OtherServiceUpdateTask task = new OtherServiceUpdateTask(service);
+                task.addPropertyChangeListener(this);
+                task.execute();
+            }
         }
     }//GEN-LAST:event_btnEditActionPerformed
 
@@ -288,19 +350,35 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
         // TODO add your handling code here:
     }//GEN-LAST:event_btnViewActionPerformed
 
+    private void btnSearch1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearch1ActionPerformed
+        search();
+    }//GEN-LAST:event_btnSearch1ActionPerformed
+
+    private void txtKeywordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKeywordKeyReleased
+        int key = evt.getKeyCode();
+        if (key == KeyEvent.VK_ENTER) {
+            search();
+        }
+    }//GEN-LAST:event_txtKeywordKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEdit;
-    private javax.swing.JButton btnLoad;
     private javax.swing.JButton btnNew;
+    private javax.swing.JButton btnSearch1;
     private javax.swing.JButton btnView;
+    private javax.swing.JComboBox cmbCategory;
+    private javax.swing.Box.Filler filler1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblMessage;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JTable tblService;
+    private javax.swing.JTextField txtKeyword;
     // End of variables declaration//GEN-END:variables
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -309,16 +387,57 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    if("update".equals(action)){
-                     lblMessage.setText("Updated");   
-                     search();
-                    }else if("search".equals(action)){
-                     services = task.get();
-                     populateTable();
-                     lblMessage.setText("Found "+services.getList().size()+" results"); 
+                    if ("update".equals(action)) {
+                        lblMessage.setText("Updated");
+                        search();
+                    } else if ("search".equals(action)) {
+                        OtherServices _services = task.get();
+                        services = _services.getList();
+                        populateTable();
+                        lblMessage.setText("Found " + services.size() + " results");
                     }
-                } catch (InterruptedException | ExecutionException ex) {}
+                } catch (InterruptedException | ExecutionException ex) {
+                }
             }
         }
+    }
+
+    private ActionListener cmbCategoryListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            int cat_index = cmbCategory.getSelectedIndex();
+
+            if (cat_index > 0) {
+                Category cat = categories.get(cat_index - 1);
+                categoryId = cat.getId();
+                txtKeyword.setText("");
+            } else {
+                categoryId = null;
+            }
+        }
+    };
+
+    private void loadCategory() {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                CategoryWSClient client = new CategoryWSClient();
+                categories = client.find().getList();
+
+                List cmbElement = new ArrayList();
+
+                for (Category c : categories) {
+                    cmbElement.add(c.getTitle());
+                }
+                //Collections.sort(cmbElement);
+                DefaultComboBoxModel cmbModel = new DefaultComboBoxModel(cmbElement.toArray());
+                cmbModel.insertElementAt("All", 0);
+
+                cmbCategory.setModel(cmbModel);
+                cmbCategory.setSelectedIndex(0);
+            }
+        });
     }
 }

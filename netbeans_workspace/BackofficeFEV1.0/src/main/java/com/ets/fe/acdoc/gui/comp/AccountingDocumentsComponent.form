@@ -249,6 +249,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/icons/void18.png"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;p&gt;Void Invoice: VOID related documents before, if there is any.&#xa;&lt;br&gt;For example, void payment/debit memo/credit memo before voiding invoice&lt;p&gt;&#xa;&lt;/html&gt;"/>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[35, 25]"/>
         </Property>
@@ -284,6 +285,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/icons/delete18.png"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;p&gt;Only VOID document can be deleted.&lt;br&gt; Delete related documents before deleting invoice&lt;p&gt;&#xa;&lt;/html&gt;"/>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[35, 25]"/>
         </Property>

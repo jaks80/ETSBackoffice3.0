@@ -2,6 +2,7 @@ package com.ets.fe.accounts.model;
 
 import com.ets.fe.Application;
 import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
+import com.ets.fe.acdoc_o.model.report.OtherInvoiceSummery;
 import com.ets.fe.report.model.Letterhead;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class TransactionReceipt {
     private String clientName;
     @XmlElement
     private String addressCRSeperated;
-        @XmlElement
+    @XmlElement
     private String telNo;
     @XmlElement
     private String mobile;
@@ -49,6 +50,8 @@ public class TransactionReceipt {
     private String cashier;
     @XmlElement
     private List<TktingInvoiceSummery> lines = new ArrayList<>();
+    @XmlElement
+    private List<OtherInvoiceSummery> olines = new ArrayList<>();
 
     public TransactionReceipt() {
     }
@@ -187,5 +190,13 @@ public class TransactionReceipt {
 
     public void setFax(String fax) {
         this.fax = fax;
+    }
+
+    public List<OtherInvoiceSummery> getOlines() {
+        return olines;
+    }
+
+    public void setOlines(List<OtherInvoiceSummery> olines) {
+        this.olines = olines;
     }
 }

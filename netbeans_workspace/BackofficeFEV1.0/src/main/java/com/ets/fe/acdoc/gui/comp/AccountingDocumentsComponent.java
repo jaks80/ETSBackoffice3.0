@@ -310,6 +310,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         btnPrint.setPreferredSize(new java.awt.Dimension(35, 25));
 
         btnVoid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/void18.png"))); // NOI18N
+        btnVoid.setToolTipText("<html>\n<p>Void Invoice: VOID related documents before, if there is any.\n<br>For example, void payment/debit memo/credit memo before voiding invoice<p>\n</html>");
         btnVoid.setMaximumSize(new java.awt.Dimension(35, 25));
         btnVoid.setMinimumSize(new java.awt.Dimension(35, 25));
         btnVoid.setPreferredSize(new java.awt.Dimension(35, 25));
@@ -325,6 +326,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         btnRefresh.setPreferredSize(new java.awt.Dimension(35, 25));
 
         btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete18.png"))); // NOI18N
+        btnDelete.setToolTipText("<html>\n<p>Only VOID document can be deleted.<br> Delete related documents before deleting invoice<p>\n</html>");
         btnDelete.setMaximumSize(new java.awt.Dimension(35, 25));
         btnDelete.setMinimumSize(new java.awt.Dimension(35, 25));
         btnDelete.setPreferredSize(new java.awt.Dimension(35, 25));

@@ -38,16 +38,16 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
     private InvoiceReport report;
 
     public TPurchaseInvoiceReportingFrame(JDesktopPane desktopPane) {
-        this.desktopPane = desktopPane;               
-        
+        this.desktopPane = desktopPane;
+
         initComponents();
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
-        dtTo.setDate(DateUtil.getEndOfMonth());        
+        dtTo.setDate(DateUtil.getEndOfMonth());
     }
 
     private void search() {
 
-        btnSearch.setEnabled(false);        
+        btnSearch.setEnabled(false);
         Long client_id = documentSearchComponent.getClient_id();
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
@@ -70,7 +70,7 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
         lblDMemo.setText(r.getTotalDMAmount());
         lblPayment.setText(r.getTotalPayment());
         lblRefund.setText(r.getTotalRefund());
-        lblDue.setText(r.getTotalDue());        
+        lblDue.setText(r.getTotalDue());
     }
 
     private void populateTable() {
@@ -86,7 +86,7 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
                     s.getDocumentedAmount(), s.getPayment(), s.getOtherAmount(), s.getDue()});
             }
         } else {
-            tableModel.insertRow(0, new Object[]{"","","","","","","","","","",""});
+            tableModel.insertRow(0, new Object[]{"", "", "", "", "", "", "", "", "", "", ""});
         }
         populateSummery(report);
     }
@@ -559,8 +559,8 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
 
             Window w = SwingUtilities.getWindowAncestor(this);
             Frame owner = w instanceof Frame ? (Frame) w : null;
-            PurchaseInvoiceDlg dlg = new PurchaseInvoiceDlg(owner);            
-            dlg.showDialog(id);            
+            PurchaseInvoiceDlg dlg = new PurchaseInvoiceDlg(owner);
+            dlg.showDialog(id);
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
 
@@ -568,14 +568,11 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
         if (report == null) {
             return;
         }
-        BeanJasperReport jasperreport = new BeanJasperReport();
-        List<InvoiceReport> list = new ArrayList<>();
-        list.add(report);
-        jasperreport.invoiceReport(list, Enums.SaleType.TKTPURCHASE, "VIEW");
+        report("VIEW");
     }//GEN-LAST:event_btnViewReportActionPerformed
 
     private void btnEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmailActionPerformed
-       if (report == null) {
+        if (report == null) {
             return;
         }
 
@@ -594,13 +591,10 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
     }//GEN-LAST:event_btnEmailActionPerformed
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-       if (report == null) {
+        if (report == null) {
             return;
         }
-        BeanJasperReport jasperreport = new BeanJasperReport();
-        List<InvoiceReport> list = new ArrayList<>();
-        list.add(report);
-        jasperreport.invoiceReport(list, Enums.SaleType.TKTPURCHASE, "PRINT");
+        report("PRINT");
     }//GEN-LAST:event_btnPrintActionPerformed
 
 
@@ -659,5 +653,12 @@ public class TPurchaseInvoiceReportingFrame extends javax.swing.JInternalFrame i
                 }
             }
         }
+    }
+
+    private void report(String action) {
+        BeanJasperReport jasperreport = new BeanJasperReport();
+        List<InvoiceReport> list = new ArrayList<>();
+        list.add(report);
+        jasperreport.invoiceReport(list, Enums.SaleType.TKTPURCHASE, action);
     }
 }

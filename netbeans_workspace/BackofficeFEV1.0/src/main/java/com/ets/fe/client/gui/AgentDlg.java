@@ -410,8 +410,8 @@ public class AgentDlg extends JDialog implements ActionListener {
                         .addComponent(txtAbta))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(chkActive)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chkActive))
                         .addGap(0, 106, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -434,9 +434,9 @@ public class AgentDlg extends JDialog implements ActionListener {
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtOfficeId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(177, 177, 177)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(chkActive)
-                .addContainerGap())
+                .addGap(177, 177, 177))
         );
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.4.final using JasperReports Library version 6.0.4  -->
+<!-- 2015-05-04T22:07:46 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ATOLCertBack" pageWidth="595" pageHeight="841" columnWidth="505" leftMargin="45" rightMargin="45" topMargin="35" bottomMargin="35" uuid="2804201f-bda5-4e5f-abd1-e12578135ff8">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ATOL Cert Data Adapter"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="155" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="75" width="504" height="37" uuid="982d322b-d2ff-478c-8e8e-f0434763f631"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[This confirms that your money is protected by the ATOL scheme and
+that you can get home if your travel company collapses.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="504" height="18" uuid="344028b4-c7b6-409d-b221-7bf04d1efffb">
+					<property name="local_mesure_unitx" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.x" value="mm"/>
+					<property name="local_mesure_unity" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+					<property name="local_mesure_unitwidth" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="local_mesure_unitheight" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[This is an important document. Make sure that you take it with you when you travel.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="19" width="504" height="60" uuid="b8e67ed5-3381-4277-9d6f-cd474f9aba13">
+					<property name="local_mesure_unitwidth" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="local_mesure_unitheight" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="52" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ATOL Certificate]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="115" width="504" height="40" uuid="8553969c-bd59-431e-b48c-2fb87b3f7562"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[This certificate sets out how the ATOL scheme will protect the people
+named on it for the parts of their trip listed below.]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="537" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="2" width="504" height="456" uuid="4388e1e7-d955-401b-a2ca-156fa04ab529">
+					<property name="local_mesure_unitheight" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+					<property name="local_mesure_unitwidth" value="mm"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="461" width="504" height="70" uuid="88cc1ef5-4454-4032-b9e6-688263ebd604">
+					<property name="local_mesure_unitheight" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="10" y="464" width="494" height="67" uuid="afbf3e44-6227-4dc1-8ce1-1c750acf3e4f"/>
+				<textFieldExpression><![CDATA["By issuing this ATOL certificate, under Regulation 1  of the Civil Aviation (Air Travel Organisers’ Licensing) Regulations\n 2012,"+$F{atolHolderName}+" confirms that the flight to which it applies is sold in line with the ATOL held by\n"+$F{atolHolderName}+"."+"\nThe ATOL scheme is run by the Civil Aviation Authority and paid for by the Air Travel Trust. To see what that is and what\n"+"you can expect, together with full information on its terms and conditions, go to www.atol.org.uk."]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="61" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="31" width="100" height="20" uuid="7cf94c33-a802-454d-9178-5f9392181b3c"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pnr}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="31" width="100" height="20" uuid="1720583f-caec-422d-8418-5906fb2a2848"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{issuedate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="1" width="100" height="30" uuid="ede3c650-f525-45cd-9236-fc341a76b1bd"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Unique reference
+number:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="200" y="31" width="100" height="20" uuid="892cc37f-58dc-4acb-a27e-4571e8970f4b"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{atolHolderName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="100" y="1" width="100" height="30" uuid="df69eaee-09ee-45f2-a69a-642a9095a43c"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Date of issue:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="51" width="354" height="10" uuid="c29a0521-4de2-4e72-8d88-2e7a224916bc"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<text><![CDATA[Copyright UK Civil Aviation Authority. The ATOL Logo is a registered trade mark.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="300" y="31" width="100" height="20" uuid="f0e73e8e-efbf-4e7f-9ad6-2aa3c4c5a8ee"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{atolNo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="400" y="1" width="104" height="50" backcolor="rgba(0, 0, 0, 0.11764706)" uuid="e88cdf11-9c48-4cb0-85e1-ee96587ee811"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Flight-only
+sale]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="1" width="100" height="30" uuid="323272b0-23f7-4c4a-8bb7-dc29a98be7cb"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[ATOL Certificate
+Issuer:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="1" width="100" height="30" uuid="5ead8924-66cd-423e-9245-34d6e9ba4546"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[ATOL
+number:]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

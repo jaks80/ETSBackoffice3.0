@@ -10,6 +10,7 @@ import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.client.gui.AgentFrame;
 import com.ets.fe.client.model.*;
+import com.ets.fe.pnr.gui.DlgItinerary;
 import com.ets.fe.pnr.task.SavePnrTask;
 import com.ets.fe.pnr.model.*;
 import com.ets.fe.util.*;
@@ -133,11 +134,15 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         int unInvoicedTicket = 0;
         for (Ticket t : pnr.getTickets()) {
             if (t.getTicketingSalesAcDoc() != null) {
-                editable = false;
+                editable = false;//At least one access here make editable false;
             } else {
                 unInvoicedTicket++;
             }
         }
+        if (unInvoicedTicket == pnr.getTickets().size()) {
+            editable = true;
+        }
+
         if (unInvoicedTicket == 0) {
             btnCreateInvoice.setEnabled(false);
             btnSave.setEnabled(false);
@@ -194,18 +199,19 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
                 try {
                     Thread.sleep(300);
                     //wait untill save worker is done.
-                } catch (InterruptedException ex) {}
+                } catch (InterruptedException ex) {
+                }
             }
             savePnrTask.removePropertyChangeListener(this);
         }
-        
-        if (AcDocUtil.validateSellingFare(pnr.getTickets()) && AcDocUtil.validateContactable(pnr)) {           
+
+        if (AcDocUtil.validateSellingFare(pnr.getTickets()) && AcDocUtil.validateContactable(pnr)) {
             this.taskType = "AC_DOCUMENT";
             newTSalesDocumentTask = new NewTSalesDocumentTask(pnrId, progressBar);
             newTSalesDocumentTask.addPropertyChangeListener(this);
             newTSalesDocumentTask.execute();
-        }else{
-         btnCreateInvoice.setEnabled(true);
+        } else {
+            btnCreateInvoice.setEnabled(true);
         }
     }
 
@@ -279,11 +285,11 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         flowLayout1.setAlignOnBaseline(true);
         CommandPanel.setLayout(flowLayout1);
 
-        btnNewDoc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newdoc18.png"))); // NOI18N
+        btnNewDoc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newdoc22.png"))); // NOI18N
         btnNewDoc.setToolTipText("New Debit/Credit Memo");
         btnNewDoc.setMaximumSize(new java.awt.Dimension(45, 22));
         btnNewDoc.setMinimumSize(new java.awt.Dimension(45, 22));
-        btnNewDoc.setPreferredSize(new java.awt.Dimension(45, 22));
+        btnNewDoc.setPreferredSize(new java.awt.Dimension(45, 24));
         btnNewDoc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNewDocActionPerformed(evt);
@@ -291,11 +297,11 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         });
         CommandPanel.add(btnNewDoc);
 
-        btnCreateInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/tinv18.png"))); // NOI18N
+        btnCreateInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/tinv22.png"))); // NOI18N
         btnCreateInvoice.setToolTipText("New Invoice");
         btnCreateInvoice.setMaximumSize(new java.awt.Dimension(45, 22));
         btnCreateInvoice.setMinimumSize(new java.awt.Dimension(45, 22));
-        btnCreateInvoice.setPreferredSize(new java.awt.Dimension(45, 22));
+        btnCreateInvoice.setPreferredSize(new java.awt.Dimension(45, 24));
         btnCreateInvoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCreateInvoiceActionPerformed(evt);
@@ -303,11 +309,11 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         });
         CommandPanel.add(btnCreateInvoice);
 
-        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh18.png"))); // NOI18N
+        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh22.png"))); // NOI18N
         btnRefresh.setToolTipText("Refresh");
         btnRefresh.setMaximumSize(new java.awt.Dimension(45, 22));
         btnRefresh.setMinimumSize(new java.awt.Dimension(45, 22));
-        btnRefresh.setPreferredSize(new java.awt.Dimension(45, 22));
+        btnRefresh.setPreferredSize(new java.awt.Dimension(45, 24));
         btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRefreshActionPerformed(evt);
@@ -315,11 +321,11 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         });
         CommandPanel.add(btnRefresh);
 
-        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save18.png"))); // NOI18N
+        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save22.png"))); // NOI18N
         btnSave.setToolTipText("Save");
         btnSave.setMaximumSize(new java.awt.Dimension(45, 22));
         btnSave.setMinimumSize(new java.awt.Dimension(45, 22));
-        btnSave.setPreferredSize(new java.awt.Dimension(45, 22));
+        btnSave.setPreferredSize(new java.awt.Dimension(45, 24));
         btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
@@ -327,11 +333,11 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         });
         CommandPanel.add(btnSave);
 
-        btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exit18.png"))); // NOI18N
+        btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exit22.png"))); // NOI18N
         btnClose.setToolTipText("Close PNR");
         btnClose.setMaximumSize(new java.awt.Dimension(45, 22));
         btnClose.setMinimumSize(new java.awt.Dimension(45, 22));
-        btnClose.setPreferredSize(new java.awt.Dimension(45, 22));
+        btnClose.setPreferredSize(new java.awt.Dimension(45, 24));
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
@@ -566,7 +572,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         );
         TopPanelLayout.setVerticalGroup(
             TopPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(PnrPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+            .addComponent(PnrPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
             .addComponent(accountingDocumentsComponent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -601,10 +607,23 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             new String [] {
                 "", "D.From", "D.To", "D.Date", "D.Time", "A.Date", "A.Time", "AirLine", "FlightNo", "Cls", "Status", "Baggage", "Terminal", "ChkInTime", "MealCode", "FlDuration", "Milage"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblItinerrary.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         tblItinerrary.setSortable(false);
         tblItinerrary.getTableHeader().setReorderingAllowed(false);
+        tblItinerrary.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblItinerraryMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblItinerrary);
         if (tblItinerrary.getColumnModel().getColumnCount() > 0) {
             tblItinerrary.getColumnModel().getColumn(0).setMinWidth(30);
@@ -629,7 +648,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(82, Short.MAX_VALUE))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
 
         tabsTicket.addTab("Segments", jPanel1);
@@ -648,7 +667,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(remarkComponent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         tabsTicket.addTab("Remarks", jPanel5);
@@ -663,7 +682,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             TicketPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(TicketPanelLayout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addComponent(tabsTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 301, Short.MAX_VALUE))
+                .addComponent(tabsTicket))
         );
 
         innerSplitPane.setRightComponent(TicketPanel);
@@ -713,9 +732,10 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(CommandPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(CommandPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(mainSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE))
+                .addComponent(mainSplitPane)
+                .addGap(0, 0, 0))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -754,6 +774,25 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             showPurchaseAcDocDlg(new TicketingPurchaseAcDoc());
         }
     }//GEN-LAST:event_btnNewDocActionPerformed
+
+    private void tblItinerraryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblItinerraryMouseClicked
+        if (evt.getClickCount() == 2) {
+            int index = tblItinerrary.getSelectedRow();
+            if (index != -1) {
+                Itinerary segment = this.segments.get(index);
+                Pnr p = new Pnr();
+                p.setId(pnr.getId());
+                segment.setPnr(p);
+
+                Window w = SwingUtilities.getWindowAncestor(this);
+                Frame owner = w instanceof Frame ? (Frame) w : null;
+                DlgItinerary dlg = new DlgItinerary(owner);
+                if(dlg.showDialog(segment)){
+                 populateTblItinerary();
+                }
+            }
+        }
+    }//GEN-LAST:event_tblItinerraryMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -812,7 +851,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
                 try {
                     if ("AC_DOCUMENT".equals(taskType)) {
                         TicketingSalesAcDoc draftDocument = newTSalesDocumentTask.get();
-                        
+
                         if (draftDocument != null) {
                             if (draftDocument.getType().equals(Enums.AcDocType.INVOICE)) {
                                 showTSalesInvoiceDlg(draftDocument);
@@ -827,10 +866,16 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
                             editingLogic();
                             segments = pnr.getSegments();
                             populatePnr();
-                            ticketComponent.setTickets(pnr.getTickets());
-                            ticketComponent.populateTblTicket(pnr.getTickets());
+                            
+                            if(tabsTicket.getSelectedIndex()==0){
+                             ticketComponent.setTickets(pnr.getTickets());
+                             ticketComponent.populateTblTicket(pnr.getTickets());
+                            }else if(tabsTicket.getSelectedIndex()==1){
+                             populateTblItinerary();
+                            }
+                            
                             setPnrOwner();
-                            SetTicketingAgent();
+                            SetTicketingAgent();                            
                         }
                     }
                 } catch (InterruptedException | ExecutionException ex) {

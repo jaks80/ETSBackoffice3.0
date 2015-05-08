@@ -1,11 +1,12 @@
 package com.ets.fe.accounts.gui.report;
 
-import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
+import com.ets.fe.Application;
 import com.ets.fe.accounts.model.AccountsReport;
 import com.ets.fe.accounts.model.AccountsReport.AccountsLine;
 import com.ets.fe.accounts.task.AccountsHistoryTask;
 import com.ets.fe.acdoc_o.gui.OtherInvoiceDlg;
 import com.ets.fe.acdoc_o.gui.OtherSalesAcDocumentDlg;
+import com.ets.fe.report.BeanJasperReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import java.awt.Color;
@@ -21,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -30,18 +32,18 @@ import org.jdesktop.swingx.JXTable;
  *
  * @author Yusuf
  */
-public class OtherSalesAccountsFrame extends javax.swing.JInternalFrame implements PropertyChangeListener{
+public class OtherSalesAccountsFrame extends javax.swing.JInternalFrame implements PropertyChangeListener {
 
     private JDesktopPane desktopPane;
     private AccountsHistoryTask task;
     private AccountsReport report;
     private List<AccountsLine> lines = new ArrayList<>();
-    
+
     public OtherSalesAccountsFrame(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
         initComponents();
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
-        dtTo.setDate(DateUtil.getEndOfMonth());        
+        dtTo.setDate(DateUtil.getEndOfMonth());
     }
 
     private void search() {
@@ -51,38 +53,37 @@ public class OtherSalesAccountsFrame extends javax.swing.JInternalFrame implemen
         Long client_id = documentSearchComponent.getClient_id();
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
-       
-        task = new AccountsHistoryTask(client_type, client_id, from, to, progressBar,Enums.SaleType.OTHERSALES);        
+
+        task = new AccountsHistoryTask(client_type, client_id, from, to, progressBar, Enums.SaleType.OTHERSALES);
         task.addPropertyChangeListener(this);
         task.execute();
     }
-    
+
     private void populateSummery(AccountsReport r) {
         lblInvAmount.setText(r.getTotalInvAmount());
         lblCMemo.setText(r.getTotalCMAmount());
         lblDMemo.setText(r.getTotalDMAmount());
         lblPayment.setText(r.getTotalPayment());
-        lblRefund.setText(r.getTotalRefund());            
+        lblRefund.setText(r.getTotalRefund());
     }
-     
+
     private void populateTable() {
-        
+
         DefaultTableModel tableModel = (DefaultTableModel) tblAccounts.getModel();
-        tableModel.getDataVector().removeAllElements();        
-        tableModel.insertRow(0, new Object[]{null, null, "Opening Balance", null, null, report.getOpeningBalance()});
+        tableModel.getDataVector().removeAllElements();
+
         if (lines.size() > 0) {
-            int i =0;
+            int i = 0;
             for (; i < lines.size(); i++) {
                 AccountsLine l = lines.get(i);
-                tableModel.insertRow(i+1, new Object[]{l.getDate(),l.getDocType(),l.getLine_desc(),l.getDebit_amount(),l.getCredit_amount(),l.getLine_balance()});
+                tableModel.insertRow(i, new Object[]{l.getDate(), l.getDocType(), l.getLine_desc(), l.getDebit_amount(), l.getCredit_amount(), l.getLine_balance()});
             }
-            tableModel.insertRow(i+1, new Object[]{null, null, "Closing Balance", null, null, report.getClosingBalance()});
         } else {
-            tableModel.insertRow(0, new Object[]{"","","","","",""});
+            tableModel.insertRow(0, new Object[]{"", "", "", "", "", ""});
         }
         populateSummery(report);
     }
-    
+
     public void viewDocument(AccountsLine line) {
 
         Window w = SwingUtilities.getWindowAncestor(this);
@@ -145,12 +146,12 @@ public class OtherSalesAccountsFrame extends javax.swing.JInternalFrame implemen
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAccounts = new JXTable(){public Component prepareRenderer(TableCellRenderer renderer,
             int rowIndex, int vColIndex) {
-            Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);  
-            String s = "";       
+            Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
+            String s = "";
 
-            Object o = tblAccounts.getModel().getValueAt(rowIndex, 1);               
+            Object o = tblAccounts.getModel().getValueAt(rowIndex, 1);
             if(o!=null){
-                s = o.toString();        
+                s = o.toString();
             }
 
             if(s.equalsIgnoreCase("INVOICE") || s.equalsIgnoreCase("DEBITMEMO")|| s.equalsIgnoreCase("REFUND")){
@@ -196,11 +197,21 @@ public class OtherSalesAccountsFrame extends javax.swing.JInternalFrame implemen
     btnEmail.setMaximumSize(new java.awt.Dimension(35, 22));
     btnEmail.setMinimumSize(new java.awt.Dimension(35, 22));
     btnEmail.setPreferredSize(new java.awt.Dimension(35, 22));
+    btnEmail.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            btnEmailActionPerformed(evt);
+        }
+    });
 
     btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
     btnPrint.setMaximumSize(new java.awt.Dimension(35, 22));
     btnPrint.setMinimumSize(new java.awt.Dimension(35, 22));
     btnPrint.setPreferredSize(new java.awt.Dimension(35, 22));
+    btnPrint.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            btnPrintActionPerformed(evt);
+        }
+    });
 
     btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
     btnSearch.setMaximumSize(new java.awt.Dimension(35, 22));
@@ -538,12 +549,12 @@ public class OtherSalesAccountsFrame extends javax.swing.JInternalFrame implemen
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
-
+        report("VIEW");
     }//GEN-LAST:event_btnViewReportActionPerformed
 
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
         int index = tblAccounts.getSelectedRow();
-        if (index != -1) {          
+        if (index != -1) {
             viewDocument(lines.get(index));
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
@@ -551,6 +562,28 @@ public class OtherSalesAccountsFrame extends javax.swing.JInternalFrame implemen
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         search();
     }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+        report("PRINT");
+    }//GEN-LAST:event_btnPrintActionPerformed
+
+    private void btnEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmailActionPerformed
+        if (report == null) {
+            return;
+        }
+        String receipent = report.getEmail();
+        String subject = report.getReportTitle().concat(" From").concat(Application.getMainAgent().getName());
+        String body = report.getReportTitle().concat(" From").concat(Application.getMainAgent().getName());
+        String refference = "report";
+        if (receipent != null) {
+            BeanJasperReport jasperreport = new BeanJasperReport(receipent, subject, body, refference);
+            List<AccountsReport> list = new ArrayList<>();
+            list.add(report);
+            jasperreport.accountStatement(list, "EMAIL");
+        } else {
+            JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEmailActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -597,6 +630,8 @@ public class OtherSalesAccountsFrame extends javax.swing.JInternalFrame implemen
             if (progress == 100) {
                 try {
                     report = task.get();
+                    report.addFirstLine();
+                    report.addLastLine();
                     lines = report.getLines();
                     populateTable();
                 } catch (InterruptedException | ExecutionException ex) {
@@ -606,5 +641,12 @@ public class OtherSalesAccountsFrame extends javax.swing.JInternalFrame implemen
                 }
             }
         }
+    }
+
+    private void report(String action) {
+        BeanJasperReport jasperreport = new BeanJasperReport();
+        List<AccountsReport> list = new ArrayList<>();
+        list.add(report);
+        jasperreport.accountStatement(list, action);
     }
 }

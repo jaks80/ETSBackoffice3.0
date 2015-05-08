@@ -64,8 +64,8 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
         if (payments.size() > 0) {
             for (int i = 0; i < payments.size(); i++) {
                 TransactionReceipt p = payments.get(i);
-
-                tableModel.insertRow(i, new Object[]{p.getPaymentDate(), p.getTotalAmount(), p.getCashier()});
+                tableModel.insertRow(i, new Object[]{p.getPaymentDate(),p.getPaymentType(),
+                    p.getTotalAmount(),p.getRemark(), p.getCashier()});
             }
         } else {
             tableModel.insertRow(0, new Object[]{"", ""});
@@ -175,8 +175,9 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
+                .addGap(28, 28, 28)
                 .addComponent(jLabel6)
                 .addGap(2, 2, 2)
                 .addComponent(dtFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -202,11 +203,11 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
 
             },
             new String [] {
-                "Date", "Amount", "User"
+                "Date", "Type", "Amount", "Remark", "User"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -214,14 +215,23 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
             }
         });
         tblPayment.setSortable(false);
+        tblPayment.getTableHeader().setReorderingAllowed(false);
         tblPayment.getSelectionModel().addListSelectionListener(tblPaymentListener);
         jScrollPane1.setViewportView(tblPayment);
+        if (tblPayment.getColumnModel().getColumnCount() > 0) {
+            tblPayment.getColumnModel().getColumn(0).setMaxWidth(85);
+            tblPayment.getColumnModel().getColumn(1).setMaxWidth(85);
+            tblPayment.getColumnModel().getColumn(2).setPreferredWidth(100);
+            tblPayment.getColumnModel().getColumn(2).setMaxWidth(150);
+            tblPayment.getColumnModel().getColumn(4).setPreferredWidth(100);
+            tblPayment.getColumnModel().getColumn(4).setMaxWidth(130);
+        }
 
         jPanel5.add(jScrollPane1);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weightx = 0.6;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel2.add(jPanel5, gridBagConstraints);
@@ -238,7 +248,15 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
             new String [] {
                 "", "Inv Reference", "PNR", "Airline", "Amount"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblPaymentDocs.setSortable(false);
         tblPaymentDocs.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tblPaymentDocs);
@@ -255,7 +273,7 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weightx = 0.4;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel2.add(jPanel6, gridBagConstraints);

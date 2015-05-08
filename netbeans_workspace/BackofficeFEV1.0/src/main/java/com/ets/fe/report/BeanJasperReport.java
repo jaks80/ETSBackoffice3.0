@@ -22,6 +22,7 @@ public class BeanJasperReport {
     private String refference;
 
     public BeanJasperReport() {
+       
     }
 
     /**
@@ -39,15 +40,55 @@ public class BeanJasperReport {
         this.refference = refference;
     }
 
-    public void invoiceReport(Collection<?> beanCollection, Enums.SaleType saletype, String actionType) {
+    public void invoice(Collection<?> beanCollection, Enums.SaleType sale_type, String actionType) {
+        InputStream template = null;
 
-        InputStream template =null;
-        if (saletype.equals(Enums.SaleType.OTHERSALES)) {
-        template = BeanJasperReport.class.getResourceAsStream("");
-        }else{
-         template = BeanJasperReport.class.getResourceAsStream("/Report/tinvoice/TAcDocumentReport.jasper");
+        if (sale_type.equals(Enums.SaleType.TKTSALES)) {
+            template = BeanJasperReport.class.getResourceAsStream("/Report/tinvoice/TicketingInvoice.jasper");
+        } else if (sale_type.equals(Enums.SaleType.TKTPURCHASE)) {
+
+        } else if (sale_type.equals(Enums.SaleType.OTHERSALES)) {
+            template = BeanJasperReport.class.getResourceAsStream("/Report/oinvoice/OtherInvoice.jasper");
         }
         
+        JasperPrint jasperPrint = prepareReport(template, beanCollection);        
+        takeAction(actionType, jasperPrint);
+    }
+
+    public void atolFront(Collection<?> beanCollection, String actionType) {
+
+        InputStream template = BeanJasperReport.class.getResourceAsStream("/Report/pnr/ATOLCertFront.jasper");
+        JasperPrint jasperPrint = prepareReport(template, beanCollection);
+        takeAction(actionType, jasperPrint);
+        //return jasperPrint;
+    }
+       
+    public JasperPrint productivityReport(Collection<?> beanCollection, String actionType) {
+
+        InputStream template = BeanJasperReport.class.getResourceAsStream("/Report/productivity/Productivity.jasper");
+
+        JasperPrint jasperPrint = prepareReport(template, beanCollection);
+        //takeAction(actionType, jasperPrint);
+        return jasperPrint;
+    }
+
+    public void accountStatement(Collection<?> beanCollection, String actionType) {
+
+        InputStream template = BeanJasperReport.class.getResourceAsStream("/Report/statement/AccountsStatement.jasper");
+
+        JasperPrint jasperPrint = prepareReport(template, beanCollection);
+        takeAction(actionType, jasperPrint);
+    }
+
+    public void invoiceReport(Collection<?> beanCollection, Enums.SaleType saletype, String actionType) {
+
+        InputStream template = null;
+        if (saletype.equals(Enums.SaleType.OTHERSALES)) {
+            template = BeanJasperReport.class.getResourceAsStream("/Report/oinvoice/OAcDocumentReport.jasper");
+        } else {
+            template = BeanJasperReport.class.getResourceAsStream("/Report/tinvoice/TAcDocumentReport.jasper");
+        }
+
         JasperPrint jasperPrint = prepareReport(template, beanCollection);
         takeAction(actionType, jasperPrint);
     }
@@ -55,11 +96,11 @@ public class BeanJasperReport {
     public void transactionReceipt(Collection<?> beanCollection, Enums.SaleType sale_type, String actionType) {
 
         InputStream template = null;
-        
-        if (sale_type.equals(Enums.SaleType.OTHERSALES)) {
 
-        }else{
-         template = BeanJasperReport.class.getResourceAsStream("/Report/payment/TicketingTransReceipt.jasper");
+        if (sale_type.equals(Enums.SaleType.OTHERSALES)) {
+            template = BeanJasperReport.class.getResourceAsStream("/Report/payment/OtherTransReceipt.jasper");
+        } else {
+            template = BeanJasperReport.class.getResourceAsStream("/Report/payment/TicketingTransReceipt.jasper");
         }
 
         JasperPrint jasperPrint = prepareReport(template, beanCollection);

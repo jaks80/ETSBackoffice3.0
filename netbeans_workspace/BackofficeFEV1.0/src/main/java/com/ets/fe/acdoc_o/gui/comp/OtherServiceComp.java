@@ -50,7 +50,7 @@ public class OtherServiceComp extends javax.swing.JPanel implements PropertyChan
     }
 
     public void loadOtherService() {
-        task = new OtherServiceTask(null);
+        task = new OtherServiceTask(null,null);
         task.addPropertyChangeListener(this);
         task.execute();
     }

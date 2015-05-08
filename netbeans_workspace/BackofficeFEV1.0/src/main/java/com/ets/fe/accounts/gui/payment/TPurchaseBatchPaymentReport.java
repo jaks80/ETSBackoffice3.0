@@ -2,8 +2,6 @@ package com.ets.fe.accounts.gui.payment;
 
 import com.ets.fe.Application;
 import com.ets.fe.acdoc.gui.PurchaseInvoiceDlg;
-import com.ets.fe.accounts.model.Payment;
-import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.accounts.model.TransactionReceipt;
 import com.ets.fe.accounts.model.TransactionReceipts;
 import com.ets.fe.accounts.task.ReceiptTask;

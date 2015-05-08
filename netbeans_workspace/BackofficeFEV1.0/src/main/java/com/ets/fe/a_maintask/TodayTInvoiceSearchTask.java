@@ -2,7 +2,7 @@ package com.ets.fe.a_maintask;
 
 import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc.ws.TicketingSAcDocWSClient;
-import com.ets.fe.acdoc_o.model.InvoiceReportOther;
+import com.ets.fe.acdoc_o.model.report.InvoiceReportOther;
 import com.ets.fe.acdoc_o.ws.OtherSAcDocWSClient;
 import javax.swing.SwingWorker;
 import org.jdesktop.swingx.JXBusyLabel;

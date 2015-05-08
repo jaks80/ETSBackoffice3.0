@@ -6,6 +6,7 @@ import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.accounts.model.AccountsReport;
 import com.ets.fe.acdoc.model.BSPReport;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
+import com.ets.fe.productivity.model.ProductivityReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import com.ets.fe.util.RestClientUtil;
@@ -43,7 +44,7 @@ public class TicketingPAcDocWSClient {
     }
 
     public TicketingPurchaseAcDoc getbyId(long id) {
-        String url = APIConfig.get("ws.tpacdoc.byid")+ id;
+        String url = APIConfig.get("ws.tpacdoc.byid") + id;
         TicketingPurchaseAcDoc doc = RestClientUtil.getEntity(TicketingPurchaseAcDoc.class, url, new TicketingPurchaseAcDoc());
         return doc;
     }
@@ -75,25 +76,24 @@ public class TicketingPAcDocWSClient {
         sb.append("?agentid=").append(agentid);
         sb.append("&dateStart=").append(dateFrom);
         sb.append("&dateEnd=").append(dateTo);
-        
 
         BSPReport report = RestClientUtil.getEntity(BSPReport.class, sb.toString(), new BSPReport());
         return report;
     }
-         
-     public TicketingPurchaseAcDocs outstandingInvoices(Enums.TicketingType ticketingType,Enums.AcDocType doctype,Long agentid, Date _dateFrom, Date _dateTo) {
+
+    public TicketingPurchaseAcDocs outstandingInvoices(Enums.TicketingType ticketingType, Enums.AcDocType doctype, Long agentid, Date _dateFrom, Date _dateTo) {
 
         String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
         String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
 
-        String url = APIConfig.get("ws.tpacdoc.dueinvoices") + "?dateStart=" + dateFrom + 
-                "&dateEnd=" + dateTo;        
-        url = url + "&ticketingtype="+ticketingType;
-        
-        if(doctype!=null){
+        String url = APIConfig.get("ws.tpacdoc.dueinvoices") + "?dateStart=" + dateFrom
+                + "&dateEnd=" + dateTo;
+        url = url + "&ticketingtype=" + ticketingType;
+
+        if (doctype != null) {
             url = url + "&doctype=" + doctype;
         }
-        
+
         if (agentid != null) {
             url = url + "&agentid=" + agentid;
         }
@@ -101,8 +101,8 @@ public class TicketingPAcDocWSClient {
         TicketingPurchaseAcDocs report = RestClientUtil.getEntity(TicketingPurchaseAcDocs.class, url, new TicketingPurchaseAcDocs());
         return report;
     }
-        
-    public InvoiceReport outstandingDocumentReport(Enums.AcDocType doctype,Long agentid, Date _dateFrom, Date _dateTo) {
+
+    public InvoiceReport outstandingDocumentReport(Enums.AcDocType doctype, Long agentid, Date _dateFrom, Date _dateTo) {
 
         String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
         String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
@@ -130,7 +130,7 @@ public class TicketingPAcDocWSClient {
         InvoiceReport report = RestClientUtil.getEntity(InvoiceReport.class, url, new InvoiceReport());
         return report;
     }
-    
+
     public AccountsReport purchaseAccountsReport(
             Long clientid, Date _dateFrom, Date _dateTo) {
 
@@ -138,12 +138,23 @@ public class TicketingPAcDocWSClient {
         String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
 
         String url = APIConfig.get("ws.tpacdoc.accounts") + "?dateStart=" + dateFrom + "&dateEnd=" + dateTo;
-        
+
         if (clientid != null) {
             url = url + "&clientid=" + clientid;
         }
 
         AccountsReport report = RestClientUtil.getEntity(AccountsReport.class, url, new AccountsReport());
+        return report;
+    }
+
+    public ProductivityReport allAgentDueReport(Date _dateFrom, Date _dateTo) {
+
+        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+        
+        StringBuilder sb = new StringBuilder(APIConfig.get("ws.tpacdoc.allagentduereport"));        
+        sb.append("?dateStart=").append(dateFrom).append("&dateEnd=").append(dateTo);
+        ProductivityReport report = RestClientUtil.getEntity(ProductivityReport.class, sb.toString(), new ProductivityReport());
         return report;
     }
 }

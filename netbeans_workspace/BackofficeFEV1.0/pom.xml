@@ -8,6 +8,12 @@
 
     <dependencies>
         <dependency>
+	<groupId>net.sourceforge.barbecue</groupId>
+	<artifactId>barbecue</artifactId>
+	<version>1.5-beta1</version>
+</dependency>
+
+        <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
             <version>6.0.3</version>
@@ -86,7 +92,6 @@
 
     <build>
         <plugins>
-           <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -107,8 +112,7 @@
                         </transformer>
                     </transformers>
                 </configuration>
-            </plugin>
-            -->
+            </plugin>                 
         </plugins>
     </build>
     <repositories>

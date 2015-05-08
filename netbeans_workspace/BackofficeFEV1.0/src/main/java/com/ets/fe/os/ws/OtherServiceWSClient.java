@@ -22,6 +22,12 @@ public class OtherServiceWSClient {
         return RestClientUtil.getEntity(OtherServices.class, url, new OtherServices());
     }
 
+     public OtherServices findByKeyword(String keyword) {
+        String url = APIConfig.get("ws.os.keyword");
+        url = url.concat("?keyword="+keyword);
+        return RestClientUtil.getEntity(OtherServices.class, url, new OtherServices());
+    }
+        
     public OtherService create(OtherService otherService) {
         String url = APIConfig.get("ws.os.new");
         OtherService persistedAgent = RestClientUtil.postEntity(OtherService.class, url, otherService);

@@ -104,7 +104,6 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
         jPanel1 = new javax.swing.JPanel();
         btnViewReport = new javax.swing.JButton();
         btnViewInvoice = new javax.swing.JButton();
-        btnEmail = new javax.swing.JButton();
         btnPrint = new javax.swing.JButton();
         btnSearch = new javax.swing.JButton();
         documentSearchComponent = new com.ets.fe.acdoc.gui.comp.ClientSearchComp(true,true,true,Enums.AgentType.ALL);
@@ -170,16 +169,6 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
             }
         });
 
-        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
-        btnEmail.setMaximumSize(new java.awt.Dimension(40, 22));
-        btnEmail.setMinimumSize(new java.awt.Dimension(40, 22));
-        btnEmail.setPreferredSize(new java.awt.Dimension(40, 22));
-        btnEmail.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEmailActionPerformed(evt);
-            }
-        });
-
         btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
         btnPrint.setMaximumSize(new java.awt.Dimension(40, 22));
         btnPrint.setMinimumSize(new java.awt.Dimension(40, 22));
@@ -209,20 +198,17 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
                 .addGap(2, 2, 2)
                 .addComponent(btnViewReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
                 .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
                 .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(651, 651, 651))
+                .addGap(685, 685, 685))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnViewReport, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
@@ -434,7 +420,7 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 725, Short.MAX_VALUE)
+            .addGap(0, 658, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -489,11 +475,6 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
         search();
     }//GEN-LAST:event_btnSearchActionPerformed
 
-    private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
-        XMLJasperReport report = new XMLJasperReport();
-        report.ticketingInvoiceReport(Enums.SaleType.TKTSALES, doc_type, client_type, client_id, from, to, "VIEW");
-    }//GEN-LAST:event_btnViewReportActionPerformed
-
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
         int index = tblReport.getSelectedRow();
         if (index != -1) {
@@ -506,27 +487,16 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
 
-    private void btnEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmailActionPerformed
-        String receipent = report.getEmail();
-        String subject = report.getTitle().concat(" From").concat(Application.getMainAgent().getName());
-        String body = report.getTitle().concat(" From").concat(Application.getMainAgent().getName());
-        String refference = "report";
-        if (receipent != null) {
-            XMLJasperReport report = new XMLJasperReport(receipent, subject, body, refference);
-            report.ticketingInvoiceReport(Enums.SaleType.TKTSALES, doc_type, client_type, client_id, from, to, "EMAIL");
-        } else {
-            JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_btnEmailActionPerformed
-
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        XMLJasperReport report = new XMLJasperReport();
-        report.ticketingInvoiceReport(Enums.SaleType.TKTSALES, doc_type, client_type, client_id, from, to, "PRINT");
+       
     }//GEN-LAST:event_btnPrintActionPerformed
+
+    private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
+       
+    }//GEN-LAST:event_btnViewReportActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnEmail;
     private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnViewInvoice;

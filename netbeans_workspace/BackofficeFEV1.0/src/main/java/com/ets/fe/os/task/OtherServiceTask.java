@@ -11,9 +11,11 @@ import javax.swing.SwingWorker;
 public class OtherServiceTask extends SwingWorker<OtherServices, Integer> {
 
     private Long categoryId = null;
+    private String keyword;
 
-    public OtherServiceTask(Long categoryId) {
+    public OtherServiceTask(Long categoryId, String keyword) {
         this.categoryId = categoryId;
+        this.keyword = keyword;
     }
 
     @Override
@@ -21,10 +23,14 @@ public class OtherServiceTask extends SwingWorker<OtherServices, Integer> {
 
         setProgress(30);
         OtherServiceWSClient client = new OtherServiceWSClient();
-        OtherServices services;
+        OtherServices services = null;
 
         if (categoryId == null) {
-            services = client.find();
+            if (keyword == null) {
+                services = client.find();
+            } else {
+                services = client.findByKeyword(keyword);
+            }
         } else {
             services = client.findByCategory(categoryId);
         }

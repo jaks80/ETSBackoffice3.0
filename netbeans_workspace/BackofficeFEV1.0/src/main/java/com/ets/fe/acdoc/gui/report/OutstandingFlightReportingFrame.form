@@ -97,22 +97,19 @@
                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                   <Component id="btnViewReport" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                  <Component id="btnEmail" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                   <Component id="btnPrint" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                   <Component id="btnSearch" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="651" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="685" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="btnViewInvoice" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
-              <Component id="btnEmail" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
               <Component id="btnPrint" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
               <Component id="btnViewReport" min="-2" pref="25" max="-2" attributes="0"/>
-              <Component id="btnSearch" alignment="1" min="-2" pref="25" max="-2" attributes="0"/>
+              <Component id="btnSearch" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -153,25 +150,6 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnViewInvoiceActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnEmail">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/icons/email18.png"/>
-            </Property>
-            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[40, 22]"/>
-            </Property>
-            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[40, 22]"/>
-            </Property>
-            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[40, 22]"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEmailActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnPrint">
@@ -570,7 +548,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="725" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="658" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">

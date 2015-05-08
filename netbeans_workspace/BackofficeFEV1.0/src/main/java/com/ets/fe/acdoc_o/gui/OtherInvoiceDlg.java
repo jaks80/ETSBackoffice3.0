@@ -9,9 +9,11 @@ import com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent;
 import com.ets.fe.accounts.task.NewPaymentTask;
 import com.ets.fe.accounts.gui.logic.PaymentLogicOther;
 import com.ets.fe.accounts.gui.payment.DlgOtherSalesCreditTransfer;
+import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc_o.task.AccountingDocTaskOther;
 import com.ets.fe.client.model.Contactable;
 import com.ets.fe.os.model.*;
+import com.ets.fe.report.BeanJasperReport;
 import com.ets.fe.report.XMLJasperReport;
 import com.ets.fe.util.*;
 import java.awt.Frame;
@@ -32,7 +34,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Yusuf
  */
 public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChangeListener {
-
+    
     private boolean editable;
     private NewPaymentTask paymentTask;
     private AccountingDocTaskOther accountingDocTask;
@@ -40,10 +42,10 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
     private boolean allowPayment = true;
     private String taskType;
     private Contactable client;
-
+    
     private OtherSalesAcDoc invoice;
     private List<AdditionalCharge> charges = Application.getAdditionalCharges();
-
+    
     public OtherInvoiceDlg(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
@@ -51,23 +53,23 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         CheckInput b = new CheckInput();
         CheckInput c = new CheckInput();
         CheckInput d = new CheckInput();
-
+        
         a.setNegativeAccepted(true);
-
+        
         txtAmount.setDocument(a);
         txtCHFee.setDocument(b);
         txtPostage.setDocument(c);
         txtOther.setDocument(d);
-
+        
         setPaymentType();
     }
-
+    
     public void showDialog(Long id) {
         otherServiceComp.setParent(this);
         if (id != null) {
             loadInvoice(id);
             this.editable = false;
-
+            
         } else {
             this.invoice = new OtherSalesAcDoc();
             List<AccountingDocumentLine> lines = new ArrayList<>();
@@ -75,13 +77,13 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             this.editable = true;
             displayInvoice(invoice);
         }
-
+        
         setLocationRelativeTo(this);
         setVisible(true);
     }
-
+    
     private void displayInvoice(OtherSalesAcDoc invoice) {
-
+        
         otherServiceComp.display(invoice.getAccountingDocumentLines(), editable);
         acDocHeaderComponent.display(invoice);
         displayOtherCharge(invoice);
@@ -89,7 +91,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         populateTblPayment(invoice);
         txtRemark.setText(invoice.getRemark());
         controllComponent(invoice);
-
+        
         if (invoice.getAgent() != null) {
             client = invoice.getAgent();
             clientComponent.setAllocatetClient(invoice.getAgent(), null, null, editable);
@@ -98,7 +100,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             clientComponent.setAllocatetClient(invoice.getCustomer(), null, null, editable);
         }
     }
-
+    
     private void displayOtherCharge(OtherSalesAcDoc invoice) {
         if (!invoice.getAdditionalChargeLines().isEmpty()) {
             for (AdditionalChargeLine line : invoice.getAdditionalChargeLines()) {
@@ -112,7 +114,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             }
         }
     }
-
+    
     public void displayBalance(OtherSalesAcDoc invoice) {
         lblSubTotal.setText(invoice.calculateOtherServiceSubTotal().toString());
         lblAddCharge.setText(invoice.calculateAddChargesSubTotal().toString());
@@ -121,7 +123,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         lblOther.setText(invoice.calculateRelatedDocBalance().toString());
         lblDue.setText(invoice.calculateDueAmount().toString());
     }
-
+    
     public void createInvoice() {
         createOtherChargeLine();
         invoice.setAdditionalChargeLines(createOtherChargeLine());
@@ -131,9 +133,9 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         invoice.setRemark(txtRemark.getText());
         invoice.setType(Enums.AcDocType.INVOICE);
         invoice.setDocIssueDate(new java.util.Date());
-
+        
         String terms = (String) AcDocHeaderComponent.cmbTerms.getSelectedItem();
-
+        
         if (!"Select".equals(terms)) {
             invoice.setTerms(terms);
             taskType = "CREATE";
@@ -142,36 +144,36 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             newInvoiceTask.execute();
         }
     }
-
+    
     public void loadInvoice(Long id) {
         taskType = "COMPLETE";
         accountingDocTask = new AccountingDocTaskOther(id, Enums.SaleType.OTHERSALES, "DETAILS");
         accountingDocTask.addPropertyChangeListener(this);
         accountingDocTask.execute();
     }
-
+    
     private List<AdditionalChargeLine> createOtherChargeLine() {
-
+        
         List<AdditionalChargeLine> chargeLines = new ArrayList<>();
-
+        
         String chFee = txtCHFee.getText();
         String postage = txtPostage.getText();
         String other = txtOther.getText();
-
+        
         if (chFee != null && !chFee.isEmpty()) {
             AdditionalChargeLine line = new AdditionalChargeLine();
             line.setAmount(new BigDecimal(chFee));
             line.setAdditionalCharge(Application.getCardHandlingFee());
             chargeLines.add(line);
         }
-
+        
         if (postage != null && !postage.isEmpty()) {
             AdditionalChargeLine line = new AdditionalChargeLine();
             line.setAmount(new BigDecimal(postage));
             line.setAdditionalCharge(Application.getPostage());
             chargeLines.add(line);
         }
-
+        
         if (other != null && !other.isEmpty()) {
             AdditionalChargeLine line = new AdditionalChargeLine();
             line.setAmount(new BigDecimal(other));
@@ -180,7 +182,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         }
         return chargeLines;
     }
-
+    
     public void processPayment(OtherSalesAcDoc invoice) {
         busyLabel.setText("");
         taskType = "PAYMENT";
@@ -188,12 +190,12 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         btnSubmitPayment.setEnabled(false);
         String amountString = txtAmount.getText();
         String remark = txtRef.getText();        
-
+        
         if (!amountString.isEmpty() && !remark.isEmpty() && cmbTType.getSelectedIndex() > 0) {
             Enums.PaymentType type = (Enums.PaymentType) cmbTType.getSelectedItem();
             BigDecimal amount = new BigDecimal(amountString.trim());
             PaymentLogicOther logic = new PaymentLogicOther();
-
+            
             if (amount.compareTo(invoice.calculateDueAmount().abs()) <= 0) {
                 Payment payment = logic.processSingleOSalesPayment(amount, invoice, remark, type);
                 paymentTask = new NewPaymentTask(payment);
@@ -208,12 +210,12 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             btnSubmitPayment.setEnabled(true);
         }
     }
-
+    
     private void populateTblPayment(OtherSalesAcDoc invoice) {
         tblPayment.clearSelection();
         DefaultTableModel model = (DefaultTableModel) tblPayment.getModel();
         model.getDataVector().removeAllElements();
-
+        
         int row = 0;
         for (OtherSalesAcDoc doc : invoice.getRelatedDocuments()) {
             String remark = doc.getRemark();
@@ -698,7 +700,9 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
 
         txtRemark.setColumns(20);
         txtRemark.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        txtRemark.setLineWrap(true);
         txtRemark.setRows(3);
+        txtRemark.setToolTipText("Additional information can be added. <br>This will be shown in client invoice.");
         jScrollPane1.setViewportView(txtRemark);
 
         jPanel6.setBackground(new java.awt.Color(0, 0, 0));
@@ -948,8 +952,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
     }//GEN-LAST:event_txtOtherFocusLost
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        XMLJasperReport report = new XMLJasperReport();
-        report.reportInvoice(invoice.getId(), Enums.SaleType.OTHERSALES, "PRINT");
+        report("PRINT");
     }//GEN-LAST:event_btnPrintActionPerformed
 
     private void btnEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmailActionPerformed
@@ -958,8 +961,12 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         String body = "Invoice".concat(" From ").concat(Application.getMainAgent().getName());
         String refference = this.invoice.getReference().toString();
         if (receipent != null) {
-            XMLJasperReport report = new XMLJasperReport(receipent, subject, body, refference);
-            report.reportInvoice(invoice.getId(), Enums.SaleType.OTHERSALES, "EMAIL");
+            
+            BeanJasperReport jasperreport = new BeanJasperReport(receipent, subject, body, refference);
+            List<OtherInvoiceModel> list = new ArrayList<>();
+            OtherInvoiceModel model = OtherInvoiceModel.createModel(invoice);
+            list.add(model);
+            jasperreport.invoice(list, Enums.SaleType.OTHERSALES, "EMAIL");
         } else {
             JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
         }
@@ -970,14 +977,13 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         Frame owner = w instanceof Frame ? (Frame) w : null;
         DlgOtherSalesCreditTransfer dlg = new DlgOtherSalesCreditTransfer(owner);        
         if (dlg.showDialog(invoice)) {
-         loadInvoice(invoice.getId());
-         resetPaymentComponent();
+            loadInvoice(invoice.getId());
+            resetPaymentComponent();
         }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void btnOfficeCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOfficeCopyActionPerformed
-       XMLJasperReport report = new XMLJasperReport();
-        report.reportInvoice(invoice.getId(), Enums.SaleType.OTHERSALES, "VIEW");
+        report("VIEW");
     }//GEN-LAST:event_btnOfficeCopyActionPerformed
 
 
@@ -1048,7 +1054,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         cmbTType.setModel(model);
         cmbTType.setSelectedIndex(0);
     }
-
+    
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress".equals(evt.getPropertyName())) {
@@ -1076,7 +1082,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             }
         }
     }
-
+    
     private void controllComponent(OtherSalesAcDoc invoice) {
         if (invoice.getId() == null) {
             btnCreateDocument.setEnabled(true);
@@ -1094,12 +1100,12 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             btnEmail.setEnabled(true);
             btnPrint.setEnabled(true);
             btnOfficeCopy.setEnabled(true);
-
+            
             txtCHFee.setEditable(false);
             txtPostage.setEditable(false);
             txtOther.setEditable(false);
             txtRemark.setEditable(false);
-
+            
             if (invoice.calculateDueAmount().compareTo(new BigDecimal("0.00")) == 0) {
                 allowPayment = false;
                 tabPayment.setEnabledAt(1, allowPayment);
@@ -1111,15 +1117,23 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             }
         }
     }
-
+    
     private void resetPaymentComponent() {
         tabPayment.setSelectedIndex(0);
         setPaymentType();
         txtAmount.setText("");
         txtRef.setText("");
     }
-
+    
     public OtherSalesAcDoc getInvoice() {
         return this.invoice;
+    }
+    
+    private void report(String action) {
+        BeanJasperReport jasperreport = new BeanJasperReport();
+        List<OtherInvoiceModel> list = new ArrayList<>();
+        OtherInvoiceModel model = OtherInvoiceModel.createModel(invoice);
+        list.add(model);
+        jasperreport.invoice(list, Enums.SaleType.OTHERSALES, action);
     }
 }

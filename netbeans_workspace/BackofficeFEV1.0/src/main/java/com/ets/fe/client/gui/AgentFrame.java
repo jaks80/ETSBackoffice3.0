@@ -1,6 +1,7 @@
 package com.ets.fe.client.gui;
 
 import com.amadeus.air.AIR;
+import com.ets.fe.Application;
 import com.ets.fe.client.task.AgentTask;
 import com.ets.fe.client.task.AgentSearchTask;
 import com.ets.fe.client.collection.Agents;
@@ -23,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
@@ -33,15 +35,24 @@ import javax.swing.table.DefaultTableModel;
 public class AgentFrame extends JInternalFrame implements PropertyChangeListener {
 
     private AgentSearchTask task;
+    private AgentTask agentTask;
     private Agents agents;
     private JDesktopPane desktopPane;
+    private String taskType = "";
 
     public AgentFrame(JDesktopPane desktopPane) {
         this.desktopPane = desktopPane;
         initComponents();
+        
+        if(Application.getLoggedOnUser().getUserType().getId()>=2){
+         btnDelete.setVisible(true);
+        }else{
+         btnDelete.setVisible(false);
+        }
     }
 
     public void search() {
+        taskType = "SEARCH";
         btnSearch.setEnabled(false);
         String name = "";
         String postCode = "";
@@ -82,12 +93,19 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
                 Agent agent = list.get(i);
-                tableModel.insertRow(i, new Object[]{i + 1, agent.getId(),agent.calculateFullName(), agent.getAddLine1(), 
-                    agent.getPostCode(), agent.getTelNo(), agent.getEmail(), agent.getOfficeID(),agent.isIsActive()});
+                tableModel.insertRow(i, new Object[]{i + 1, agent.getId(), agent.calculateFullName(), agent.getAddLine1(),
+                    agent.getPostCode(), agent.getTelNo(), agent.getEmail(), agent.getOfficeID(), agent.isIsActive()});
             }
         } else {
             tableModel.insertRow(0, new Object[]{});
         }
+    }
+
+    private void delete(Long id) {
+        taskType = "DELETE";
+        agentTask = new AgentTask(id, taskType);     
+        agentTask.addPropertyChangeListener(this);
+        agentTask.execute();
     }
 
     /**
@@ -114,10 +132,9 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         jSeparator1 = new javax.swing.JSeparator();
         lblInfo = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        btnViewInvoice = new javax.swing.JButton();
-        btnEmail = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
         btnPrint = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAgent = new org.jdesktop.swingx.JXTable();
@@ -274,23 +291,6 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         jPanel2.setBackground(new java.awt.Color(102, 102, 102));
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newclient18.png"))); // NOI18N
-        btnViewInvoice.setToolTipText("New Agent");
-        btnViewInvoice.setMaximumSize(new java.awt.Dimension(35, 22));
-        btnViewInvoice.setMinimumSize(new java.awt.Dimension(35, 22));
-        btnViewInvoice.setPreferredSize(new java.awt.Dimension(35, 22));
-        btnViewInvoice.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewInvoiceActionPerformed(evt);
-            }
-        });
-
-        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
-        btnEmail.setToolTipText("Send Email");
-        btnEmail.setMaximumSize(new java.awt.Dimension(35, 22));
-        btnEmail.setMinimumSize(new java.awt.Dimension(35, 22));
-        btnEmail.setPreferredSize(new java.awt.Dimension(35, 22));
-
         btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit18.png"))); // NOI18N
         btnEdit.setToolTipText("Edit");
         btnEdit.setMaximumSize(new java.awt.Dimension(35, 22));
@@ -305,26 +305,31 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
         btnPrint.setToolTipText("Print");
 
+        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete18.png"))); // NOI18N
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
                 .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
                 .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         jTabbedPane1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -406,7 +411,7 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1009, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 984, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -425,7 +430,7 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE))
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE))
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -449,17 +454,13 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
             agent = agents.getList().get(row);
 
             if (dlg.showAgentDialog(agent)) {
-                AgentTask task = new AgentTask(agent);
+                AgentTask task = new AgentTask(agent, "EDIT");
                 task.execute();
             }
         } else {
             lblInfo.setText("Select a customer from table to Edit");
         }
     }//GEN-LAST:event_btnEditActionPerformed
-
-    private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
-
-    }//GEN-LAST:event_btnViewInvoiceActionPerformed
 
     private void txtNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameKeyReleased
         int key = evt.getKeyCode();
@@ -483,8 +484,7 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
     }//GEN-LAST:event_txtOfficeIdKeyReleased
 
     private void btnImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportActionPerformed
-        //fileChooser.setVisible(true);
-        int returnVal = fileChooser.showOpenDialog(this);
+        
         File file = fileChooser.getSelectedFile();
         txtFilePath.setText(file.getAbsolutePath());
         create(convertCSV(file));
@@ -508,14 +508,27 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         txtPostCode.setText("");
     }//GEN-LAST:event_txtOfficeIdFocusGained
 
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int index = tblAgent.getSelectedRow();
+        if (index != -1) {
+
+            if (JOptionPane.showConfirmDialog(null, "Delete Agent !!! Are you sure?", "WARNING",
+                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                Long id = (Long) tblAgent.getValueAt(index, 1);
+                delete(id);
+            } else {
+
+            }
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
-    private javax.swing.JButton btnEmail;
     private javax.swing.JButton btnImport;
     private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSearch;
-    private javax.swing.JButton btnViewInvoice;
     private javax.swing.JFileChooser fileChooser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
@@ -539,19 +552,27 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
     // End of variables declaration//GEN-END:variables
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
+        if ("progress".equals(evt.getPropertyName())) {
             int progress = (Integer) evt.getNewValue();
-
             progressBar.setValue(progress);
+
             if (progress == 100) {
                 try {
-                    if(task!=null){
-                     agents = (Agents) task.get();
-                     populateTblAgent();
+                    switch (taskType) {
+                        case "SEARCH":
+                            agents = (Agents) task.get();
+                            populateTblAgent();
+                            break;
+                        case "DELETE":
+                            int status = agentTask.getHttpStatus();
+                            if (status == 200) {
+                                search();
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Could not delete Agent!!!", "Delete Agent", JOptionPane.WARNING_MESSAGE);
+                            }
+                            break;
                     }
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(AgentFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ExecutionException ex) {
+                } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(AgentFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
                     btnSearch.setEnabled(true);
@@ -560,12 +581,12 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
         }
     }
 
-    public void create(List<Agent> agents){
-     AgentTask updatetask = new AgentTask(agents);
-     updatetask.addPropertyChangeListener(this);
-     updatetask.execute();
+    public void create(List<Agent> agents) {
+        AgentTask updatetask = new AgentTask(agents, "BULKCREATE");
+        updatetask.addPropertyChangeListener(this);
+        updatetask.execute();
     }
-    
+
     public List<Agent> convertCSV(File file) {
         List<Agent> agents = new ArrayList<>();
         try {
@@ -574,7 +595,7 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
             String line = null;
             while ((line = bf.readLine()) != null) {
                 //NAME,WEB,ADDLINE1,ADDLINE2,CITY,EMAIL,FAX,MOBILE,POSTCODE,PROVINCE,TELNO,OFFICEID
-                String[] vals = line.split(",",-1);
+                String[] vals = line.split(",", -1);
                 Agent agent = new Agent();
                 agent.setName(vals[0]);
                 agent.setWeb(vals[1]);

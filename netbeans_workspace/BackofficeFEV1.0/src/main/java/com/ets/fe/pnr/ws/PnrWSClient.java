@@ -4,6 +4,7 @@ import com.ets.fe.pnr.collection.Pnrs;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.util.RestClientUtil;
 import com.ets.fe.APIConfig;
+import com.ets.fe.pnr.model.ATOLCertificate;
 import com.ets.fe.pnr.model.Itinerary;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.util.DateUtil;
@@ -110,9 +111,19 @@ public class PnrWSClient {
     public List<Pnr> getUninvoicedPnr() {
 
         String url = APIConfig.get("ws.pnr.uninvoicedpnr");
-
         Pnrs pnrs = new Pnrs();
         pnrs = RestClientUtil.getEntity(Pnrs.class, url, pnrs);
         return pnrs.getList();
+    }
+    
+    public ATOLCertificate getAtolCertificate(long pnrid, Date certissuedate) {
+        
+        String _certissuedate = DateUtil.dateToString(certissuedate, "ddMMMyyyy");
+        StringBuilder sb = new StringBuilder(APIConfig.get("ws.pnr.atolcertbyid"));
+        sb.append("?pnrid=").append(pnrid);
+        sb.append("&certissuedate=").append(_certissuedate);
+        
+        ATOLCertificate cert = RestClientUtil.getEntity(ATOLCertificate.class, sb.toString(), new ATOLCertificate());
+        return cert;
     }
 }

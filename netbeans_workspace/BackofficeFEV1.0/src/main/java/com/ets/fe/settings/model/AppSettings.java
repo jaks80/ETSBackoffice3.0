@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.*;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class AppSettings  extends PersistentObject implements Serializable{
+public class AppSettings extends PersistentObject implements Serializable {
 
     @XmlElement
     private String email;
@@ -25,7 +25,7 @@ public class AppSettings  extends PersistentObject implements Serializable{
     private String smtp_auth;
     @XmlElement
     private String starttls_enable;
-    
+
     @XmlElement
     private String tInvTAndC;
     @XmlElement
@@ -40,8 +40,16 @@ public class AppSettings  extends PersistentObject implements Serializable{
     private BigDecimal vatRate = new BigDecimal("0.00");
     @XmlElement
     private Integer version;
-    
-    public AppSettings(){
+    @XmlElement
+    private byte[] companyLogo;
+    @XmlElement
+    private byte[] atolLogo;
+    @XmlElement
+    private byte[] iataLogo;
+    @XmlElement
+    private byte[] otherLogo;
+
+    public AppSettings() {
 
     }
 
@@ -147,5 +155,37 @@ public class AppSettings  extends PersistentObject implements Serializable{
 
     public void setMainAgentID(String mainAgentID) {
         this.mainAgentID = mainAgentID;
+    }
+
+    public byte[] getCompanyLogo() {
+        return companyLogo;
+    }
+
+    public void setCompanyLogo(byte[] companyLogo) {
+        this.companyLogo = companyLogo;
+    }
+
+    public byte[] getAtolLogo() {
+        return atolLogo;
+    }
+
+    public void setAtolLogo(byte[] atolLogo) {
+        this.atolLogo = atolLogo;
+    }
+
+    public byte[] getIataLogo() {
+        return iataLogo;
+    }
+
+    public void setIataLogo(byte[] iataLogo) {
+        this.iataLogo = iataLogo;
+    }
+
+    public byte[] getOtherLogo() {
+        return otherLogo;
+    }
+
+    public void setOtherLogo(byte[] otherLogo) {
+        this.otherLogo = otherLogo;
     }
 }

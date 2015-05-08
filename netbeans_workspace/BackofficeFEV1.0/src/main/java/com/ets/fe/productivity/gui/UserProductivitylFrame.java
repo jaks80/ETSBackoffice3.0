@@ -1,17 +1,14 @@
 package com.ets.fe.productivity.gui;
 
-import com.ets.fe.accounts.model.AccountsReport;
 import com.ets.fe.acdoc.gui.report.TSalesInvoiceReportingFrame;
-import com.ets.fe.productivity.model.UserProductivityReport;
+import com.ets.fe.productivity.model.ProductivityReport;
+import com.ets.fe.productivity.model.ProductivityReport.ProductivityLine;
 import com.ets.fe.productivity.task.UserProductivityTask;
-import com.ets.fe.settings.model.User;
 import com.ets.fe.util.Enums;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,8 +23,8 @@ public class UserProductivitylFrame extends javax.swing.JInternalFrame implement
 
     private JDesktopPane desktopPane;
     private UserProductivityTask task;
-    private UserProductivityReport treport;
-    private UserProductivityReport oreport;
+    private ProductivityReport treport;
+    private ProductivityReport oreport;
 
     public UserProductivitylFrame(JDesktopPane desktopPane) {
         initComponents();
@@ -53,11 +50,11 @@ public class UserProductivitylFrame extends javax.swing.JInternalFrame implement
         if (treport == null) {
             return;
         }
-        Map<String, String> tlines = treport.getProductivityLine();
+        List<ProductivityLine> tlines = treport.getProductivityLine();
         if (tlines.size() > 0) {
             int i = 0;
-            for (String key : tlines.keySet()) {
-                tableModel.insertRow(i, new Object[]{key, tlines.get(key)});
+            for (ProductivityLine line : tlines) {
+                tableModel.insertRow(i, new Object[]{line.getKey(), line.getValue()});
                 i++;
             }
         }
@@ -71,11 +68,11 @@ public class UserProductivitylFrame extends javax.swing.JInternalFrame implement
         if (oreport == null) {
             return;
         }
-        Map<String, String> olines = oreport.getProductivityLine();
+        List<ProductivityLine> olines = oreport.getProductivityLine();
         if (olines.size() > 0) {
             int i = 0;
-            for (String key : olines.keySet()) {
-                tableModel.insertRow(i, new Object[]{key, olines.get(key)});
+            for (ProductivityLine line : olines) {
+                tableModel.insertRow(i, new Object[]{line.getKey(), line.getValue()});
                 i++;
             }
         }
@@ -397,9 +394,9 @@ public class UserProductivitylFrame extends javax.swing.JInternalFrame implement
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    List<UserProductivityReport> reports = task.get();
+                    List<ProductivityReport> reports = task.get();
 
-                    for (UserProductivityReport r : reports) {
+                    for (ProductivityReport r : reports) {
                         if (r.getProductivityLine().isEmpty()) {
                             continue;
                         }

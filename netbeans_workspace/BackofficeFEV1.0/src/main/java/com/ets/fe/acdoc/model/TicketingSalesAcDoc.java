@@ -145,6 +145,16 @@ public class TicketingSalesAcDoc extends AccountingDocument implements Serializa
         return name;
     }
 
+    public List<TicketingSalesAcDoc> calculateActiveRelatedDocuments() {
+        List<TicketingSalesAcDoc> activeDocs = new ArrayList<>();
+        for (TicketingSalesAcDoc d : this.relatedDocuments) {
+            if (d.getStatus().equals(Enums.AcDocStatus.ACTIVE)) {
+                activeDocs.add(d);
+            }
+        }
+        return activeDocs;
+    }
+
     public List<Ticket> getTickets() {
         return tickets;
     }

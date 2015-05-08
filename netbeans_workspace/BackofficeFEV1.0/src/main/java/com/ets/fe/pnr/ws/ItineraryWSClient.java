@@ -1,9 +1,9 @@
 package com.ets.fe.pnr.ws;
 
-
 import com.ets.fe.report.model.SegmentReport;
 import com.ets.fe.util.RestClientUtil;
 import com.ets.fe.APIConfig;
+import com.ets.fe.pnr.model.Itinerary;
 import com.ets.fe.util.DateUtil;
 import java.util.Date;
 
@@ -12,6 +12,14 @@ import java.util.Date;
  * @author Yusuf
  */
 public class ItineraryWSClient {
+
+    public Itinerary update(Itinerary segment) {
+        segment.recordUpdateBy();
+
+        String url = APIConfig.get("ws.itinerary.update");
+        segment = RestClientUtil.putEntity(Itinerary.class, url, segment);
+        return segment;
+    }
 
     public SegmentReport segmentReport(String ticketStatus, String airLineCode,
             Date issueDateFrom, Date issueDateTo, String officeId) {

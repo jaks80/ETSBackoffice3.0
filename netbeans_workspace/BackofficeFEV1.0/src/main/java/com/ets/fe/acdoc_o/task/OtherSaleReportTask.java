@@ -1,6 +1,6 @@
 package com.ets.fe.acdoc_o.task;
 
-import com.ets.fe.acdoc_o.model.InvoiceReportOther;
+import com.ets.fe.acdoc_o.model.report.InvoiceReportOther;
 import com.ets.fe.acdoc_o.model.ServicesSaleReport;
 import com.ets.fe.acdoc_o.ws.OtherSAcDocWSClient;
 import com.ets.fe.client.task.AgentSearchTask;

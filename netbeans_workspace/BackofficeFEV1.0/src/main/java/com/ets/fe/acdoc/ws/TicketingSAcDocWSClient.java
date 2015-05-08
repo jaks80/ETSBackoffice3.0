@@ -5,7 +5,7 @@ import com.ets.fe.APIConfig;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.accounts.model.AccountsReport;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
-import com.ets.fe.productivity.model.UserProductivityReport;
+import com.ets.fe.productivity.model.ProductivityReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import com.ets.fe.util.RestClientUtil;
@@ -207,7 +207,7 @@ public class TicketingSAcDocWSClient {
         return report;
     }
 
-    public UserProductivityReport userProducivityReport(Date _dateFrom, Date _dateTo) {
+    public ProductivityReport userProducivityReport(Date _dateFrom, Date _dateTo) {
 
         String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
         String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
@@ -216,7 +216,19 @@ public class TicketingSAcDocWSClient {
         sb.append(APIConfig.get("ws.tsacdoc.userproductivity"));
         sb.append("?dateStart=").append(dateFrom).append("&dateEnd=").append(dateTo);
 
-        UserProductivityReport report = RestClientUtil.getEntity(UserProductivityReport.class, sb.toString(), new UserProductivityReport());
+        ProductivityReport report = RestClientUtil.getEntity(ProductivityReport.class, sb.toString(), new ProductivityReport());
+        return report;
+    }
+
+    public ProductivityReport allAgentDueReport(Date _dateFrom, Date _dateTo) {
+
+        String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
+        String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
+        
+        StringBuilder sb = new StringBuilder(APIConfig.get("ws.tsacdoc.allagentduereport"));
+        sb.append("?dateStart=").append(dateFrom).append("&dateEnd=").append(dateTo);
+
+        ProductivityReport report = RestClientUtil.getEntity(ProductivityReport.class, sb.toString(), new ProductivityReport());
         return report;
     }
 }

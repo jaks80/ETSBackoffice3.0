@@ -10,10 +10,15 @@ import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.task.AccountingDocTask;
 import com.ets.fe.accounts.task.NewPaymentTask;
+import com.ets.fe.acdoc.model.report.InvoiceModel;
 import com.ets.fe.client.model.Contactable;
 import com.ets.fe.os.model.AdditionalCharge;
+import com.ets.fe.pnr.logic.AtolLogic;
+import com.ets.fe.pnr.model.ATOLCertificate;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
+import com.ets.fe.pnr.task.AtolCertificateTask;
+import com.ets.fe.report.BeanJasperReport;
 import com.ets.fe.report.XMLJasperReport;
 import com.ets.fe.util.*;
 import java.awt.Color;
@@ -197,13 +202,6 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         accountingDocTask.execute();
     }
 
-    public void paymentTask(Payment payment) {
-        taskType = "PAYMENT";
-        paymentTask = new NewPaymentTask(payment);
-        paymentTask.addPropertyChangeListener(this);
-        paymentTask.execute();
-    }
-
     public void populateTblTicket() {
         tblTicket.clearSelection();
         DefaultTableModel model = (DefaultTableModel) tblTicket.getModel();
@@ -216,12 +214,6 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         BigDecimal totalNetPayable = new BigDecimal("0.00");
 
         for (Ticket t : this.tickets) {
-//            boolean invoiced = true;
-//            if (t.getTicketingSalesAcDoc() == null) {
-//                invoiced = false;
-//            } else {
-//                invoiced = true;
-//            }
             totalGF = totalGF.add(t.getGrossFare());
             totalDisc = totalDisc.add(t.getDiscount());
             totalAtol = totalAtol.add(t.getAtolChg());
@@ -262,7 +254,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         busyLabel.setBusy(true);
         btnSubmitPayment.setEnabled(false);
         String amountString = txtAmount.getText();
-        String remark = txtRef.getText();        
+        String remark = txtRef.getText();
 
         if (!amountString.isEmpty() && !remark.isEmpty() && cmbTType.getSelectedIndex() > 0) {
             Enums.PaymentType type = (Enums.PaymentType) cmbTType.getSelectedItem();
@@ -379,6 +371,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         btnPrint = new javax.swing.JButton();
         btnEmail = new javax.swing.JButton();
         btnOfficeCopy = new javax.swing.JButton();
+        btnATOLFront = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -938,12 +931,22 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
             }
         });
 
+        btnATOLFront.setText("ATOL");
+        btnATOLFront.setToolTipText("Print ATOL Certificate");
+        btnATOLFront.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnATOLFrontActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap(698, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnATOLFront)
+                .addGap(2, 2, 2)
                 .addComponent(btnCreateDocument)
                 .addGap(2, 2, 2)
                 .addComponent(btnPrint)
@@ -958,6 +961,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
             .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnOfficeCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnATOLFront, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1022,8 +1026,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     }//GEN-LAST:event_txtOtherFocusGained
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        XMLJasperReport report = new XMLJasperReport();
-        report.reportInvoice(tInvoice.getId(), Enums.SaleType.TKTSALES, "PRINT");
+        report("PRINT");
     }//GEN-LAST:event_btnPrintActionPerformed
 
     private void btnEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmailActionPerformed
@@ -1032,8 +1035,11 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         String body = "Invoice".concat(" From ").concat(Application.getMainAgent().getName());
         String refference = this.tInvoice.getReference().toString();
         if (receipent != null) {
-            XMLJasperReport report = new XMLJasperReport(receipent, subject, body, refference);
-            report.reportInvoice(tInvoice.getId(), Enums.SaleType.TKTSALES, "EMAIL");
+            BeanJasperReport jasperreport = new BeanJasperReport(receipent, subject, body, refference);
+            List<InvoiceModel> list = new ArrayList<>();
+            InvoiceModel model = InvoiceModel.createModel(tInvoice);
+            list.add(model);
+            jasperreport.invoice(list, Enums.SaleType.TKTSALES, "EMAIL");
         } else {
             JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
         }
@@ -1050,13 +1056,19 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
     }//GEN-LAST:event_btnAppyCreditActionPerformed
 
     private void btnOfficeCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOfficeCopyActionPerformed
-        XMLJasperReport report = new XMLJasperReport();
-        report.reportInvoice(tInvoice.getId(), Enums.SaleType.TKTSALES, "VIEW");
+        report("VIEW");
     }//GEN-LAST:event_btnOfficeCopyActionPerformed
+
+    private void btnATOLFrontActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnATOLFrontActionPerformed
+        btnATOLFront.setEnabled(false);
+        AtolLogic logic = new AtolLogic();
+        logic.printCertificate(this.tInvoice.getPnr().getId());
+    }//GEN-LAST:event_btnATOLFrontActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent acDocHeaderComponent;
+    private javax.swing.JButton btnATOLFront;
     private javax.swing.JButton btnAppyCredit;
     private javax.swing.JButton btnCreateDocument;
     private javax.swing.JButton btnEmail;
@@ -1157,6 +1169,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
             btnEmail.setEnabled(false);
             btnPrint.setEnabled(false);
             btnOfficeCopy.setEnabled(false);
+            btnATOLFront.setVisible(false);
             allowPayment = false;
             tabPayment.setEnabledAt(1, allowPayment);
             txtCHFee.setEditable(true);
@@ -1167,7 +1180,6 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
             btnEmail.setEnabled(true);
             btnPrint.setEnabled(true);
             btnOfficeCopy.setEnabled(true);
-
             txtCHFee.setEditable(false);
             txtPostage.setEditable(false);
             txtOther.setEditable(false);
@@ -1181,6 +1193,12 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
                 tabPayment.setEnabledAt(1, allowPayment);
                 tabPayment.setSelectedIndex(0);
             }
+
+            if (AtolLogic.validForATOL(tickets)) {
+                btnATOLFront.setVisible(true);
+            } else {
+                btnATOLFront.setVisible(false);
+            }
         }
     }
 
@@ -1189,5 +1207,20 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         setPaymentType();
         txtAmount.setText("");
         txtRef.setText("");
+    }
+
+    private void report(String action) {
+        BeanJasperReport jasperreport = new BeanJasperReport();
+        List<InvoiceModel> list = new ArrayList<>();
+        InvoiceModel model = InvoiceModel.createModel(tInvoice);
+        list.add(model);
+        jasperreport.invoice(list, Enums.SaleType.TKTSALES, action);
+    }
+
+    public void paymentTask(Payment payment) {
+        taskType = "PAYMENT";
+        paymentTask = new NewPaymentTask(payment);
+        paymentTask.addPropertyChangeListener(this);
+        paymentTask.execute();
     }
 }

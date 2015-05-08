@@ -1,13 +1,11 @@
 package com.ets.fe.accounts.model;
 
+import com.ets.fe.Application;
+import com.ets.fe.report.model.Letterhead;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -15,9 +13,19 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
-public class AccountsReport implements Serializable {    
+public class AccountsReport implements Serializable {
 
-    private static long serialVersionUID = 1L;
+    private static long serialVersionUID = 1L;    
+    private Letterhead letterhead = Application.getLetterhead();
+    
+    @XmlElement
+    private String reportTitle;
+    @XmlElement
+    private String reportDate;
+    @XmlElement
+    private String dateFrom;
+    @XmlElement
+    private String dateTo;
 
     @XmlElement
     private String clientName;
@@ -31,36 +39,51 @@ public class AccountsReport implements Serializable {
     private String email;
     @XmlElement
     private String fax;
+    
+    @XmlElement
+    private String openingBalance = "0.00";
+    @XmlElement
+    private String closingBalance = "0.00";
+    @XmlElement
+    private String totalInvAmount = "0.00";
+    @XmlElement
+    private String totalDMAmount = "0.00";
+    @XmlElement
+    private String totalCMAmount = "0.00";
+    @XmlElement
+    private String totalPayment = "0.00";
+    @XmlElement
+    private String totalRefund = "0.00";
     @XmlElement
     private List<AccountsLine> lines = new ArrayList<>();
-    @XmlElement
-    private BigDecimal openingBalance = new BigDecimal("0.00");
-    @XmlElement
-    private BigDecimal closingBalance = new BigDecimal("0.00");
-    @XmlElement
-    private String totalInvAmount = new String("0.00");
-    @XmlElement
-    private String totalDMAmount = new String("0.00");
-    @XmlElement
-    private String totalCMAmount = new String("0.00");
-    @XmlElement
-    private String totalPayment = new String("0.00");
-    @XmlElement
-    private String totalRefund = new String("0.00");
+
+    public void addFirstLine(){
+     AccountsLine l = new AccountsLine();
+     l.setLine_desc("Opening Balance");
+     l.setLine_balance(openingBalance);
+     lines.add(0, l);
+    }
     
-    public BigDecimal getOpeningBalance() {
+    public void addLastLine(){
+     AccountsLine l = new AccountsLine();
+     l.setLine_desc("Closing Balance");
+     l.setLine_balance(closingBalance);
+     lines.add(lines.size(), l);
+    }
+        
+    public String getOpeningBalance() {
         return openingBalance;
     }
 
-    public void setOpeningBalance(BigDecimal openingBalance) {
+    public void setOpeningBalance(String openingBalance) {
         this.openingBalance = openingBalance;
     }
 
-    public BigDecimal getClosingBalance() {
+    public String getClosingBalance() {
         return closingBalance;
     }
 
-    public void setClosingBalance(BigDecimal closingBalance) {
+    public void setClosingBalance(String closingBalance) {
         this.closingBalance = closingBalance;
     }
 
@@ -121,7 +144,7 @@ public class AccountsReport implements Serializable {
     }
 
     public void addLine(AccountsLine line) {
-        
+
         this.getLines().add(line);
     }
 
@@ -165,6 +188,46 @@ public class AccountsReport implements Serializable {
         this.totalRefund = totalRefund;
     }
 
+    public Letterhead getLetterhead() {
+        return letterhead;
+    }
+
+    public void setLetterhead(Letterhead letterhead) {
+        this.letterhead = letterhead;
+    }
+
+    public String getReportDate() {
+        return reportDate;
+    }
+
+    public void setReportDate(String reportDate) {
+        this.reportDate = reportDate;
+    }
+
+    public String getDateFrom() {
+        return dateFrom;
+    }
+
+    public void setDateFrom(String dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public String getDateTo() {
+        return dateTo;
+    }
+
+    public void setDateTo(String dateTo) {
+        this.dateTo = dateTo;
+    }
+
+    public String getReportTitle() {
+        return reportTitle;
+    }
+
+    public void setReportTitle(String reportTitle) {
+        this.reportTitle = reportTitle;
+    }
+
     @XmlAccessorType(XmlAccessType.NONE)
     @XmlRootElement
     public static class AccountsLine {
@@ -178,11 +241,11 @@ public class AccountsReport implements Serializable {
         @XmlElement
         private String line_desc;
         @XmlElement
-        private BigDecimal debit_amount = new BigDecimal("0.00");
+        private String debit_amount = "0.00";
         @XmlElement
-        private BigDecimal credit_amount = new BigDecimal("0.00");
+        private String credit_amount = "0.00";
         @XmlElement
-        private BigDecimal line_balance = new BigDecimal("0.00");
+        private String line_balance = "0.00";
 
         public Long getId() {
             return id;
@@ -216,27 +279,27 @@ public class AccountsReport implements Serializable {
             this.line_desc = line_desc;
         }
 
-        public BigDecimal getDebit_amount() {
+        public String getDebit_amount() {
             return debit_amount;
         }
 
-        public void setDebit_amount(BigDecimal debit_amount) {
+        public void setDebit_amount(String debit_amount) {
             this.debit_amount = debit_amount;
         }
 
-        public BigDecimal getCredit_amount() {
+        public String getCredit_amount() {
             return credit_amount;
         }
 
-        public void setCredit_amount(BigDecimal credit_amount) {
+        public void setCredit_amount(String credit_amount) {
             this.credit_amount = credit_amount;
         }
 
-        public BigDecimal getLine_balance() {
+        public String getLine_balance() {
             return line_balance;
         }
 
-        public void setLine_balance(BigDecimal line_balance) {
+        public void setLine_balance(String line_balance) {
             this.line_balance = line_balance;
         }
     }

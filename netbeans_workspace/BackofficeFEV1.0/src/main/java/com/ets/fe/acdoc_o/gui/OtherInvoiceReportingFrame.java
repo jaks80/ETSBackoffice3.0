@@ -1,10 +1,14 @@
 package com.ets.fe.acdoc_o.gui;
 
+import com.ets.fe.acdoc_o.model.report.OtherInvoiceSummery;
+import com.ets.fe.acdoc_o.model.report.InvoiceReportOther;
 import com.ets.fe.Application;
 import com.ets.fe.acdoc.gui.report.TSalesInvoiceReportingFrame;
+import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc_o.model.*;
 import com.ets.fe.acdoc_o.task.AccountingDocTaskOther;
 import com.ets.fe.acdoc_o.task.OtherAcDocReportingTask;
+import com.ets.fe.report.BeanJasperReport;
 import com.ets.fe.report.XMLJasperReport;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
@@ -690,8 +694,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
-        XMLJasperReport report = new XMLJasperReport();
-        report.otherInvoiceReport(doc_type, client_type, client_id, from, to, "VIEW");
+        report("VIEW");
     }//GEN-LAST:event_btnViewReportActionPerformed
 
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
@@ -715,16 +718,17 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         String body = report.getTitle().concat(" From").concat(Application.getMainAgent().getName());
         String refference = "report";
         if (receipent != null) {
-            XMLJasperReport report = new XMLJasperReport(receipent, subject, body, refference);
-            report.otherInvoiceReport(doc_type, client_type, client_id, from, to, "EMAIL");
+            BeanJasperReport jasperreport = new BeanJasperReport(receipent, subject, body, refference);
+            List<InvoiceReportOther> list = new ArrayList<>();
+            list.add(report);
+            jasperreport.invoiceReport(list, Enums.SaleType.OTHERSALES, "EMAIL");
         } else {
             JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnEmailActionPerformed
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        XMLJasperReport report = new XMLJasperReport();
-        report.otherInvoiceReport(doc_type, client_type, client_id, from, to, "PRINT");
+        report("PRINT");
     }//GEN-LAST:event_btnPrintActionPerformed
 
     private void btnNewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewInvoiceActionPerformed
@@ -796,5 +800,12 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
                 }
             }
         }
+    }
+
+    private void report(String action) {
+        BeanJasperReport jasperreport = new BeanJasperReport();
+        List<InvoiceReportOther> list = new ArrayList<>();
+        list.add(report);
+        jasperreport.invoiceReport(list, Enums.SaleType.OTHERSALES, action);
     }
 }

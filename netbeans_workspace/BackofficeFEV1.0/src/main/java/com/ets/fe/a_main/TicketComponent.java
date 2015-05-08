@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -1088,17 +1089,25 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
     }//GEN-LAST:event_btnReIssueActionPerformed
 
     private void btnVoidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoidActionPerformed
+
         int index = tblTicket.getSelectedRow();
         if (index != -1) {
-            TicketLogic.voidTicket(ticket);
-            populateTblTicket(tickets);
-            setSaveNeeded(true);
+            if (JOptionPane.showConfirmDialog(null, "Void Ticket !!! Are you sure?", "WARNING",
+                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+
+                TicketLogic.voidTicket(ticket);
+                populateTblTicket(tickets);
+                setSaveNeeded(true);
+            }
         }
     }//GEN-LAST:event_btnVoidActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        deleteTicket(ticket);
-        setSaveNeeded(true);
+        if (JOptionPane.showConfirmDialog(null, "Delete Ticket !!! Are you sure?", "WARNING",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            deleteTicket(ticket);
+            setSaveNeeded(true);
+        }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
@@ -1178,7 +1187,7 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
             txtTax.setEditable(true);
             txtFees.setEditable(true);
             txtBspCom.setEditable(true);
-            
+
             txtGrossFare.setEditable(true);
             txtDisc.setEditable(true);
             txtAtol.setEditable(true);

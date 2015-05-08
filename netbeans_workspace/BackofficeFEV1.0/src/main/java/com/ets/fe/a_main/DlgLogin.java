@@ -334,7 +334,7 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
                 try {
                     User user = task.get();
                     if (user != null && user.getUserType() != null) {
-                        txtUserName.setText("");
+                        txtUserName.setText(user.getLoginID());//Leave login id here for automated logout
                         txtPWord.setText("");
                         txtNewPassword.setText("");
                         btnLogin.setEnabled(true);

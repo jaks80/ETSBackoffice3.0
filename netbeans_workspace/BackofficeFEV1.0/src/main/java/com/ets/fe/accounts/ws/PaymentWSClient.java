@@ -75,14 +75,18 @@ public class PaymentWSClient {
         return ppayment;
     }
 
-    public TransactionReceipts findTSReceiptHistory(Enums.ClientType clienttype, Long clientid, Date _dateFrom, Date _dateTo, Enums.SaleType saleType) {
+    public TransactionReceipts findReceiptHistory(Enums.ClientType clienttype, Long clientid, Date _dateFrom, Date _dateTo, Enums.SaleType saleType) {
         String dateFrom = DateUtil.dateToString(_dateFrom, "ddMMMyyyy");
         String dateTo = DateUtil.dateToString(_dateTo, "ddMMMyyyy");
 
         StringBuilder sb = new StringBuilder();
-       
-        sb.append(APIConfig.get("ws.pay.treceiptshistory")).append("?dateStart=").append(dateFrom).append("&dateEnd=").append(dateTo).append("&saleType=").append(saleType);
-       
+
+        if (saleType.equals(Enums.SaleType.OTHERSALES)) {
+            sb.append(APIConfig.get("ws.pay.oreceiptshistory")).append("?dateStart=").append(dateFrom).append("&dateEnd=").append(dateTo).append("&saleType=").append(saleType);
+        } else {
+            sb.append(APIConfig.get("ws.pay.treceiptshistory")).append("?dateStart=").append(dateFrom).append("&dateEnd=").append(dateTo).append("&saleType=").append(saleType);
+        }
+
         if (clienttype != null) {
             sb.append("&clienttype=").append(clienttype);
         }
@@ -93,7 +97,7 @@ public class PaymentWSClient {
         TransactionReceipts receipts = RestClientUtil.getEntity(TransactionReceipts.class, sb.toString(), new TransactionReceipts());
         return receipts;
     }
-        
+
     public CashBookReport cashBook(Long userid, Enums.ClientType clienttype, Long clientid,
             Date _dateFrom, Date _dateTo, Enums.SaleType saleType, Enums.PaymentType paymentType) {
 

@@ -43,7 +43,7 @@ public class ReceiptTask extends SwingWorker<TransactionReceipts, Integer> {
         t.start();
 
         PaymentWSClient client = new PaymentWSClient();
-        TransactionReceipts payments = client.findTSReceiptHistory(clienttype, clientid, dateFrom, dateTo, saleType);
+        TransactionReceipts payments = client.findReceiptHistory(clienttype, clientid, dateFrom, dateTo, saleType);
 
         p.cancel();
         return payments;
