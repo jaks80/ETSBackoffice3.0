@@ -6,6 +6,7 @@ import com.ets.util.Enums;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -34,4 +35,6 @@ public interface TPurchaseAcDocDAO extends GenericDAO<TicketingPurchaseAcDoc, Lo
     public List<TicketingPurchaseAcDoc> findAllDocuments(Long agentid,Date dateStart,Date dateEnd);
 
     public BigDecimal getAccountBallanceToDate(Long agentid,Date dateEnd);
+    
+    public Map<String,BigDecimal> allAgentOutstandingReport(Date dateStart,Date dateEnd);
 }

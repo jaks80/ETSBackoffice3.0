@@ -8,7 +8,7 @@ import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.domain.Ticket;
 import com.ets.pnr.service.PnrService;
 import com.ets.accountingdoc.model.InvoiceReport;
-import com.ets.productivity.model.UserProductivityReport;
+import com.ets.productivity.model.ProductivityReport;
 import com.ets.settings.domain.User;
 import com.ets.util.*;
 import com.ets.util.Enums.AcDocType;
@@ -235,7 +235,14 @@ public class TSalesAcDocService {
     }
 
     public int delete(long id) {
-        TicketingSalesAcDoc document = dao.findByID(TicketingSalesAcDoc.class, id);
+        TicketingSalesAcDoc document = dao.getWithChildrenById(id);
+        Set<TicketingSalesAcDoc> relatedDocs = document.getRelatedDocuments();
+        
+        //MySql gives exception if deleting with related docs.
+        if(!relatedDocs.isEmpty()){
+         return 0;
+        }
+        
         if (document.getStatus().equals(Enums.AcDocStatus.VOID)) {
             dao.delete(document);
             return 1;
@@ -246,7 +253,7 @@ public class TSalesAcDocService {
 
     /**
      * If invoice has related documents it is not possible to void invoice while
-     * it has children. Children needs to be VOID first.
+     * it has active children. Children needs to be VOID first.
      *
      * @param ticketingSalesAcDoc
      * @return
@@ -261,7 +268,9 @@ public class TSalesAcDocService {
         doc.setLastModifiedBy(ticketingSalesAcDoc.getLastModifiedBy());
 
         Set<TicketingSalesAcDoc> relatedDocs = doc.getRelatedDocuments();
-        if (doc.getType().equals(Enums.AcDocType.INVOICE) && !relatedDocs.isEmpty()) {
+        Set<TicketingSalesAcDoc> filtered_relatedDocs = AcDocUtil.filterVoidRelatedDocuments(relatedDocs);
+        
+        if (doc.getType().equals(Enums.AcDocType.INVOICE) && !filtered_relatedDocs.isEmpty()) {
             doc = getWithChildrenById(doc.getId());
             return doc;
         } else {
@@ -337,37 +346,44 @@ public class TSalesAcDocService {
         return InvoiceModel.createModel(undefineChildren(doc));
     }
 
-    public UserProductivityReport userProductivityReport(Date from, Date to) {
+    public ProductivityReport userProductivityReport(Date from, Date to) {
 
         Map<User, BigDecimal> productivityLine = dao.userProductivityReport(from, to);
 
-        UserProductivityReport report = new UserProductivityReport();
+        ProductivityReport report = new ProductivityReport();
         report.setTitle("Productivity Report");
         report.setDateFrom(DateUtil.dateToString(from));
         report.setDateTo(DateUtil.dateToString(to));
         report.setSaleType(Enums.SaleType.TKTSALES);
 
         for (User key : productivityLine.keySet()) {
-            report.getProductivityLine().put(key.calculateFullName(), productivityLine.get(key).toString());
+            //report.getProductivityLine().put(key.calculateFullName(), productivityLine.get(key).toString());
+            ProductivityReport.ProductivityLine line = new ProductivityReport.ProductivityLine();
+            line.setKey(key.calculateFullName());
+            line.setValue(productivityLine.get(key).abs().toString());
+            report.addLine(line);
         }
 
         return report;
     }
 
-//    public UserProductivityReport agentOutstandingReport(Date from, Date to) {
-//
-//        Map<String, BigDecimal> productivityLine = dao.agentOutstandingReport(from, to);
-//
-//        UserProductivityReport report = new UserProductivityReport();
-//        report.setTitle("Outstanding Invoice Report");
-//        report.setDateFrom(DateUtil.dateToString(from));
-//        report.setDateTo(DateUtil.dateToString(to));
-//        report.setSaleType(Enums.SaleType.TKTSALES);
-//
-//        for (String key : productivityLine.keySet()) {
-//            report.getProductivityLine().put(key, productivityLine.get(key).toString());
-//        }
-//
-//        return report;
-//    }
+    public ProductivityReport allAgentDueReport(Date dateStart,Date dateEnd) {
+
+        Map<String, BigDecimal> productivityLine = dao.allAgentOutstandingReport(dateStart,dateEnd);
+
+        ProductivityReport report = new ProductivityReport();
+        report.setTitle("Outstanding Invoice Report");
+        report.setSaleType(Enums.SaleType.TKTSALES);
+        report.setDateFrom(DateUtil.dateToString(dateStart));
+        report.setDateTo(DateUtil.dateToString(dateEnd));
+        
+        for (String key : productivityLine.keySet()) {
+            ProductivityReport.ProductivityLine line = new ProductivityReport.ProductivityLine();
+            line.setKey(key);
+            line.setValue(productivityLine.get(key).abs().toString());
+            report.addLine(line);
+        }
+
+        return report;
+    }
 }

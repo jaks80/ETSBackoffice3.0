@@ -25,13 +25,24 @@ public class OtherServiceService {
     }
 
     public List<OtherService> findItemsByCategory(Long categoryId) {
-        
-        List<OtherService> services = dao.findItemsByCategory(categoryId); 
-        for(OtherService os:services){
-         os.setCreatedBy(null);
-         os.setLastModified(null);
+
+        List<OtherService> services = dao.findItemsByCategory(categoryId);
+        for (OtherService os : services) {
+            os.setCreatedBy(null);
+            os.setLastModified(null);
         }
-        
+
+        return services;
+    }
+
+    public List<OtherService> findItemsByKeyword(String keyword) {
+
+        List<OtherService> services = dao.findItemsByKeyword(keyword);
+        for (OtherService os : services) {
+            os.setCreatedBy(null);
+            os.setLastModified(null);
+        }
+
         return services;
     }
 

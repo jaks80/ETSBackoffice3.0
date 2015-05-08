@@ -56,7 +56,7 @@ public class AccountsWS {
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
         
-        AccountsReport report = service.generateVendorStatement(clienttype, clientid, dateFrom, dateTo);
+        AccountsReport report = service.generateVendorStatement(clientid, dateFrom, dateTo);
 
         return report;
     }

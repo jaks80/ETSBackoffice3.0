@@ -15,22 +15,27 @@ public class CustomerService {
 
     @Resource(name = "customerDAO")
     private CustomerDAO dao;
-    
-    public List<Customer> findAll(){    
+
+    public List<Customer> findAll() {
         return dao.findAll(Customer.class);
     }
-    
-    public List<Customer> findAll(String surName, String foreName, String postCode, String telNo){    
-        
+
+    public List<Customer> findAll(String surName, String foreName, String postCode, String telNo) {
+
         return dao.findByLike(surName, foreName, postCode, telNo);
     }
-    
-    public Customer saveorUpdate(Customer customer){
-     dao.save(customer);
-     return customer;
+
+    public Customer getCustomer(Long id) {
+        return dao.findByID(Customer.class, id);
     }
-    
-    public void delete(Customer customer){
-     dao.delete(customer);
-    }         
+
+    public Customer saveorUpdate(Customer customer) {
+        dao.save(customer);
+        return customer;
+    }
+
+    public void delete(Long id) {
+        Customer customer = dao.findByID(Customer.class, id);
+        dao.delete(customer);
+    }
 }

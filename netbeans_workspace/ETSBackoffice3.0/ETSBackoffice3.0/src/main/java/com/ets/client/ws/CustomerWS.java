@@ -63,6 +63,7 @@ public class CustomerWS {
     @Path("/delete/{id}")
     @RolesAllowed("SM")
     public Response delete(@PathParam("id") long id) {
+         service.delete(id);
         return Response.status(200).build();
     }
 }

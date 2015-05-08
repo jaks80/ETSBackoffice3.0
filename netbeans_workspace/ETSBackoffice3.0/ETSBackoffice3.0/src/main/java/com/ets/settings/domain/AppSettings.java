@@ -7,11 +7,9 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -22,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.NONE)
 @Access(AccessType.PROPERTY)
 @Table(name = "app_settings")
-public class AppSettings  extends PersistentObject implements Serializable{
+public class AppSettings extends PersistentObject implements Serializable {
 
     @XmlElement
     private String email;
@@ -36,7 +34,7 @@ public class AppSettings  extends PersistentObject implements Serializable{
     private String smtp_auth;
     @XmlElement
     private String starttls_enable;
-    
+
     @XmlElement
     private String tInvTAndC;
     @XmlElement
@@ -45,20 +43,29 @@ public class AppSettings  extends PersistentObject implements Serializable{
     private String tInvFooter;
     @XmlElement
     private String oInvFooter;
-    
+
+    @XmlElement
+    private byte[] companyLogo;
+    @XmlElement
+    private byte[] atolLogo;
+    @XmlElement
+    private byte[] iataLogo;
+    @XmlElement
+    private byte[] otherLogo;
+
     // This is an 10 digit Alphanumaric ID, all lower case. 2Digit CountryCode+3DGT CityCode+3Digit NumaricCode+ 2Digit Agent Code
     // This must be unique. Inside tomcat web apps folder thereshould be a folder using this ID
     // Application will reside in that folder for particular agent. 
     // Database name also should be this one. Example: UKLON111IT
     @XmlElement
     private String mainAgentID;
-    
+
     @XmlElement
     private BigDecimal vatRate = new BigDecimal("0.00");
     @XmlElement
     private Integer version;
-    
-    public AppSettings(){
+
+    public AppSettings() {
 
     }
 
@@ -166,6 +173,42 @@ public class AppSettings  extends PersistentObject implements Serializable{
 
     public void setMainAgentID(String mainAgentID) {
         this.mainAgentID = mainAgentID;
+    }
+
+    @Column(length = 65535)
+    public byte[] getCompanyLogo() {
+        return companyLogo;
+    }
+
+    public void setCompanyLogo(byte[] companyLogo) {
+        this.companyLogo = companyLogo;
+    }
+
+    @Column(length = 65535)
+    public byte[] getAtolLogo() {
+        return atolLogo;
+    }
+    
+    public void setAtolLogo(byte[] atolLogo) {
+        this.atolLogo = atolLogo;
+    }
+
+    @Column(length = 65535)
+    public byte[] getIataLogo() {
+        return iataLogo;
+    }
+
+    public void setIataLogo(byte[] iataLogo) {
+        this.iataLogo = iataLogo;
+    }    
+
+    @Column(length = 65535)
+    public byte[] getOtherLogo() {
+        return otherLogo;
+    }
+
+    public void setOtherLogo(byte[] otherLogo) {
+        this.otherLogo = otherLogo;
     }
 
 }

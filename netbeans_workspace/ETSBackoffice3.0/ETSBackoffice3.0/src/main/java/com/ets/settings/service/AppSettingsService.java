@@ -46,19 +46,8 @@ public class AppSettingsService {
             getLetterhead().setCompanyName(mainAgent.getName());
             getLetterhead().setAddress(mainAgent.getFullAddressCRSeperated());
 
-            StringBuilder sb = new StringBuilder();
-            if (mainAgent.getAtol() != null && !mainAgent.getAtol().isEmpty()) {
-                sb.append("ATOL: ").append(mainAgent.getAtol()).append(" ");
-            }
-
-            if (mainAgent.getIata() != null && !mainAgent.getIata().isEmpty()) {
-                sb.append("IATA: ").append(mainAgent.getIata()).append(" ");
-            }
-
-            if (mainAgent.getAbta() != null && !mainAgent.getAbta().isEmpty()) {
-                sb.append("ABTA: ").append(mainAgent.getAbta()).append(" ");
-            }
-            getLetterhead().setFooter(sb.toString());
+            getLetterhead().settInvFooter(settings.gettInvFooter());
+            getLetterhead().setoInvFooter(settings.getoInvFooter());
             getLetterhead().settInvTAndC(settings.gettInvTAndC());
             getLetterhead().setoInvTAndC(settings.getoInvTAndC());
         }

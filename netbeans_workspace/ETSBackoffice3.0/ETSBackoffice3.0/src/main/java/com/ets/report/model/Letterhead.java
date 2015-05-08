@@ -12,13 +12,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 public class Letterhead {
-    
+
     @XmlElement
     private String companyName;
     @XmlElement
     private String address;
     @XmlElement
-    private String footer;
+    private String tInvFooter;
+    @XmlElement
+    private String oInvFooter;
     @XmlElement
     private String tInvTAndC;
     @XmlElement
@@ -40,14 +42,6 @@ public class Letterhead {
         this.address = address;
     }
 
-    public String getFooter() {
-        return footer;
-    }
-
-    public void setFooter(String footer) {
-        this.footer = footer;
-    }        
-
     public String gettInvTAndC() {
         return tInvTAndC;
     }
@@ -62,5 +56,21 @@ public class Letterhead {
 
     public void setoInvTAndC(String oInvTAndC) {
         this.oInvTAndC = oInvTAndC;
+    }
+
+    public String gettInvFooter() {
+        return tInvFooter;
+    }
+
+    public void settInvFooter(String tInvFooter) {
+        this.tInvFooter = tInvFooter;
+    }
+
+    public String getoInvFooter() {
+        return oInvFooter;
+    }
+
+    public void setoInvFooter(String oInvFooter) {
+        this.oInvFooter = oInvFooter;
     }
 }

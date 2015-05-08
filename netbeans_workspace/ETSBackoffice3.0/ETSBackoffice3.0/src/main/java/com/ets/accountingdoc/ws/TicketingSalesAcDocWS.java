@@ -6,7 +6,7 @@ import com.ets.accountingdoc.model.InvoiceModel;
 import com.ets.accountingdoc.model.InvoiceReport;
 import com.ets.accountingdoc.service.TPurchaseAcDocService;
 import com.ets.accountingdoc.service.TSalesAcDocService;
-import com.ets.productivity.model.UserProductivityReport;
+import com.ets.productivity.model.ProductivityReport;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
@@ -86,7 +86,7 @@ public class TicketingSalesAcDocWS {
     public TicketingSalesAcDoc createNewDocument(TicketingSalesAcDoc ticketingSalesAcDoc) {
         service.newDocument(ticketingSalesAcDoc);
         TicketingSalesAcDoc doc = service.getWithChildrenById(ticketingSalesAcDoc.getId());
-        
+
         return doc;
     }
 
@@ -172,8 +172,7 @@ public class TicketingSalesAcDocWS {
 
     @GET
     @Path("/paymentdue_flight")
-    //@RolesAllowed("SM")
-    @PermitAll
+    @RolesAllowed("GS")    
     public InvoiceReport outstandingFlightReport(
             @QueryParam("clienttype") Enums.ClientType clienttype,
             @QueryParam("clientid") Long clientid,
@@ -191,7 +190,7 @@ public class TicketingSalesAcDocWS {
 
     @GET
     @Path("/acdoc_history")
-    @RolesAllowed("SM")
+    @RolesAllowed("GS")
     public InvoiceReport documentHistoryReport(
             @QueryParam("clienttype") Enums.ClientType clienttype,
             @QueryParam("clientid") Long clientid,
@@ -209,32 +208,30 @@ public class TicketingSalesAcDocWS {
 
     @GET
     @Path("/user_productivity")
-    @RolesAllowed("SM")
-    public UserProductivityReport userProducivityReport(
+    @RolesAllowed("AD")
+    public ProductivityReport userProducivityReport(
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd) {
 
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
 
-        UserProductivityReport report = service.userProductivityReport(dateFrom, dateTo);
+        ProductivityReport report = service.userProductivityReport(dateFrom, dateTo);
 
         return report;
     }
 
-//    @GET
-//    @Path("/agentduereport")
-//    //@RolesAllowed("SM")
-//    @PermitAll
-//    public UserProductivityReport agentDueReport(
-//            @QueryParam("dateStart") String dateStart,
-//            @QueryParam("dateEnd") String dateEnd) {
-//
-//        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
-//        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
-//
-//        UserProductivityReport report = service.agentOutstandingReport(dateFrom, dateTo);
-//
-//        return report;
-//    }
+    @GET
+    @Path("/allagentduereport")
+    @RolesAllowed("AD")    
+    public ProductivityReport allAgentDueReport(
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+        
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+        
+        ProductivityReport report = service.allAgentDueReport(dateFrom,dateTo);
+        return report;
+    }
 }

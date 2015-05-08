@@ -76,11 +76,11 @@ public class PnrService {
         return pnr;
     }
 
-    public ATOLCertificate getAtolCertificate(long id, Date issueDate) {
-        Pnr pnr = getByIdWithChildren(id);
+    public ATOLCertificate getAtolCertificate(long pnrid, Date issueDate) {
+        Pnr pnr = getByIdWithChildren(pnrid);
         MainAgent mainAgent = AppSettingsService.mainAgent;
         ATOLCertificate certificate
-                = ATOLCertificate.serializeToCertificate(DateUtil.dateToString(issueDate, "mm/dd/yyyy").toString(),
+                = ATOLCertificate.serializeToCertificate(DateUtil.dateToString(issueDate, "dd/MM/yyyy"),
                         mainAgent, pnr);
         return certificate;
     }

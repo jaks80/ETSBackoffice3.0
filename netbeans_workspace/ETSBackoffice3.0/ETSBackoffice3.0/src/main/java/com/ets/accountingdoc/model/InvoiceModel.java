@@ -105,13 +105,13 @@ public class InvoiceModel implements Serializable{
 
         Set<TicketingSalesAcDoc> relatedDocs = invoice.getRelatedDocuments();
 
-        for (TicketingSalesAcDoc rd : relatedDocs) {
-            RelatedDocSummery sum = new RelatedDocSummery();
-            sum.setAmount(rd.getDocumentedAmount().toString());
-            sum.setDate(DateUtil.dateToString(rd.getDocIssueDate()));
-            sum.setRemark(rd.getRemark());
-            sum.setType(rd.getType().toString());
-        }
+//        for (TicketingSalesAcDoc rd : relatedDocs) {
+//            RelatedDocSummery sum = new RelatedDocSummery();
+//            sum.setAmount(rd.getDocumentedAmount().toString());
+//            sum.setDate(DateUtil.dateToString(rd.getDocIssueDate()));
+//            sum.setRemark(rd.getRemark());
+//            sum.setType(rd.getType().toString());
+//        }
         
         Set<Itinerary> segments = pnr.getSegments();
         for(Itinerary it: segments){

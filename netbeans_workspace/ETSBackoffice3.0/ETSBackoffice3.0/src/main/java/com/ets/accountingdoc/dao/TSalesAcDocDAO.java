@@ -43,5 +43,5 @@ public interface TSalesAcDocDAO extends GenericDAO<TicketingSalesAcDoc, Long> {
     
     public Map<User,BigDecimal> userProductivityReport(Date dateStart,Date dateEnd);
     
-    public Map<String,BigDecimal> agentOutstandingReport(Date dateStart,Date dateEnd);
+    public Map<String,BigDecimal> allAgentOutstandingReport(Date dateStart,Date dateEnd);
 }

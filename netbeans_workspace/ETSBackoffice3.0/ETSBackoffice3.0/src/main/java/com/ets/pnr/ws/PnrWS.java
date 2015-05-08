@@ -7,6 +7,7 @@ import com.ets.pnr.service.PnrService;
 import com.ets.util.DateUtil;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -75,9 +76,9 @@ public class PnrWS {
     @GET
     @Path("/atolcertbyid")
     @RolesAllowed("GS")
-    public ATOLCertificate getAtolCertificate(@QueryParam("id") long id, @QueryParam("issuedate") String issuedate) {
-        Date date = DateUtil.stringToDate(issuedate, "ddMMMyyyy");
-        return service.getAtolCertificate(id, date);
+    public ATOLCertificate getAtolCertificate(@QueryParam("pnrid") long pnrid, @QueryParam("certissuedate") String certissuedate) {
+        Date date = DateUtil.stringToDate(certissuedate, "ddMMMyyyy");
+        return service.getAtolCertificate(pnrid, date);
     }
 
     @GET

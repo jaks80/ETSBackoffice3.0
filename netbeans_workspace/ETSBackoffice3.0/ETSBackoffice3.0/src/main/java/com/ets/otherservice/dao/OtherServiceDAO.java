@@ -11,4 +11,6 @@ import java.util.List;
 public interface OtherServiceDAO extends GenericDAO<OtherService, Long>{   
     
     public List<OtherService> findItemsByCategory(Long categoryId);
+    
+    public List<OtherService> findItemsByKeyword(String keyword);
 }

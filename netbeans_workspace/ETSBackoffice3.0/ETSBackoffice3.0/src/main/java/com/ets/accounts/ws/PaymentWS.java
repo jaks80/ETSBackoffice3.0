@@ -146,6 +146,25 @@ public class PaymentWS {
     }
 
     @GET
+    @Path("/oreceipts_history")
+    @RolesAllowed("SM")
+    public TransactionReceipts otherPaymentReceipts(
+            @QueryParam("clienttype") Enums.ClientType clienttype,
+            @QueryParam("clientid") Long clientid,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd,
+            @QueryParam("saleType") Enums.SaleType saleType) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        List<TransactionReceipt> list_receipt = service.findOtherPaymentReceipts(clienttype, clientid, dateFrom, dateTo, saleType);
+        TransactionReceipts receipts = new TransactionReceipts();
+        receipts.setList(list_receipt);
+        return receipts;
+    }
+
+    @GET
     @Path("/cashbook")
     @PermitAll
     public CashBookReport cashBook(

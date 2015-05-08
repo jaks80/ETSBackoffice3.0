@@ -1,7 +1,6 @@
 
 package com.ets.accountingdoc.model;
 
-import com.ets.accountingdoc.domain.AccountingDocument;
 import com.ets.accountingdoc.domain.OtherSalesAcDoc;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.util.DateUtil;

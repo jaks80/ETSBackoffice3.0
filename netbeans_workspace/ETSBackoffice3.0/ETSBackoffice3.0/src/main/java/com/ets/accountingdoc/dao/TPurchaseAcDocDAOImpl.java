@@ -9,7 +9,10 @@ import com.ets.util.Enums;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -237,7 +240,7 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
                 + "where a.status <> 2 "
                 + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
                 + "and (:agentid is null or tktingagent.id = :agentid)"
-                + " order by a.docIssueDate asc";
+                + " order by a.id asc";
 
         Query query = getSession().createQuery(hql);
 
@@ -290,5 +293,31 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
         doc.setStatus(Enums.AcDocStatus.VOID);
         save(doc);
         return true;
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Map<String, BigDecimal> allAgentOutstandingReport(Date from,Date to) {
+        String hql = "select agent.name, coalesce(sum(a.documentedAmount),0) as balance "
+                + "from TicketingPurchaseAcDoc a "
+                + "left join a.pnr as p "
+                + "inner join p.ticketing_agent as agent "
+                + "where a.status = 0 "
+                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
+                + "group by agent.id order by balance desc ";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameter("from", from);
+        query.setParameter("to", to);
+        
+        List results = query.list();
+        Map<String, BigDecimal> map = new LinkedHashMap<>();
+
+        Iterator it = results.iterator();
+        while (it.hasNext()) {
+            Object[] objects = (Object[]) it.next();
+            map.put((String) objects[0], (BigDecimal) objects[1]);
+        }
+        return map;
     }
 }

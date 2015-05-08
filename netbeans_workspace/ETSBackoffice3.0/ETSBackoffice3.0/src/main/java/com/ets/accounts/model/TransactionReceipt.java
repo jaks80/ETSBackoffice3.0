@@ -1,8 +1,10 @@
 package com.ets.accounts.model;
 
+import com.ets.accountingdoc.domain.OtherSalesAcDoc;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accountingdoc.model.TktingInvoiceSummery;
+import com.ets.accountingdoc_o.model.OtherInvoiceSummery;
 import com.ets.accounts.domain.Payment;
 import com.ets.client.domain.Contactable;
 import com.ets.pnr.domain.Pnr;
@@ -57,6 +59,8 @@ public class TransactionReceipt {
     private String cashier;
     @XmlElement
     private List<TktingInvoiceSummery> lines = new ArrayList<>();
+    @XmlElement
+    private List<OtherInvoiceSummery> olines = new ArrayList<>();
 
     public TransactionReceipt() {
     }
@@ -129,9 +133,48 @@ public class TransactionReceipt {
                     if (pnr.getTicketing_agent() != null) {
                         clientName = pnr.getTicketing_agent().getName();
                         addressCRSeperated = pnr.getTicketing_agent().getFullAddressCRSeperated();
+
+                        email = pnr.getTicketing_agent().getEmail();
+                        fax = pnr.getTicketing_agent().getFax();
+                        mobile = pnr.getTicketing_agent().getMobile();
+                        telNo = pnr.getTicketing_agent().getMobile();
+
                     }
                 }
                 this.totalItems = pdocs.size();
+                this.totalAmount = total.abs().toString();
+            }
+        }
+
+        Set<OtherSalesAcDoc> odocs = payment.getoSalesAcDocuments();
+
+        if (odocs != null && !odocs.isEmpty()) {
+            reportTitle = "Sales Receipt";
+            for (OtherSalesAcDoc d : odocs) {
+                OtherInvoiceSummery sum = new OtherInvoiceSummery();
+                sum.setId(d.getId());
+                sum.setParentId(d.getParent().getId());
+                sum.setReference(d.getReference());
+                sum.setRemark(d.getRemark());
+                sum.setDocumentedAmount(d.getDocumentedAmount().abs());
+                olines.add(sum);
+                total = total.add(d.getDocumentedAmount());
+
+                Contactable cont = null;
+
+                if (d.getAgent() != null) {
+                    cont = d.getAgent();
+                } else {
+                    cont = d.getCustomer();
+                }
+                clientName = cont.calculateFullName();
+                email = cont.getEmail();
+                fax = cont.getFax();
+                mobile = cont.getMobile();
+                telNo = cont.getMobile();
+                addressCRSeperated = cont.getAddressCRSeperated();
+
+                this.totalItems = odocs.size();
                 this.totalAmount = total.abs().toString();
             }
         }
@@ -271,5 +314,13 @@ public class TransactionReceipt {
 
     public void setFax(String fax) {
         this.fax = fax;
+    }
+
+    public List<OtherInvoiceSummery> getOlines() {
+        return olines;
+    }
+
+    public void setOlines(List<OtherInvoiceSummery> olines) {
+        this.olines = olines;
     }
 }

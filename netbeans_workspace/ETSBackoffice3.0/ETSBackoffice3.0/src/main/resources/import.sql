@@ -1,9 +1,6 @@
 INSERT INTO bo_user (id,loginID,password,surName,foreName,userType,isActive) VALUES (1,'supertech','1234','Akhond','YS',3,1);
 INSERT INTO bo_user (id,loginID,password,surName,foreName,userType,isActive) VALUES (2,'admin','1234','Admin','Admin',2,1);
 INSERT INTO bo_user (id,loginID,password,surName,foreName,userType,isActive) VALUES (3,'ashik','1234','Rahman','Ashik',2,1);
-INSERT INTO bo_user (id,loginID,password,surName,foreName,userType,isActive) VALUES (4,'nahid','1234','Rahman','Nahid',1,1);
-INSERT INTO bo_user (id,loginID,password,surName,foreName,userType,isActive) VALUES (5,'ikbal','1234','Hussain','Ikbal',1,1);
-INSERT INTO bo_user (id,loginID,password,surName,foreName,userType,isActive) VALUES (6,'sales','1234','Sales','Sales',0,1);
 
 INSERT INTO additionalCharge (id,title,charge,calculationType,isArchived) VALUES (1,'Card Handling','0.00',2,true);
 INSERT INTO additionalCharge (id,title,charge,calculationType,isArchived) VALUES (2,'Postage','0.00',1,true);
@@ -16,6 +13,7 @@ INSERT INTO category (id,title) VALUES (4,'Legal');
 INSERT INTO category (id,title) VALUES (5,'Hotel');
 INSERT INTO category (id,title) VALUES (6,'Air Transport');
 INSERT INTO category (id,title) VALUES (7,'Road Transport');
+INSERT INTO category (id,title) VALUES (8,'Passport');
 
 INSERT INTO airline (code,name,calculationType,bspCom) VALUES ('AI','NACIL AIR INDIA',0,0.00);
 INSERT INTO airline (code,name,calculationType,bspCom) VALUES ('SV','SAUDI ARABIAN AIRLINES',0,0.00);

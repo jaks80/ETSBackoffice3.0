@@ -5,6 +5,7 @@ import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.accountingdoc.model.BSPReport;
 import com.ets.accountingdoc.service.TPurchaseAcDocService;
 import com.ets.accountingdoc.model.InvoiceReport;
+import com.ets.productivity.model.ProductivityReport;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.ArrayList;
@@ -169,6 +170,20 @@ public class TicketingPurchaseAcDocWS {
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
 
         InvoiceReport report = service.invoiceHistoryReport(agentid, dateFrom, dateTo);
+
+        return report;
+    }
+    
+    @GET
+    @Path("/allagentduereport")
+    @RolesAllowed("AD")    
+    public ProductivityReport allAgentDueReport(
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+        ProductivityReport report = service.allAgentDueReport(dateFrom,dateTo);
 
         return report;
     }

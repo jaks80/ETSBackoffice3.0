@@ -310,6 +310,18 @@ public class PaymentService {
         return payment_list;
     }
 
+    public synchronized List<TransactionReceipt> findOtherPaymentReceipts(Enums.ClientType clienttype, Long clientid, Date from, Date to, Enums.SaleType saleType) {
+        List<Payment> payment_list = findOtherPaymentHistory(clienttype, clientid, from, to, saleType);
+        List<TransactionReceipt> receipt_list = new ArrayList<>();
+        
+        for(Payment payment:payment_list){
+         TransactionReceipt receipt = new TransactionReceipt(payment);
+         receipt_list.add(receipt);
+        }
+        
+        return receipt_list;
+    }
+    
     public List<Payment> findTicketingSalesCashBook(Date from, Date to, Long userId,
             Enums.ClientType clienttype, Long clientid, Enums.PaymentType paymentType) {
         List<Payment> payment_list = dao.findTicketingSalesCashBook(from, to, userId, clienttype, clientid, paymentType);

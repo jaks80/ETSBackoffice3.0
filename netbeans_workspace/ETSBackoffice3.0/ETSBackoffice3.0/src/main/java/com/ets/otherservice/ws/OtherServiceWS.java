@@ -54,6 +54,17 @@ public class OtherServiceWS {
         return otherService;
     }
     
+    @GET
+    @Path("/otherservices/bykeyword")
+    @RolesAllowed("GS")
+    public OtherServices findByKeyword(@QueryParam("keyword") String keyword) {
+
+        List<OtherService> list = service.findItemsByKeyword(keyword);
+        OtherServices otherService = new OtherServices();
+        otherService.setList(list);
+        return otherService;
+    }
+    
     @POST
     @Path("/new")
     @RolesAllowed("SM")

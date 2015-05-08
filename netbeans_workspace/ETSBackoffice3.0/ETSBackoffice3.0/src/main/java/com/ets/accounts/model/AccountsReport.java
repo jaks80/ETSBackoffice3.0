@@ -3,10 +3,7 @@ package com.ets.accounts.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -14,9 +11,16 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
-public class AccountsReport implements Serializable {    
+public class AccountsReport implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @XmlElement
+    private String reportTitle;
+    @XmlElement
+    private String dateFrom;
+    @XmlElement
+    private String dateTo;
     
     @XmlElement
     private String clientName;
@@ -30,22 +34,27 @@ public class AccountsReport implements Serializable {
     private String email;
     @XmlElement
     private String fax;
+    
     @XmlElement
     private List<AccountsLine> lines = new ArrayList<>();
     @XmlElement
-    private String openingBalance = new String("0.00");
+    private String openingBalance = "0.00";
     @XmlElement
-    private String closingBalance = new String("0.00");
+    private String closingBalance = "0.00";
     @XmlElement
-    private String totalInvAmount = new String("0.00");
+    private String totalInvAmount = "0.00";
     @XmlElement
-    private String totalDMAmount = new String("0.00");
+    private String totalDMAmount = "0.00";
     @XmlElement
-    private String totalCMAmount = new String("0.00");
+    private String totalCMAmount = "0.00";
     @XmlElement
-    private String totalPayment = new String("0.00");
+    private String totalPayment = "0.00";
     @XmlElement
-    private String totalRefund = new String("0.00");
+    private String totalRefund = "0.00";
+
+    public AccountsReport() {
+        
+    }
 
     public String getOpeningBalance() {
         return openingBalance;
@@ -120,7 +129,7 @@ public class AccountsReport implements Serializable {
     }
 
     public void addLine(AccountsLine line) {
-        
+
         this.getLines().add(line);
     }
 
@@ -162,6 +171,30 @@ public class AccountsReport implements Serializable {
 
     public void setTotalRefund(String totalRefund) {
         this.totalRefund = totalRefund;
+    }
+
+    public String getReportTitle() {
+        return reportTitle;
+    }
+
+    public void setReportTitle(String reportTitle) {
+        this.reportTitle = reportTitle;
+    }
+
+    public String getDateFrom() {
+        return dateFrom;
+    }
+
+    public void setDateFrom(String dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public String getDateTo() {
+        return dateTo;
+    }
+
+    public void setDateTo(String dateTo) {
+        this.dateTo = dateTo;
     }
 
     @XmlAccessorType(XmlAccessType.NONE)

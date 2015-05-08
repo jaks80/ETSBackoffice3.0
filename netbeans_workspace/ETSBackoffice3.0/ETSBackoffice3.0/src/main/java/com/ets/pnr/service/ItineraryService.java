@@ -21,6 +21,12 @@ public class ItineraryService {
     @Resource(name = "itineraryDAO")
     private ItineraryDAO dao;
 
+    public Itinerary save(Itinerary itinerary) {
+        dao.save(itinerary);
+        
+        return itinerary;
+    }
+        
     public SegmentReport segmentReport(String ticketStatus,
             String airLineCode, String from, String to, String officeId) {
 

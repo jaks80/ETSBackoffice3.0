@@ -86,8 +86,9 @@ public class AgentWS {
 
     @DELETE
     @Path("/delete/{id}")
-    @RolesAllowed("SM")
+    @RolesAllowed("AD")
     public Response delete(@PathParam("id") long id) {
+        service.delete(id);
         return Response.status(200).build();
     }
 }

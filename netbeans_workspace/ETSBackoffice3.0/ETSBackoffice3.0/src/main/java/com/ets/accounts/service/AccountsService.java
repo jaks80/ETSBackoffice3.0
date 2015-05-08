@@ -3,16 +3,18 @@ package com.ets.accounts.service;
 import com.ets.accountingdoc_o.dao.OtherSalesAcDocDAO;
 import com.ets.accountingdoc.dao.TPurchaseAcDocDAO;
 import com.ets.accountingdoc.dao.TSalesAcDocDAO;
-import com.ets.accountingdoc.domain.OtherSalesAcDoc;
-import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
-import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
+import com.ets.accountingdoc.domain.*;
 import com.ets.accounts.model.AccountsReport;
+import com.ets.client.domain.Contactable;
+import com.ets.client.service.AgentService;
+import com.ets.client.service.CustomerService;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,17 +29,41 @@ public class AccountsService {
 
     @Resource(name = "tPurchaseAcDocDAO")
     private TPurchaseAcDocDAO purchase_dao;
-    
+
     @Resource(name = "otherSalesAcDocDAO")
     private OtherSalesAcDocDAO other_dao;
 
+    @Autowired
+    AgentService agentService;
+
+    @Autowired
+    CustomerService customerService;
 
     public AccountsReport generateClientStatement(Enums.ClientType clienttype, Long clientid, Date from, Date to) {
 
         BigDecimal balance_brought_forward = sales_dao.getAccountBallanceToDate(clienttype, clientid, from);
         List<TicketingSalesAcDoc> docs = sales_dao.findAllDocuments(clienttype, clientid, from, to);
 
+        Contactable cont = null;
+        if (clienttype.equals(Enums.ClientType.AGENT)) {
+            cont = agentService.getAgent(clientid);
+        } else if (clienttype.equals(Enums.ClientType.CUSTOMER)) {
+            cont = customerService.getCustomer(clientid);
+        }
+
         AccountsReport report = new AccountsReport();
+        report.setReportTitle("Client Account Statement");
+        report.setDateFrom(DateUtil.dateToString(from));
+        report.setDateTo(DateUtil.dateToString(to));
+        if (cont != null) {
+            report.setClientName(cont.calculateFullName());
+            report.setEmail(cont.getEmail());
+            report.setFax(cont.getFax());
+            report.setMobile(cont.getMobile());
+            report.setTelNo(cont.getMobile());
+            report.setAddressCRSeperated(cont.getAddressCRSeperated());
+        }
+
         report.setOpeningBalance(balance_brought_forward.toString());
 
         BigDecimal line_balance = balance_brought_forward;
@@ -111,12 +137,27 @@ public class AccountsService {
         return report;
     }
 
-    public AccountsReport generateVendorStatement(Enums.ClientType clienttype, Long clientid, Date from, Date to) {
+    public AccountsReport generateVendorStatement(Long clientid, Date from, Date to) {
 
         BigDecimal balance_brought_forward = purchase_dao.getAccountBallanceToDate(clientid, from);
         List<TicketingPurchaseAcDoc> docs = purchase_dao.findAllDocuments(clientid, from, to);
 
+        Contactable cont = agentService.getAgent(clientid);      
+
         AccountsReport report = new AccountsReport();
+        report.setReportTitle("Vendor Account Statement");
+        report.setDateFrom(DateUtil.dateToString(from));
+        report.setDateTo(DateUtil.dateToString(to));
+        
+        if (cont != null) {
+            report.setClientName(cont.calculateFullName());
+            report.setEmail(cont.getEmail());
+            report.setFax(cont.getFax());
+            report.setMobile(cont.getMobile());
+            report.setTelNo(cont.getMobile());
+            report.setAddressCRSeperated(cont.getAddressCRSeperated());
+        }
+        
         report.setOpeningBalance(balance_brought_forward.toString());
 
         BigDecimal line_balance = balance_brought_forward;
@@ -189,13 +230,32 @@ public class AccountsService {
         report.setClosingBalance(line_balance.toString());
         return report;
     }
-    
+
     public AccountsReport generateClientStatementOther(Enums.ClientType clienttype, Long clientid, Date from, Date to) {
 
         BigDecimal balance_brought_forward = other_dao.getAccountBallanceToDate(clienttype, clientid, from);
         List<OtherSalesAcDoc> docs = other_dao.findAllDocuments(clienttype, clientid, from, to);
 
+        Contactable cont = null;
+        if (clienttype.equals(Enums.ClientType.AGENT)) {
+            cont = agentService.getAgent(clientid);
+        } else if (clienttype.equals(Enums.ClientType.CUSTOMER)) {
+            cont = customerService.getCustomer(clientid);
+        }
+
         AccountsReport report = new AccountsReport();
+        report.setReportTitle("Client Account Statement");
+        report.setDateFrom(DateUtil.dateToString(from));
+        report.setDateTo(DateUtil.dateToString(to));
+        
+        if (cont != null) {
+            report.setClientName(cont.calculateFullName());
+            report.setEmail(cont.getEmail());
+            report.setFax(cont.getFax());
+            report.setMobile(cont.getMobile());
+            report.setTelNo(cont.getMobile());
+            report.setAddressCRSeperated(cont.getAddressCRSeperated());
+        }
         report.setOpeningBalance(balance_brought_forward.toString());
 
         BigDecimal line_balance = balance_brought_forward;
@@ -229,7 +289,7 @@ public class AccountsService {
             line.setDocType(doc.getType().toString());
 
             StringBuilder sb = new StringBuilder();
-            sb.append(doc.getReference());                    ;
+            sb.append(doc.getReference());;
 
             if (doc.getRemark() != null) {
                 sb.append(doc.getRemark()).append(" ");
@@ -262,5 +322,5 @@ public class AccountsService {
 
         report.setClosingBalance(line_balance.toString());
         return report;
-    }    
+    }
 }

@@ -27,4 +27,17 @@ public class OtherServiceDAOImpl extends GenericDAOImpl<OtherService, Long> impl
         return query.list();
     }
 
+    @Override
+    public List<OtherService> findItemsByKeyword(String keyword) {
+        keyword = "%".concat(keyword.concat("%"));
+
+        String hql = "from OtherService os "
+                + "left join fetch os.category as cat "
+                + "where "
+                + "(os.title like :keyword)";
+        Query query = getSession().createQuery(hql);
+        query.setParameter("keyword", keyword);
+        return query.list();
+    }
+
 }

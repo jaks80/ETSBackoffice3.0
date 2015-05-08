@@ -7,11 +7,15 @@ import com.ets.pnr.domain.Ticket;
 import com.ets.accountingdoc.model.InvoiceReport;
 import com.ets.pnr.model.GDSSaleReport;
 import com.ets.pnr.service.TicketService;
+import com.ets.productivity.model.ProductivityReport;
+import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import com.ets.util.PnrUtil;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -196,7 +200,7 @@ public class TPurchaseAcDocService {
                 related.setParent(null);
             }
             AcDocUtil.undefineTPAcDoc(inv, inv.getTickets());
-            inv.setAdditionalChargeLines(null);            
+            inv.setAdditionalChargeLines(null);
             inv.getPnr().setTickets(null);
             inv.getPnr().setRemarks(null);
             PnrUtil.undefinePnrInSegments(inv.getPnr(), inv.getPnr().getSegments());
@@ -266,6 +270,26 @@ public class TPurchaseAcDocService {
 
         InvoiceReport report = InvoiceReport.serializeToPurchaseSummery(agentid, dueInvoices, dateStart, dateEnd);
         report.setTitle("Vendor Due Invoice Report");
+        return report;
+    }
+
+    public ProductivityReport allAgentDueReport(Date dateStart,Date dateEnd) {
+
+        Map<String, BigDecimal> productivityLine = dao.allAgentOutstandingReport(dateStart,dateEnd);
+
+        ProductivityReport report = new ProductivityReport();
+        report.setTitle("Outstanding Invoice Report");
+        report.setSaleType(Enums.SaleType.TKTPURCHASE);
+        report.setDateFrom(DateUtil.dateToString(dateStart));
+        report.setDateTo(DateUtil.dateToString(dateEnd));
+        
+        for (String key : productivityLine.keySet()) {
+             ProductivityReport.ProductivityLine line = new ProductivityReport.ProductivityLine();
+            line.setKey(key);
+            line.setValue(productivityLine.get(key).abs().toString());
+            report.addLine(line);
+        }
+
         return report;
     }
 }

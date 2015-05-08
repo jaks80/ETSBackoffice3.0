@@ -3,7 +3,7 @@ package com.ets.accountingdoc_o.service;
 import com.ets.accountingdoc.domain.*;
 import com.ets.accountingdoc_o.dao.*;
 import com.ets.accountingdoc_o.model.*;
-import com.ets.productivity.model.UserProductivityReport;
+import com.ets.productivity.model.ProductivityReport;
 import com.ets.accountingdoc.service.AcDocUtil;
 import com.ets.settings.domain.User;
 import com.ets.util.DateUtil;
@@ -139,7 +139,7 @@ public class OSalesAcDocService {
 
         List<OtherSalesAcDoc> dueInvoices = dueInvoices(type, clienttype, clientid, dateStart, dateEnd);
         InvoiceReportOther report = InvoiceReportOther.serializeToSalesSummery(clientid, dueInvoices, dateStart, dateEnd);
-        report.setTitle("Outstanding Hostory Report");
+        report.setTitle("Outstanding Invoice Report");
         return report;
     }
 
@@ -185,35 +185,42 @@ public class OSalesAcDocService {
         return sale_report;
     }
 
-    public UserProductivityReport userProductivityReport(Date from, Date to) {
+    public ProductivityReport userProductivityReport(Date from, Date to) {
 
         Map<User, BigDecimal> productivityLine = dao.userProductivityReport(from, to);
 
-        UserProductivityReport report = new UserProductivityReport();
+        ProductivityReport report = new ProductivityReport();
         report.setTitle("Productivity Report");
         report.setDateFrom(DateUtil.dateToString(from));
         report.setDateTo(DateUtil.dateToString(to));
         report.setSaleType(Enums.SaleType.OTHERSALES);
 
         for (User key : productivityLine.keySet()) {
-            report.getProductivityLine().put(key.calculateFullName(), productivityLine.get(key).toString());
+            //report.getProductivityLine().put(key.calculateFullName(), productivityLine.get(key).toString());
+            ProductivityReport.ProductivityLine line = new ProductivityReport.ProductivityLine();
+            line.setKey(key.calculateFullName());
+            line.setValue(productivityLine.get(key).abs().toString());
+            report.addLine(line);
         }
 
         return report;
     }
 
-    public UserProductivityReport agentOutstandingReport(Date from, Date to) {
+    public ProductivityReport agentOutstandingReport(Date dateStart,Date dateEnd) {
 
-        Map<String, BigDecimal> productivityLine = dao.agentOutstandingReport(from, to);
+        Map<String, BigDecimal> productivityLine = dao.allAgentOutstandingReport(dateStart,dateEnd);
 
-        UserProductivityReport report = new UserProductivityReport();
+        ProductivityReport report = new ProductivityReport();
         report.setTitle("Agent Outstanding Report");
-        report.setDateFrom(DateUtil.dateToString(from));
-        report.setDateTo(DateUtil.dateToString(to));
         report.setSaleType(Enums.SaleType.OTHERSALES);
+        report.setDateFrom(DateUtil.dateToString(dateStart));
+        report.setDateTo(DateUtil.dateToString(dateEnd));
 
         for (String key : productivityLine.keySet()) {
-            report.getProductivityLine().put(key, productivityLine.get(key).toString());
+             ProductivityReport.ProductivityLine line = new ProductivityReport.ProductivityLine();
+            line.setKey(key);
+            line.setValue(productivityLine.get(key).abs().toString());
+            report.addLine(line);
         }
 
         return report;

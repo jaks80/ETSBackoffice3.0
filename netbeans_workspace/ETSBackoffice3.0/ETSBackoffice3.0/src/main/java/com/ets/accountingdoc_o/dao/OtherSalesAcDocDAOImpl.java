@@ -306,7 +306,7 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
 
     @Override
     @Transactional(readOnly = true)
-    public Map<String, BigDecimal> agentOutstandingReport(Date from, Date to) {
+    public Map<String, BigDecimal> allAgentOutstandingReport(Date from,Date to) {
         String hql = "select agent.name, coalesce(sum(a.documentedAmount),0) as balance "
                 + "from OtherSalesAcDoc a "
                 + "inner join a.agent as agent "
@@ -317,7 +317,7 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
         Query query = getSession().createQuery(hql);
         query.setParameter("from", from);
         query.setParameter("to", to);
-
+        
         List results = query.list();
         Map<String, BigDecimal> map = new LinkedHashMap<>();
 

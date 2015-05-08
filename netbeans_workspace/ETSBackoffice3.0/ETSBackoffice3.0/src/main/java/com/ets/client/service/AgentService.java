@@ -83,8 +83,8 @@ public class AgentService {
         return agent;
     }
 
-    public void delete(Agent agent) {
+    public void delete(Long id) {
+        Agent agent = dao.findByID(Agent.class, id);
         dao.delete(agent);
     }
-
 }

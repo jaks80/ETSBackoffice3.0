@@ -320,7 +320,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + "where a.status <> 2 "
                 + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
                 + clientcondition
-                + " order by a.docIssueDate asc";
+                + " order by a.id asc";
 
         Query query = getSession().createQuery(hql);
         if (!clientcondition.isEmpty()) {
@@ -401,7 +401,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
 
     @Override
     @Transactional(readOnly = true)
-    public Map<String, BigDecimal> agentOutstandingReport(Date from, Date to) {
+    public Map<String, BigDecimal> allAgentOutstandingReport(Date from,Date to) {
         String hql = "select agent.name, coalesce(sum(a.documentedAmount),0) as balance "
                 + "from TicketingSalesAcDoc a "
                 + "left join a.pnr as p "
@@ -413,7 +413,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         Query query = getSession().createQuery(hql);
         query.setParameter("from", from);
         query.setParameter("to", to);
-
+        
         List results = query.list();
         Map<String, BigDecimal> map = new LinkedHashMap<>();
 

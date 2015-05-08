@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.*;
 public class InvoiceReport implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @XmlElement
     private String title;
     @XmlElement
@@ -110,7 +110,7 @@ public class InvoiceReport implements Serializable {
             invSummery.setOtherAmount(invoice.calculateTotalDebitMemo().add(invoice.calculateTotalCreditMemo()));
             invSummery.setPayment((invoice.calculateTotalPayment().add(invoice.calculateTotalRefund())).abs());
             invSummery.setDue(invoice.calculateDueAmount());
-            
+
             invSummery.setInvBy(invoice.getCreatedBy().calculateFullName());
 
             totalInvAmount = totalInvAmount.add(invoice.getDocumentedAmount());

@@ -6,12 +6,11 @@ import com.ets.accountingdoc_o.model.InvoiceReportOther;
 import com.ets.accountingdoc_o.model.OtherInvoiceModel;
 import com.ets.accountingdoc_o.model.ServicesSaleReport;
 import com.ets.accountingdoc_o.service.OSalesAcDocService;
-import com.ets.productivity.model.UserProductivityReport;
+import com.ets.productivity.model.ProductivityReport;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -82,7 +81,7 @@ public class OtherSalesAcDocWS {
     public OtherSalesAcDocs outstandingInvoices(
             @QueryParam("doctype") Enums.AcDocType doctype,
             @QueryParam("clienttype") Enums.ClientType clienttype,
-            @QueryParam("clientid") Long clientid,            
+            @QueryParam("clientid") Long clientid,
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd) {
 
@@ -90,23 +89,22 @@ public class OtherSalesAcDocWS {
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
 
         List<OtherSalesAcDoc> list = service.dueInvoices(doctype,
-                clienttype,clientid, dateFrom, dateTo);
+                clienttype, clientid, dateFrom, dateTo);
 
         OtherSalesAcDocs docs = new OtherSalesAcDocs();
         docs.setList(list);
         return docs;
     }
-    
+
     //*****************Reporting Methods are Bellow******************//
-    
     @GET
     @Path("/model/byid/{id}")
-    @RolesAllowed("GS")    
+    @RolesAllowed("GS")
     public OtherInvoiceModel getModelbyId(@PathParam("id") long id) {
         OtherInvoiceModel model = service.getModelbyId(id);
         return model;
     }
-    
+
     @GET
     @Path("/acdoc_report")
     @RolesAllowed("SM")
@@ -148,16 +146,16 @@ public class OtherSalesAcDocWS {
 
         return report;
     }
-    
+
     @GET
     @Path("/services_salereport")
-    @RolesAllowed("SM")    
+    @RolesAllowed("SM")
     public ServicesSaleReport servicesSaleReport(
             @QueryParam("clienttype") Enums.ClientType clienttype,
             @QueryParam("clientid") Long clientid,
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd,
-            @QueryParam("categoryId") Long categoryId, 
+            @QueryParam("categoryId") Long categoryId,
             @QueryParam("itemId") Long itemId) {
 
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
@@ -167,35 +165,31 @@ public class OtherSalesAcDocWS {
 
         return report;
     }
-    
+
     @GET
     @Path("/user_productivity")
-    @RolesAllowed("SM")    
-    public UserProductivityReport userProducivityReport(
+    @RolesAllowed("SM")
+    public ProductivityReport userProducivityReport(
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd) {
 
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
-        
-        UserProductivityReport report = service.userProductivityReport(dateFrom, dateTo);
+
+        ProductivityReport report = service.userProductivityReport(dateFrom, dateTo);
 
         return report;
     }
-    
+
     @GET
-    @Path("/agentduereport")
-    //@RolesAllowed("SM")
-    @PermitAll
-    public UserProductivityReport agentDueReport(
+    @Path("/allagentduereport")
+    @RolesAllowed("AD")
+    public ProductivityReport agentDueReport(
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd) {
-
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
-
-        UserProductivityReport report = service.agentOutstandingReport(dateFrom, dateTo);
-
+        ProductivityReport report = service.agentOutstandingReport(dateFrom,dateTo);
         return report;
     }
 }

@@ -23,6 +23,8 @@ public class OtherInvoiceSummery implements Serializable {
     @XmlElement
     private Long id;
     @XmlElement
+    private Long parentId;
+    @XmlElement
     private Long reference;
     @XmlElement
     private Enums.AcDocType type;
@@ -180,5 +182,13 @@ public class OtherInvoiceSummery implements Serializable {
 
     public void setInvBy(String invBy) {
         this.invBy = invBy;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 }
