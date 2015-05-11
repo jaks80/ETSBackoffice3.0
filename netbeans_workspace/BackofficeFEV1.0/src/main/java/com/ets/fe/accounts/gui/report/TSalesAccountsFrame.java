@@ -143,10 +143,10 @@ public class TSalesAccountsFrame extends javax.swing.JInternalFrame implements P
                 s = o.toString();        
             }
 
-            if(s.equalsIgnoreCase("INVOICE") || s.equalsIgnoreCase("DEBITMEMO")|| s.equalsIgnoreCase("REFUND")){
-                c.setForeground(Color.red);
-            }else if(s.equalsIgnoreCase("PAYMENT") || s.equalsIgnoreCase("CREDITMEMO")){
-                c.setForeground(Color.green);
+            if(s.equalsIgnoreCase("INVOICE") || s.equalsIgnoreCase("DEBITMEMO")){
+                c.setForeground(Color.GREEN);
+            }else if(s.equalsIgnoreCase("REFUND") || s.equalsIgnoreCase("CREDITMEMO")){
+                c.setForeground(Color.RED);
             }else{
                 c.setForeground(Color.WHITE);
             }

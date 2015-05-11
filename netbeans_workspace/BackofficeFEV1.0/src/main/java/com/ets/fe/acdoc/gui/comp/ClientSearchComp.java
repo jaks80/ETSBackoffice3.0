@@ -219,6 +219,7 @@ public class ClientSearchComp extends javax.swing.JPanel implements PropertyChan
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(jLabel1, gridBagConstraints);

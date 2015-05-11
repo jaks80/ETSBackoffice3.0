@@ -27,7 +27,7 @@ public class AcDocHeaderComponent extends JPanel {
         } else {
             cmbTerms.setEnabled(false);
         }
-        
+
         txtUser.setText(doc.getCreatedByName());
         if (doc instanceof TicketingSalesAcDoc || doc instanceof OtherSalesAcDoc) {
             txtVendorRef.setVisible(false);
@@ -43,16 +43,30 @@ public class AcDocHeaderComponent extends JPanel {
             lblVendorRef.setVisible(false);
         }
 
-        if(doc.getDocIssueDate()!=null){
-         txtIssueDate.setText(DateUtil.dateToString(doc.getDocIssueDate()));
+        if (doc.getDocIssueDate() != null) {
+            txtIssueDate.setText(DateUtil.dateToString(doc.getDocIssueDate()));
         }
         if (doc.getReference() != null) {
             txtInvRef.setText(doc.getReference().toString());
         }
-        if(doc.getTerms()!=null){
-        cmbTerms.setSelectedItem(doc.getTerms());
-        }else{
-         cmbTerms.setSelectedIndex(0);
+
+        if (doc.getTerms() != null) {
+            cmbTerms.setSelectedItem(doc.getTerms());
+        } else {
+            if (doc instanceof OtherSalesAcDoc) {
+                OtherSalesAcDoc d = (OtherSalesAcDoc) doc;
+                if (d.getCustomer() == null) {
+                    cmbTerms.setSelectedItem("End of Month");
+                } else {
+                    cmbTerms.setSelectedIndex(0);
+                }
+            } else {
+                if (doc.getPnr().getCustomer() == null) {
+                    cmbTerms.setSelectedItem("End of Month");
+                } else {
+                    cmbTerms.setSelectedIndex(0);
+                }
+            }
         }
     }
 

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.swing.JRViewer;
 
 /**
  *
@@ -22,7 +23,7 @@ public class BeanJasperReport {
     private String refference;
 
     public BeanJasperReport() {
-       
+
     }
 
     /**
@@ -50,8 +51,8 @@ public class BeanJasperReport {
         } else if (sale_type.equals(Enums.SaleType.OTHERSALES)) {
             template = BeanJasperReport.class.getResourceAsStream("/Report/oinvoice/OtherInvoice.jasper");
         }
-        
-        JasperPrint jasperPrint = prepareReport(template, beanCollection);        
+
+        JasperPrint jasperPrint = prepareReport(template, beanCollection);
         takeAction(actionType, jasperPrint);
     }
 
@@ -62,13 +63,12 @@ public class BeanJasperReport {
         takeAction(actionType, jasperPrint);
         //return jasperPrint;
     }
-       
+
     public JasperPrint productivityReport(Collection<?> beanCollection, String actionType) {
 
         InputStream template = BeanJasperReport.class.getResourceAsStream("/Report/productivity/Productivity.jasper");
 
         JasperPrint jasperPrint = prepareReport(template, beanCollection);
-        //takeAction(actionType, jasperPrint);
         return jasperPrint;
     }
 
@@ -80,7 +80,7 @@ public class BeanJasperReport {
         takeAction(actionType, jasperPrint);
     }
 
-    public void invoiceReport(Collection<?> beanCollection, Enums.SaleType saletype, String actionType) {
+    public JRViewer invoiceReport(Collection<?> beanCollection, Enums.SaleType saletype, String actionType) {
 
         InputStream template = null;
         if (saletype.equals(Enums.SaleType.OTHERSALES)) {
@@ -90,7 +90,13 @@ public class BeanJasperReport {
         }
 
         JasperPrint jasperPrint = prepareReport(template, beanCollection);
-        takeAction(actionType, jasperPrint);
+        if ("VIEW".equals(actionType)) {
+            return viewReport(jasperPrint);
+        } else {
+            takeAction(actionType, jasperPrint);
+        }
+
+        return null;
     }
 
     public void transactionReceipt(Collection<?> beanCollection, Enums.SaleType sale_type, String actionType) {
@@ -109,7 +115,7 @@ public class BeanJasperReport {
 
     private void takeAction(String actionType, JasperPrint jasperPrint) {
         if ("VIEW".equals(actionType)) {
-            viewReport(jasperPrint);
+            viewReportFrame(jasperPrint);
         } else if ("EMAIL".equals(actionType)) {
             emailReport(this.recepeintAddress, this.subject, this.body, this.refference, jasperPrint);
         } else if ("PRINT".equals(actionType)) {
@@ -117,7 +123,12 @@ public class BeanJasperReport {
         }
     }
 
-    private void viewReport(JasperPrint jasperPrint) {
+    public JRViewer viewReport(JasperPrint jasperPrint) {
+        JRViewer viewer = new JRViewer(jasperPrint);
+        return viewer;
+    }
+
+    private void viewReportFrame(JasperPrint jasperPrint) {
         ReportViewerFrame rptViewer = new ReportViewerFrame();
         rptViewer.viewReport(jasperPrint, "Report Viewer");
     }

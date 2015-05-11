@@ -69,7 +69,7 @@ public class OtherServiceDlg extends JDialog implements ActionListener {
             txtCost.setText(otherService.getPurchaseCost().toString());
             txtPrice.setText(otherService.getSellingPrice().toString());
             cmbVat.setSelectedIndex(otherService.isVatable());
-            cmbActive.setSelectedIndex(otherService.getIsActive());            
+            cmbActive.setSelectedIndex(otherService.getActive());            
         }
         save = false;
         setLocationRelativeTo(this);
@@ -81,7 +81,7 @@ public class OtherServiceDlg extends JDialog implements ActionListener {
             otherService.setPurchaseCost(new BigDecimal(txtCost.getText().trim()));
             otherService.setSellingPrice(new BigDecimal(txtPrice.getText().trim()));
             otherService.setVatable(cmbVat.getSelectedIndex());
-            otherService.setIsActive(cmbActive.getSelectedIndex());
+            otherService.setActive(cmbActive.getSelectedIndex());
             
             for (Category c : categories) {
                 if (c.getTitle().equals(cmbCat.getSelectedItem())) {

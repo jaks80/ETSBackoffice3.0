@@ -28,7 +28,7 @@ public class OtherService extends PersistentObject implements Serializable {
     @XmlElement
     private int vatable;//0-no, 1-yes
     @XmlElement
-    private int isActive;//0-ni, 1-yes
+    private int active;//0-ni, 1-yes
     @XmlElement    
     private Category category;
     
@@ -80,13 +80,7 @@ public class OtherService extends PersistentObject implements Serializable {
         return vatable;
     }
 
-    public int getIsActive() {
-        return isActive;
-    }
 
-    public void setIsActive(int isActive) {
-        this.isActive = isActive;
-    }
 
     public Category getCategory() {
         return category;
@@ -94,5 +88,13 @@ public class OtherService extends PersistentObject implements Serializable {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
     }
 }

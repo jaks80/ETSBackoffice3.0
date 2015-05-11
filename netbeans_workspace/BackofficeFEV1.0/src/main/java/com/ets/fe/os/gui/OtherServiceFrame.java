@@ -68,18 +68,20 @@ public class OtherServiceFrame extends JInternalFrame implements PropertyChangeL
             for (int i = 0; i < services.size(); i++) {
                 OtherService os = services.get(i);
                 String vat = "NO";
-                String archive = "No";
+                String active = "No";
                 if (os.isVatable() == 1) {
                     vat = "YES";
                 }
-                if (os.getIsActive() == 1) {
-                    archive = "YES";
+                if (os.getActive()== 0) {
+                    active = "YES";
+                }else{
+                 active = "NO";
                 }
                 String category = "";
                 if (os.getCategory() != null) {
                     category = os.getCategory().getTitle();
                 }
-                tableModel.insertRow(i, new Object[]{i + 1, os.getTitle(), os.getPurchaseCost(), os.getSellingPrice(), vat, archive, category});
+                tableModel.insertRow(i, new Object[]{i + 1, os.getTitle(), os.getPurchaseCost(), os.getSellingPrice(), vat, active, category});
             }
             tblService.setRowSelectionInterval(0, 0);
         } else {

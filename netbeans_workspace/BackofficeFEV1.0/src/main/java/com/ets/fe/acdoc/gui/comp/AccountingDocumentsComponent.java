@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
@@ -101,6 +102,10 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
             saleType = SaleType.TKTSALES;
             if (index != -1) {
                 doc = tSAcDocList.get(index);
+                if (doc.getType().equals(Enums.AcDocType.PAYMENT) || doc.getType().equals(Enums.AcDocType.REFUND)) {
+                    JOptionPane.showMessageDialog(null, "Delete/Void Payment in Payment History", "Delete Payment", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
                 doc.recordUpdateBy();
             }
         } else if (tabAcDoc.getSelectedIndex() == 1) {
@@ -108,6 +113,10 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
             saleType = SaleType.TKTPURCHASE;
             if (index != -1) {
                 doc = tPAcDocList.get(index);
+                if (doc.getType().equals(Enums.AcDocType.PAYMENT) || doc.getType().equals(Enums.AcDocType.REFUND)) {
+                    JOptionPane.showMessageDialog(null, "Delete/Void Payment in Payment History", "Delete Payment", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
                 doc.recordUpdateBy();
             }
         }
@@ -235,9 +244,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                 return c;} 
         };
         btnViewDocument = new javax.swing.JButton();
-        btnPrint = new javax.swing.JButton();
         btnVoid = new javax.swing.JButton();
-        btnRefresh = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
 
         tblSales.setModel(new javax.swing.table.DefaultTableModel(
@@ -304,11 +311,6 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
             }
         });
 
-        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
-        btnPrint.setMaximumSize(new java.awt.Dimension(35, 25));
-        btnPrint.setMinimumSize(new java.awt.Dimension(35, 25));
-        btnPrint.setPreferredSize(new java.awt.Dimension(35, 25));
-
         btnVoid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/void18.png"))); // NOI18N
         btnVoid.setToolTipText("<html>\n<p>Void Invoice: VOID related documents before, if there is any.\n<br>For example, void payment/debit memo/credit memo before voiding invoice<p>\n</html>");
         btnVoid.setMaximumSize(new java.awt.Dimension(35, 25));
@@ -319,11 +321,6 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                 btnVoidActionPerformed(evt);
             }
         });
-
-        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refresh18.png"))); // NOI18N
-        btnRefresh.setMaximumSize(new java.awt.Dimension(35, 25));
-        btnRefresh.setMinimumSize(new java.awt.Dimension(35, 25));
-        btnRefresh.setPreferredSize(new java.awt.Dimension(35, 25));
 
         btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete18.png"))); // NOI18N
         btnDelete.setToolTipText("<html>\n<p>Only VOID document can be deleted.<br> Delete related documents before deleting invoice<p>\n</html>");
@@ -344,8 +341,6 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnViewDocument, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addComponent(tabAcDoc, javax.swing.GroupLayout.DEFAULT_SIZE, 509, Short.MAX_VALUE))
@@ -357,11 +352,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnViewDocument, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(2, 2, 2)
-                        .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(2, 2, 2)
-                        .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
                         .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(2, 2, 2)
                         .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -396,8 +387,6 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnPrint;
-    private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnViewDocument;
     private javax.swing.JButton btnVoid;
     private javax.swing.JScrollPane jScrollPane1;
@@ -471,7 +460,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                                 }
                             }
                         }
-                        
+
                     } else if ("VOID".equals(taskType) || "DELETE".equals(taskType)) {
                         parent.loadCompletePnr();
                     }

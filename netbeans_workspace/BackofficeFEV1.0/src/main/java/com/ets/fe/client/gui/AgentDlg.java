@@ -98,7 +98,7 @@ public class AgentDlg extends JDialog implements ActionListener {
             } else {
                 txtName.requestFocusInWindow();
             }
-            chkActive.setSelected(agent.isIsActive());
+            chkActive.setSelected(agent.isActive());
         }
         save = false;
         setLocationRelativeTo(this);
@@ -126,7 +126,7 @@ public class AgentDlg extends JDialog implements ActionListener {
             agent.setIata(txtIATA.getText().trim());
             agent.setAbta(txtAbta.getText().trim());
             agent.setOfficeID(txtOfficeId.getText().trim());
-            agent.setIsActive(chkActive.isSelected());
+            agent.setActive(chkActive.isSelected());
         }
         return save;
     }

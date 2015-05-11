@@ -28,7 +28,7 @@ public class Agent extends Contactable implements Serializable {
     @XmlElement
     private String officeID;
     @XmlElement
-    private boolean isActive;
+    private boolean active;
 
     public Agent() {
         super();
@@ -96,11 +96,12 @@ public class Agent extends Contactable implements Serializable {
         return this.name;
     }
 
-    public boolean isIsActive() {
-        return isActive;
+    public boolean isActive() {
+        return active;
     }
 
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
+    public void setActive(boolean active) {
+        this.active = active;
     }
+
 }

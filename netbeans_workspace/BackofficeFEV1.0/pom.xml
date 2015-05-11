@@ -92,6 +92,7 @@
 
     <build>
         <plugins>
+    
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -112,7 +113,7 @@
                         </transformer>
                     </transformers>
                 </configuration>
-            </plugin>                 
+            </plugin>    
         </plugins>
     </build>
     <repositories>

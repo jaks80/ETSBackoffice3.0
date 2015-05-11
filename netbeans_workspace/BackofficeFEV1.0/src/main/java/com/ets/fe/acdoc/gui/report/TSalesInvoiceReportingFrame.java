@@ -1,7 +1,6 @@
 package com.ets.fe.acdoc.gui.report;
 
 import com.ets.fe.Application;
-import com.ets.fe.accounts.model.TransactionReceipt;
 import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
@@ -25,8 +24,11 @@ import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import net.sf.jasperreports.swing.JRViewer;
 import org.jdesktop.swingx.JXTable;
 
 /**
@@ -56,7 +58,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
     private void search() {
 
         btnSearch.setEnabled(false);
-
+        tabResult.setSelectedIndex(0);
         client_type = documentSearchComponent.getContactableType();
         client_id = documentSearchComponent.getClient_id();
         from = dtFrom.getDate();
@@ -66,7 +68,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
             doc_type = Enums.AcDocType.INVOICE;
             reportType = "OUTSTANDING";
             task = new SalesAcDocReportingTask(reportType, doc_type, client_type, client_id, from, to, progressBar);
-        } else if (rdoDueRefund.isSelected()) {
+        }else if (rdoDueRefund.isSelected()) {
             reportType = "OUTSTANDING";
             doc_type = Enums.AcDocType.REFUND;
             task = new SalesAcDocReportingTask(reportType, doc_type, client_type, client_id, from, to, progressBar);
@@ -118,18 +120,22 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         java.awt.GridBagConstraints gridBagConstraints;
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        jPanel3 = new javax.swing.JPanel();
-        progressBar = new javax.swing.JProgressBar();
-        jSeparator1 = new javax.swing.JSeparator();
-        jLabel2 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        btnViewReport = new javax.swing.JButton();
-        btnViewInvoice = new javax.swing.JButton();
-        btnEmail = new javax.swing.JButton();
-        btnPrint = new javax.swing.JButton();
-        btnSearch = new javax.swing.JButton();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        dtFrom = new org.jdesktop.swingx.JXDatePicker();
+        jLabel8 = new javax.swing.JLabel();
+        dtTo = new org.jdesktop.swingx.JXDatePicker();
+        rdoInvHistory = new javax.swing.JRadioButton();
+        rdoDueRefund = new javax.swing.JRadioButton();
+        rdoDueInvoice = new javax.swing.JRadioButton();
         documentSearchComponent = new com.ets.fe.acdoc.gui.comp.ClientSearchComp(true,true,true,Enums.AgentType.ALL);
-        jSeparator2 = new javax.swing.JSeparator();
+        jLabel2 = new javax.swing.JLabel();
+        progressBar = new javax.swing.JProgressBar();
+        tabResult = new javax.swing.JTabbedPane();
+        tabResult.addChangeListener(tabListener);
+        jPanel6 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -156,142 +162,134 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
                 return c;
             }
         };
-        jPanel4 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        dtFrom = new org.jdesktop.swingx.JXDatePicker();
-        jLabel8 = new javax.swing.JLabel();
-        dtTo = new org.jdesktop.swingx.JXDatePicker();
-        rdoDueInvoice = new javax.swing.JRadioButton();
-        rdoDueRefund = new javax.swing.JRadioButton();
-        rdoInvHistory = new javax.swing.JRadioButton();
+        jPanel1 = new javax.swing.JPanel();
+        btnViewInvoice = new javax.swing.JButton();
+        btnEmail = new javax.swing.JButton();
+        btnSearch = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        reportPane = new javax.swing.JScrollPane();
 
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
         setTitle("Sales Invoice: Report");
+        setMinimumSize(new java.awt.Dimension(982, 545));
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel3.setMaximumSize(new java.awt.Dimension(32767, 24));
-        jPanel3.setMinimumSize(new java.awt.Dimension(71, 24));
-        jPanel3.setPreferredSize(new java.awt.Dimension(980, 24));
-        jPanel3.setLayout(new java.awt.GridBagLayout());
+        jSplitPane1.setDividerLocation(200);
+        jSplitPane1.setDividerSize(6);
+        jSplitPane1.setOneTouchExpandable(true);
 
-        progressBar.setMaximumSize(new java.awt.Dimension(32767, 18));
-        progressBar.setMinimumSize(new java.awt.Dimension(10, 18));
-        progressBar.setPreferredSize(new java.awt.Dimension(146, 18));
-        progressBar.setStringPainted(true);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 1, 0, 1);
-        jPanel3.add(progressBar, gridBagConstraints);
+        jPanel5.setLayout(new java.awt.GridBagLayout());
 
-        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
-        jPanel3.add(jSeparator1, gridBagConstraints);
+        jLabel6.setText("Date From");
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Message:");
+        dtFrom.setPreferredSize(new java.awt.Dimension(110, 20));
+
+        jLabel8.setText("Date To");
+
+        dtTo.setPreferredSize(new java.awt.Dimension(110, 20));
+
+        buttonGroup1.add(rdoInvHistory);
+        rdoInvHistory.setSelected(true);
+        rdoInvHistory.setText("Invoice Hisory");
+        rdoInvHistory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoInvHistoryActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(rdoDueRefund);
+        rdoDueRefund.setText("Outstanding Refund");
+
+        buttonGroup1.add(rdoDueInvoice);
+        rdoDueInvoice.setText("Outstanding Invoice");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(2, 2, 2)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel8))
+                        .addContainerGap())
+                    .addComponent(dtTo, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                    .addComponent(dtFrom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rdoInvHistory, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rdoDueRefund, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+                    .addComponent(rdoDueInvoice, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addGap(2, 2, 2)
+                .addComponent(dtFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel8)
+                .addGap(2, 2, 2)
+                .addComponent(dtTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
+                .addComponent(rdoInvHistory)
+                .addGap(0, 0, 0)
+                .addComponent(rdoDueRefund)
+                .addGap(0, 0, 0)
+                .addComponent(rdoDueInvoice)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(1, 2, 1, 2);
-        jPanel3.add(jLabel2, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 2);
+        jPanel5.add(jPanel4, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 0, 2, 0);
+        jPanel5.add(documentSearchComponent, gridBagConstraints);
 
-        jPanel1.setBackground(new java.awt.Color(102, 102, 102));
-        jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("Message:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 2);
+        jPanel5.add(jLabel2, gridBagConstraints);
 
-        btnViewReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/details18.png"))); // NOI18N
-        btnViewReport.setToolTipText("View Report");
-        btnViewReport.setMaximumSize(new java.awt.Dimension(40, 22));
-        btnViewReport.setMinimumSize(new java.awt.Dimension(40, 22));
-        btnViewReport.setPreferredSize(new java.awt.Dimension(40, 22));
-        btnViewReport.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewReportActionPerformed(evt);
-            }
-        });
+        progressBar.setMaximumSize(new java.awt.Dimension(32767, 18));
+        progressBar.setMinimumSize(new java.awt.Dimension(10, 18));
+        progressBar.setPreferredSize(new java.awt.Dimension(146, 18));
+        progressBar.setStringPainted(true);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 2);
+        jPanel5.add(progressBar, gridBagConstraints);
 
-        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/acdoc18.png"))); // NOI18N
-        btnViewInvoice.setToolTipText("View Invoice");
-        btnViewInvoice.setMaximumSize(new java.awt.Dimension(40, 22));
-        btnViewInvoice.setMinimumSize(new java.awt.Dimension(40, 22));
-        btnViewInvoice.setPreferredSize(new java.awt.Dimension(40, 22));
-        btnViewInvoice.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewInvoiceActionPerformed(evt);
-            }
-        });
+        jSplitPane1.setLeftComponent(jPanel5);
 
-        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
-        btnEmail.setToolTipText("Email Report");
-        btnEmail.setMaximumSize(new java.awt.Dimension(40, 22));
-        btnEmail.setMinimumSize(new java.awt.Dimension(40, 22));
-        btnEmail.setPreferredSize(new java.awt.Dimension(40, 22));
-        btnEmail.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEmailActionPerformed(evt);
-            }
-        });
-
-        btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
-        btnPrint.setToolTipText("Print Report");
-        btnPrint.setMaximumSize(new java.awt.Dimension(40, 22));
-        btnPrint.setMinimumSize(new java.awt.Dimension(40, 22));
-        btnPrint.setPreferredSize(new java.awt.Dimension(40, 22));
-        btnPrint.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPrintActionPerformed(evt);
-            }
-        });
-
-        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
-        btnSearch.setToolTipText("Search");
-        btnSearch.setMaximumSize(new java.awt.Dimension(40, 22));
-        btnSearch.setMinimumSize(new java.awt.Dimension(40, 22));
-        btnSearch.setPreferredSize(new java.awt.Dimension(40, 22));
-        btnSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearchActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
-                .addComponent(btnViewReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
-                .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
-                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
-                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(651, 651, 651))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnViewReport, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(btnSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-
-        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        tabResult.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -431,7 +429,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
 
             },
             new String [] {
-                "", "Date", "Reference", "Invoicee", "PNR", "Psgr", "Flight Details", "Lead Psgr", "Inv Amount", "Payment", "Other (+/-)", "Balance", "InvBy"
+                "", "Date", "Reference", "Client", "PNR", "Psgr", "Flight Details", "Lead Psgr", "Inv Amount", "Payment", "Other (+/-)", "Balance", "InvBy"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -462,103 +460,106 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
             tblReport.getColumnModel().getColumn(6).setMaxWidth(160);
         }
 
-        jLabel6.setText("Date From");
+        jPanel1.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        dtFrom.setPreferredSize(new java.awt.Dimension(110, 20));
+        btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/acdoc18.png"))); // NOI18N
+        btnViewInvoice.setToolTipText("View Invoice");
+        btnViewInvoice.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnViewInvoice.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnViewInvoice.setPreferredSize(new java.awt.Dimension(40, 22));
+        btnViewInvoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewInvoiceActionPerformed(evt);
+            }
+        });
 
-        jLabel8.setText("Date To");
+        btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
+        btnEmail.setToolTipText("Email Report");
+        btnEmail.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnEmail.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnEmail.setPreferredSize(new java.awt.Dimension(40, 22));
+        btnEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmailActionPerformed(evt);
+            }
+        });
 
-        dtTo.setPreferredSize(new java.awt.Dimension(110, 20));
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
+        btnSearch.setToolTipText("Search");
+        btnSearch.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnSearch.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnSearch.setPreferredSize(new java.awt.Dimension(40, 22));
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
-        buttonGroup1.add(rdoDueInvoice);
-        rdoDueInvoice.setSelected(true);
-        rdoDueInvoice.setText("Outstanding Invoice");
-
-        buttonGroup1.add(rdoDueRefund);
-        rdoDueRefund.setText("Outstanding Refund");
-
-        buttonGroup1.add(rdoInvHistory);
-        rdoInvHistory.setText("Invoice Hisory");
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dtFrom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(dtTo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(rdoDueRefund, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel8))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(rdoDueInvoice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(rdoInvHistory, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())))
+                .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel6)
-                .addGap(2, 2, 2)
-                .addComponent(dtFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
-                .addGap(2, 2, 2)
-                .addComponent(dtTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(rdoDueInvoice)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rdoDueRefund)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rdoInvHistory)
-                .addContainerGap(9, Short.MAX_VALUE))
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(btnViewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE))
+        );
+
+        tabResult.addTab("Search Result", jPanel6);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(reportPane, javax.swing.GroupLayout.DEFAULT_SIZE, 792, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(reportPane, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+        );
+
+        tabResult.addTab("Print View", jPanel3);
+
+        jSplitPane1.setRightComponent(tabResult);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(documentSearchComponent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(2, 2, 2))
+            .addComponent(jSplitPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator2)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(documentSearchComponent, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(2, 2, 2)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
         );
 
         pack();
@@ -567,13 +568,6 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         search();
     }//GEN-LAST:event_btnSearchActionPerformed
-
-    private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
-        if (report == null) {
-            return;
-        }
-        report("VIEW");
-    }//GEN-LAST:event_btnViewReportActionPerformed
 
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
         int index = tblReport.getSelectedRow();
@@ -606,20 +600,15 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         }
     }//GEN-LAST:event_btnEmailActionPerformed
 
-    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        if (report == null) {
-            return;
-        }
-        report("PRINT");
-    }//GEN-LAST:event_btnPrintActionPerformed
+    private void rdoInvHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoInvHistoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rdoInvHistoryActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEmail;
-    private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnViewInvoice;
-    private javax.swing.JButton btnViewReport;
     private javax.swing.ButtonGroup buttonGroup1;
     private com.ets.fe.acdoc.gui.comp.ClientSearchComp documentSearchComponent;
     private org.jdesktop.swingx.JXDatePicker dtFrom;
@@ -637,9 +626,10 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JLabel lblCMemo;
     private javax.swing.JLabel lblDMemo;
     private javax.swing.JLabel lblDue;
@@ -650,6 +640,8 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
     private javax.swing.JRadioButton rdoDueInvoice;
     private javax.swing.JRadioButton rdoDueRefund;
     private javax.swing.JRadioButton rdoInvHistory;
+    private javax.swing.JScrollPane reportPane;
+    private javax.swing.JTabbedPane tabResult;
     private org.jdesktop.swingx.JXTable tblReport;
     // End of variables declaration//GEN-END:variables
 
@@ -660,7 +652,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    report = task.get();
+                    report = task.get();                    
                     populateTable();
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(TSalesInvoiceReportingFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -675,6 +667,25 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         BeanJasperReport jasperreport = new BeanJasperReport();
         List<InvoiceReport> list = new ArrayList<>();
         list.add(report);
-        jasperreport.invoiceReport(list, Enums.SaleType.TKTSALES, action);
+        JRViewer viewer = jasperreport.invoiceReport(list, Enums.SaleType.TKTSALES, action);        
+        if (viewer != null) {            
+            reportPane.setViewportView(viewer);            
+        }
     }
+    
+    private ChangeListener tabListener = new ChangeListener() {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            if (tabResult.getSelectedIndex() == 1) {
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        report("VIEW");
+                    }
+                });               
+            } 
+        }
+    };
 }

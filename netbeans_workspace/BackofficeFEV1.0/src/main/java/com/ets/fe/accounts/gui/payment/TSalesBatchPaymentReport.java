@@ -85,11 +85,11 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
                 total = total.add(doc.getDocumentedAmount());
 
                 tableModel.insertRow(i, new Object[]{i + 1, doc.getReference(), doc.getGdsPnr(),
-                    doc.getAirLine(), doc.getDocumentedAmount()});
+                    doc.getAirLine(), doc.getDocumentedAmount(),doc.getStatus()});
             }
-            tableModel.insertRow(i, new Object[]{"", "", "Total:", "", "", total.abs()});
+            tableModel.insertRow(i, new Object[]{"", "", "Total:", "", total.abs(),""});
         } else {
-            tableModel.insertRow(0, new Object[]{"", "", "", "", "", ""});
+            tableModel.insertRow(0, new Object[]{"", "", "", "", "", "",""});
         }
 
     }
@@ -246,11 +246,11 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
 
             },
             new String [] {
-                "", "Inv Reference", "PNR", "Airline", "Amount"
+                "", "Inv Reference", "PNR", "Airline", "Amount", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -407,7 +407,7 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addComponent(jSplitPane1)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

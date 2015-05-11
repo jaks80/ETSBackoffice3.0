@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.4.final using JasperReports Library version 6.0.4  -->
-<!-- 2015-05-02T17:25:40 -->
+<!-- 2015-05-10T10:05:22 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TAcDocumentReport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="10" uuid="b52f17e1-f3c6-44a5-9cb6-53b1ebacc6b8">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TinvReporting Data Adapter "/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -246,7 +246,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total Inv Amount ]]></text>
+				<text><![CDATA[Total Inv Amount]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="635" y="17" width="89" height="15" uuid="45f81025-a278-45bf-b794-2527d65d91a5"/>
@@ -260,21 +260,21 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total Debit Memo ]]></text>
+				<text><![CDATA[Total Debit Memo]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="635" y="48" width="89" height="15" uuid="52bb9cfe-d047-4972-b68c-cf76afbdc97e"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total Received ]]></text>
+				<text><![CDATA[Total Received]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="635" y="63" width="89" height="15" uuid="2b0c5f07-be8b-4afb-a5a8-f1e2531acc78"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total Paid ]]></text>
+				<text><![CDATA[Total Refund]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="634" y="78" width="90" height="14" uuid="dbbe2d14-d421-4f0e-93f9-4c41afdfb0cd"/>
@@ -487,11 +487,11 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="210" uuid="4574186c-99ce-45fa-8ff9-ddc1f7099abb">
+					<jr:column width="110" uuid="4574186c-99ce-45fa-8ff9-ddc1f7099abb">
 						<jr:tableFooter height="0" rowSpan="1"/>
 						<jr:columnHeader height="16" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="1" width="190" height="15" uuid="fdcb6f3c-9a6b-43c1-9b92-e7ebe24f2183">
+								<reportElement x="0" y="1" width="110" height="15" uuid="fdcb6f3c-9a6b-43c1-9b92-e7ebe24f2183">
 									<property name="com.jaspersoft.studio.unit.x" value="px"/>
 								</reportElement>
 								<textElement verticalAlignment="Middle">
@@ -502,7 +502,7 @@
 						</jr:columnHeader>
 						<jr:detailCell height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="210" height="14" isRemoveLineWhenBlank="true" uuid="c1227990-f3ec-4787-9958-ba7c9b4cbc6d">
+								<reportElement x="0" y="0" width="110" height="14" isRemoveLineWhenBlank="true" uuid="c1227990-f3ec-4787-9958-ba7c9b4cbc6d">
 									<property name="com.jaspersoft.studio.unit.x" value="px"/>
 								</reportElement>
 								<textElement>
@@ -512,12 +512,14 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="70" uuid="4e585b38-5d90-4b3c-ab48-8c046aee9199">
+					<jr:column width="188" uuid="4e585b38-5d90-4b3c-ab48-8c046aee9199">
 						<jr:tableFooter height="0" rowSpan="1"/>
 						<jr:columnHeader height="16" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="70" height="15" uuid="90313044-9354-4d86-8ab2-fdca6d836051">
+								<reportElement x="0" y="0" width="188" height="15" uuid="90313044-9354-4d86-8ab2-fdca6d836051">
 									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+									<property name="local_mesure_unitwidth" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
 								</reportElement>
 								<textElement verticalAlignment="Middle">
 									<font fontName="Arial" size="7" isBold="true"/>
@@ -526,9 +528,11 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="70" height="14" isRemoveLineWhenBlank="true" uuid="42a35d37-1d21-40cc-80e3-7f29009ca3b2">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="188" height="14" isRemoveLineWhenBlank="true" uuid="42a35d37-1d21-40cc-80e3-7f29009ca3b2">
 									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+									<property name="local_mesure_unitwidth" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
 								</reportElement>
 								<textElement>
 									<font fontName="Courier New" size="8"/>
@@ -537,11 +541,13 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="29" uuid="0923e58c-d42e-4df1-b0f3-d9937717d18c">
+					<jr:column width="25" uuid="0923e58c-d42e-4df1-b0f3-d9937717d18c">
 						<jr:columnHeader height="16" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="28" height="15" uuid="90d676ec-321d-46be-bf5a-cbb7b8c5b096">
+								<reportElement x="0" y="0" width="25" height="15" uuid="90d676ec-321d-46be-bf5a-cbb7b8c5b096">
 									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+									<property name="local_mesure_unitwidth" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
 								</reportElement>
 								<textElement verticalAlignment="Middle">
 									<font fontName="Arial" size="7" isBold="true"/>
@@ -551,8 +557,10 @@
 						</jr:columnHeader>
 						<jr:detailCell height="15" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="29" height="14" uuid="c7e25a88-2119-4d47-a5d1-8d0c29d9132f">
+								<reportElement x="0" y="0" width="25" height="14" uuid="c7e25a88-2119-4d47-a5d1-8d0c29d9132f">
 									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+									<property name="local_mesure_unitwidth" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
 								</reportElement>
 								<textElement textAlignment="Center">
 									<font fontName="Courier New" size="8"/>
@@ -594,7 +602,7 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="7" uuid="f94f8be6-c6ff-4372-b277-84e6f152272c">
+					<jr:column width="2" uuid="f94f8be6-c6ff-4372-b277-84e6f152272c">
 						<jr:tableFooter height="0" rowSpan="1"/>
 						<jr:columnHeader height="16" rowSpan="1"/>
 						<jr:detailCell height="15" rowSpan="1"/>
@@ -653,7 +661,7 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="89" uuid="caf07dba-44e3-4d37-a56a-a1e46cdf21f4">
+					<jr:column width="75" uuid="caf07dba-44e3-4d37-a56a-a1e46cdf21f4">
 						<jr:tableFooter height="0" rowSpan="1"/>
 						<jr:columnHeader height="16" rowSpan="1">
 							<staticText>

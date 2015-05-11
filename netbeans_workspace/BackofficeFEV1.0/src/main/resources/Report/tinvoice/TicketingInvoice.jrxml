@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.4.final using JasperReports Library version 6.0.4  -->
-<!-- 2015-05-08T11:17:27 -->
+<!-- 2015-05-10T10:06:57 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TicketingInvoice" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="10" uuid="0c8be88e-654d-4012-a393-90fb7ce95ba3">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TicketingInvoice Data Adapter"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -344,7 +344,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement x="372" y="29" width="180" height="38" uuid="611ea2f0-1321-4246-a758-c436da760a4c"/>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="8" isBold="false"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{clientAddress}]]></textFieldExpression>
 			</textField>
@@ -405,7 +405,7 @@
 			<textField>
 				<reportElement x="372" y="20" width="180" height="14" uuid="6f15fa2b-e56e-440a-9314-c9d685980da6"/>
 				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font fontName="Arial" size="8" isBold="false"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{clientName}]]></textFieldExpression>
 			</textField>
@@ -419,7 +419,7 @@
 			<textField>
 				<reportElement x="372" y="6" width="180" height="14" uuid="f0aee50f-c4a2-4fa1-a6d0-b3efa4023da0"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isBold="true"/>
+					<font fontName="Arial" size="9" isBold="true" isUnderline="true"/>
 					<paragraph lineSpacingSize="0.0"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{title} +"For"]]></textFieldExpression>

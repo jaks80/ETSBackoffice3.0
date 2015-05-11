@@ -65,6 +65,9 @@ public class AccountsHistoryTask extends SwingWorker<AccountsReport, Integer> {
 
     @Override
     protected void done() {
+        if(progressBar.isIndeterminate()){
+         progressBar.setIndeterminate(false);
+        }
         setProgress(100);
     }
 

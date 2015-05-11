@@ -59,6 +59,8 @@ public class AccountsReport implements Serializable {
 
     public void addFirstLine(){
      AccountsLine l = new AccountsLine();
+     l.setDebit_amount("");
+     l.setCredit_amount("");
      l.setLine_desc("Opening Balance");
      l.setLine_balance(openingBalance);
      lines.add(0, l);
@@ -66,6 +68,8 @@ public class AccountsReport implements Serializable {
     
     public void addLastLine(){
      AccountsLine l = new AccountsLine();
+     l.setDebit_amount("");
+     l.setCredit_amount("");
      l.setLine_desc("Closing Balance");
      l.setLine_balance(closingBalance);
      lines.add(lines.size(), l);

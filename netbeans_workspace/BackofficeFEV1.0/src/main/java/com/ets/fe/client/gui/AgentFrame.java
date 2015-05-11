@@ -94,7 +94,7 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
             for (int i = 0; i < list.size(); i++) {
                 Agent agent = list.get(i);
                 tableModel.insertRow(i, new Object[]{i + 1, agent.getId(), agent.calculateFullName(), agent.getAddLine1(),
-                    agent.getPostCode(), agent.getTelNo(), agent.getEmail(), agent.getOfficeID(), agent.isIsActive()});
+                    agent.getPostCode(), agent.getTelNo(), agent.getEmail(), agent.getOfficeID(), agent.isActive()});
             }
         } else {
             tableModel.insertRow(0, new Object[]{});
@@ -609,7 +609,7 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
                 agent.setProvince(vals[9]);
                 agent.setTelNo(vals[10]);
                 agent.setOfficeID(vals[11]);
-                agent.setIsActive(true);
+                agent.setActive(true);
                 agents.add(agent);
             }
         } catch (FileNotFoundException ex) {

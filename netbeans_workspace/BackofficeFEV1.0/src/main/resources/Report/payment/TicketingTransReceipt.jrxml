@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.4.final using JasperReports Library version 6.0.4  -->
-<!-- 2015-05-06T23:47:08 -->
+<!-- 2015-05-10T19:28:43 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TicketingTransReceipt" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="10" uuid="e9501efe-79b7-4728-bdb3-7d15a8cc9024">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="TransReceipt Data Adapter "/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -58,6 +58,12 @@
 		</field>
 		<field name="reference" class="java.lang.Long">
 			<fieldDescription><![CDATA[reference]]></fieldDescription>
+		</field>
+		<field name="leadPsgr" class="java.lang.String">
+			<fieldDescription><![CDATA[leadPsgr]]></fieldDescription>
+		</field>
+		<field name="outBoundDetails" class="java.lang.String">
+			<fieldDescription><![CDATA[outBoundDetails]]></fieldDescription>
 		</field>
 	</subDataset>
 	<queryString>
@@ -290,7 +296,7 @@
 					<datasetRun subDataset="TransactionLine" uuid="dd13b9f4-ec0d-4081-99fe-fc9cba2d69c9">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{lines})]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="120" uuid="e65307a6-0241-4f2a-8252-8178e4123b83">
+					<jr:column width="70" uuid="e65307a6-0241-4f2a-8252-8178e4123b83">
 						<jr:columnHeader style="Table_CH" height="16">
 							<box>
 								<topPen lineWidth="0.2"/>
@@ -299,7 +305,7 @@
 								<rightPen lineWidth="0.2"/>
 							</box>
 							<staticText>
-								<reportElement x="0" y="0" width="120" height="15" uuid="6582ff94-396d-4249-89d7-7395d83a951b">
+								<reportElement x="0" y="0" width="70" height="16" uuid="6582ff94-396d-4249-89d7-7395d83a951b">
 									<property name="com.jaspersoft.studio.unit.height" value="px"/>
 									<property name="local_mesure_unitheight" value="pixel"/>
 								</reportElement>
@@ -312,7 +318,7 @@
 								<textElement>
 									<font fontName="Courier New" size="10" isBold="true"/>
 								</textElement>
-								<text><![CDATA[Invoice Ref]]></text>
+								<text><![CDATA[Invoice]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15">
@@ -323,7 +329,7 @@
 								<rightPen lineWidth="0.0"/>
 							</box>
 							<textField>
-								<reportElement x="0" y="0" width="120" height="15" uuid="2c511d1e-94da-4ae8-9116-e42a56354f4b">
+								<reportElement x="0" y="0" width="70" height="15" uuid="2c511d1e-94da-4ae8-9116-e42a56354f4b">
 									<property name="local_mesure_unitheight" value="pixel"/>
 									<property name="com.jaspersoft.studio.unit.height" value="px"/>
 								</reportElement>
@@ -340,7 +346,7 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="120" uuid="55817d3f-464b-4073-aca6-f9ee6377bc95">
+					<jr:column width="60" uuid="55817d3f-464b-4073-aca6-f9ee6377bc95">
 						<jr:columnHeader style="Table_CH" height="16">
 							<box>
 								<topPen lineWidth="0.2"/>
@@ -349,7 +355,7 @@
 								<rightPen lineWidth="0.2"/>
 							</box>
 							<staticText>
-								<reportElement x="0" y="0" width="120" height="16" uuid="a155b80d-8631-4e6e-bec8-4d2151541743">
+								<reportElement x="0" y="0" width="60" height="16" uuid="a155b80d-8631-4e6e-bec8-4d2151541743">
 									<property name="com.jaspersoft.studio.unit.height" value="px"/>
 								</reportElement>
 								<box topPadding="2" leftPadding="2" rightPadding="0"/>
@@ -367,8 +373,10 @@
 								<rightPen lineWidth="0.0"/>
 							</box>
 							<textField>
-								<reportElement x="0" y="0" width="120" height="15" uuid="6a2173ef-39dc-4e6a-89e3-8bc7d9f9c5c2">
+								<reportElement x="0" y="0" width="60" height="15" uuid="6a2173ef-39dc-4e6a-89e3-8bc7d9f9c5c2">
 									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="local_mesure_unitwidth" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
 								</reportElement>
 								<box topPadding="2" leftPadding="2" rightPadding="0"/>
 								<textElement>
@@ -378,7 +386,7 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="80" uuid="532e25d9-899a-492c-9021-1b1c8a49e037">
+					<jr:column width="309" uuid="532e25d9-899a-492c-9021-1b1c8a49e037">
 						<jr:columnHeader style="Table_CH" height="16">
 							<box>
 								<topPen lineWidth="0.2"/>
@@ -387,14 +395,14 @@
 								<rightPen lineWidth="0.2"/>
 							</box>
 							<staticText>
-								<reportElement x="0" y="0" width="80" height="15" uuid="50447cae-998d-474f-b56a-0b4b7e68b72a">
+								<reportElement x="0" y="0" width="309" height="16" uuid="50447cae-998d-474f-b56a-0b4b7e68b72a">
 									<property name="com.jaspersoft.studio.unit.height" value="px"/>
 								</reportElement>
 								<box topPadding="2" leftPadding="2" rightPadding="0"/>
 								<textElement>
 									<font fontName="Courier New" size="10" isBold="true"/>
 								</textElement>
-								<text><![CDATA[Airline]]></text>
+								<text><![CDATA[]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15">
@@ -404,19 +412,21 @@
 								<bottomPen lineWidth="0.0"/>
 								<rightPen lineWidth="0.0"/>
 							</box>
-							<textField>
-								<reportElement x="0" y="0" width="80" height="15" uuid="4ef42563-7e65-46f4-8186-9ff89810fdf0">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="309" height="15" uuid="4ef42563-7e65-46f4-8186-9ff89810fdf0">
 									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="local_mesure_unitwidth" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
 								</reportElement>
 								<box topPadding="2" leftPadding="2" rightPadding="0"/>
 								<textElement>
 									<font fontName="Courier New" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{airLine}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{outBoundDetails}+" "+$F{airLine}+" "+ $F{noOfPax}+" "+$F{leadPsgr}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="90" uuid="524844df-7104-45ac-ba13-f98463710d57">
+					<jr:column width="110" uuid="c7f28780-457f-4e3b-8f8a-60acbf573612">
 						<jr:columnHeader style="Table_CH" height="16">
 							<box>
 								<topPen lineWidth="0.2"/>
@@ -425,47 +435,10 @@
 								<rightPen lineWidth="0.2"/>
 							</box>
 							<staticText>
-								<reportElement x="0" y="0" width="90" height="15" uuid="c381e0b8-03d9-4c73-8736-9dba1b0a6618">
-									<property name="com.jaspersoft.studio.unit.height" value="px"/>
-								</reportElement>
-								<box topPadding="2" leftPadding="2" rightPadding="0"/>
-								<textElement>
-									<font fontName="Courier New" size="10" isBold="true"/>
-								</textElement>
-								<text><![CDATA[T.Pax]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:detailCell style="Table_TD" height="15">
-							<box>
-								<topPen lineWidth="0.0"/>
-								<leftPen lineWidth="0.0"/>
-								<bottomPen lineWidth="0.0"/>
-								<rightPen lineWidth="0.0"/>
-							</box>
-							<textField>
-								<reportElement x="0" y="0" width="90" height="15" uuid="4c9f3024-0744-4ac4-9128-77947feaef2e">
-									<property name="com.jaspersoft.studio.unit.height" value="px"/>
-								</reportElement>
-								<box topPadding="2" leftPadding="2" rightPadding="0"/>
-								<textElement>
-									<font fontName="Courier New" size="10"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{noOfPax}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="140" uuid="c7f28780-457f-4e3b-8f8a-60acbf573612">
-						<jr:columnHeader style="Table_CH" height="16">
-							<box>
-								<topPen lineWidth="0.2"/>
-								<leftPen lineWidth="0.2"/>
-								<bottomPen lineWidth="0.0"/>
-								<rightPen lineWidth="0.2"/>
-							</box>
-							<staticText>
-								<reportElement x="0" y="0" width="140" height="16" uuid="e1e4052e-c926-41e1-86ca-0e59c26ee66a">
+								<reportElement x="0" y="0" width="110" height="16" uuid="e1e4052e-c926-41e1-86ca-0e59c26ee66a">
 									<property name="local_mesure_unitheight" value="pixel"/>
 									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="com.jaspersoft.studio.unit.x" value="px"/>
 								</reportElement>
 								<box topPadding="2" leftPadding="0" rightPadding="2"/>
 								<textElement textAlignment="Right">
@@ -482,8 +455,10 @@
 								<rightPen lineWidth="0.0"/>
 							</box>
 							<textField>
-								<reportElement x="0" y="0" width="140" height="15" uuid="352924d5-db66-424e-a64c-4c93de23cbdf">
+								<reportElement x="0" y="0" width="110" height="15" uuid="352924d5-db66-424e-a64c-4c93de23cbdf">
 									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="local_mesure_unitx" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.x" value="px"/>
 								</reportElement>
 								<box topPadding="2" leftPadding="0" rightPadding="2"/>
 								<textElement textAlignment="Right">

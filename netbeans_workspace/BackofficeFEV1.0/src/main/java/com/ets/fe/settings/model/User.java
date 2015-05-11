@@ -26,7 +26,7 @@ public class User extends Contactable implements Serializable {
     @XmlElement
     private Enums.UserType userType;
     @XmlElement
-    private boolean isActive;
+    private boolean active;
     @XmlElement
     private String sessionId;
 
@@ -98,13 +98,6 @@ public class User extends Contactable implements Serializable {
         this.foreName = foreName;
     }
 
-    public boolean isIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
-    }
 
     @Override
     public String calculateFullName() {
@@ -125,5 +118,13 @@ public class User extends Contactable implements Serializable {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
