@@ -37,7 +37,7 @@ public class User extends PersistentObject implements Serializable{
     @XmlElement
     private Enums.UserType userType;
     @XmlElement
-    private boolean isActive;
+    private boolean active;
     
     public User(){
     
@@ -76,13 +76,6 @@ public class User extends PersistentObject implements Serializable{
         this.foreName = foreName;
     }        
 
-    public boolean isIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
-    }
    
     public String calculateFullName() {
       return this.surName + "/" + this.foreName;
@@ -94,5 +87,13 @@ public class User extends PersistentObject implements Serializable{
 
     public void setUserType(Enums.UserType userType) {
         this.userType = userType;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

@@ -30,6 +30,7 @@ public class AppSettingsService {
     }
 
     public MainAgent saveorUpdateMainAgent(MainAgent agent) {
+        agent.setActive(true);
         return getAgentService().saveorUpdate(agent);
     }
 

@@ -40,7 +40,7 @@ public class UserService {
         User authenticatedUser = null;
 
         for (User user : dbUsers) {
-            if (user.getLoginID().equals(loginId) && user.getPassword().equals(password)) {
+            if (user.getLoginID().equals(loginId) && user.getPassword().equals(password) && user.isActive()) {
                 authenticatedUser = user;
                 break;
             }

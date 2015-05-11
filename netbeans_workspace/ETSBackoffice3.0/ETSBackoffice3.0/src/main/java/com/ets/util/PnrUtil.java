@@ -268,17 +268,11 @@ public class PnrUtil {
     public static String getOutBoundFlightSummery(Set<Itinerary> segments) {
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < segments.size(); i++) {
-            Itinerary seg = segments.iterator().next();
-            sb.append(DateUtil.dateTOddmm(seg.getDeptDate())).append("/");
-            sb.append(seg.getDeptFrom()).append("-").append(seg.getDeptTo()).append("/");
-            sb.append(seg.getAirLineCode());
-            if (i == 3) {
-                break;
-            } else {
-                sb.append(",");
-            }
-        }
+        Itinerary seg = segments.iterator().next();
+        sb.append(DateUtil.dateTOddmm(seg.getDeptDate())).append("/");
+        sb.append(seg.getDeptFrom()).append("-").append(seg.getDeptTo()).append("/");
+        sb.append(seg.getAirLineCode());
+
         return sb.toString();
     }
 
@@ -301,7 +295,7 @@ public class PnrUtil {
         return firstSegment;
     }
 
-    public static String calculateLeadPaxName(Set<Ticket> ticket_list) {
+    public static Ticket calculateLeadPaxTicket(Set<Ticket> ticket_list) {
         Ticket leadPax = null;
         int paxNo = 99;
 
@@ -312,7 +306,7 @@ public class PnrUtil {
             }
         }
         if (leadPax != null) {
-            return leadPax.getFullPaxName();
+            return leadPax;
         } else {
             Iterator<Ticket> iterator = ticket_list.iterator();
             Ticket setElement = new Ticket();
@@ -320,15 +314,21 @@ public class PnrUtil {
                 setElement = iterator.next();
                 break;
             }
-            return setElement.getFullPaxName();
+            return setElement;
         }
     }
 
+    public static String calculateLeadPaxName(Set<Ticket> ticket_list) {
+
+        Ticket ticket = calculateLeadPaxTicket(ticket_list);
+        return ticket.getFullPaxName();
+    }
+
     public static String calculatePartialName(String name) {
-        if (name.length() < 8) {
+        if (name.length() < 10) {
             return name;
         } else {
-            return name.substring(0, 8);
+            return name.substring(0, 10);
         }
     }
 

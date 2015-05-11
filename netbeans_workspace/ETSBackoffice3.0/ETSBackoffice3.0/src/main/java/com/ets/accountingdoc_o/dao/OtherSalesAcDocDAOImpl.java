@@ -281,7 +281,7 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
                 + "coalesce(sum(a.documentedAmount),0) as balance "
                 + "from OtherSalesAcDoc a "
                 + "left join a.createdBy as user "
-                + "where a.status <> 2 and a.type <> 1 and a.type <> 4 and user.isActive = true "
+                + "where a.status <> 2 and a.type <> 1 and a.type <> 4 and user.active = true "
                 + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
                 + "group by user.id order by balance desc ";
 

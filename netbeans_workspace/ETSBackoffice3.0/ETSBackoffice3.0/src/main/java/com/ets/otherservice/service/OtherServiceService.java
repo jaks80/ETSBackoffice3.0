@@ -20,7 +20,7 @@ public class OtherServiceService {
 
         String hql = "from OtherService os "
                 + "left join fetch os.category as cat "
-                + "where os.isActive = 0 ";
+                + "where os.active = 0 ";
         return dao.findMany(hql);
     }
 

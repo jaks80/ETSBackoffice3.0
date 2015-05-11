@@ -312,6 +312,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         }
 
         String hql = "select distinct a from TicketingSalesAcDoc as a "
+                + "left join fetch a.tickets as t "
                 + "left join fetch a.payment as payment "
                 + "left join fetch a.pnr as p "
                 + "left join a.createdBy as user "
@@ -376,7 +377,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + "coalesce(sum(a.documentedAmount),0) as balance "
                 + "from TicketingSalesAcDoc a "
                 + "left join a.createdBy as user "
-                + "where a.status <> 2 and a.type <> 1 and a.type <> 4 and user.isActive = true "
+                + "where a.status <> 2 and a.type <> 1 and a.type <> 4 and user.active = true "
                 + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
                 + "group by user.id order by balance desc ";
 

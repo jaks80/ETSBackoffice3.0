@@ -19,7 +19,7 @@ public class AgentDAOImpl extends GenericDAOImpl<Agent, Long> implements AgentDA
     public List<Agent> findByOfficeID(String officeID) {
 
         String hql = "from Agent agt "
-                + "where agt.officeID=:officeID and agt.isActive = true";
+                + "where agt.officeID=:officeID and agt.active = true";
 
         Query query = getSession().createQuery(hql);
         query.setParameter("officeID", officeID);
@@ -63,7 +63,7 @@ public class AgentDAOImpl extends GenericDAOImpl<Agent, Long> implements AgentDA
         String hql = "from Agent agt "
                 + "where "
                 + "agt.name like :name and "                
-                + "(agt.officeID is null or agt.officeID like :officeID and agt.isActive = true) ";
+                + "(agt.officeID is null or agt.officeID like :officeID and agt.active = true) ";
         Query query = getSession().createQuery(hql);
         query.setParameter("name", name);
         query.setParameter("officeID", officeID);
@@ -74,7 +74,7 @@ public class AgentDAOImpl extends GenericDAOImpl<Agent, Long> implements AgentDA
     @Override
     public List<Agent> findTicketingAgents() {
         String hql = "select distinct agt from Agent as agt, Pnr as p "
-                + "where p.ticketingAgtOid = agt.officeID and agt.isActive = true order by agt.name ";
+                + "where p.ticketingAgtOid = agt.officeID and agt.active = true order by agt.name ";
 
         Query query = getSession().createQuery(hql);
         return query.list();

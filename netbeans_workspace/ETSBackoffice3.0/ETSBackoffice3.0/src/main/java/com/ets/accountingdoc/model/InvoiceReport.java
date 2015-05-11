@@ -5,6 +5,7 @@ import com.ets.accountingdoc.domain.*;
 import com.ets.accountingdoc.service.AcDocUtil;
 import com.ets.client.domain.Contactable;
 import com.ets.pnr.domain.Pnr;
+import com.ets.pnr.domain.Ticket;
 import com.ets.report.model.Letterhead;
 import com.ets.settings.service.AppSettingsService;
 import com.ets.util.DateUtil;
@@ -97,8 +98,13 @@ public class InvoiceReport implements Serializable {
             invSummery.setDocIssueDate(DateUtil.dateToString(invoice.getDocIssueDate()));
             invSummery.setGdsPnr(pnr.getGdsPnr());
             invSummery.setNoOfPax(pnr.getNoOfPax());
-            invSummery.setLeadPsgr(PnrUtil.calculatePartialName(PnrUtil.calculateLeadPaxName(
-                    invoice.getTickets())));
+
+            Set<Ticket> tickets = invoice.getTickets();
+            if (tickets != null && !tickets.isEmpty()) {
+                Ticket leadPax = PnrUtil.calculateLeadPaxTicket(tickets);
+                invSummery.setLeadPsgr(leadPax.getFullPaxName() + "/" + leadPax.getFullTicketNo());
+            }
+
             invSummery.setAirLine(pnr.getAirLineCode());
             invSummery.setPnr_id(pnr.getId());
             invSummery.setReference(invoice.getReference());

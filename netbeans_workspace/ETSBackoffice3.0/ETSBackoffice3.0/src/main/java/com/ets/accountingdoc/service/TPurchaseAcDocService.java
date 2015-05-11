@@ -67,11 +67,14 @@ public class TPurchaseAcDocService {
 
     public int delete(long id) {
         TicketingPurchaseAcDoc document = dao.findByID(TicketingPurchaseAcDoc.class, id);
-        if (document.getStatus().equals(Enums.AcDocStatus.VOID)) {
+
+        if (document.getStatus().equals(Enums.AcDocStatus.VOID) && 
+                !document.getType().equals(Enums.AcDocType.PAYMENT)&&
+                !document.getType().equals(Enums.AcDocType.REFUND)) {
             dao.delete(document);
             return 1;
         }
-
+        
         return 0;
     }
 

@@ -238,13 +238,11 @@ public class PaymentService {
                     doc.setTickets(null);
                     doc.setRelatedDocuments(null);
                     doc.getPnr().setTickets(null);
-                    doc.getPnr().setRemarks(null);
-                    doc.getPnr().setSegments(null);
+                    doc.getPnr().setRemarks(null);                    
 
                     if (doc.getParent() != null) {
                         doc.getParent().setAdditionalChargeLines(null);
                         doc.getParent().setPnr(null);
-                        doc.getParent().setTickets(null);
                         doc.getParent().setRelatedDocuments(null);
                         doc.getParent().setPayment(null);
                         doc.getParent().setParent(null);
@@ -259,13 +257,11 @@ public class PaymentService {
                     doc.setTickets(null);
                     doc.setRelatedDocuments(null);
                     doc.getPnr().setTickets(null);
-                    doc.getPnr().setRemarks(null);
-                    doc.getPnr().setSegments(null);
+                    doc.getPnr().setRemarks(null);                    
 
                     if (doc.getParent() != null) {
                         doc.getParent().setAdditionalChargeLines(null);
                         doc.getParent().setPnr(null);
-                        doc.getParent().setTickets(null);
                         doc.getParent().setRelatedDocuments(null);
                         doc.getParent().setPayment(null);
                         doc.getParent().setParent(null);

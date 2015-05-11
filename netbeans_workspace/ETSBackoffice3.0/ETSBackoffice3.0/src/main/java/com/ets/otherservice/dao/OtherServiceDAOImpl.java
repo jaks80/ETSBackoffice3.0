@@ -20,7 +20,7 @@ public class OtherServiceDAOImpl extends GenericDAOImpl<OtherService, Long> impl
     public List<OtherService> findItemsByCategory(Long categoryId) {
         String hql = "from OtherService os "
                 + "left join fetch os.category as cat "
-                + "where os.isActive = 0 and "
+                + "where os.active = 0 and "
                 + "(:categoryId is null or cat.id = :categoryId)";
         Query query = getSession().createQuery(hql);
         query.setParameter("categoryId", categoryId);

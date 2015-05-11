@@ -20,6 +20,14 @@ public class DateUtil {
     private static final SimpleDateFormat dfInput1 = new SimpleDateFormat("ddMMMyy");
     private static Calendar cal = Calendar.getInstance();
 
+    public static Date minusDays(Date dateInstance, int days) {
+
+        cal.setTime(dateInstance);
+        cal.add(Calendar.DATE, days * -1);
+        Date date = cal.getTime();
+        return date;
+    }
+
     public static Date yyMMddToDate(String yyMMdd) {
 
         Date date = null;
@@ -35,18 +43,19 @@ public class DateUtil {
     /**
      * If current month is less then provided month then provided month is
      * actually in next year.
+     *
      * @param ddmm
-     * @return 
+     * @return
      */
     public static Date ddmmToDate(String ddmm) {
         Integer current_year = cal.get(Calendar.YEAR);
         Integer current_month = cal.get(Calendar.MONTH);
         Integer provided_month = stringToMonthValue(ddmm.substring(2));
-        
-        if(provided_month < current_month){
-         current_year++;
+
+        if (provided_month < current_month) {
+            current_year++;
         }
-        
+
         String tempDate = ddmm.concat(current_year.toString());
         SimpleDateFormat dfIn = new SimpleDateFormat("ddMMMyyyy");
         SimpleDateFormat dfOut = new SimpleDateFormat("yyyy-MM-dd");
@@ -61,11 +70,11 @@ public class DateUtil {
         return date;
     }
 
-    public static String dateTOddmm(Date date){
-     String _date = dateToString(date, "ddMMMyyyy");     
-     return _date.substring(0,5).toUpperCase();
+    public static String dateTOddmm(Date date) {
+        String _date = dateToString(date, "ddMMMyyyy");
+        return _date.substring(0, 5).toUpperCase();
     }
-    
+
     public static Date refundDate(String dateString) {
 
         Date date = null;
@@ -116,7 +125,7 @@ public class DateUtil {
 
         switch (mm) {
             case "JAN":
-                return 0; 
+                return 0;
             case "FEB":
                 return 1;
             case "MAR":

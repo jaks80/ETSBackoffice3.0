@@ -80,7 +80,9 @@ public class PaymentDAOImpl extends GenericDAOImpl<Payment, Long> implements Pay
                 //+ "left join fetch pay.lastModifiedBy as modifiedby "
                 + concatSaleType
                 + "left join fetch sp.pnr as p "
+                + "left join fetch p.segments "
                 + "left join fetch sp.parent as invoice "
+                + "left join fetch invoice.tickets "
                 + concatClient
                 + "where "
                 + "(sp.docIssueDate >= :from and sp.docIssueDate <= :to) "

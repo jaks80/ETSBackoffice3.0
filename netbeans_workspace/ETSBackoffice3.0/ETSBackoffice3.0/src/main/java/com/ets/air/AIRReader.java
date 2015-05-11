@@ -6,6 +6,8 @@ import com.ets.pnr.domain.Remark;
 import com.ets.pnr.domain.Ticket;
 import com.ets.air.service.AirService;
 import com.ets.util.Enums;
+import com.ets.util.PnrUtil;
+import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.List;
 import javax.annotation.Resource;
@@ -82,6 +84,7 @@ public class AIRReader {
                     pnr.setRemarks(new LinkedHashSet(remarks));
                     boolean issued = false;
                     for (Ticket t : tickets) {
+                        t.setBaseFare(new BigDecimal("0.00"));//For entry other then TTP fare entry is not accurate, Hence it is set to 0 for manual entry by user.
                         if ("ISSUE".equals(t.getTktStatusString())) {
                             issued = true;
                             break;

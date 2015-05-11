@@ -8,8 +8,10 @@ import com.ets.accounts.model.AccountsReport;
 import com.ets.client.domain.Contactable;
 import com.ets.client.service.AgentService;
 import com.ets.client.service.CustomerService;
+import com.ets.pnr.domain.Ticket;
 import com.ets.util.DateUtil;
 import com.ets.util.Enums;
+import com.ets.util.PnrUtil;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -40,8 +42,8 @@ public class AccountsService {
     CustomerService customerService;
 
     public AccountsReport generateClientStatement(Enums.ClientType clienttype, Long clientid, Date from, Date to) {
-
-        BigDecimal balance_brought_forward = sales_dao.getAccountBallanceToDate(clienttype, clientid, from);
+        Date previousDay = DateUtil.minusDays(from, 1);
+        BigDecimal balance_brought_forward = sales_dao.getAccountBallanceToDate(clienttype, clientid, previousDay);
         List<TicketingSalesAcDoc> docs = sales_dao.findAllDocuments(clienttype, clientid, from, to);
 
         Contactable cont = null;
@@ -103,7 +105,17 @@ public class AccountsService {
                     .append(" ")
                     .append(doc.getPnr().getAirLineCode())
                     .append(" ");
-
+            
+            if (doc.getTickets() != null && !doc.getTickets().isEmpty()) {
+                Ticket leadPax = PnrUtil.calculateLeadPaxTicket(doc.getTickets());
+                sb.append(leadPax.getFullPaxName()).append("/").append(leadPax.getFullTicketNo());
+                
+                if (Enums.AcDocType.INVOICE.equals(doc.getType())) {
+                 sb.append(" ").append(PnrUtil.getOutBoundFlightSummery(doc.getPnr().getSegments()));
+                }
+            }            
+            
+            
             if (doc.getRemark() != null) {
                 sb.append(doc.getRemark()).append(" ");
             }
@@ -142,13 +154,13 @@ public class AccountsService {
         BigDecimal balance_brought_forward = purchase_dao.getAccountBallanceToDate(clientid, from);
         List<TicketingPurchaseAcDoc> docs = purchase_dao.findAllDocuments(clientid, from, to);
 
-        Contactable cont = agentService.getAgent(clientid);      
+        Contactable cont = agentService.getAgent(clientid);
 
         AccountsReport report = new AccountsReport();
         report.setReportTitle("Vendor Account Statement");
         report.setDateFrom(DateUtil.dateToString(from));
         report.setDateTo(DateUtil.dateToString(to));
-        
+
         if (cont != null) {
             report.setClientName(cont.calculateFullName());
             report.setEmail(cont.getEmail());
@@ -157,7 +169,7 @@ public class AccountsService {
             report.setTelNo(cont.getMobile());
             report.setAddressCRSeperated(cont.getAddressCRSeperated());
         }
-        
+
         report.setOpeningBalance(balance_brought_forward.toString());
 
         BigDecimal line_balance = balance_brought_forward;
@@ -247,7 +259,7 @@ public class AccountsService {
         report.setReportTitle("Client Account Statement");
         report.setDateFrom(DateUtil.dateToString(from));
         report.setDateTo(DateUtil.dateToString(to));
-        
+
         if (cont != null) {
             report.setClientName(cont.calculateFullName());
             report.setEmail(cont.getEmail());
