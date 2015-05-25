@@ -1,5 +1,6 @@
 package com.ets.accounts.ws;
 
+import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accounts.model.*;
 import com.ets.accounts.domain.Payment;
 import com.ets.accounts.service.PaymentService;
@@ -34,6 +35,26 @@ public class PaymentWS {
         return service.save(payment);
     }
 
+    @PUT
+    @Path("/void")
+    @RolesAllowed("AD")    
+    public Payment _void(@QueryParam("paymentid") Long paymentid) {
+        Payment payment = service._void(paymentid);
+        return payment;
+    }
+    
+    @DELETE
+    @Path("/delete")
+    @RolesAllowed("AD")    
+    public Response _delete(@QueryParam("paymentid") Long paymentid) {
+        String message = service.delete(paymentid);
+        if ("Deleted".equals(message)) {
+            return Response.status(200).entity(message).build();
+        } else {
+            return Response.status(500).entity(message).build();
+        }
+    }
+
     @POST
     @Path("/newbsppay")
     @RolesAllowed("SM")
@@ -59,24 +80,21 @@ public class PaymentWS {
 
     @GET
     @Path("/tsales_pay_byid/{id}")
-    //@RolesAllowed("GS")
-    @PermitAll
+    @RolesAllowed("GS")
     public Payment getTSalesPaymentById(@PathParam("id") Long id) {
         return service.findTSalesPaymentById(id);
     }
 
     @GET
     @Path("/tpurch_pay_byid/{id}")
-    //@RolesAllowed("GS")
-    @PermitAll
+    @RolesAllowed("GS")
     public Payment getTPurchasePaymentById(@PathParam("id") Long id) {
         return service.findTPurchasePaymentById(id);
     }
 
     @GET
     @Path("/other_pay_byid/{id}")
-    //@RolesAllowed("GS")
-    @PermitAll
+    @RolesAllowed("GS")
     public Payment getOSalesPaymentById(@PathParam("id") Long id) {
         return service.findOSalesPaymentById(id);
     }

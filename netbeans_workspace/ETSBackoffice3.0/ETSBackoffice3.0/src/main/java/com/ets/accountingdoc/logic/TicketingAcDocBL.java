@@ -79,15 +79,15 @@ public class TicketingAcDocBL {
         return creditMemo;
     }
 
-    public TicketingPurchaseAcDoc newTicketingPurchaseInvoice(TicketingSalesAcDoc salesInvoice) {
-
-        TicketingPurchaseAcDoc invoice = new TicketingPurchaseAcDoc();
-        invoice.setType(Enums.AcDocType.INVOICE);
-        invoice.setDocIssueDate(salesInvoice.getDocIssueDate());
-        invoice.setTickets(salesInvoice.getTickets());
-        invoice.setReference(salesInvoice.getReference());
-        invoice.setPnr(pnr);
-        return invoice;
+    public TicketingPurchaseAcDoc newTicketingPurchaseInvoice(TicketingSalesAcDoc salesInvoice,
+            TicketingPurchaseAcDoc pinvoice) {
+        
+        pinvoice.setType(Enums.AcDocType.INVOICE);
+        pinvoice.setDocIssueDate(salesInvoice.getDocIssueDate());
+        pinvoice.setTickets(salesInvoice.getTickets());
+        pinvoice.setReference(salesInvoice.getReference());
+        pinvoice.setPnr(pnr);
+        return pinvoice;
     }
 
     public TicketingPurchaseAcDoc newTicketingDraftPurchaseInvoice(TicketingPurchaseAcDoc draftInvoice, Set<Ticket> unDocumentedTickets) {

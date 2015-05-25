@@ -150,8 +150,8 @@ public class AccountsService {
     }
 
     public AccountsReport generateVendorStatement(Long clientid, Date from, Date to) {
-
-        BigDecimal balance_brought_forward = purchase_dao.getAccountBallanceToDate(clientid, from);
+        Date previousDay = DateUtil.minusDays(from, 1);
+        BigDecimal balance_brought_forward = purchase_dao.getAccountBallanceToDate(clientid, previousDay);
         List<TicketingPurchaseAcDoc> docs = purchase_dao.findAllDocuments(clientid, from, to);
 
         Contactable cont = agentService.getAgent(clientid);
@@ -209,7 +209,17 @@ public class AccountsService {
                     .append(" ")
                     .append(doc.getPnr().getAirLineCode())
                     .append(" ");
-
+            
+            if (doc.getTickets() != null && !doc.getTickets().isEmpty()) {
+                Ticket leadPax = PnrUtil.calculateLeadPaxTicket(doc.getTickets());
+                sb.append(leadPax.getFullPaxName()).append("/").append(leadPax.getFullTicketNo());
+                
+                if (Enums.AcDocType.INVOICE.equals(doc.getType())) {
+                 sb.append(" ").append(PnrUtil.getOutBoundFlightSummery(doc.getPnr().getSegments()));
+                }
+            }            
+            
+            
             if (doc.getRemark() != null) {
                 sb.append(doc.getRemark()).append(" ");
             }
@@ -244,8 +254,8 @@ public class AccountsService {
     }
 
     public AccountsReport generateClientStatementOther(Enums.ClientType clienttype, Long clientid, Date from, Date to) {
-
-        BigDecimal balance_brought_forward = other_dao.getAccountBallanceToDate(clienttype, clientid, from);
+        Date previousDay = DateUtil.minusDays(from, 1);
+        BigDecimal balance_brought_forward = other_dao.getAccountBallanceToDate(clienttype, clientid, previousDay);
         List<OtherSalesAcDoc> docs = other_dao.findAllDocuments(clienttype, clientid, from, to);
 
         Contactable cont = null;

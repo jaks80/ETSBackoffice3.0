@@ -1,6 +1,0 @@
-1. Type of Issue:
- 1. Self Book Self Issue
- 2. Self Book 3rd Party Issue
- 3. 3rd Party Book Self Issue
- 4. 3rd Party Book 3rd Party Issue
- 

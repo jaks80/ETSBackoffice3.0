@@ -21,10 +21,10 @@ public class DateUtil {
     private static Calendar cal = Calendar.getInstance();
 
     public static Date minusDays(Date dateInstance, int days) {
-
-        cal.setTime(dateInstance);
-        cal.add(Calendar.DATE, days * -1);
-        Date date = cal.getTime();
+        Calendar c = Calendar.getInstance();
+        c.setTime(dateInstance);
+        c.add(Calendar.DATE, days * -1);
+        Date date = c.getTime();
         return date;
     }
 

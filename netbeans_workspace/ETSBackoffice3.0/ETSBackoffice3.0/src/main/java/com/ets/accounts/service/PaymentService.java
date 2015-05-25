@@ -87,6 +87,41 @@ public class PaymentService {
         return payment;
     }
 
+    public String delete(Long paymentid) {        
+        Payment payment = dao.findById(paymentid);
+        dao.delete(payment);
+        return "Deleted";
+    }
+
+    public Payment _void(Long paymentid) {
+        Payment payment = dao.findById(paymentid);
+        if (!payment.gettSalesAcDocuments().isEmpty()) {
+            for (TicketingSalesAcDoc d : payment.gettSalesAcDocuments()) {
+                d.setParent(null);
+                d.setStatus(Enums.AcDocStatus.VOID);
+            }
+            dao.save(payment);
+            return findTSalesPaymentById(paymentid);
+        } else if (!payment.gettPurchaseAcDocuments().isEmpty()) {
+
+            for (TicketingPurchaseAcDoc d : payment.gettPurchaseAcDocuments()) {
+                d.setParent(null);
+                d.setStatus(Enums.AcDocStatus.VOID);
+            }
+            dao.save(payment);
+            return findTPurchasePaymentById(paymentid);
+        } else if (!payment.getoSalesAcDocuments().isEmpty()) {
+            for (OtherSalesAcDoc d : payment.getoSalesAcDocuments()) {
+                d.setParent(null);
+                d.setStatus(Enums.AcDocStatus.VOID);
+            }
+            dao.save(payment);
+            return findOSalesPaymentById(paymentid);
+        }
+
+        return payment;
+    }
+
     public Payment findTSalesPaymentById(Long id) {
         Payment payment = dao.findById(id);
 
@@ -238,7 +273,7 @@ public class PaymentService {
                     doc.setTickets(null);
                     doc.setRelatedDocuments(null);
                     doc.getPnr().setTickets(null);
-                    doc.getPnr().setRemarks(null);                    
+                    doc.getPnr().setRemarks(null);
 
                     if (doc.getParent() != null) {
                         doc.getParent().setAdditionalChargeLines(null);
@@ -257,7 +292,7 @@ public class PaymentService {
                     doc.setTickets(null);
                     doc.setRelatedDocuments(null);
                     doc.getPnr().setTickets(null);
-                    doc.getPnr().setRemarks(null);                    
+                    doc.getPnr().setRemarks(null);
 
                     if (doc.getParent() != null) {
                         doc.getParent().setAdditionalChargeLines(null);
@@ -275,15 +310,15 @@ public class PaymentService {
     public synchronized List<TransactionReceipt> findTicketingPaymentReceipts(Enums.ClientType clienttype, Long clientid, Date from, Date to, Enums.SaleType saleType) {
         List<Payment> payment_list = findTicketingPaymentHistory(clienttype, clientid, from, to, saleType);
         List<TransactionReceipt> receipt_list = new ArrayList<>();
-        
-        for(Payment payment:payment_list){
-         TransactionReceipt receipt = new TransactionReceipt(payment);
-         receipt_list.add(receipt);
+
+        for (Payment payment : payment_list) {
+            TransactionReceipt receipt = new TransactionReceipt(payment);
+            receipt_list.add(receipt);
         }
-        
+
         return receipt_list;
     }
-    
+
     public synchronized List<Payment> findOtherPaymentHistory(Enums.ClientType clienttype, Long clientid, Date from, Date to, Enums.SaleType saleType) {
         List<Payment> payment_list = dao.findOtherPaymentHistory(clienttype, clientid, from, to, saleType);
 
@@ -309,15 +344,15 @@ public class PaymentService {
     public synchronized List<TransactionReceipt> findOtherPaymentReceipts(Enums.ClientType clienttype, Long clientid, Date from, Date to, Enums.SaleType saleType) {
         List<Payment> payment_list = findOtherPaymentHistory(clienttype, clientid, from, to, saleType);
         List<TransactionReceipt> receipt_list = new ArrayList<>();
-        
-        for(Payment payment:payment_list){
-         TransactionReceipt receipt = new TransactionReceipt(payment);
-         receipt_list.add(receipt);
+
+        for (Payment payment : payment_list) {
+            TransactionReceipt receipt = new TransactionReceipt(payment);
+            receipt_list.add(receipt);
         }
-        
+
         return receipt_list;
     }
-    
+
     public List<Payment> findTicketingSalesCashBook(Date from, Date to, Long userId,
             Enums.ClientType clienttype, Long clientid, Enums.PaymentType paymentType) {
         List<Payment> payment_list = dao.findTicketingSalesCashBook(from, to, userId, clienttype, clientid, paymentType);

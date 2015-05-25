@@ -307,14 +307,17 @@ public class OtherSalesAcDocDAOImpl extends GenericDAOImpl<OtherSalesAcDoc, Long
     @Override
     @Transactional(readOnly = true)
     public Map<String, BigDecimal> allAgentOutstandingReport(Date from,Date to) {
-        String hql = "select agent.name, coalesce(sum(a.documentedAmount),0) as balance "
-                + "from OtherSalesAcDoc a "
-                + "inner join a.agent as agent "
-                + "where a.status = 0 "
-                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
-                + "group by agent.id order by balance desc ";
+        
+        String sql = " select agt.name as agentname, coalesce(sum(acdoc.documentedAmount), 0) as balance "
+                + "from other_sales_acdoc invoice "
+                + "left outer join other_sales_acdoc acdoc on invoice.reference=acdoc.reference and (acdoc.status<>2) "
+                + "inner join agent agt on invoice.agentid_fk=agt.id "
+                + "where invoice.status<>2 and invoice.type=0 and "
+                + "(select sum(other4_.documentedAmount) from other_sales_acdoc other4_ where invoice.reference=other4_.reference and other4_.status<>2 group by other4_.reference)>0 "
+                + "and invoice.docIssueDate>=:from and invoice.docIssueDate<=:to "
+                + "group by agt.id order by balance desc";
 
-        Query query = getSession().createQuery(hql);
+        Query query = getSession().createSQLQuery(sql);
         query.setParameter("from", from);
         query.setParameter("to", to);
         

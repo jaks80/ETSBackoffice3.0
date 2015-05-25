@@ -94,11 +94,11 @@ public class TicketingPurchaseAcDocWS {
     @Path("/delete/{id}")
     @RolesAllowed("SM")
     public Response delete(@PathParam("id") long id) {
-        int status = service.delete(id);
-        if (status == 1) {
-            return Response.status(200).build();
+        String message = service.delete(id);
+        if ("Deleted".equals(message)) {
+            return Response.status(200).entity(message).build();
         } else {
-            return Response.status(500).build();
+            return Response.status(500).entity(message).build();
         }
     }
 
@@ -126,7 +126,7 @@ public class TicketingPurchaseAcDocWS {
 
     @GET
     @Path("/due_bspreport")
-    @RolesAllowed("SM")    
+    @RolesAllowed("SM")
     public BSPReport outstandingBSPReport(
             @QueryParam("agentid") Long agentid,
             @QueryParam("dateStart") String dateStart,
@@ -173,17 +173,17 @@ public class TicketingPurchaseAcDocWS {
 
         return report;
     }
-    
+
     @GET
     @Path("/allagentduereport")
-    @RolesAllowed("AD")    
+    @RolesAllowed("AD")
     public ProductivityReport allAgentDueReport(
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd) {
 
         Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
         Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
-        ProductivityReport report = service.allAgentDueReport(dateFrom,dateTo);
+        ProductivityReport report = service.allAgentDueReport(dateFrom, dateTo);
 
         return report;
     }

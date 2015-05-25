@@ -3,6 +3,7 @@ package com.ets.accountingdoc.dao;
 import com.ets.GenericDAOImpl;
 import com.ets.accountingdoc.domain.AdditionalChargeLine;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
+import com.ets.accountingdoc.service.AcDocUtil;
 import com.ets.pnr.dao.TicketDAO;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums;
@@ -70,6 +71,23 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
 
     @Override
     @Transactional(readOnly = true)
+    public TicketingPurchaseAcDoc getByTicketId(Long ticketId) {
+        String hql = "select distinct a from TicketingPurchaseAcDoc as a "
+                + "left join fetch a.additionalChargeLines as adl "
+                + "left join fetch adl.additionalCharge "
+                + "left join a.tickets as t "
+                + "left join fetch a.relatedDocuments as a1 "
+                + "left join fetch a1.payment as p "
+                + "where t.id = :ticketId";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameter("ticketId", ticketId);
+        TicketingPurchaseAcDoc result = (TicketingPurchaseAcDoc) query.uniqueResult();
+        return result;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<TicketingPurchaseAcDoc> getByPnrId(Long pnrId) {
         String hql = "select distinct a from TicketingPurchaseAcDoc as a "
                 + "left join fetch a.additionalChargeLines as adl "
@@ -122,7 +140,7 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
                 + "from TicketingPurchaseAcDoc b "
                 + "where a.reference=b.reference and b.status = 0 group by b.reference)" + operator + "0 "
                 + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
-                + "and (:agentid is null or tktingagent.id = :agentid) order by a.id";
+                + "and (:agentid is null or tktingagent.id = :agentid) order by a.docIssueDate,a.id";
 
         Query query = getSession().createQuery(hql);
 
@@ -149,7 +167,7 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
                 + "from TicketingPurchaseAcDoc b "
                 + "where a.reference=b.reference and b.status = 0 group by b.reference) <> 0 "
                 + "and a.docIssueDate <= :to "
-                + "and tktingagent.id = :agentid order by a.docIssueDate";
+                + "and tktingagent.id = :agentid order by a.docIssueDate,a.id";
 
         Query query = getSession().createQuery(hql);
 
@@ -168,7 +186,7 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
         String hql = "select distinct a from TicketingPurchaseAcDoc as a "
                 + "left join fetch a.relatedDocuments as r "
                 + "left join fetch a.tickets as t "
-                + "left join fetch a.pnr as p "                
+                + "left join fetch a.pnr as p "
                 + "inner join fetch p.ticketing_agent as tktingagent "
                 + "where a.status = 0 and (a.type = 2 or a.type = 3) and"
                 + "(select sum(b.documentedAmount) as total "
@@ -186,7 +204,7 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
         List<TicketingPurchaseAcDoc> docs = query.list();
         return docs;
     }
-    
+
     @Override
     @Transactional(readOnly = true)
     public List<TicketingPurchaseAcDoc> findInvoiceHistory(Long agentid, Date from, Date to) {
@@ -199,7 +217,7 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
                 + "inner join fetch p.ticketing_agent as tktingagent "
                 + "where a.status = 0 and a.type = 0 and "
                 + "a.docIssueDate >= :from and a.docIssueDate <= :to "
-                + "and (:agentid is null or tktingagent.id = :agentid) order by a.id";
+                + "and (:agentid is null or tktingagent.id = :agentid) order by a.docIssueDate,a.id";
 
         Query query = getSession().createQuery(hql);
 
@@ -208,23 +226,6 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
         query.setParameter("agentid", agentid);
         List<TicketingPurchaseAcDoc> dueInvoices = query.list();
         return dueInvoices;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public TicketingPurchaseAcDoc getByTicketId(Long ticketId) {
-        String hql = "select distinct a from TicketingPurchaseAcDoc as a "
-                + "left join fetch a.additionalChargeLines as adl "
-                + "left join fetch adl.additionalCharge "
-                + "left join a.tickets as t "
-                + "left join fetch a.relatedDocuments as a1 "
-                + "left join fetch a1.payment as p "
-                + "where t.id = :ticketId";
-
-        Query query = getSession().createQuery(hql);
-        query.setParameter("ticketId", ticketId);
-        TicketingPurchaseAcDoc result = (TicketingPurchaseAcDoc) query.uniqueResult();
-        return result;
     }
 
     @Override
@@ -276,11 +277,11 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
         Set<Ticket> tickets = doc.getTickets();
 
         doc.setTickets(null);
-        for (Ticket t : tickets) {
-            t.setTicketingPurchaseAcDoc(null);
-        }
 
-        if (!tickets.isEmpty()) {
+        if (tickets != null && !tickets.isEmpty()) {
+            for (Ticket t : tickets) {
+                t.setTicketingPurchaseAcDoc(null);
+            }
             ticketDAO.saveBulk(new ArrayList(tickets));
         }
 
@@ -290,26 +291,39 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
             additionalChgLineDAO.deleteBulk(additionalChargeLines);
             doc.setAdditionalChargeLines(null);
         }
+
+        if (doc.getType().equals(Enums.AcDocType.INVOICE)) {
+            Set<TicketingPurchaseAcDoc> related_docs = doc.getRelatedDocuments();
+            for (TicketingPurchaseAcDoc d : related_docs) {
+                d.setParent(null);
+                d.setStatus(Enums.AcDocStatus.VOID);
+            }
+            saveBulk(new ArrayList(related_docs));
+        }
+
         doc.setStatus(Enums.AcDocStatus.VOID);
+        doc.setDocumentedAmount(new BigDecimal("0.00"));
         save(doc);
         return true;
     }
-    
+
     @Override
     @Transactional(readOnly = true)
-    public Map<String, BigDecimal> allAgentOutstandingReport(Date from,Date to) {
-        String hql = "select agent.name, coalesce(sum(a.documentedAmount),0) as balance "
-                + "from TicketingPurchaseAcDoc a "
-                + "left join a.pnr as p "
-                + "inner join p.ticketing_agent as agent "
-                + "where a.status = 0 "
-                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
-                + "group by agent.id order by balance desc ";
+    public Map<String, BigDecimal> allAgentOutstandingReport(Date from, Date to) {
+        String sql = " select agt.name as agentname, coalesce(sum(acdoc.documentedAmount), 0) as balance "
+                + "from tkt_purch_acdoc invoice "
+                + "left outer join tkt_purch_acdoc acdoc on invoice.reference=acdoc.reference and (acdoc.status<>2) "
+                + "left outer join pnr p on invoice.pnr_fk=p.id "
+                + "inner join agent agt on p.tkagentid_fk=agt.id "
+                + "where invoice.status<>2 and invoice.type=0 and "
+                + "(select sum(ticketings4_.documentedAmount) from tkt_purch_acdoc ticketings4_ where invoice.reference=ticketings4_.reference and ticketings4_.status<>2 group by ticketings4_.reference)>0 "
+                + "and invoice.docIssueDate>=:from and invoice.docIssueDate<=:to "
+                + "group by agt.id order by balance desc";
 
-        Query query = getSession().createQuery(hql);
+        Query query = getSession().createSQLQuery(sql);
         query.setParameter("from", from);
         query.setParameter("to", to);
-        
+
         List results = query.list();
         Map<String, BigDecimal> map = new LinkedHashMap<>();
 

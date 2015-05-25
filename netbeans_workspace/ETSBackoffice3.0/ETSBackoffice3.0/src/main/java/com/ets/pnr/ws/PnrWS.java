@@ -46,12 +46,14 @@ public class PnrWS {
     @DELETE
     @Path("/delete/{id}")
     @RolesAllowed("SM")
-    public Response delete(@PathParam("id") long id) {
+    public Response delete(@PathParam("id") long id, @QueryParam("date") String date) {
 
-        if (service.delete(id)) {
-            return Response.status(200).build();
+        Date _date = DateUtil.stringToDate(date, "ddMMMyyyy");
+        String message = service.delete(id, _date);
+        if ("Deleted".equals(message)) {
+            return Response.status(200).entity(message).build();
         } else {
-            return Response.status(500).build();
+            return Response.status(500).entity(message).build();
         }
     }
 

@@ -119,12 +119,12 @@ public class TSalesAcDocService {
 
         TicketingPurchaseAcDoc p_doc = null;
         if (!doc.getTickets().isEmpty()) {
-            p_doc = autoCreatePurchaseDocuments(doc);
+            p_doc = autoCreatePurchaseDocuments(doc, doc.getPnr().getId());
         }
 
         doc.setStatus(Enums.AcDocStatus.ACTIVE);
         dao.save(doc);
-        
+
         AcDocUtil.undefineTSAcDoc(doc, doc.getTickets());
         AcDocUtil.undefineTPAcDoc(p_doc, doc.getTickets());
         if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
@@ -141,14 +141,21 @@ public class TSalesAcDocService {
      *
      * @param doc
      */
-    private TicketingPurchaseAcDoc autoCreatePurchaseDocuments(TicketingSalesAcDoc doc) {
+    private TicketingPurchaseAcDoc autoCreatePurchaseDocuments(TicketingSalesAcDoc doc, Long pnrid) {
 
         TicketingPurchaseAcDoc p_doc = new TicketingPurchaseAcDoc();
-
         TicketingAcDocBL logic = new TicketingAcDocBL(doc.getPnr());
 
         if (doc.getType().equals(Enums.AcDocType.INVOICE)) {
-            p_doc = logic.newTicketingPurchaseInvoice(doc);
+            List<TicketingPurchaseAcDoc> acdocList = purchase_service.getByPnrId(pnrid);
+            for (TicketingPurchaseAcDoc p : acdocList) {
+                if (p.getType().equals(Enums.AcDocType.INVOICE)) {
+                    p_doc = p;
+                    break;
+                }
+            }
+
+            p_doc = logic.newTicketingPurchaseInvoice(doc,p_doc);
             purchase_service.createNewDocument(p_doc);
 
         } else if (doc.getType().equals(Enums.AcDocType.DEBITMEMO)) {
@@ -237,15 +244,15 @@ public class TSalesAcDocService {
     public int delete(long id) {
         TicketingSalesAcDoc document = dao.getWithChildrenById(id);
         Set<TicketingSalesAcDoc> relatedDocs = document.getRelatedDocuments();
-        
+
         //MySql gives exception if deleting with related docs.
-        if(!relatedDocs.isEmpty()){
-         return 0;
+        if (!relatedDocs.isEmpty()) {
+            return 0;
         }
-        
-        if (document.getStatus().equals(Enums.AcDocStatus.VOID) && 
-                !document.getType().equals(Enums.AcDocType.PAYMENT)&&
-                !document.getType().equals(Enums.AcDocType.REFUND)) {
+
+        if (document.getStatus().equals(Enums.AcDocStatus.VOID)
+                && !document.getType().equals(Enums.AcDocType.PAYMENT)
+                && !document.getType().equals(Enums.AcDocType.REFUND)) {
             dao.delete(document);
             return 1;
         }
@@ -271,7 +278,7 @@ public class TSalesAcDocService {
 
         Set<TicketingSalesAcDoc> relatedDocs = doc.getRelatedDocuments();
         Set<TicketingSalesAcDoc> filtered_relatedDocs = AcDocUtil.filterVoidRelatedDocuments(relatedDocs);
-        
+
         if (doc.getType().equals(Enums.AcDocType.INVOICE) && !filtered_relatedDocs.isEmpty()) {
             doc = getWithChildrenById(doc.getId());
             return doc;
@@ -295,7 +302,10 @@ public class TSalesAcDocService {
         List<TicketingSalesAcDoc> dueInvoices = dao.findOutstandingDocuments(type, clienttype, clientid, dateStart, dateEnd);
 
         for (TicketingSalesAcDoc inv : dueInvoices) {
-            for (TicketingSalesAcDoc related : inv.getRelatedDocuments()) {
+
+            Set<TicketingSalesAcDoc> relatedDocs = AcDocUtil.filterVoidRelatedDocuments(inv.getRelatedDocuments());
+
+            for (TicketingSalesAcDoc related : relatedDocs) {
                 related.setAdditionalChargeLines(null);
                 related.setPayment(null);
                 related.setPnr(null);
@@ -303,6 +313,7 @@ public class TSalesAcDocService {
                 related.setRelatedDocuments(null);
                 related.setParent(null);
             }
+            inv.setRelatedDocuments(relatedDocs);
             inv.setAdditionalChargeLines(null);
             AcDocUtil.undefineTSAcDoc(inv, inv.getTickets());
             //inv.setRelatedDocuments(null);
@@ -325,11 +336,11 @@ public class TSalesAcDocService {
     }
 
     public InvoiceReport outstandingFlightReport(Enums.ClientType clienttype,
-            Long clientid, Date dateEnd) {
+            Long clientid, Date dateFrom, Date dateEnd) {
 
         Date dateStart = new java.util.Date();
 
-        List<TicketingSalesAcDoc> dueInvoices = dao.outstandingFlightReport(clienttype, clientid, dateEnd);
+        List<TicketingSalesAcDoc> dueInvoices = dao.outstandingFlightReport(clienttype, clientid, dateFrom, dateEnd);
         InvoiceReport report = InvoiceReport.serializeToSalesSummery(clientid, dueInvoices, dateStart, dateEnd);
         report.setTitle("Unpaid Flight Report");
         return report;
@@ -369,16 +380,16 @@ public class TSalesAcDocService {
         return report;
     }
 
-    public ProductivityReport allAgentDueReport(Date dateStart,Date dateEnd) {
+    public ProductivityReport allAgentDueReport(Date dateStart, Date dateEnd) {
 
-        Map<String, BigDecimal> productivityLine = dao.allAgentOutstandingReport(dateStart,dateEnd);
+        Map<String, BigDecimal> productivityLine = dao.allAgentOutstandingReport(dateStart, dateEnd);
 
         ProductivityReport report = new ProductivityReport();
         report.setTitle("Outstanding Invoice Report");
         report.setSaleType(Enums.SaleType.TKTSALES);
         report.setDateFrom(DateUtil.dateToString(dateStart));
         report.setDateTo(DateUtil.dateToString(dateEnd));
-        
+
         for (String key : productivityLine.keySet()) {
             ProductivityReport.ProductivityLine line = new ProductivityReport.ProductivityLine();
             line.setKey(key);

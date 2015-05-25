@@ -11,7 +11,6 @@ import com.ets.util.DateUtil;
 import com.ets.util.Enums;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.*;
@@ -179,12 +178,15 @@ public class TicketingSalesAcDocWS {
             @QueryParam("dateStart") String dateStart,
             @QueryParam("dateEnd") String dateEnd) {
 
+        Date dateFrom = null;
         Date dateTo = null;
-        if (dateEnd != null) {
+        
+        if (dateStart != null && dateEnd != null) {
+            dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
             dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
         }
 
-        InvoiceReport report = service.outstandingFlightReport(clienttype, clientid, dateTo);
+        InvoiceReport report = service.outstandingFlightReport(clienttype, clientid, dateFrom, dateTo);
         return report;
     }
 

@@ -2,9 +2,9 @@ INSERT INTO bo_user (id,loginID,password,surName,foreName,userType,active) VALUE
 INSERT INTO bo_user (id,loginID,password,surName,foreName,userType,active) VALUES (2,'admin','1234','Admin','Admin',2,1);
 INSERT INTO bo_user (id,loginID,password,surName,foreName,userType,active) VALUES (3,'ashik','1234','Rahman','Ashik',2,1);
 
-INSERT INTO additionalCharge (id,title,charge,calculationType,isArchived) VALUES (1,'Card Handling','0.00',2,true);
-INSERT INTO additionalCharge (id,title,charge,calculationType,isArchived) VALUES (2,'Postage','0.00',1,true);
-INSERT INTO additionalCharge (id,title,charge,calculationType,isArchived) VALUES (3,'Other','0.00',1,true);
+INSERT INTO additional_charge (id,title,charge,calculationType) VALUES (1,'Card Handling','0.00',2);
+INSERT INTO additional_charge (id,title,charge,calculationType) VALUES (2,'Postage','0.00',1);
+INSERT INTO additional_charge (id,title,charge,calculationType) VALUES (3,'Other','0.00',1);
 
 INSERT INTO category (id,title) VALUES (1,'Hajj');
 INSERT INTO category (id,title) VALUES (2,'Umra');

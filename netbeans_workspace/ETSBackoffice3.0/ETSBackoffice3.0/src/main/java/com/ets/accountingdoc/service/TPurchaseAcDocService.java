@@ -2,6 +2,7 @@ package com.ets.accountingdoc.service;
 
 import com.ets.accountingdoc.dao.TPurchaseAcDocDAO;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
+import com.ets.accountingdoc.domain.TicketingSalesAcDoc;
 import com.ets.accountingdoc.model.BSPReport;
 import com.ets.pnr.domain.Ticket;
 import com.ets.accountingdoc.model.InvoiceReport;
@@ -65,17 +66,17 @@ public class TPurchaseAcDocService {
         return undefineChildren(doc);
     }
 
-    public int delete(long id) {
+    public String delete(long id) {
         TicketingPurchaseAcDoc document = dao.findByID(TicketingPurchaseAcDoc.class, id);
 
         if (document.getStatus().equals(Enums.AcDocStatus.VOID) && 
                 !document.getType().equals(Enums.AcDocType.PAYMENT)&&
                 !document.getType().equals(Enums.AcDocType.REFUND)) {
             dao.delete(document);
-            return 1;
-        }
-        
-        return 0;
+            return "Deleted";
+        }else{
+         return "Only VOID document can be deleted.";
+        }                
     }
 
     public TicketingPurchaseAcDoc _void(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {
@@ -83,15 +84,15 @@ public class TPurchaseAcDocService {
         doc.setLastModified(ticketingPurchaseAcDoc.getLastModified());
         doc.setLastModifiedBy(ticketingPurchaseAcDoc.getLastModifiedBy());
 
-        Set<TicketingPurchaseAcDoc> relatedDocs = doc.getRelatedDocuments();
-        if (doc.getType().equals(Enums.AcDocType.INVOICE) && !relatedDocs.isEmpty()) {
-            return doc;
-        } else {
+//        Set<TicketingPurchaseAcDoc> relatedDocs = doc.getRelatedDocuments();
+//        if (doc.getType().equals(Enums.AcDocType.INVOICE) && !relatedDocs.isEmpty()) {
+//            return doc;
+//        } else {
 
             dao.voidDocument(undefineChildren(doc));
             return doc;
         }
-    }
+    
 
     public TicketingPurchaseAcDoc getWithChildrenById(long id) {
         TicketingPurchaseAcDoc doc = dao.getWithChildrenById(id);
@@ -168,7 +169,9 @@ public class TPurchaseAcDocService {
         for (TicketingPurchaseAcDoc a : list) {
             a.setRelatedDocuments(null);
             if (a.getType().equals(Enums.AcDocType.PAYMENT) || a.getType().equals(Enums.AcDocType.REFUND)) {
-                AcDocUtil.undefineTPAcDocumentInPayment(a);
+                if(a.getParent()!=null){
+                 AcDocUtil.undefineTPAcDocumentInPayment(a);
+                }
             }
             for (Ticket t : a.getTickets()) {
                 t.setTicketingPurchaseAcDoc(null);
@@ -178,9 +181,9 @@ public class TPurchaseAcDocService {
         return list;
     }
 
-    public void delete(TicketingPurchaseAcDoc document) {
-        dao.delete(document);
-    }
+//    public void delete(TicketingPurchaseAcDoc document) {
+//        dao.delete(document);
+//    }
 
     public InvoiceReport invoiceHistoryReport(Long agentid, Date dateStart, Date dateEnd) {
         List<TicketingPurchaseAcDoc> invoice_history = dao.findInvoiceHistory(agentid, dateStart, dateEnd);
@@ -194,7 +197,10 @@ public class TPurchaseAcDocService {
 
         List<TicketingPurchaseAcDoc> dueInvoices = dao.findOutstandingInvoice(type, agentid, dateStart, dateEnd);
         for (TicketingPurchaseAcDoc inv : dueInvoices) {
-            for (TicketingPurchaseAcDoc related : inv.getRelatedDocuments()) {
+            
+            Set<TicketingPurchaseAcDoc> relatedDocs = AcDocUtil.filterPVoidRelatedDocuments(inv.getRelatedDocuments());            
+            
+            for (TicketingPurchaseAcDoc related : relatedDocs) {
                 related.setAdditionalChargeLines(null);
                 related.setPayment(null);
                 related.setPnr(null);
@@ -202,6 +208,8 @@ public class TPurchaseAcDocService {
                 related.setRelatedDocuments(null);
                 related.setParent(null);
             }
+            inv.setRelatedDocuments(relatedDocs);
+            
             AcDocUtil.undefineTPAcDoc(inv, inv.getTickets());
             inv.setAdditionalChargeLines(null);
             inv.getPnr().setTickets(null);
@@ -247,7 +255,7 @@ public class TPurchaseAcDocService {
     public BSPReport dueBSPReport(Long agentid, Date dateStart, Date dateEnd) {
         List<TicketingPurchaseAcDoc> dueInvoices = dueBSPInvoices(agentid, dateStart, dateEnd);
         List<TicketingPurchaseAcDoc> adm_acm = dao.findBSP_ADM_ACM(agentid, dateStart, dateEnd);
-        GDSSaleReport sale_report = ticketService.saleReport(null, null, null, dateStart, dateEnd, null);
+        GDSSaleReport sale_report = ticketService.saleReport(Enums.TicketingType.IATA, null, null, dateStart, dateEnd, null);
 
         List<TicketingPurchaseAcDoc> adm_acm_noticket = new ArrayList<>();
 

@@ -77,7 +77,7 @@ public class AIRToPNRConverter {
             pnr.setPnrCancellationDate(date);
         }
 
-        if ("INV".equals(air.getType())) {
+        if ("INV".equals(air.getType()) || "TTP/BTK".equals(air.getType())) {
             for (String s : air.getLines()) {
                 if (s.startsWith("TK")) {
                     String[] data = AIRLineParser.parseTKLine(s);
@@ -180,7 +180,11 @@ public class AIRToPNRConverter {
                         baseFare = new BigDecimal((data[0].replaceAll("[a-zA-Z]", "").trim()));
                     } else {
                         if (!data[1].isEmpty()) {
-                            baseFare = new BigDecimal(data[1].replaceAll("[a-zA-Z]", "").trim());
+                            String bf = data[1].replaceAll("[a-zA-Z]", "");
+                            if (bf.isEmpty()) {
+                                bf = "0.00";
+                            }
+                            baseFare = new BigDecimal(bf);
                         }
                     }
                 }
@@ -205,7 +209,11 @@ public class AIRToPNRConverter {
                         baseFare = new BigDecimal((data[0].replaceAll("[a-zA-Z]", "").trim()));
                     } else {
                         if (!data[1].isEmpty()) {
-                            baseFare = new BigDecimal(data[1].replaceAll("[a-zA-Z]", "").trim());
+                            String bf = data[1].replaceAll("[a-zA-Z]", "");
+                            if (bf.isEmpty()) {
+                                bf = "0.00";
+                            }
+                            baseFare = new BigDecimal(bf);
                         }
                     }
                 }
@@ -227,7 +235,17 @@ public class AIRToPNRConverter {
 
                 totalFare = new BigDecimal(data[12].replaceAll("[a-zA-Z]", "").trim());
                 if (totalFare.compareTo(BigDecimal.ONE) > 0) {
-                    baseFare = new BigDecimal((data[0].replaceAll("[a-zA-Z]", "").trim()));
+                    if (bfCurrencyCode.equals(localCurrencyCode)) {
+                        baseFare = new BigDecimal((data[0].replaceAll("[a-zA-Z]", "").trim()));
+                    } else {
+                        if (!data[1].isEmpty()) {
+                            String bf = data[1].replaceAll("[a-zA-Z]", "");
+                            if (bf.isEmpty()) {
+                                bf = "0.00";
+                            }
+                            baseFare = new BigDecimal(bf);
+                        }
+                    }
                 }
 
                 tax = totalFare.subtract(baseFare);
@@ -325,13 +343,13 @@ public class AIRToPNRConverter {
                 if (data[0] != null && data[0].length() > 3) {
                     ticket.setNumericAirLineCode(data[0].substring(1, 4).trim());
                 }
-                
+
                 if (data.length == 3) {
                     ticket.setTicketNo(data[1] + "-" + data[2]);
                 } else {
                     ticket.setTicketNo(data[1]);
                 }
-                
+
                 ticket.setTktStatus(TicketStatus.REFUND);
             } else if (s.startsWith("R-")) {
                 String[] data = AIRLineParser.parseRLine(s);
@@ -376,13 +394,13 @@ public class AIRToPNRConverter {
                 if (data[0] != null && data[0].length() > 3) {
                     ticket.setNumericAirLineCode(data[0].substring(1, 4).trim());
                 }
-                
+
                 if (data.length == 3) {
                     ticket.setTicketNo(data[1] + "-" + data[2]);
                 } else {
                     ticket.setTicketNo(data[1]);
                 }
-                                
+
                 ticket.setTktStatus(TicketStatus.VOID);
             }
         }

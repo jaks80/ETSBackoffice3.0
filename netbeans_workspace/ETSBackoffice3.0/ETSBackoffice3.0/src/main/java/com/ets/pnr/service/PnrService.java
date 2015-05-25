@@ -3,6 +3,7 @@ package com.ets.pnr.service;
 import com.ets.client.domain.MainAgent;
 import com.ets.pnr.model.collection.Pnrs;
 import com.ets.pnr.dao.PnrDAO;
+import com.ets.pnr.domain.Itinerary;
 import com.ets.pnr.domain.Pnr;
 import com.ets.pnr.model.ATOLCertificate;
 import com.ets.settings.service.AppSettingsService;
@@ -35,10 +36,16 @@ public class PnrService {
         return dao.findTicketingOIDs();
     }
 
-    public boolean delete(Long id) {
+    public String delete(Long id, Date today) {
         Pnr pnr = getByIdWithChildren(id);
-        dao.delete(pnr);
-        return true;
+        Itinerary firstSegment = PnrUtil.getFirstSegment(pnr.getSegments());
+        
+        if (firstSegment.getDeptDate().after(today)) {
+            dao.delete(pnr);
+            return "Deleted";
+        } else {
+            return "Past segment PNR can not be deleted";
+        }
     }
 
     public List<Pnr> getByGDSPnr(String gdsPnr) {

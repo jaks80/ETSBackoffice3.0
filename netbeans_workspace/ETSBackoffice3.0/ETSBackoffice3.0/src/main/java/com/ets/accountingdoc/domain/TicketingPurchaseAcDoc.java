@@ -183,7 +183,7 @@ public class TicketingPurchaseAcDoc extends AccountingDocument implements Serial
         this.additionalChargeLines = additionalChargeLines;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_fk")
     public Payment getPayment() {
         return payment;

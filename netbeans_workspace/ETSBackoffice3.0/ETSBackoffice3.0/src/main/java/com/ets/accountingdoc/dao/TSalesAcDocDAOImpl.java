@@ -147,13 +147,13 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + "left join a.createdBy as user "
                 + "left join fetch p.segments "
                 + concatClient
-                + "where a.status = 0 and a.type = 0 and "
+                + "where a.status <> 2 and a.type = 0 and "
                 + "(select sum(b.documentedAmount) as total "
                 + "from TicketingSalesAcDoc b "
-                + "where a.reference=b.reference and b.status = 0 group by b.reference)" + operator + "0 "
+                + "where a.reference=b.reference and b.status <> 2 group by b.reference)" + operator + "0 "
                 + dateCondition
                 + clientcondition
-                + " order by a.id";
+                + " order by a.docIssueDate,a.id";
 
         Query query = getSession().createQuery(hql);
         if (!clientcondition.isEmpty()) {
@@ -172,7 +172,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     @Override
     @Transactional(readOnly = true)
     public List<TicketingSalesAcDoc> outstandingFlightReport(Enums.ClientType clienttype,
-            Long clientid, Date dateEnd) {
+            Long clientid, Date dateFrom, Date dateEnd) {
         String concatClient = "";
         String clientcondition = "and (:clientid is null or client.id = :clientid) ";
 
@@ -192,11 +192,11 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + "left join a.createdBy as user "
                 + "inner join fetch p.segments as seg "
                 + concatClient
-                + "where a.status = 0 and a.type = 0 and "
+                + "where a.status<>2 and a.type = 0 and "
                 + "(select sum(b.documentedAmount) as total "
                 + "from TicketingSalesAcDoc b "
-                + "where a.reference=b.reference and b.status = 0 group by b.reference) > 0 "
-                + "and seg.deptDate <= :dateEnd "
+                + "where a.reference=b.reference and b.status<>2 group by b.reference) > 0 "
+                + "and seg.deptDate >= :dateFrom and seg.deptDate <= :dateEnd "
                 + clientcondition
                 + "group by p.id order by seg.deptDate asc";
 
@@ -204,6 +204,8 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         if (!clientcondition.isEmpty()) {
             query.setParameter("clientid", clientid);
         }
+        
+        query.setParameter("dateFrom", dateFrom);
         query.setParameter("dateEnd", dateEnd);
 
         List<TicketingSalesAcDoc> dueInvoices = query.list();
@@ -232,10 +234,10 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
                 + "left join a.createdBy as user "
                 + "left join fetch p.segments "
                 + concatClient
-                + "where a.status = 0 and a.type = 0 "
+                + "where a.status<>2 and a.type = 0 "
                 + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
                 + clientcondition
-                + " order by a.id";
+                + " order by a.docIssueDate,a.id";
 
         Query query = getSession().createQuery(hql);
         if (!clientcondition.isEmpty()) {
@@ -287,11 +289,13 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
             doc.setAdditionalChargeLines(null);
         }
         doc.setStatus(Enums.AcDocStatus.VOID);
+        doc.setDocumentedAmount(new BigDecimal("0.00"));
         save(doc);
         
-        //5. Delete purchase doc as its goin to be created agian while saving sales document.
+        //5. Delete/VOID purchase doc as its goin to be created agian while saving sales document.
         if (purchaseDoc != null) {
-            tPurchaseAcDocDAO.delete(purchaseDoc);
+            //purchaseDoc = tPurchaseAcDocDAO.getWithChildrenById(purchaseDoc.getId());
+            tPurchaseAcDocDAO.voidDocument(purchaseDoc);
         }
         return doc;
     }
@@ -403,15 +407,18 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     @Override
     @Transactional(readOnly = true)
     public Map<String, BigDecimal> allAgentOutstandingReport(Date from,Date to) {
-        String hql = "select agent.name, coalesce(sum(a.documentedAmount),0) as balance "
-                + "from TicketingSalesAcDoc a "
-                + "left join a.pnr as p "
-                + "inner join p.agent as agent "
-                + "where a.status = 0 "
-                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
-                + "group by agent.id order by balance desc ";
+       
+        String sql = " select agt.name as agentname, coalesce(sum(acdoc.documentedAmount), 0) as balance "
+                + "from tkt_sales_acdoc invoice "
+                + "left outer join tkt_sales_acdoc acdoc on invoice.reference=acdoc.reference and (acdoc.status<>2) "
+                + "left outer join pnr p on invoice.pnr_fk=p.id "
+                + "inner join agent agt on p.agentid_fk=agt.id "
+                + "where invoice.status<>2 and invoice.type=0 and "
+                + "(select sum(ticketings4_.documentedAmount) from tkt_sales_acdoc ticketings4_ where invoice.reference=ticketings4_.reference and ticketings4_.status<>2 group by ticketings4_.reference)>0 "
+                + "and invoice.docIssueDate>=:from and invoice.docIssueDate<=:to "
+                + "group by agt.id order by balance desc";
 
-        Query query = getSession().createQuery(hql);
+        Query query = getSession().createSQLQuery(sql);
         query.setParameter("from", from);
         query.setParameter("to", to);
         

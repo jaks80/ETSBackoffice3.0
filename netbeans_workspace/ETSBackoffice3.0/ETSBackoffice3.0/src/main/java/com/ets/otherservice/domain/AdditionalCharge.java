@@ -8,10 +8,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 /**
  *
@@ -29,9 +26,7 @@ public class AdditionalCharge extends PersistentObject implements Serializable{
     @XmlElement
     private BigDecimal charge = new BigDecimal("0.00");
     @XmlElement
-    private CalculationType calculationType;
-    @XmlElement
-    private boolean isArchived;    
+    private CalculationType calculationType;  
 
     public AdditionalCharge(){
 
@@ -59,13 +54,5 @@ public class AdditionalCharge extends PersistentObject implements Serializable{
 
     public void setCalculationType(CalculationType calculationType) {
         this.calculationType = calculationType;
-    }
-
-    public boolean isIsArchived() {
-        return isArchived;
-    }
-
-    public void setIsArchived(boolean isArchived) {
-        this.isArchived = isArchived;
     }
 }

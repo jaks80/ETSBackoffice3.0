@@ -131,12 +131,15 @@ public class TransactionReceipt {
             for (TicketingPurchaseAcDoc d : pdocs) {
                 TktingInvoiceSummery sum = new TktingInvoiceSummery();
                 sum.setId(d.getId());
-                sum.setParentId(d.getParent().getId());
+                if(d.getParent()!=null){
+                 sum.setParentId(d.getParent().getId());
+                }
                 sum.setReference(d.getReference());
                 sum.setGdsPnr(d.getPnr().getGdsPnr());
                 sum.setAirLine(d.getPnr().getAirLineCode());
                 sum.setNoOfPax(d.getPnr().getNoOfPax());
                 sum.setDocumentedAmount(d.getDocumentedAmount().abs());
+                sum.setStatus(d.getStatus());
                 lines.add(sum);
                 total = total.add(d.getDocumentedAmount());
 
@@ -169,6 +172,7 @@ public class TransactionReceipt {
                 sum.setReference(d.getReference());
                 sum.setRemark(d.getRemark());
                 sum.setDocumentedAmount(d.getDocumentedAmount().abs());
+                sum.setStatus(d.getStatus());
                 olines.add(sum);
                 total = total.add(d.getDocumentedAmount());
 

@@ -118,17 +118,21 @@ public class OSalesAcDocService {
         List<OtherSalesAcDoc> dueInvoices = dao.findOutstandingDocuments(type, clienttype, clientid, dateStart, dateEnd);
 
         for (OtherSalesAcDoc inv : dueInvoices) {
+            
+            Set<OtherSalesAcDoc> relatedDocs = AcDocUtil.filterVoidRelatedDocumentsOther(inv.getRelatedDocuments());            
+            
             for (AccountingDocumentLine l : inv.getAccountingDocumentLines()) {
                 l.setOtherSalesAcDoc(null);
             }
 
-            for (OtherSalesAcDoc related : inv.getRelatedDocuments()) {
+            for (OtherSalesAcDoc related : relatedDocs) {
                 related.setAccountingDocumentLines(null);
                 related.setAdditionalChargeLines(null);
                 //related.setPayment(null);
                 related.setRelatedDocuments(null);
                 related.setParent(null);
             }
+            inv.setRelatedDocuments(relatedDocs);
             inv.setAdditionalChargeLines(null);
         }
 

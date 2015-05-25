@@ -163,6 +163,7 @@ public class Payment extends PersistentObject implements Serializable {
     }
 
     @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy(value = "id")
     public Set<TicketingSalesAcDoc> gettSalesAcDocuments() {
         return tSalesAcDocuments;
     }
@@ -172,6 +173,7 @@ public class Payment extends PersistentObject implements Serializable {
     }
 
     @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy(value = "id")
     public Set<OtherSalesAcDoc> getoSalesAcDocuments() {
         return oSalesAcDocuments;
     }
@@ -181,6 +183,7 @@ public class Payment extends PersistentObject implements Serializable {
     }
 
     @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy(value = "id")
     public Set<TicketingPurchaseAcDoc> gettPurchaseAcDocuments() {
         return tPurchaseAcDocuments;
     }
