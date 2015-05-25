@@ -84,12 +84,16 @@ public class PnrUtil {
             return leadPax.getFullPaxName();
         } else {
             Iterator<Ticket> iterator = ticket_list.iterator();
-            Ticket setElement = new Ticket();
+            Ticket setElement = null;
             while (iterator.hasNext()) {
                 setElement = iterator.next();
                 break;
             }
-            return setElement.getFullPaxName();
+            if(setElement!=null){
+             return setElement.getFullPaxName();
+            }else{
+             return "";
+            }
         }
     }
 

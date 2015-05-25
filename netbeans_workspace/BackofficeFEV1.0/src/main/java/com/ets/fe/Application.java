@@ -26,7 +26,7 @@ public class Application {
     private static MainAgent mainAgent;
     private static AppSettings appSettings;
     private static List<AdditionalCharge> additionalCharges = new ArrayList<>();
-    private static Properties prop;
+    private static Properties prop;    
 
     public static void loadSettings() {
         ApplicationWSClient client = new ApplicationWSClient();
@@ -49,7 +49,7 @@ public class Application {
 
     public static void loadProperties() {
         try {
-            InputStream sdkis = com.ets.fe.Application.class.getResourceAsStream("/settings.properties");
+            InputStream sdkis = com.ets.fe.Application.class.getResourceAsStream("/app.properties");
             setProp(new Properties());
             getProp().load(sdkis);
             sdkis.close();

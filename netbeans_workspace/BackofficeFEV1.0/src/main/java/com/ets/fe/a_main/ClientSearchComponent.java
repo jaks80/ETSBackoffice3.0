@@ -82,11 +82,11 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
                 setCmbSearchResult(list);
             }
         } else {
-            if (customerlist.size() == 1) {                
+            if (customerlist.size() == 1) {
                 this.agent = null;
                 this.customer = this.customerlist.get(0);
                 setTxtCustomerDetails(this.getCustomer());
-                
+
                 //If this is not the customer, allow to add one
                 cmbSearchResult.setEnabled(true);
                 List<String> list = new ArrayList<>();
@@ -117,13 +117,15 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
             String[] data = tempCustomer.split("/");
             newCustomer.setSurName(data[0].trim());
             newCustomer.setForeName(data[1].trim());
+        } else if (tempCustomer.length() > 0 && !tempCustomer.contains("/")) {
+            newCustomer.setSurName(tempCustomer);
+        }
 
-            if (customerDlg.showDialog(newCustomer)) {
-                taskType = "NEWCUSTOMER";
-                CustomerTask task = new CustomerTask(newCustomer);
-                task.addPropertyChangeListener(this);
-                task.execute();
-            }
+        if (customerDlg.showDialog(newCustomer)) {
+            taskType = "NEWCUSTOMER";
+            CustomerTask task = new CustomerTask(newCustomer);
+            task.addPropertyChangeListener(this);
+            task.execute();
         }
     }
 
@@ -230,7 +232,10 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            txtContactableSearch.setText(clientName.replaceAll("[^a-zA-Z0-9/]" , " "));
+            if(clientName!=null){
+             clientName = clientName.replaceAll("[^a-zA-Z0-9/]", " ");
+            }
+            txtContactableSearch.setText(clientName);
 
             if (cmbSearchResult.getItemCount() > 0) {
                 cmbSearchResult.removeAllItems();
@@ -268,6 +273,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
 
         buttonGroup1.add(rdoCustomer);
         rdoCustomer.setText("Customer");
+        rdoCustomer.setToolTipText("Click to Invoice a Customer");
         rdoCustomer.addActionListener(radioCustomer);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
@@ -275,12 +281,14 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
 
         buttonGroup1.add(rdoAgent);
         rdoAgent.setText("Agent");
+        rdoAgent.setToolTipText("Click to Invoice an Agent");
         rdoAgent.addActionListener(radioAgent);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
         jPanel1.add(rdoAgent, gridBagConstraints);
 
+        txtContactableSearch.setToolTipText("<html>\n<b>Search Customer:</b> Surname/ Forename -> Click on Search or Hit Enter Key<br>\n<b>Search Agent:</b> OFFICEID or Name -> Click on Search or Hit Enter Key\n</html>");
         txtContactableSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtContactableSearchKeyPressed(evt);
@@ -315,6 +323,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
         txtContactableDetails.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtContactableDetails.setLineWrap(true);
         txtContactableDetails.setRows(5);
+        txtContactableDetails.setToolTipText("Invoice For");
         jScrollPane1.setViewportView(txtContactableDetails);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -327,6 +336,8 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 4, 0);
         jPanel1.add(jScrollPane1, gridBagConstraints);
 
+        cmbSearchResult.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        cmbSearchResult.setToolTipText("Select customer from List or Add new.");
         cmbSearchResult.setEnabled(false);
         cmbSearchResult.setPreferredSize(new java.awt.Dimension(56, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -388,7 +399,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
 
     private void setTxtAgentDetails(Agent agent) {
         if (agent != null) {
-            txtContactableDetails.setText(agent.calculateFullName()+"\n");
+            txtContactableDetails.setText(agent.calculateFullName() + "\n");
             txtContactableDetails.append(agent.getFullAddressCRSeperated());
         } else {
             txtContactableDetails.setText("");
@@ -397,7 +408,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
 
     private void setTxtCustomerDetails(Customer customer) {
         if (customer != null) {
-            txtContactableDetails.setText(customer.calculateFullName()+"\n");
+            txtContactableDetails.setText(customer.calculateFullName() + "\n");
             txtContactableDetails.append(customer.getFullAddressCRSeperated());
         } else {
             txtContactableDetails.setText("");

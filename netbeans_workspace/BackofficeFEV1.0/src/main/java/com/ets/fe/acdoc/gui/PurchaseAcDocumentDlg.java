@@ -2,6 +2,8 @@ package com.ets.fe.acdoc.gui;
 
 import com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
+import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
+import com.ets.fe.acdoc.task.AccountingDocTask;
 import com.ets.fe.acdoc.task.TktingPurchaseDocTask;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.util.CheckInput;
@@ -22,8 +24,10 @@ import java.util.logging.Logger;
 public class PurchaseAcDocumentDlg extends javax.swing.JDialog implements PropertyChangeListener {
 
     private TktingPurchaseDocTask tktingPurchaseDocTask;
+    private AccountingDocTask accountingDocTask;
     private Pnr pnr;
     private TicketingPurchaseAcDoc document;
+    private String taskType;
 
     public PurchaseAcDocumentDlg(Frame parent) {
         super(parent, true);
@@ -39,7 +43,20 @@ public class PurchaseAcDocumentDlg extends javax.swing.JDialog implements Proper
         setVisible(true);
         return true;
     }
-
+    
+    public void showDialog(Long id) {   
+        loadDocument(id);    
+        setLocationRelativeTo(this);                      
+        setVisible(true);                       
+    }
+    
+    public void loadDocument(Long id) {
+        taskType = "COMPLETE";
+        accountingDocTask = new AccountingDocTask(id, Enums.SaleType.TKTSALES, "DETAILS");
+        accountingDocTask.addPropertyChangeListener(this);
+        accountingDocTask.execute();
+    }
+    
     private void displayDocument(TicketingPurchaseAcDoc document) {
         this.document = document;
         this.pnr = document.getPnr();
@@ -65,6 +82,7 @@ public class PurchaseAcDocumentDlg extends javax.swing.JDialog implements Proper
     }
 
     public void createDocument() {
+        taskType = "CREATE";
         BigDecimal amount = new BigDecimal(txtAmount.getText());
         String remark = txtRemark.getText();
         int cmbIndex = cmbAdditionalCharge.getSelectedIndex();
@@ -381,8 +399,14 @@ public class PurchaseAcDocumentDlg extends javax.swing.JDialog implements Proper
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
+                    if ("CREATE".equals(taskType)) {
                     document = tktingPurchaseDocTask.get();
                     displayDocument(document);
+                    }else if ("COMPLETE".equals(taskType)) {
+                        document = (TicketingPurchaseAcDoc) accountingDocTask.get();
+                        displayDocument(document);
+                        taskType = "";
+                    } 
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(SalesInvoiceDlg.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {

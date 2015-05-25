@@ -12,13 +12,15 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.ExecutionException;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
  * @author Yusuf
  */
-public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListener {
+public class DlgLogin extends JDialog implements PropertyChangeListener {
 
     private boolean login;
     private LoginTask task;
@@ -340,12 +342,12 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
                         btnLogin.setEnabled(true);
                         Application.setLoggedOnUser(user);
                         setVisible(false);
-                        if (main == null) {
-                            main = new Main();
-                            Main.setDlgLogin(this);
-                            main.setVisible(true);
-                        }
                         Application.loadSettings();
+                        if (main == null) {                                                        
+                            showMainFrame(this);
+                            
+                        }
+                                                
                     } else {
                         btnLogin.setEnabled(true);
                         lblMessage.setText("Could not login...");
@@ -355,5 +357,18 @@ public class DlgLogin extends javax.swing.JDialog implements PropertyChangeListe
                 }
             }
         }
+    }
+
+    private void showMainFrame(final DlgLogin dlg) {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                main = new Main();
+                Main.setDlgLogin(dlg);
+                main.setVisible(true);
+                main.setTitle("ETSBackoffice V:" + Application.getProp().getProperty("version") + " " + Application.getMainAgent().getName());
+            }
+        });
     }
 }

@@ -6,15 +6,13 @@ import com.ets.fe.acdoc_o.task.NewOSalesDocumentTask;
 import com.ets.fe.Application;
 import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent;
-import com.ets.fe.accounts.task.NewPaymentTask;
+import com.ets.fe.accounts.task.PaymentTask;
 import com.ets.fe.accounts.gui.logic.PaymentLogicOther;
 import com.ets.fe.accounts.gui.payment.DlgOtherSalesCreditTransfer;
-import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc_o.task.AccountingDocTaskOther;
 import com.ets.fe.client.model.Contactable;
 import com.ets.fe.os.model.*;
 import com.ets.fe.report.BeanJasperReport;
-import com.ets.fe.report.XMLJasperReport;
 import com.ets.fe.util.*;
 import java.awt.Frame;
 import java.awt.Window;
@@ -34,18 +32,18 @@ import javax.swing.table.DefaultTableModel;
  * @author Yusuf
  */
 public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChangeListener {
-    
+
     private boolean editable;
-    private NewPaymentTask paymentTask;
+    private PaymentTask paymentTask;
     private AccountingDocTaskOther accountingDocTask;
     private NewOSalesDocumentTask newInvoiceTask;
     private boolean allowPayment = true;
     private String taskType;
     private Contactable client;
-    
+
     private OtherSalesAcDoc invoice;
     private List<AdditionalCharge> charges = Application.getAdditionalCharges();
-    
+
     public OtherInvoiceDlg(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
@@ -53,23 +51,23 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         CheckInput b = new CheckInput();
         CheckInput c = new CheckInput();
         CheckInput d = new CheckInput();
-        
+
         a.setNegativeAccepted(true);
-        
+
         txtAmount.setDocument(a);
         txtCHFee.setDocument(b);
         txtPostage.setDocument(c);
         txtOther.setDocument(d);
-        
+
         setPaymentType();
     }
-    
+
     public void showDialog(Long id) {
         otherServiceComp.setParent(this);
         if (id != null) {
             loadInvoice(id);
             this.editable = false;
-            
+
         } else {
             this.invoice = new OtherSalesAcDoc();
             List<AccountingDocumentLine> lines = new ArrayList<>();
@@ -77,13 +75,13 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             this.editable = true;
             displayInvoice(invoice);
         }
-        
+
         setLocationRelativeTo(this);
         setVisible(true);
     }
-    
+
     private void displayInvoice(OtherSalesAcDoc invoice) {
-        
+
         otherServiceComp.display(invoice.getAccountingDocumentLines(), editable);
         acDocHeaderComponent.display(invoice);
         displayOtherCharge(invoice);
@@ -91,7 +89,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         populateTblPayment(invoice);
         txtRemark.setText(invoice.getRemark());
         controllComponent(invoice);
-        
+
         if (invoice.getAgent() != null) {
             client = invoice.getAgent();
             clientComponent.setAllocatetClient(invoice.getAgent(), null, null, editable);
@@ -100,7 +98,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             clientComponent.setAllocatetClient(invoice.getCustomer(), null, null, editable);
         }
     }
-    
+
     private void displayOtherCharge(OtherSalesAcDoc invoice) {
         if (!invoice.getAdditionalChargeLines().isEmpty()) {
             for (AdditionalChargeLine line : invoice.getAdditionalChargeLines()) {
@@ -114,7 +112,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             }
         }
     }
-    
+
     public void displayBalance(OtherSalesAcDoc invoice) {
         lblSubTotal.setText(invoice.calculateOtherServiceSubTotal().toString());
         lblAddCharge.setText(invoice.calculateAddChargesSubTotal().toString());
@@ -123,7 +121,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         lblOther.setText(invoice.calculateRelatedDocBalance().toString());
         lblDue.setText(invoice.calculateDueAmount().toString());
     }
-    
+
     public void createInvoice() {
         createOtherChargeLine();
         invoice.setAdditionalChargeLines(createOtherChargeLine());
@@ -133,9 +131,9 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         invoice.setRemark(txtRemark.getText());
         invoice.setType(Enums.AcDocType.INVOICE);
         invoice.setDocIssueDate(new java.util.Date());
-        
+
         String terms = (String) AcDocHeaderComponent.cmbTerms.getSelectedItem();
-        
+
         if (!"Select".equals(terms)) {
             invoice.setTerms(terms);
             taskType = "CREATE";
@@ -144,36 +142,36 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             newInvoiceTask.execute();
         }
     }
-    
+
     public void loadInvoice(Long id) {
         taskType = "COMPLETE";
         accountingDocTask = new AccountingDocTaskOther(id, Enums.SaleType.OTHERSALES, "DETAILS");
         accountingDocTask.addPropertyChangeListener(this);
         accountingDocTask.execute();
     }
-    
+
     private List<AdditionalChargeLine> createOtherChargeLine() {
-        
+
         List<AdditionalChargeLine> chargeLines = new ArrayList<>();
-        
+
         String chFee = txtCHFee.getText();
         String postage = txtPostage.getText();
         String other = txtOther.getText();
-        
+
         if (chFee != null && !chFee.isEmpty()) {
             AdditionalChargeLine line = new AdditionalChargeLine();
             line.setAmount(new BigDecimal(chFee));
             line.setAdditionalCharge(Application.getCardHandlingFee());
             chargeLines.add(line);
         }
-        
+
         if (postage != null && !postage.isEmpty()) {
             AdditionalChargeLine line = new AdditionalChargeLine();
             line.setAmount(new BigDecimal(postage));
             line.setAdditionalCharge(Application.getPostage());
             chargeLines.add(line);
         }
-        
+
         if (other != null && !other.isEmpty()) {
             AdditionalChargeLine line = new AdditionalChargeLine();
             line.setAmount(new BigDecimal(other));
@@ -182,23 +180,23 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         }
         return chargeLines;
     }
-    
+
     public void processPayment(OtherSalesAcDoc invoice) {
         busyLabel.setText("");
         taskType = "PAYMENT";
         busyLabel.setBusy(true);
         btnSubmitPayment.setEnabled(false);
         String amountString = txtAmount.getText();
-        String remark = txtRef.getText();        
-        
+        String remark = txtRef.getText();
+
         if (!amountString.isEmpty() && !remark.isEmpty() && cmbTType.getSelectedIndex() > 0) {
             Enums.PaymentType type = (Enums.PaymentType) cmbTType.getSelectedItem();
             BigDecimal amount = new BigDecimal(amountString.trim());
             PaymentLogicOther logic = new PaymentLogicOther();
-            
+
             if (amount.compareTo(invoice.calculateDueAmount().abs()) <= 0) {
                 Payment payment = logic.processSingleOSalesPayment(amount, invoice, remark, type);
-                paymentTask = new NewPaymentTask(payment);
+                paymentTask = new PaymentTask(payment, Enums.TaskType.CREATE);
                 paymentTask.addPropertyChangeListener(this);
                 paymentTask.execute();
             } else {
@@ -210,12 +208,12 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             btnSubmitPayment.setEnabled(true);
         }
     }
-    
+
     private void populateTblPayment(OtherSalesAcDoc invoice) {
         tblPayment.clearSelection();
         DefaultTableModel model = (DefaultTableModel) tblPayment.getModel();
         model.getDataVector().removeAllElements();
-        
+
         int row = 0;
         for (OtherSalesAcDoc doc : invoice.getRelatedDocuments()) {
             String remark = doc.getRemark();
@@ -246,6 +244,8 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         btnPrint = new javax.swing.JButton();
         btnEmail = new javax.swing.JButton();
         btnOfficeCopy = new javax.swing.JButton();
+        btnVoid = new javax.swing.JButton();
+        btnNewDoc = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         progressBar = new javax.swing.JProgressBar();
         jSeparator2 = new javax.swing.JSeparator();
@@ -302,6 +302,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Other Invoice");
+        setResizable(false);
 
         jPanel7.setBackground(new java.awt.Color(102, 102, 102));
         jPanel7.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -319,7 +320,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         });
 
         btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/print18.png"))); // NOI18N
-        btnPrint.setToolTipText("Print");
+        btnPrint.setToolTipText("Print Invoice");
         btnPrint.setEnabled(false);
         btnPrint.setFocusable(false);
         btnPrint.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -354,12 +355,33 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             }
         });
 
+        btnVoid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/void18-1.png"))); // NOI18N
+        btnVoid.setToolTipText("<html>\nVOID Payment, Debit/ Credit Memo.<br>\nVOID Invoice from Invoice History.\n</html>");
+        btnVoid.setEnabled(false);
+        btnVoid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVoidActionPerformed(evt);
+            }
+        });
+
+        btnNewDoc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newdoc18.png"))); // NOI18N
+        btnNewDoc.setToolTipText("New Debit/ Credit Memo");
+        btnNewDoc.setEnabled(false);
+        btnNewDoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewDocActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnVoid)
+                .addGap(2, 2, 2)
+                .addComponent(btnNewDoc)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCreateDocument)
                 .addGap(0, 0, 0)
                 .addComponent(btnPrint)
@@ -374,6 +396,9 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnOfficeCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnNewDoc, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -424,7 +449,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(clientComponent, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+            .addComponent(clientComponent, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
             .addComponent(acDocHeaderComponent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
@@ -961,7 +986,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         String body = "Invoice".concat(" From ").concat(Application.getMainAgent().getName());
         String refference = this.invoice.getReference().toString();
         if (receipent != null) {
-            
+
             BeanJasperReport jasperreport = new BeanJasperReport(receipent, subject, body, refference);
             List<OtherInvoiceModel> list = new ArrayList<>();
             OtherInvoiceModel model = OtherInvoiceModel.createModel(invoice);
@@ -975,7 +1000,7 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         Window w = SwingUtilities.getWindowAncestor(this);
         Frame owner = w instanceof Frame ? (Frame) w : null;
-        DlgOtherSalesCreditTransfer dlg = new DlgOtherSalesCreditTransfer(owner);        
+        DlgOtherSalesCreditTransfer dlg = new DlgOtherSalesCreditTransfer(owner);
         if (dlg.showDialog(invoice)) {
             loadInvoice(invoice.getId());
             resetPaymentComponent();
@@ -986,14 +1011,24 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         report("VIEW");
     }//GEN-LAST:event_btnOfficeCopyActionPerformed
 
+    private void btnNewDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewDocActionPerformed
+        newSalesAcDocDlg(this.invoice);
+    }//GEN-LAST:event_btnNewDocActionPerformed
+
+    private void btnVoidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoidActionPerformed
+       _voidDocument();
+    }//GEN-LAST:event_btnVoidActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent acDocHeaderComponent;
     private javax.swing.JButton btnCreateDocument;
     private javax.swing.JButton btnEmail;
+    private javax.swing.JButton btnNewDoc;
     private javax.swing.JButton btnOfficeCopy;
     private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSubmitPayment;
+    private javax.swing.JButton btnVoid;
     private org.jdesktop.swingx.JXBusyLabel busyLabel;
     private com.ets.fe.a_main.ClientSearchComponent clientComponent;
     private javax.swing.JComboBox cmbTType;
@@ -1054,7 +1089,34 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
         cmbTType.setModel(model);
         cmbTType.setSelectedIndex(0);
     }
-    
+
+    private void _voidDocument() {
+        taskType = "VOID";
+        int index = tblPayment.getSelectedRow();
+        if (index != -1) {
+            Long id = this.invoice.getRelatedDocuments().get(index).getId();
+            OtherSalesAcDoc doc = new OtherSalesAcDoc();
+            doc.setId(id);
+            doc.recordUpdateBy();
+            accountingDocTask = new AccountingDocTaskOther(doc, Enums.SaleType.OTHERSALES, "VOID");
+            accountingDocTask.addPropertyChangeListener(this);
+            accountingDocTask.execute();
+        }else{
+         JOptionPane.showMessageDialog (null, "Select a document to VOID.", "VOID Document", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    public void newSalesAcDocDlg(OtherSalesAcDoc invoice) {
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+
+        OtherSalesAcDocumentDlg dlg = new OtherSalesAcDocumentDlg(owner);
+        dlg.setLocationRelativeTo(this);
+        if (dlg.showDialog(invoice)) {
+            loadInvoice(invoice.getId());
+        }
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress".equals(evt.getPropertyName())) {
@@ -1074,7 +1136,10 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
                         invoice = (OtherSalesAcDoc) accountingDocTask.get();
                         displayInvoice(invoice);
                         taskType = "";
-                    }
+                    }else if ("VOID".equals(taskType)) {
+                        busyLabel.setBusy(false);                        
+                        loadInvoice(invoice.getId());                        
+                    } 
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(SalesInvoiceDlg.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
@@ -1082,13 +1147,16 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             }
         }
     }
-    
+
     private void controllComponent(OtherSalesAcDoc invoice) {
         if (invoice.getId() == null) {
             btnCreateDocument.setEnabled(true);
             btnEmail.setEnabled(false);
             btnPrint.setEnabled(false);
             btnOfficeCopy.setEnabled(false);
+            btnVoid.setEnabled(false);
+            btnNewDoc.setEnabled(false);
+
             allowPayment = false;
             tabPayment.setEnabledAt(1, allowPayment);
             txtCHFee.setEditable(true);
@@ -1100,12 +1168,14 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             btnEmail.setEnabled(true);
             btnPrint.setEnabled(true);
             btnOfficeCopy.setEnabled(true);
-            
+            btnVoid.setEnabled(true);
+            btnNewDoc.setEnabled(true);
+
             txtCHFee.setEditable(false);
             txtPostage.setEditable(false);
             txtOther.setEditable(false);
             txtRemark.setEditable(false);
-            
+
             if (invoice.calculateDueAmount().compareTo(new BigDecimal("0.00")) == 0) {
                 allowPayment = false;
                 tabPayment.setEnabledAt(1, allowPayment);
@@ -1117,18 +1187,18 @@ public class OtherInvoiceDlg extends javax.swing.JDialog implements PropertyChan
             }
         }
     }
-    
+
     private void resetPaymentComponent() {
         tabPayment.setSelectedIndex(0);
         setPaymentType();
         txtAmount.setText("");
         txtRef.setText("");
     }
-    
+
     public OtherSalesAcDoc getInvoice() {
         return this.invoice;
     }
-    
+
     private void report(String action) {
         BeanJasperReport jasperreport = new BeanJasperReport();
         List<OtherInvoiceModel> list = new ArrayList<>();

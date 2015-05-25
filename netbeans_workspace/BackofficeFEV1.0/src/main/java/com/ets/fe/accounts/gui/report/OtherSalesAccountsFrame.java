@@ -97,7 +97,7 @@ public class OtherSalesAccountsFrame extends javax.swing.JInternalFrame implemen
                 || line.getDocType().equals(Enums.AcDocType.CREDITMEMO.toString())) {
 
             OtherSalesAcDocumentDlg dlg = new OtherSalesAcDocumentDlg(owner);
-            dlg.showDialog(line.getId(), null);
+            dlg.showDialog(line.getId());
         }
     }
 
@@ -146,18 +146,18 @@ public class OtherSalesAccountsFrame extends javax.swing.JInternalFrame implemen
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAccounts = new JXTable(){public Component prepareRenderer(TableCellRenderer renderer,
             int rowIndex, int vColIndex) {
-            Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
-            String s = "";
+            Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);  
+            String s = "";       
 
-            Object o = tblAccounts.getModel().getValueAt(rowIndex, 1);
+            Object o = tblAccounts.getModel().getValueAt(rowIndex, 1);               
             if(o!=null){
-                s = o.toString();
+                s = o.toString();        
             }
 
-            if(s.equalsIgnoreCase("INVOICE") || s.equalsIgnoreCase("DEBITMEMO")|| s.equalsIgnoreCase("REFUND")){
-                c.setForeground(Color.red);
-            }else if(s.equalsIgnoreCase("PAYMENT") || s.equalsIgnoreCase("CREDITMEMO")){
-                c.setForeground(Color.green);
+            if(s.equalsIgnoreCase("INVOICE") || s.equalsIgnoreCase("DEBITMEMO")){
+                c.setForeground(Color.GREEN);
+            }else if(s.equalsIgnoreCase("REFUND") || s.equalsIgnoreCase("CREDITMEMO")){
+                c.setForeground(Color.RED);
             }else{
                 c.setForeground(Color.WHITE);
             }

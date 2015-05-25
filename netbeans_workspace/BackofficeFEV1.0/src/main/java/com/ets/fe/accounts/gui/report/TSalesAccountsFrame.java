@@ -5,6 +5,7 @@ import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.accounts.model.AccountsReport;
 import com.ets.fe.accounts.model.AccountsReport.AccountsLine;
 import com.ets.fe.accounts.task.AccountsHistoryTask;
+import com.ets.fe.acdoc.gui.SalesAcDocumentDlg;
 import com.ets.fe.acdoc.gui.report.TSalesInvoiceReportingFrame;
 import com.ets.fe.report.BeanJasperReport;
 import com.ets.fe.util.DateUtil;
@@ -546,11 +547,7 @@ public class TSalesAccountsFrame extends javax.swing.JInternalFrame implements P
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
         int index = tblAccounts.getSelectedRow();
         if (index != -1) {
-            Long id = lines.get(index).getId();
-            Window w = SwingUtilities.getWindowAncestor(this);
-            Frame owner = w instanceof Frame ? (Frame) w : null;
-            SalesInvoiceDlg dlg = new SalesInvoiceDlg(owner);
-            dlg.showDialog(id);
+            viewDocument(lines.get(index));
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
 
@@ -636,6 +633,23 @@ public class TSalesAccountsFrame extends javax.swing.JInternalFrame implements P
                     btnSearch.setEnabled(true);
                 }
             }
+        }
+    }
+
+    public void viewDocument(AccountsLine line) {
+
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+
+        if (line.getDocType().equals(Enums.AcDocType.INVOICE.toString())) {
+
+            SalesInvoiceDlg dlg = new SalesInvoiceDlg(owner);
+            dlg.showDialog(line.getId());
+        } else if (line.getDocType().equals(Enums.AcDocType.DEBITMEMO.toString())
+                || line.getDocType().equals(Enums.AcDocType.CREDITMEMO.toString())) {
+
+            SalesAcDocumentDlg dlg = new SalesAcDocumentDlg(owner);
+            dlg.showDialog(line.getId());
         }
     }
 

@@ -24,8 +24,6 @@ public class AdditionalCharge extends PersistentObject implements Serializable {
     private BigDecimal charge = new BigDecimal("0.00");    
     @XmlElement
     private CalculationType calculationType;
-    @XmlElement
-    private boolean isArchived;
     
     public AdditionalCharge() {
         
@@ -65,12 +63,4 @@ public class AdditionalCharge extends PersistentObject implements Serializable {
     public void setCalculationType(CalculationType calculationType) {
         this.calculationType = calculationType;
     }    
-    
-    public boolean isIsArchived() {
-        return isArchived;
-    }
-    
-    public void setIsArchived(boolean isArchived) {
-        this.isArchived = isArchived;
-    }
 }

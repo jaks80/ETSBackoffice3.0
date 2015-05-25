@@ -14,7 +14,6 @@ import java.awt.font.TextAttribute;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +45,8 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
     private List<Ticket> tickets = new ArrayList<>();
     private TicketTask ticketTask;
     private String taskType = "";
-
+    private PnrPanel pnrPanel;
+    
     public TicketComponent() {
         initComponents();
 
@@ -1043,9 +1043,9 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
                 && key != KeyEvent.VK_RIGHT && key != KeyEvent.VK_LEFT) {
             if (!text.isEmpty() && key != KeyEvent.VK_PERIOD && key != KeyEvent.VK_DECIMAL) {
                 BigDecimal val = new BigDecimal(text);
-                if (ticket.getTktStatus() == Enums.TicketStatus.REFUND) {
-                    val = val.negate();
-                }
+//                if (ticket.getTktStatus() == Enums.TicketStatus.REFUND) {
+//                    val = val.negate();
+//                }
                 this.ticket.setFee(val);
                 calculatePurchaseBalance();
                 populateTblTicket(tickets);
@@ -1281,9 +1281,14 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
 
     public void setSaveNeeded(boolean saveNeeded) {
         this.saveNeeded = saveNeeded;
+        pnrPanel.editingLogic();
     }
 
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
+    }
+
+    public void setPnrPanel(PnrPanel pnrPanel) {
+        this.pnrPanel = pnrPanel;
     }
 }

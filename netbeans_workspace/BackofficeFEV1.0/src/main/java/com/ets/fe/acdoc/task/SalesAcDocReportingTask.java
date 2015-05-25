@@ -50,9 +50,12 @@ public class SalesAcDocReportingTask extends SwingWorker<InvoiceReport, Integer>
     @Override
     protected InvoiceReport doInBackground() throws Exception {
         setProgress(10);
-        Progress p = new Progress();
-        Thread t = new Thread(p);
-        t.start();
+        Progress p=null;
+        if (progressBar != null) {
+            p = new Progress();
+            Thread t = new Thread(p);
+            t.start();
+        }
 
         TicketingSAcDocWSClient client = new TicketingSAcDocWSClient();
         InvoiceReport report = null;
@@ -65,13 +68,17 @@ public class SalesAcDocReportingTask extends SwingWorker<InvoiceReport, Integer>
             report = client.outstandingFlightReport(clienttype, clientid, dateFrom, dateTo);
         }
 
-        p.cancel();
+        if(p!=null){
+         p.cancel();
+        }
         return report;
     }
 
     @Override
     protected void done() {
-        progressBar.setIndeterminate(false);
+        if (progressBar != null) {
+            progressBar.setIndeterminate(false);
+        }
         setProgress(100);
     }
 

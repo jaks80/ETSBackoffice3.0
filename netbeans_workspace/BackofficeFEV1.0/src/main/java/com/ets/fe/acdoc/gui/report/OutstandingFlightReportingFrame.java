@@ -39,7 +39,6 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
     private Long client_id;
     private Date from;
     private Date to;
-    private Enums.AcDocType doc_type;
     private String reportType = "UNPAID_FLIGHT";
 
     public OutstandingFlightReportingFrame(JDesktopPane desktopPane) {
@@ -80,8 +79,8 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
         if (invoices.size() > 0) {
             for (int i = 0; i < invoices.size(); i++) {
                 TktingInvoiceSummery s = invoices.get(i);
-                tableModel.insertRow(i, new Object[]{i + 1, s.getDocIssueDate(), s.getReference(), s.getClientName(),
-                    s.getGdsPnr(), s.getNoOfPax(), s.getOutBoundDetails(), s.getLeadPsgr(),
+                tableModel.insertRow(i, new Object[]{i + 1,s.getOutBoundDetails(), s.getDocIssueDate(), s.getReference(), s.getClientName(),
+                    s.getGdsPnr(), s.getNoOfPax(), s.getLeadPsgr(),
                     s.getDocumentedAmount(), s.getPayment(), s.getOtherAmount(), s.getDue()});
             }
         } else {
@@ -145,6 +144,7 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
         setMaximizable(true);
         setResizable(true);
         setTitle("Unpaid flight report");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/unpaidflight20.png"))); // NOI18N
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -372,7 +372,7 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
                 .addComponent(jLabel8)
                 .addGap(2, 2, 2)
                 .addComponent(dtTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 191, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -383,7 +383,7 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
 
             },
             new String [] {
-                "", "Date", "Reference", "Invoicee", "PNR", "Psgr", "Flight Details", "Lead Psgr", "Inv Amount", "Payment", "Other (+/-)", "Balance"
+                "", "Flight Details", "InvDate", "InvNo", "Client", "PNR", "Psgr", "Lead Psgr", "Inv Amount", "Payment", "Other (+/-)", "Balance"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -403,15 +403,21 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
             tblReport.getColumnModel().getColumn(0).setMinWidth(40);
             tblReport.getColumnModel().getColumn(0).setPreferredWidth(40);
             tblReport.getColumnModel().getColumn(0).setMaxWidth(60);
-            tblReport.getColumnModel().getColumn(1).setMinWidth(80);
-            tblReport.getColumnModel().getColumn(1).setPreferredWidth(80);
-            tblReport.getColumnModel().getColumn(1).setMaxWidth(80);
-            tblReport.getColumnModel().getColumn(5).setMinWidth(40);
-            tblReport.getColumnModel().getColumn(5).setPreferredWidth(40);
-            tblReport.getColumnModel().getColumn(5).setMaxWidth(40);
-            tblReport.getColumnModel().getColumn(6).setMinWidth(130);
-            tblReport.getColumnModel().getColumn(6).setPreferredWidth(130);
-            tblReport.getColumnModel().getColumn(6).setMaxWidth(160);
+            tblReport.getColumnModel().getColumn(1).setMinWidth(130);
+            tblReport.getColumnModel().getColumn(1).setPreferredWidth(130);
+            tblReport.getColumnModel().getColumn(1).setMaxWidth(160);
+            tblReport.getColumnModel().getColumn(2).setMinWidth(80);
+            tblReport.getColumnModel().getColumn(2).setPreferredWidth(80);
+            tblReport.getColumnModel().getColumn(2).setMaxWidth(80);
+            tblReport.getColumnModel().getColumn(3).setMinWidth(65);
+            tblReport.getColumnModel().getColumn(3).setPreferredWidth(65);
+            tblReport.getColumnModel().getColumn(3).setMaxWidth(100);
+            tblReport.getColumnModel().getColumn(5).setMinWidth(65);
+            tblReport.getColumnModel().getColumn(5).setPreferredWidth(65);
+            tblReport.getColumnModel().getColumn(5).setMaxWidth(100);
+            tblReport.getColumnModel().getColumn(6).setMinWidth(40);
+            tblReport.getColumnModel().getColumn(6).setPreferredWidth(40);
+            tblReport.getColumnModel().getColumn(6).setMaxWidth(40);
         }
 
         jTabbedPane1.addTab("Outstanding Flight Report", jScrollPane1);
@@ -420,11 +426,11 @@ public class OutstandingFlightReportingFrame extends javax.swing.JInternalFrame 
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 658, Short.MAX_VALUE)
+            .addGap(0, 783, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 339, Short.MAX_VALUE)
+            .addGap(0, 373, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Print View", jPanel5);

@@ -28,7 +28,9 @@ public class CustomerSearchTask extends ContactableSearchTask {
         if (name != null && name.contains("/")) {
             nameElement = name.split("/");
             surName = nameElement[0].trim();
-            foreName = nameElement[1].trim();
+            if(nameElement.length>1 && foreName!=null){
+             foreName = nameElement[1].trim();
+            }
         } else if(name !=null){
             surName = name.trim();
         }

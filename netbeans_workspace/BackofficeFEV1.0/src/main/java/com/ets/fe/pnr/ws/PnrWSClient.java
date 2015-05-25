@@ -10,6 +10,8 @@ import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.util.DateUtil;
 import java.util.Date;
 import java.util.List;
+import javax.swing.JOptionPane;
+import org.apache.http.HttpResponse;
 
 /**
  *
@@ -40,9 +42,13 @@ public class PnrWSClient {
     }
 
     public Integer delete(long id) {
-        String url = APIConfig.get("ws.pnr.delete") + id;
-        Integer status = RestClientUtil.deleteById(url);
-        return status;
+        
+        String date = DateUtil.dateToString(new java.util.Date(), "ddMMMyyyy");
+        String url = APIConfig.get("ws.pnr.delete") + id+"?date="+date;
+        HttpResponse response = RestClientUtil.deleteByIdGetResponse(url);
+              
+        RestClientUtil.showMessage(response,"Delete PNR");
+        return response.getStatusLine().getStatusCode();
     }
 
     public Pnr getByDate(Date start, Date end) {

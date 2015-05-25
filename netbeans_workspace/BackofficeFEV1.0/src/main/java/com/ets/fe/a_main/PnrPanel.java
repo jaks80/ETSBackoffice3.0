@@ -67,6 +67,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
 
         mainSplitPane.addComponentListener(this);
         loadCompletePnr();
+        ticketComponent.setPnrPanel(this);
     }
 
     public void setSaveNeeded(boolean value) {
@@ -130,15 +131,25 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         }
     }
 
-    private void editingLogic() {
+    public void editingLogic() {
         int unInvoicedTicket = 0;
+        boolean invoiceExist = false;
+        
         for (Ticket t : pnr.getTickets()) {
             if (t.getTicketingSalesAcDoc() != null) {
+                invoiceExist = true;
                 editable = false;//At least one access here make editable false;
             } else {
                 unInvoicedTicket++;
             }
         }
+        
+        if(invoiceExist){
+         btnNewDoc.setEnabled(true);
+        }else{
+         btnNewDoc.setEnabled(false);
+        }
+        
         if (unInvoicedTicket == pnr.getTickets().size()) {
             editable = true;
         }
@@ -205,7 +216,9 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
             savePnrTask.removePropertyChangeListener(this);
         }
 
-        if (AcDocUtil.validateSellingFare(pnr.getTickets()) && AcDocUtil.validateContactable(pnr)) {
+        if (AcDocUtil.validateSellingFare(pnr.getTickets())&&
+                AcDocUtil.validatePurchaseFare(pnr.getTickets()) && 
+                AcDocUtil.validateContactable(pnr)) {
             this.taskType = "AC_DOCUMENT";
             newTSalesDocumentTask = new NewTSalesDocumentTask(pnrId, progressBar);
             newTSalesDocumentTask.addPropertyChangeListener(this);
@@ -263,6 +276,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         txtPnr = new javax.swing.JTextArea();
         jLabel8 = new javax.swing.JLabel();
         dtCanceldate = new org.jdesktop.swingx.JXDatePicker();
+        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(20, 5), new java.awt.Dimension(20, 5), new java.awt.Dimension(0, 32767));
         accountingDocumentsComponent = new AccountingDocumentsComponent(this);
         TicketPanel = new javax.swing.JPanel();
         tabsTicket = new javax.swing.JTabbedPane();
@@ -520,7 +534,6 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
-        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         PnrPanel.add(dtBookingDate, gridBagConstraints);
 
@@ -535,6 +548,8 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         jScrollPane1.setViewportView(txtPnr);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -558,9 +573,15 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
-        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 2, 2, 2);
         PnrPanel.add(dtCanceldate, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.weighty = 1.0;
+        PnrPanel.add(filler2, gridBagConstraints);
 
         javax.swing.GroupLayout TopPanelLayout = new javax.swing.GroupLayout(TopPanel);
         TopPanel.setLayout(TopPanelLayout);
@@ -810,6 +831,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
     private com.ets.fe.a_main.ClientSearchComponent clientComponent;
     private org.jdesktop.swingx.JXDatePicker dtBookingDate;
     private org.jdesktop.swingx.JXDatePicker dtCanceldate;
+    private javax.swing.Box.Filler filler2;
     private javax.swing.JSplitPane innerSplitPane;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

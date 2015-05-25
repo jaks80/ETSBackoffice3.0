@@ -21,6 +21,22 @@ public class DateUtil {
     private static final SimpleDateFormat dfInput1 = new SimpleDateFormat("ddMMMyy");
     private static Calendar cal = Calendar.getInstance();
 
+    public static Date minusDays(Date dateInstance, int days) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(dateInstance);
+        c.add(Calendar.DATE, days * -1);
+        Date date = c.getTime();
+        return date;
+    }
+
+    public static Date addDays(Date dateInstance, int days) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(dateInstance);
+        c.add(Calendar.DATE, days * +1);
+        Date date = c.getTime();
+        return date;
+    }
+
     /**
      * For AIR
      *
@@ -90,15 +106,14 @@ public class DateUtil {
         return cal.getTime();
     }
 
-    public static String dateToString(Date date){
-     return dateToString(date,Application.get("dateformat"));
+    public static String dateToString(Date date) {
+        return dateToString(date, Application.get("dateformat"));
     }
-    
-    public static Date stringToDate(String dateString){
-     return stringToDate(dateString,Application.get("dateformat"));
+
+    public static Date stringToDate(String dateString) {
+        return stringToDate(dateString, Application.get("dateformat"));
     }
-    
-    
+
     public static String dateToString(Date date, String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(date);
@@ -113,13 +128,13 @@ public class DateUtil {
             Logger.getLogger(DateUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
         return date;
-    }    
-    
+    }
+
     public static int stringToMonthValue(String mm) {
 
         switch (mm) {
             case "JAN":
-                return 0; 
+                return 0;
             case "FEB":
                 return 1;
             case "MAR":
@@ -146,22 +161,23 @@ public class DateUtil {
                 return -1;
         }
     }
-    
-        /**
+
+    /**
      * If current month is less then provided month then provided month is
      * actually in next year.
+     *
      * @param ddmm
-     * @return 
+     * @return
      */
     public static Date ddmmToDate(String ddmm) {
         Integer current_year = cal.get(Calendar.YEAR);
         Integer current_month = cal.get(Calendar.MONTH);
         Integer provided_month = stringToMonthValue(ddmm.substring(2));
-        
-        if(provided_month < current_month){
-         current_year++;
+
+        if (provided_month < current_month) {
+            current_year++;
         }
-        
+
         String tempDate = ddmm.concat(current_year.toString());
         SimpleDateFormat dfIn = new SimpleDateFormat("ddMMMyyyy");
         SimpleDateFormat dfOut = new SimpleDateFormat("yyyy-MM-dd");
@@ -176,11 +192,11 @@ public class DateUtil {
         return date;
     }
 
-    public static String dateTOddmm(Date date){
-     String _date = dateToString(date, "ddMMMyyyy");     
-     return _date.substring(0,5).toUpperCase();
+    public static String dateTOddmm(Date date) {
+        String _date = dateToString(date, "ddMMMyyyy");
+        return _date.substring(0, 5).toUpperCase();
     }
-    
+
     public static Timestamp getCurrentTimeStamp() {
         Date now = cal.getTime();
         Timestamp instance = new java.sql.Timestamp(now.getTime());

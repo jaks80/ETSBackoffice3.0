@@ -118,6 +118,8 @@ public class AgentDlg extends JDialog implements ActionListener {
             String email = txtEmail.getText().trim();
             if(!email.isEmpty()){
              agent.setEmail(email.toLowerCase());
+            }else{
+             agent.setEmail(email);
             }
             
             agent.setRemark(txtRemark.getText().trim());

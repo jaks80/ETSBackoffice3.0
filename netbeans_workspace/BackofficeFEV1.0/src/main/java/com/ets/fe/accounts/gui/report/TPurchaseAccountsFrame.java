@@ -5,6 +5,7 @@ import com.ets.fe.acdoc.gui.PurchaseInvoiceDlg;
 import com.ets.fe.accounts.model.AccountsReport;
 import com.ets.fe.accounts.model.AccountsReport.AccountsLine;
 import com.ets.fe.accounts.task.AccountsHistoryTask;
+import com.ets.fe.acdoc.gui.PurchaseAcDocumentDlg;
 import com.ets.fe.acdoc.gui.report.TPurchaseInvoiceReportingFrame;
 import com.ets.fe.report.BeanJasperReport;
 import com.ets.fe.util.DateUtil;
@@ -32,7 +33,7 @@ import org.jdesktop.swingx.JXTable;
  *
  * @author Yusuf
  */
-public class TPurchaseAccountsFrame extends javax.swing.JInternalFrame implements PropertyChangeListener{
+public class TPurchaseAccountsFrame extends javax.swing.JInternalFrame implements PropertyChangeListener {
 
     private JDesktopPane desktopPane;
     private AccountsHistoryTask task;
@@ -54,7 +55,7 @@ public class TPurchaseAccountsFrame extends javax.swing.JInternalFrame implement
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
 
-        task = new AccountsHistoryTask(client_type, client_id, from, to, progressBar,Enums.SaleType.TKTPURCHASE);
+        task = new AccountsHistoryTask(client_type, client_id, from, to, progressBar, Enums.SaleType.TKTPURCHASE);
         task.addPropertyChangeListener(this);
         task.execute();
     }
@@ -73,13 +74,13 @@ public class TPurchaseAccountsFrame extends javax.swing.JInternalFrame implement
         tableModel.getDataVector().removeAllElements();
 
         if (lines.size() > 0) {
-            int i =0;
+            int i = 0;
             for (; i < lines.size(); i++) {
                 AccountsLine l = lines.get(i);
-                tableModel.insertRow(i, new Object[]{l.getDate(),l.getDocType(),l.getLine_desc(),l.getDebit_amount(),l.getCredit_amount(),l.getLine_balance()});
+                tableModel.insertRow(i, new Object[]{l.getDate(), l.getDocType(), l.getLine_desc(), l.getDebit_amount(), l.getCredit_amount(), l.getLine_balance()});
             }
         } else {
-            tableModel.insertRow(0, new Object[]{"","","","","",""});
+            tableModel.insertRow(0, new Object[]{"", "", "", "", "", ""});
         }
         populateSummery(report);
     }
@@ -129,18 +130,18 @@ public class TPurchaseAccountsFrame extends javax.swing.JInternalFrame implement
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAccounts = new JXTable(){public Component prepareRenderer(TableCellRenderer renderer,
             int rowIndex, int vColIndex) {
-            Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
-            String s = "";
+            Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);  
+            String s = "";       
 
-            Object o = tblAccounts.getModel().getValueAt(rowIndex, 1);
+            Object o = tblAccounts.getModel().getValueAt(rowIndex, 1);               
             if(o!=null){
-                s = o.toString();
+                s = o.toString();        
             }
 
             if(s.equalsIgnoreCase("INVOICE") || s.equalsIgnoreCase("DEBITMEMO")|| s.equalsIgnoreCase("REFUND")){
-                c.setForeground(Color.red);
+                c.setForeground(Color.GREEN);
             }else if(s.equalsIgnoreCase("PAYMENT") || s.equalsIgnoreCase("CREDITMEMO")){
-                c.setForeground(Color.green);
+                c.setForeground(Color.RED);
             }else{
                 c.setForeground(Color.WHITE);
             }
@@ -532,17 +533,13 @@ public class TPurchaseAccountsFrame extends javax.swing.JInternalFrame implement
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewReportActionPerformed
-         report("VIEW");
+        report("VIEW");
     }//GEN-LAST:event_btnViewReportActionPerformed
 
     private void btnViewInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInvoiceActionPerformed
         int index = tblAccounts.getSelectedRow();
         if (index != -1) {
-            Long id = lines.get(index).getId();
-            Window w = SwingUtilities.getWindowAncestor(this);
-            Frame owner = w instanceof Frame ? (Frame) w : null;
-            PurchaseInvoiceDlg dlg = new PurchaseInvoiceDlg(owner);
-            dlg.showDialog(id);
+            viewDocument(lines.get(index));
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed
 
@@ -555,7 +552,7 @@ public class TPurchaseAccountsFrame extends javax.swing.JInternalFrame implement
     }//GEN-LAST:event_btnPrintActionPerformed
 
     private void btnEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmailActionPerformed
-         if (report == null) {
+        if (report == null) {
             return;
         }
 
@@ -567,7 +564,7 @@ public class TPurchaseAccountsFrame extends javax.swing.JInternalFrame implement
             BeanJasperReport jasperreport = new BeanJasperReport(receipent, subject, body, refference);
             List<AccountsReport> list = new ArrayList<>();
             list.add(report);
-            jasperreport.accountStatement(list,"EMAIL");
+            jasperreport.accountStatement(list, "EMAIL");
         } else {
             JOptionPane.showMessageDialog(null, "No Email address", "Email", JOptionPane.WARNING_MESSAGE);
         }
@@ -631,7 +628,24 @@ public class TPurchaseAccountsFrame extends javax.swing.JInternalFrame implement
         }
     }
 
-        private void report(String action) {
+    public void viewDocument(AccountsLine line) {
+
+        Window w = SwingUtilities.getWindowAncestor(this);
+        Frame owner = w instanceof Frame ? (Frame) w : null;
+
+        if (line.getDocType().equals(Enums.AcDocType.INVOICE.toString())) {
+
+            PurchaseInvoiceDlg dlg = new PurchaseInvoiceDlg(owner);
+            dlg.showDialog(line.getId());
+        } else if (line.getDocType().equals(Enums.AcDocType.DEBITMEMO.toString())
+                || line.getDocType().equals(Enums.AcDocType.CREDITMEMO.toString())) {
+
+            PurchaseAcDocumentDlg dlg = new PurchaseAcDocumentDlg(owner);
+            dlg.showDialog(line.getId());
+        }
+    }
+
+    private void report(String action) {
         BeanJasperReport jasperreport = new BeanJasperReport();
         List<AccountsReport> list = new ArrayList<>();
         list.add(report);

@@ -4,6 +4,7 @@ import com.ets.fe.acdoc.task.AllAgentsDueSummeryTask;
 import com.ets.fe.productivity.model.ProductivityReport;
 import com.ets.fe.report.BeanJasperReport;
 import com.ets.fe.util.DateUtil;
+import com.ets.fe.util.Enums;
 import com.ets.fe.util.Enums.SaleType;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -28,6 +29,15 @@ public class OutStandingAllAgentsFrame extends javax.swing.JInternalFrame implem
     public OutStandingAllAgentsFrame(SaleType saleType) {
         initComponents();
         this.saleType = saleType;
+        
+        if(this.saleType.equals(Enums.SaleType.OTHERSALES)){
+         this.setTitle("All agent outstanding summery: Other Sales Invoice");
+        }else if(this.saleType.equals(Enums.SaleType.TKTSALES)){
+         this.setTitle("All agent outstanding summery: Ticketing Sales Invoice");
+        }else if(this.saleType.equals(Enums.SaleType.TKTPURCHASE)){
+         this.setTitle("All agent outstanding summery: Ticketing Purchase Invoice");
+        }
+        
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
         dtTo.setDate(DateUtil.getEndOfMonth());
     }

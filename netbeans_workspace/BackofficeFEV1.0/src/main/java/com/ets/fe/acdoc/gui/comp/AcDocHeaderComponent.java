@@ -192,6 +192,7 @@ public class AcDocHeaderComponent extends JPanel {
         txtVendorRef.setBackground(new java.awt.Color(0, 51, 51));
         txtVendorRef.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtVendorRef.setForeground(new java.awt.Color(255, 255, 0));
+        txtVendorRef.setCaretColor(new java.awt.Color(255, 255, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;

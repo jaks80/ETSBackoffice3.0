@@ -34,7 +34,10 @@ public class DeletePnrTask extends SwingWorker<Integer, Integer> {
 
     @Override
     protected void done() {
-
         setProgress(100);
+    }
+
+    public Pnr getPnr() {
+        return pnr;
     }
 }

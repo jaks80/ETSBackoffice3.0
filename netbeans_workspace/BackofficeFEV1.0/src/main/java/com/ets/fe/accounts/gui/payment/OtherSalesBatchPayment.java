@@ -5,7 +5,9 @@ import com.ets.fe.Application;
 import com.ets.fe.accounts.gui.logic.PaymentLogic;
 import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.acdoc.model.*;
-import com.ets.fe.accounts.task.NewPaymentTask;
+import com.ets.fe.accounts.task.PaymentTask;
+import com.ets.fe.acdoc_o.gui.OtherInvoiceDlg;
+import com.ets.fe.acdoc_o.gui.OtherSalesAcDocumentDlg;
 import com.ets.fe.acdoc_o.model.OtherSalesAcDoc;
 import com.ets.fe.acdoc_o.task.OtherDueInvoiceTask;
 import com.ets.fe.util.CheckInput;
@@ -44,7 +46,7 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
 
     private JDesktopPane desktopPane;
     private OtherDueInvoiceTask task;
-    private NewPaymentTask paymentTask;
+    private PaymentTask paymentTask;
     private List<OtherSalesAcDoc> invoices;
     private String taskType;
 
@@ -83,6 +85,12 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
         String remark = txtRef.getText();
 
         if (!amountString.isEmpty() && !remark.isEmpty() && cmbTType.getSelectedIndex() > 0) {
+            
+            int choice = JOptionPane.showConfirmDialog(null, "Submit Payment? " + amountString, "Submit Payment", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.NO_OPTION) {
+                return;
+            }
+            
             BigDecimal amount = new BigDecimal(amountString.trim());
             PaymentLogic logic = new PaymentLogic();
 
@@ -119,7 +127,7 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
                 }
 
                 if (!payment.getoSalesAcDocuments().isEmpty()) {
-                    paymentTask = new NewPaymentTask(payment);
+                    paymentTask = new PaymentTask(payment,Enums.TaskType.CREATE);
                     paymentTask.addPropertyChangeListener(this);
                     paymentTask.execute();
                 } else {
@@ -288,9 +296,9 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
                 Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
                 String s = this.getModel().getValueAt(rowIndex, 7).toString();
                 if (s.startsWith("-")) {
-                    c.setForeground(Color.GREEN);
+                    c.setForeground(Color.RED);
                 } else {
-                    c.setForeground(Color.red);
+                    c.setForeground(Color.GREEN);
                 }
                 return c;
             }
@@ -315,7 +323,8 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Sales: Batch Payment");
+        setTitle("Other Sales: Batch Payment");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/OtherBatchPayment20.png"))); // NOI18N
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel3.setMaximumSize(new java.awt.Dimension(32767, 24));
@@ -779,7 +788,7 @@ public class OtherSalesBatchPayment extends javax.swing.JInternalFrame implement
 
             Window w = SwingUtilities.getWindowAncestor(this);
             Frame owner = w instanceof Frame ? (Frame) w : null;
-            SalesInvoiceDlg dlg = new SalesInvoiceDlg(owner);
+            OtherInvoiceDlg dlg = new OtherInvoiceDlg(owner);            
             dlg.showDialog(id);
         }
     }//GEN-LAST:event_btnViewInvoiceActionPerformed

@@ -2,6 +2,7 @@ package com.ets.fe.acdoc_o.gui;
 
 import com.ets.fe.acdoc.gui.SalesInvoiceDlg;
 import com.ets.fe.acdoc.gui.comp.AcDocHeaderComponent;
+import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc_o.model.OtherSalesAcDoc;
 import com.ets.fe.acdoc_o.task.AccountingDocTaskOther;
 import com.ets.fe.acdoc_o.task.NewOSalesDocumentTask;
@@ -23,7 +24,7 @@ import java.util.logging.Logger;
 public class OtherSalesAcDocumentDlg extends javax.swing.JDialog implements PropertyChangeListener {
 
     private NewOSalesDocumentTask newOSalesDocumentTask;
-    private AccountingDocTaskOther accountingDocTask;   
+    private AccountingDocTaskOther accountingDocTask;
     private String taskType;
     private OtherSalesAcDoc document;
 
@@ -36,25 +37,32 @@ public class OtherSalesAcDocumentDlg extends javax.swing.JDialog implements Prop
     }
 
     /**
-     * @param id
-     * @param invoice 
-     * If ID is not null it loeads document. If ID is null then its creates a draft DM/CM using
-     * invoice provided. Invoice can not be null in case of creating new document.
+     * This method creates new document. 
+     * @param invoice If ID is not null it loeads document. If ID is null then
+     * its creates a draft DM/CM using invoice provided. Invoice can not be null
+     * in case of creating new document.
+     * @return 
      */
-    public void showDialog(Long id,OtherSalesAcDoc invoice) {   
-        
-        if(id!=null){
-         loadDocument(id);    
-        }else{
-         document = createDraftDocument(invoice);
-         displayDocument();
-        }
-        
-        setLocationRelativeTo(this);                      
-        setVisible(true);                       
+
+    public boolean showDialog(OtherSalesAcDoc invoice) {
+        document = createDraftDocument(invoice);
+        displayDocument();
+        setLocationRelativeTo(this);
+        setVisible(true);
+        return true;
     }
-        
-    private void displayDocument() {           
+
+    /**
+     * This method loads existing document
+     * @param id 
+     */
+    public void showDialog(Long id) {
+        loadDocument(id);
+        setLocationRelativeTo(this);
+        setVisible(true);
+    }
+
+    private void displayDocument() {
         AcDocType docType = document.getType();
         if (docType != null) {
             if (document.getType().equals(Enums.AcDocType.DEBITMEMO)) {
@@ -88,7 +96,7 @@ public class OtherSalesAcDocumentDlg extends javax.swing.JDialog implements Prop
 
         return draft_doc;
     }
-    
+
     public void createDocument() {
         taskType = "CREATE";
         BigDecimal amount = new BigDecimal(txtAmount.getText());
@@ -135,10 +143,11 @@ public class OtherSalesAcDocumentDlg extends javax.swing.JDialog implements Prop
 
     public void loadDocument(Long id) {
         taskType = "COMPLETE";
-        accountingDocTask = new AccountingDocTaskOther(id, Enums.SaleType.TKTSALES, "DETAILS");
+        accountingDocTask = new AccountingDocTaskOther(id, Enums.SaleType.OTHERSALES, "DETAILS");
         accountingDocTask.addPropertyChangeListener(this);
         accountingDocTask.execute();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -414,13 +423,13 @@ public class OtherSalesAcDocumentDlg extends javax.swing.JDialog implements Prop
             if (progress == 100) {
                 try {
                     if ("CREATE".equals(taskType)) {
-                     document = newOSalesDocumentTask.get();
-                     displayDocument();
-                    }else if ("COMPLETE".equals(taskType)) {
+                        document = newOSalesDocumentTask.get();
+                        displayDocument();
+                    } else if ("COMPLETE".equals(taskType)) {
                         document = (OtherSalesAcDoc) accountingDocTask.get();
                         displayDocument();
                         taskType = "";
-                    } 
+                    }
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(SalesInvoiceDlg.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {

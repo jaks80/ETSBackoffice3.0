@@ -9,17 +9,14 @@ import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.acdoc.task.NewTSalesDocumentTask;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.task.AccountingDocTask;
-import com.ets.fe.accounts.task.NewPaymentTask;
+import com.ets.fe.accounts.task.PaymentTask;
 import com.ets.fe.acdoc.model.report.InvoiceModel;
 import com.ets.fe.client.model.Contactable;
 import com.ets.fe.os.model.AdditionalCharge;
 import com.ets.fe.pnr.logic.AtolLogic;
-import com.ets.fe.pnr.model.ATOLCertificate;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
-import com.ets.fe.pnr.task.AtolCertificateTask;
 import com.ets.fe.report.BeanJasperReport;
-import com.ets.fe.report.XMLJasperReport;
 import com.ets.fe.util.*;
 import java.awt.Color;
 import java.awt.Component;
@@ -53,7 +50,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
 
     private NewTSalesDocumentTask newInvoiceTask;
     private AccountingDocTask accountingDocTask;
-    private NewPaymentTask paymentTask;
+    private PaymentTask paymentTask;
 
     private Contactable client;
     private String taskType;
@@ -263,7 +260,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
 
             if (amount.compareTo(invoice.calculateDueAmount().abs()) <= 0) {
                 Payment payment = logic.processSingleTSalesPayment(amount, invoice, remark, type);
-                paymentTask = new NewPaymentTask(payment);
+                paymentTask = new PaymentTask(payment,Enums.TaskType.CREATE);
                 paymentTask.addPropertyChangeListener(this);
                 paymentTask.execute();
             } else {
@@ -1215,12 +1212,5 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         InvoiceModel model = InvoiceModel.createModel(tInvoice);
         list.add(model);
         jasperreport.invoice(list, Enums.SaleType.TKTSALES, action);
-    }
-
-    public void paymentTask(Payment payment) {
-        taskType = "PAYMENT";
-        paymentTask = new NewPaymentTask(payment);
-        paymentTask.addPropertyChangeListener(this);
-        paymentTask.execute();
     }
 }

@@ -7,6 +7,8 @@ import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import com.ets.fe.util.RestClientUtil;
 import java.util.Date;
+import javax.swing.JOptionPane;
+import org.apache.http.HttpResponse;
 
 /**
  *
@@ -37,6 +39,22 @@ public class PaymentWSClient {
         String url = APIConfig.get("ws.pay.new");
         Payment ppayment = RestClientUtil.postEntity(Payment.class, url, payment);
         return ppayment;
+    }
+
+    public Payment voidPayment(Long paymentid) {
+        String url = APIConfig.get("ws.pay.void") + "?paymentid=" + paymentid;
+        Payment ppayment = RestClientUtil.putEntity(Payment.class, url, new Payment());
+        return ppayment;
+    }
+
+    public Integer deletePayment(Long paymentid) {
+        String url = APIConfig.get("ws.pay.delete") + "?paymentid=" + paymentid;
+        
+        HttpResponse response = RestClientUtil.deleteByIdGetResponse(url);
+        int status = response.getStatusLine().getStatusCode();
+        RestClientUtil.showMessage(response,"Delete Payment");
+        
+        return status;
     }
 
     public Integer createCreditTransfer(CreditTransfer creditTransfer) {

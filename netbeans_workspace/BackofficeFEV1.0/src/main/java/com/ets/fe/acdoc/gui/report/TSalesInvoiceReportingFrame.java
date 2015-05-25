@@ -172,11 +172,12 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Sales Invoice: Report");
+        setTitle("History: Sales Invoice");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/TicketSalesHistory20.png"))); // NOI18N
         setMinimumSize(new java.awt.Dimension(982, 545));
 
-        jSplitPane1.setDividerLocation(200);
-        jSplitPane1.setDividerSize(6);
+        jSplitPane1.setDividerLocation(210);
+        jSplitPane1.setDividerSize(10);
         jSplitPane1.setOneTouchExpandable(true);
 
         jPanel5.setLayout(new java.awt.GridBagLayout());
@@ -216,12 +217,12 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
                             .addComponent(jLabel6)
                             .addComponent(jLabel8))
                         .addContainerGap())
-                    .addComponent(dtTo, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                    .addComponent(dtTo, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                     .addComponent(dtFrom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(rdoInvHistory, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rdoDueRefund, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+                    .addComponent(rdoDueRefund, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
                     .addComponent(rdoDueInvoice, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -429,7 +430,7 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
 
             },
             new String [] {
-                "", "Date", "Reference", "Client", "PNR", "Psgr", "Flight Details", "Lead Psgr", "Inv Amount", "Payment", "Other (+/-)", "Balance", "InvBy"
+                "", "Date", "InvoiceNo", "Client", "PNR", "Psgr", "Flight Details", "Lead Psgr", "Inv Amount", "Payment", "Other (+/-)", "Outstanding", "InvBy"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -452,6 +453,8 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
             tblReport.getColumnModel().getColumn(1).setMinWidth(80);
             tblReport.getColumnModel().getColumn(1).setPreferredWidth(80);
             tblReport.getColumnModel().getColumn(1).setMaxWidth(80);
+            tblReport.getColumnModel().getColumn(2).setPreferredWidth(60);
+            tblReport.getColumnModel().getColumn(4).setPreferredWidth(60);
             tblReport.getColumnModel().getColumn(5).setMinWidth(40);
             tblReport.getColumnModel().getColumn(5).setPreferredWidth(40);
             tblReport.getColumnModel().getColumn(5).setMaxWidth(40);
@@ -534,13 +537,13 @@ public class TSalesInvoiceReportingFrame extends javax.swing.JInternalFrame impl
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE))
         );
 
-        tabResult.addTab("Search Result", jPanel6);
+        tabResult.addTab("Search", jPanel6);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(reportPane, javax.swing.GroupLayout.DEFAULT_SIZE, 792, Short.MAX_VALUE)
+            .addComponent(reportPane, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

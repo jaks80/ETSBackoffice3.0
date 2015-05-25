@@ -7,7 +7,7 @@ import com.ets.fe.acdoc.model.AccountingDocument;
 import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.task.DueInvoiceTask;
-import com.ets.fe.accounts.task.NewPaymentTask;
+import com.ets.fe.accounts.task.PaymentTask;
 import com.ets.fe.util.*;
 import java.awt.Color;
 import java.awt.Component;
@@ -42,7 +42,7 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
 
     private JDesktopPane desktopPane;
     private DueInvoiceTask task;
-    private NewPaymentTask paymentTask;
+    private PaymentTask paymentTask;
     private List<TicketingPurchaseAcDoc> invoices;
     private String taskType;
 
@@ -80,6 +80,12 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
         String remark = txtRef.getText();
 
         if (!amountString.isEmpty() && !remark.isEmpty() && cmbTType.getSelectedIndex() > 0) {
+
+            int choice = JOptionPane.showConfirmDialog(null, "Submit Payment? " + amountString, "Submit Payment", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.NO_OPTION) {
+                return;
+            }
+
             BigDecimal amount = new BigDecimal(amountString.trim());
             PaymentLogic logic = new PaymentLogic();
 
@@ -115,7 +121,7 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
                 }
 
                 if (!payment.gettPurchaseAcDocuments().isEmpty()) {
-                    paymentTask = new NewPaymentTask(payment);
+                    paymentTask = new PaymentTask(payment, Enums.TaskType.CREATE);
                     paymentTask.addPropertyChangeListener(this);
                     paymentTask.execute();
                 } else {
@@ -285,9 +291,9 @@ public class TPurchaseBatchPayment extends javax.swing.JInternalFrame implements
                 Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
                 String s = this.getModel().getValueAt(rowIndex, 8).toString();
                 if (s.startsWith("-")) {
-                    c.setForeground(Color.GREEN);
+                    c.setForeground(Color.RED);
                 } else {
-                    c.setForeground(Color.red);
+                    c.setForeground(Color.GREEN);
                 }
                 return c;
             }

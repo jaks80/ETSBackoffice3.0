@@ -6,6 +6,37 @@ package com.ets.fe.util;
  */
 public class Enums {
 
+    public enum TaskType {
+
+        CREATE(0), UPDATE(1), VOID(2), DELETE(3), READ(4);
+        private int id;
+
+        TaskType(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static String valueOf(int id) {
+            switch (id) {
+                case 0:
+                    return CREATE.toString();
+                case 1:
+                    return UPDATE.toString();
+                case 2:
+                    return VOID.toString();
+                case 3:
+                    return DELETE.toString();
+                case 4:
+                    return READ.toString();
+                default:
+                    return null;
+            }
+        }
+    }
+
     public enum UserType {
 
         GS(0), SM(1), AD(2), SU(3);

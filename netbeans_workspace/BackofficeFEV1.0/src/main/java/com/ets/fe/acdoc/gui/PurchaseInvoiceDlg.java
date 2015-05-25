@@ -8,7 +8,7 @@ import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.acdoc.model.TicketingPurchaseAcDoc;
 import com.ets.fe.acdoc.task.AccountingDocTask;
 import com.ets.fe.acdoc.task.TktingPurchaseDocTask;
-import com.ets.fe.accounts.task.NewPaymentTask;
+import com.ets.fe.accounts.task.PaymentTask;
 import com.ets.fe.os.model.AdditionalCharge;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
@@ -43,7 +43,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
 
     private TktingPurchaseDocTask newInvoiceTask;
     private AccountingDocTask accountingDocTask;
-    private NewPaymentTask paymentTask;
+    private PaymentTask paymentTask;
 
     private String taskType;
     private Pnr pnr;
@@ -216,12 +216,12 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
         accountingDocTask.execute();
     }
 
-    public void paymentTask(Payment payment) {
-        taskType = "PAYMENT";
-        paymentTask = new NewPaymentTask(payment);
-        paymentTask.addPropertyChangeListener(this);
-        paymentTask.execute();
-    }
+//    public void paymentTask(Payment payment) {
+//        taskType = "PAYMENT";
+//        paymentTask = new PaymentTask(payment);
+//        paymentTask.addPropertyChangeListener(this);
+//        paymentTask.execute();
+//    }
 
     public void populateTblTicket() {
         tblTicket.clearSelection();
@@ -290,7 +290,7 @@ public class PurchaseInvoiceDlg extends JDialog implements PropertyChangeListene
 
             if (amount.compareTo(invoice.calculateDueAmount().abs()) <= 0) {
                 Payment payment = logic.processSingleTPurchasePayment(amount, invoice, remark, type);
-                paymentTask = new NewPaymentTask(payment);
+                paymentTask = new PaymentTask(payment,Enums.TaskType.CREATE);
                 paymentTask.addPropertyChangeListener(this);
                 paymentTask.execute();
             } else {

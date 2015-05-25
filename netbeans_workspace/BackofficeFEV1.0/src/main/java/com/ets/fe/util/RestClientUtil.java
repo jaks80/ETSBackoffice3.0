@@ -4,9 +4,19 @@ import com.amadeus.air.AIR;
 import com.ets.fe.APIConfig;
 import com.ets.fe.Application;
 import com.ets.fe.a_main.Main;
+import com.ets.fe.pnr.ws.PnrWSClient;
+import java.awt.Dimension;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.xml.bind.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -17,6 +27,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 /**
+ * http://hc.apache.org/httpclient-3.x/sslguide.html
  *
  * @author Yusuf
  */
@@ -24,6 +35,38 @@ public class RestClientUtil {
 
     private static final String domain = APIConfig.get("ws.domain");
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
+
+    public static void showMessage(HttpResponse response,String title) {
+        BufferedReader reader = null;
+        String string = "";
+
+        try {
+            reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            string = reader.readLine();
+
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(PnrWSClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | IllegalStateException ex) {
+            Logger.getLogger(PnrWSClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (response.getStatusLine().getStatusCode() == 200) {
+            JOptionPane.showMessageDialog(null, string, title, JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            RestClientUtil.displayErrorMessage(string);
+        }
+    }
+
+    public static void displayErrorMessage(String message) {
+
+        JTextArea jta = new JTextArea(message);
+        JScrollPane jsp = new JScrollPane(jta) {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(480, 320);
+            }
+        };
+        JOptionPane.showMessageDialog(null, jsp, "Error", JOptionPane.ERROR_MESSAGE);
+    }
 
     public synchronized static <T> T getEntity(final Class<T> type, String destUrl, T entity) {
 
@@ -36,6 +79,7 @@ public class RestClientUtil {
 
     public synchronized static String getXML(String destUrl) {
         HttpClient httpClient = HttpClientBuilder.create().build();
+
         int status = 0;
         String apiOutput = "";
         try {
@@ -96,6 +140,22 @@ public class RestClientUtil {
         }
 
         return status;
+    }
+
+    public synchronized static HttpResponse deleteByIdGetResponse(String destUrl) {
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpResponse response = null;
+        try {
+            HttpDelete httpDelete = new HttpDelete(buildURL(destUrl));
+            httpDelete.addHeader("accept", "application/xml");
+            httpDelete.addHeader(AUTHORIZATION_PROPERTY, Application.getUserPassowrdEncoded());
+            response = httpClient.execute(httpDelete);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return response;
     }
 
     public synchronized static <T> T postEntity(final Class<T> type, String destUrl, T entity) {

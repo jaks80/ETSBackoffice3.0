@@ -7,7 +7,7 @@ import com.ets.fe.acdoc.model.AccountingDocument;
 import com.ets.fe.accounts.model.Payment;
 import com.ets.fe.acdoc.model.TicketingSalesAcDoc;
 import com.ets.fe.acdoc.task.DueInvoiceTask;
-import com.ets.fe.accounts.task.NewPaymentTask;
+import com.ets.fe.accounts.task.PaymentTask;
 import com.ets.fe.util.CheckInput;
 import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
@@ -44,7 +44,7 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
 
     private JDesktopPane desktopPane;
     private DueInvoiceTask task;
-    private NewPaymentTask paymentTask;
+    private PaymentTask paymentTask;
     private List<TicketingSalesAcDoc> invoices;
     //private InvoiceReport report;
     private String taskType;
@@ -84,6 +84,12 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
         String remark = txtRef.getText();
 
         if (!amountString.isEmpty() && !remark.isEmpty() && cmbTType.getSelectedIndex() > 0) {
+            
+            int choice = JOptionPane.showConfirmDialog(null, "Submit Payment? " + amountString, "Submit Payment", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.NO_OPTION) {
+                return;
+            }
+            
             BigDecimal amount = new BigDecimal(amountString.trim());
             PaymentLogic logic = new PaymentLogic();
 
@@ -119,7 +125,7 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
                 }
 
                 if (!payment.gettSalesAcDocuments().isEmpty()) {
-                    paymentTask = new NewPaymentTask(payment);
+                    paymentTask = new PaymentTask(payment,Enums.TaskType.CREATE);
                     paymentTask.addPropertyChangeListener(this);
                     paymentTask.execute();
                 } else {
@@ -289,9 +295,9 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
                 Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
                 String s = this.getModel().getValueAt(rowIndex, 8).toString();
                 if (s.startsWith("-")) {
-                    c.setForeground(Color.GREEN);
+                    c.setForeground(Color.RED);
                 } else {
-                    c.setForeground(Color.red);
+                    c.setForeground(Color.GREEN);
                 }
                 return c;
             }
@@ -316,7 +322,8 @@ public class TSalesBatchPayment extends javax.swing.JInternalFrame implements Pr
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Sales: Batch Payment");
+        setTitle("Ticketing Sales: Batch Payment");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/TicketBatchPayment20.png"))); // NOI18N
         setMinimumSize(new java.awt.Dimension(1000, 500));
         setPreferredSize(new java.awt.Dimension(1000, 500));
 

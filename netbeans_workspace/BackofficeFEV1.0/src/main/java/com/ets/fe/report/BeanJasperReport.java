@@ -99,7 +99,7 @@ public class BeanJasperReport {
         return null;
     }
 
-    public void transactionReceipt(Collection<?> beanCollection, Enums.SaleType sale_type, String actionType) {
+    public JRViewer transactionReceipt(Collection<?> beanCollection, Enums.SaleType sale_type, String actionType) {
 
         InputStream template = null;
 
@@ -110,7 +110,13 @@ public class BeanJasperReport {
         }
 
         JasperPrint jasperPrint = prepareReport(template, beanCollection);
-        takeAction(actionType, jasperPrint);
+        if ("VIEW".equals(actionType)) {
+            return viewReport(jasperPrint);
+        } else {
+            takeAction(actionType, jasperPrint);
+        }
+
+        return null;
     }
 
     private void takeAction(String actionType, JasperPrint jasperPrint) {

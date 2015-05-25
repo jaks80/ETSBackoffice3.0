@@ -46,6 +46,25 @@ public class AcDocUtil {
         return okToInvoice;
     }
 
+    public static boolean validatePurchaseFare(List<Ticket> ticketsToInvoice) {
+        boolean okToInvoice = false;
+        StringBuilder unvalidatedTicketNo = new StringBuilder();
+        for (Ticket t : ticketsToInvoice) {
+            if (t.calculateNetPurchaseFare().compareTo(new BigDecimal("0.00")) == 0) {
+                unvalidatedTicketNo.append(t.getFullPaxName().concat(" , Nett Purchase Fare : " + t.calculateNetPurchaseFare() + "\n"));
+            }
+        }
+
+        if (unvalidatedTicketNo.toString().isEmpty()) {
+            okToInvoice = true;
+        } else {
+            JOptionPane.showMessageDialog(null, "Purchase fare validation failed! Check tickets bellow:\n\n"
+                    + unvalidatedTicketNo + "\n\nCould not proceed to invoicing...", "Issue Invoice", JOptionPane.WARNING_MESSAGE);
+            okToInvoice = false;
+        }
+        return okToInvoice;
+    }
+
     public static boolean validateOtherSellingPrice(AccountingDocumentLine line) {
         boolean okToInvoice = false;
 

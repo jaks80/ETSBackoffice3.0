@@ -11,6 +11,8 @@ import com.ets.fe.util.DateUtil;
 import com.ets.fe.util.Enums;
 import com.ets.fe.util.RestClientUtil;
 import java.util.Date;
+import javax.swing.JOptionPane;
+import org.apache.http.HttpResponse;
 
 /**
  *
@@ -33,8 +35,9 @@ public class TicketingPAcDocWSClient {
 
     public Integer delete(long id) {
         String url = APIConfig.get("ws.tpacdoc.delete") + id;
-        Integer status = RestClientUtil.deleteById(url);
-        return status;
+        HttpResponse response = RestClientUtil.deleteByIdGetResponse(url); 
+        RestClientUtil.showMessage(response,"Delete Document");        
+        return response.getStatusLine().getStatusCode();
     }
 
     public TicketingPurchaseAcDoc _void(TicketingPurchaseAcDoc ticketingPurchaseAcDoc) {

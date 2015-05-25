@@ -103,7 +103,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
             if (index != -1) {
                 doc = tSAcDocList.get(index);
                 if (doc.getType().equals(Enums.AcDocType.PAYMENT) || doc.getType().equals(Enums.AcDocType.REFUND)) {
-                    JOptionPane.showMessageDialog(null, "Delete/Void Payment in Payment History", "Delete Payment", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Delete Payment in Payment History", "Delete Payment", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
                 doc.recordUpdateBy();
@@ -114,7 +114,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
             if (index != -1) {
                 doc = tPAcDocList.get(index);
                 if (doc.getType().equals(Enums.AcDocType.PAYMENT) || doc.getType().equals(Enums.AcDocType.REFUND)) {
-                    JOptionPane.showMessageDialog(null, "Delete/Void Payment in Payment History", "Delete Payment", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Delete Payment in Payment History", "Delete Payment", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
                 doc.recordUpdateBy();

@@ -155,10 +155,6 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
         java.awt.GridBagConstraints gridBagConstraints;
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        jPanel3 = new javax.swing.JPanel();
-        progressBar = new javax.swing.JProgressBar();
-        jSeparator1 = new javax.swing.JSeparator();
-        jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         btnViewReport = new javax.swing.JButton();
         btnViewInvoice = new javax.swing.JButton();
@@ -213,6 +209,8 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
     jPanel5 = new javax.swing.JPanel();
     jScrollPane2 = new javax.swing.JScrollPane();
     tblAcDoc = new JXTable(){public Component prepareRenderer(TableCellRenderer renderer,                                       int rowIndex, int vColIndex) {          Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);            String s = "";          Object o = tblAcDoc.getModel().getValueAt(rowIndex, 1);                 if(o!=null){          s = o.toString();          }              if(s.equalsIgnoreCase("ACM")){                  c.setForeground(Color.green);              }else if(s.equalsIgnoreCase("ADM")){                  c.setForeground(Color.red);              }else{               c.setForeground(Color.WHITE);              }  return c;      }  };
+    progressBar = new javax.swing.JProgressBar();
+    jLabel2 = new javax.swing.JLabel();
 
     setClosable(true);
     setMaximizable(true);
@@ -220,44 +218,6 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
     setTitle("Purchase: Bill Payment");
     setMinimumSize(new java.awt.Dimension(1000, 500));
     setPreferredSize(new java.awt.Dimension(1000, 500));
-
-    jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-    jPanel3.setMaximumSize(new java.awt.Dimension(32767, 24));
-    jPanel3.setMinimumSize(new java.awt.Dimension(71, 24));
-    jPanel3.setPreferredSize(new java.awt.Dimension(980, 24));
-    jPanel3.setLayout(new java.awt.GridBagLayout());
-
-    progressBar.setMaximumSize(new java.awt.Dimension(32767, 18));
-    progressBar.setMinimumSize(new java.awt.Dimension(10, 18));
-    progressBar.setPreferredSize(new java.awt.Dimension(146, 18));
-    progressBar.setStringPainted(true);
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 1, 0, 1);
-    jPanel3.add(progressBar, gridBagConstraints);
-
-    jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
-    jPanel3.add(jSeparator1, gridBagConstraints);
-
-    jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    jLabel2.setText("Message:");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(1, 2, 1, 2);
-    jPanel3.add(jLabel2, gridBagConstraints);
 
     jPanel1.setBackground(new java.awt.Color(102, 102, 102));
     jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -328,6 +288,7 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
     jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
     jPanel2.setLayout(new java.awt.GridBagLayout());
 
+    jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     jLabel1.setText("Nett Tktd Amount:");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -338,6 +299,7 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
     gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 2);
     jPanel2.add(jLabel1, gridBagConstraints);
 
+    jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     jLabel3.setText("ADM:");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -384,6 +346,7 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
     gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 2);
     jPanel2.add(lblDMemo, gridBagConstraints);
 
+    jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     jLabel9.setText("ACM:");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -445,6 +408,7 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
     jPanel8.add(jLabel11, gridBagConstraints);
 
     txtAmount.setEditable(false);
+    txtAmount.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 1;
@@ -490,7 +454,7 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
 
     jTabbedPane1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
 
-    tblTicket.setBackground(new java.awt.Color(51, 51, 51));
+    tblTicket.setBackground(new java.awt.Color(0, 0, 0));
     tblTicket.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
 
@@ -543,7 +507,7 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
         jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(jPanel5Layout.createSequentialGroup()
             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(0, 222, Short.MAX_VALUE))
+            .addGap(0, 196, Short.MAX_VALUE))
     );
     jPanel5Layout.setVerticalGroup(
         jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -555,29 +519,37 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
 
     jTabbedPane1.addTab("ADM/ACM", jPanel5);
 
+    progressBar.setMaximumSize(new java.awt.Dimension(32767, 18));
+    progressBar.setMinimumSize(new java.awt.Dimension(10, 18));
+    progressBar.setPreferredSize(new java.awt.Dimension(146, 18));
+    progressBar.setStringPainted(true);
+
+    jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+    jLabel2.setText("Message:");
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(layout.createSequentialGroup()
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 991, Short.MAX_VALUE)
-            .addContainerGap())
         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGap(4, 4, 4)
             .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGap(2, 2, 2)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createSequentialGroup()
                     .addGap(2, 2, 2)
-                    .addComponent(jTabbedPane1))))
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
     );
     layout.setVerticalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -590,15 +562,17 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(16, 16, 16)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 379, Short.MAX_VALUE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(jTabbedPane1)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGap(2, 2, 2)
-            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(2, 2, 2))
     );
 
     pack();
@@ -646,13 +620,11 @@ public class BSPBillPayment extends javax.swing.JInternalFrame implements Proper
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblDMemo;

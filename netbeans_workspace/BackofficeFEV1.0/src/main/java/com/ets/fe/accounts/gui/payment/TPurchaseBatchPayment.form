@@ -518,7 +518,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="        new JXTable() {&#xa;            public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex) {&#xa;                Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);                &#xa;                String s = this.getModel().getValueAt(rowIndex, 8).toString();&#xa;                if (s.startsWith(&quot;-&quot;)) {&#xa;                    c.setForeground(Color.GREEN);&#xa;                } else {&#xa;                    c.setForeground(Color.red);&#xa;                }&#xa;                return c;&#xa;            }&#xa;        }"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="        new JXTable() {&#xa;            public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex) {&#xa;                Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);                &#xa;                String s = this.getModel().getValueAt(rowIndex, 8).toString();&#xa;                if (s.startsWith(&quot;-&quot;)) {&#xa;                    c.setForeground(Color.RED);&#xa;                } else {&#xa;                    c.setForeground(Color.GREEN);&#xa;                }&#xa;                return c;&#xa;            }&#xa;        }"/>
           </AuxValues>
         </Component>
       </SubComponents>

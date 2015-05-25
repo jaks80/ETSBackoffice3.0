@@ -9,7 +9,10 @@
     <Property name="closable" type="boolean" value="true"/>
     <Property name="maximizable" type="boolean" value="true"/>
     <Property name="resizable" type="boolean" value="true"/>
-    <Property name="title" type="java.lang.String" value="Sales: Batch Payment"/>
+    <Property name="title" type="java.lang.String" value="Other Sales: Batch Payment"/>
+    <Property name="frameIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+      <Image iconType="3" name="/icons/OtherBatchPayment20.png"/>
+    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -513,7 +516,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="        new JXTable() {&#xa;            public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex) {&#xa;                Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);                &#xa;                String s = this.getModel().getValueAt(rowIndex, 7).toString();&#xa;                if (s.startsWith(&quot;-&quot;)) {&#xa;                    c.setForeground(Color.GREEN);&#xa;                } else {&#xa;                    c.setForeground(Color.red);&#xa;                }&#xa;                return c;&#xa;            }&#xa;        }"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="        new JXTable() {&#xa;            public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex) {&#xa;                Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);                &#xa;                String s = this.getModel().getValueAt(rowIndex, 7).toString();&#xa;                if (s.startsWith(&quot;-&quot;)) {&#xa;                    c.setForeground(Color.RED);&#xa;                } else {&#xa;                    c.setForeground(Color.GREEN);&#xa;                }&#xa;                return c;&#xa;            }&#xa;        }"/>
           </AuxValues>
         </Component>
       </SubComponents>

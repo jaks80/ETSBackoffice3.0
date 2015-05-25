@@ -73,7 +73,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         from = dtFrom.getDate();
         to = dtTo.getDate();
 
-       if (rdoDueInvoice.isSelected()) {
+        if (rdoDueInvoice.isSelected()) {
             doc_type = Enums.AcDocType.INVOICE;
             task = new OtherAcDocReportingTask(doc_type, client_type, client_id, from, to, progressBar);
         } else if (rdoDueRefund.isSelected()) {
@@ -135,30 +135,13 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         }
     }
 
-    public void newSalesAcDocDlg(OtherSalesAcDoc acdoc) {
+    public void newSalesAcDocDlg(OtherSalesAcDoc invoice) {
         Window w = SwingUtilities.getWindowAncestor(this);
         Frame owner = w instanceof Frame ? (Frame) w : null;
-
-        int index = tblReport.getSelectedRow();
-        if (index != -1) {
-
-            OtherInvoiceSummery invSummery = report.getInvoices().get(index);
-
-            //Convert summery to invoice
-            OtherSalesAcDoc invoice = new OtherSalesAcDoc();
-            invoice.setReference(invSummery.getReference());
-            invoice.setId(invSummery.getId());
-            invoice.setAgent(invSummery.getAgent());
-            invoice.setCustomer(invSummery.getCustomer());
-
-            acdoc.setReference(invoice.getReference());
-            acdoc.setParent(invoice);
-            acdoc.setDocIssueDate(new java.util.Date());
-
-            OtherSalesAcDocumentDlg dlg = new OtherSalesAcDocumentDlg(owner);
-            dlg.setLocationRelativeTo(this);
-            dlg.showDialog(null, invoice);
-        }
+       
+        OtherSalesAcDocumentDlg dlg = new OtherSalesAcDocumentDlg(owner);
+        dlg.setLocationRelativeTo(this);
+        dlg.showDialog(invoice);
     }
 
     public void viewDocument(OtherInvoiceSummery invSummery) {
@@ -174,7 +157,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
                 || invSummery.getType().equals(Enums.AcDocType.CREDITMEMO)) {
 
             OtherSalesAcDocumentDlg dlg = new OtherSalesAcDocumentDlg(owner);
-            dlg.showDialog(invSummery.getId(), null);
+            dlg.showDialog(invSummery.getId());
         }
     }
 
@@ -244,17 +227,18 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         btnEmail = new javax.swing.JButton();
         btnSearch = new javax.swing.JButton();
         btnVoid = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnNewDoc = new javax.swing.JButton();
         btnNewInvoice = new javax.swing.JButton();
         reportPane = new javax.swing.JScrollPane();
 
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Other Sales Invoice: Report");
+        setTitle("History: Other Sales Invoice");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/OtherSalesHistory20.png"))); // NOI18N
 
         jSplitPane1.setDividerLocation(200);
-        jSplitPane1.setDividerSize(6);
+        jSplitPane1.setDividerSize(10);
         jSplitPane1.setOneTouchExpandable(true);
 
         jPanel5.setLayout(new java.awt.GridBagLayout());
@@ -328,7 +312,6 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
         jPanel5.add(documentSearchComponent, gridBagConstraints);
@@ -359,6 +342,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
 
         jSplitPane1.setLeftComponent(jPanel5);
 
+        tabResult.setToolTipText("This tab is for Printing and Saving report.");
         tabResult.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
 
         jPanel6.setLayout(new java.awt.GridBagLayout());
@@ -559,6 +543,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         btnViewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/acdoc18.png"))); // NOI18N
+        btnViewInvoice.setToolTipText("View selected invoice");
         btnViewInvoice.setMaximumSize(new java.awt.Dimension(40, 22));
         btnViewInvoice.setMinimumSize(new java.awt.Dimension(40, 22));
         btnViewInvoice.setPreferredSize(new java.awt.Dimension(40, 22));
@@ -569,6 +554,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         });
 
         btnEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/email18.png"))); // NOI18N
+        btnEmail.setToolTipText("Email Report to Client");
         btnEmail.setMaximumSize(new java.awt.Dimension(40, 22));
         btnEmail.setMinimumSize(new java.awt.Dimension(40, 22));
         btnEmail.setPreferredSize(new java.awt.Dimension(40, 22));
@@ -579,6 +565,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         });
 
         btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search18.png"))); // NOI18N
+        btnSearch.setToolTipText("Search");
         btnSearch.setMaximumSize(new java.awt.Dimension(40, 22));
         btnSearch.setMinimumSize(new java.awt.Dimension(40, 22));
         btnSearch.setPreferredSize(new java.awt.Dimension(40, 22));
@@ -589,6 +576,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         });
 
         btnVoid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/void18-1.png"))); // NOI18N
+        btnVoid.setToolTipText("VOID Invoice");
         btnVoid.setMaximumSize(new java.awt.Dimension(40, 22));
         btnVoid.setMinimumSize(new java.awt.Dimension(40, 22));
         btnVoid.setPreferredSize(new java.awt.Dimension(40, 22));
@@ -598,17 +586,19 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
             }
         });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newdoc18.png"))); // NOI18N
-        jButton2.setMaximumSize(new java.awt.Dimension(40, 22));
-        jButton2.setMinimumSize(new java.awt.Dimension(40, 22));
-        jButton2.setPreferredSize(new java.awt.Dimension(40, 22));
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnNewDoc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/newdoc18.png"))); // NOI18N
+        btnNewDoc.setToolTipText("New Debit/ Credit Memo");
+        btnNewDoc.setMaximumSize(new java.awt.Dimension(40, 22));
+        btnNewDoc.setMinimumSize(new java.awt.Dimension(40, 22));
+        btnNewDoc.setPreferredSize(new java.awt.Dimension(40, 22));
+        btnNewDoc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnNewDocActionPerformed(evt);
             }
         });
 
         btnNewInvoice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/onewinv18.png"))); // NOI18N
+        btnNewInvoice.setToolTipText("New Invoice");
         btnNewInvoice.setMaximumSize(new java.awt.Dimension(40, 22));
         btnNewInvoice.setMinimumSize(new java.awt.Dimension(40, 22));
         btnNewInvoice.setPreferredSize(new java.awt.Dimension(40, 22));
@@ -631,7 +621,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
                 .addGap(2, 2, 2)
                 .addComponent(btnNewInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnNewDoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
                 .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -647,7 +637,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(btnViewInvoice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
                         .addComponent(btnEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                        .addComponent(btnNewDoc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
                         .addComponent(btnNewInvoice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
@@ -684,9 +674,21 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         dlg.showDialog(null);
     }//GEN-LAST:event_btnNewInvoiceActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        newSalesAcDocDlg(new OtherSalesAcDoc());
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void btnNewDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewDocActionPerformed
+        int index = tblReport.getSelectedRow();
+        if (index != -1) {
+            OtherInvoiceSummery invSummery = report.getInvoices().get(index);
+
+            //Convert summery to invoice
+            OtherSalesAcDoc invoice = new OtherSalesAcDoc();
+            invoice.setReference(invSummery.getReference());
+            invoice.setId(invSummery.getId());
+            invoice.setAgent(invSummery.getAgent());
+            invoice.setCustomer(invSummery.getCustomer());
+
+            newSalesAcDocDlg(invoice);
+        }
+    }//GEN-LAST:event_btnNewDocActionPerformed
 
     private void btnVoidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoidActionPerformed
         _voidDocument();
@@ -721,6 +723,7 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEmail;
+    private javax.swing.JButton btnNewDoc;
     private javax.swing.JButton btnNewInvoice;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnViewInvoice;
@@ -729,7 +732,6 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
     private com.ets.fe.acdoc.gui.comp.ClientSearchComp documentSearchComponent;
     private org.jdesktop.swingx.JXDatePicker dtFrom;
     private org.jdesktop.swingx.JXDatePicker dtTo;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -785,13 +787,13 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
         BeanJasperReport jasperreport = new BeanJasperReport();
         List<InvoiceReportOther> list = new ArrayList<>();
         list.add(report);
-        JRViewer viewer = jasperreport.invoiceReport(list, Enums.SaleType.OTHERSALES, action);        
-        if (viewer != null) {            
-            reportPane.setViewportView(viewer);            
+        JRViewer viewer = jasperreport.invoiceReport(list, Enums.SaleType.OTHERSALES, action);
+        if (viewer != null) {
+            reportPane.setViewportView(viewer);
         }
     }
-    
-        private ChangeListener tabListener = new ChangeListener() {
+
+    private ChangeListener tabListener = new ChangeListener() {
 
         @Override
         public void stateChanged(ChangeEvent e) {
@@ -803,8 +805,8 @@ public class OtherInvoiceReportingFrame extends javax.swing.JInternalFrame imple
                         report("VIEW");
                     }
                 });
-               
-            } 
+
+            }
         }
     };
 }
