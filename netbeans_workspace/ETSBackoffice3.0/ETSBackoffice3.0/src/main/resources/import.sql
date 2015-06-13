@@ -1,6 +1,6 @@
 INSERT INTO bo_user (id,loginID,password,surName,foreName,userType,active) VALUES (1,'supertech','1234','Akhond','YS',3,1);
 INSERT INTO bo_user (id,loginID,password,surName,foreName,userType,active) VALUES (2,'admin','1234','Admin','Admin',2,1);
-INSERT INTO bo_user (id,loginID,password,surName,foreName,userType,active) VALUES (3,'ashik','1234','Rahman','Ashik',2,1);
+INSERT INTO bo_user (id,loginID,password,surName,foreName,userType,active) VALUES (3,'liblu','1234','Khan','Liblu',2,1);
 
 INSERT INTO additional_charge (id,title,charge,calculationType) VALUES (1,'Card Handling','0.00',2);
 INSERT INTO additional_charge (id,title,charge,calculationType) VALUES (2,'Postage','0.00',1);

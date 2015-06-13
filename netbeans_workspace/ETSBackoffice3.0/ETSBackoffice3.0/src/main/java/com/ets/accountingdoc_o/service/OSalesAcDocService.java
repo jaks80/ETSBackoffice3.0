@@ -97,11 +97,13 @@ public class OSalesAcDocService {
         doc.setLastModifiedBy(other_doc.getLastModifiedBy());
 
         Set<OtherSalesAcDoc> relatedDocs = doc.getRelatedDocuments();
-        if (doc.getType().equals(Enums.AcDocType.INVOICE) && !relatedDocs.isEmpty()) {
+        Set<OtherSalesAcDoc> filtered_relatedDocs = AcDocUtil.filterVoidRelatedDocumentsOther(relatedDocs);
+        if (doc.getType().equals(Enums.AcDocType.INVOICE) && !filtered_relatedDocs.isEmpty()) {
+            doc = getWithChildrenById(doc.getId());
             return doc;
         } else {
-
             dao.voidDocument(undefineChildren(doc));
+            doc = getWithChildrenById(doc.getId());
             return doc;
         }
     }

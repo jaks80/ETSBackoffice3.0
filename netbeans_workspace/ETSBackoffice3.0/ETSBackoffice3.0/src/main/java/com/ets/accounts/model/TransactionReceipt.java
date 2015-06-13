@@ -84,22 +84,24 @@ public class TransactionReceipt {
             for (TicketingSalesAcDoc d : sdocs) {
                 TktingInvoiceSummery sum = new TktingInvoiceSummery();
                 sum.setId(d.getId());
-                sum.setParentId(d.getParent().getId());
                 sum.setReference(d.getReference());
                 sum.setGdsPnr(d.getPnr().getGdsPnr());
                 sum.setAirLine(d.getPnr().getAirLineCode());
                 sum.setNoOfPax(d.getPnr().getNoOfPax());
                 sum.setDocumentedAmount(d.getDocumentedAmount().abs());
                 sum.setStatus(d.getStatus());
-                
-                Set<Ticket> tickets = d.getParent().getTickets();
-                if(tickets!=null && !tickets.isEmpty()){
-                 Ticket leadPax = PnrUtil.calculateLeadPaxTicket(tickets);
-                 sum.setLeadPsgr(leadPax.getFullPaxName()+"/"+leadPax.getFullTicketNo());
+
+                if (d.getParent() != null) {
+                    sum.setParentId(d.getParent().getId());
+                    Set<Ticket> tickets = d.getParent().getTickets();
+                    if (tickets != null && !tickets.isEmpty()) {
+                        Ticket leadPax = PnrUtil.calculateLeadPaxTicket(tickets);
+                        sum.setLeadPsgr(leadPax.getFullPaxName() + "/" + leadPax.getFullTicketNo());
+                    }
                 }
-                
+
                 sum.setOutBoundDetails(PnrUtil.getOutBoundFlightSummery(d.getPnr().getSegments()));
-                
+
                 lines.add(sum);
                 total = total.add(d.getDocumentedAmount().abs());
 
@@ -130,10 +132,7 @@ public class TransactionReceipt {
             reportTitle = "Billing Receipt";
             for (TicketingPurchaseAcDoc d : pdocs) {
                 TktingInvoiceSummery sum = new TktingInvoiceSummery();
-                sum.setId(d.getId());
-                if(d.getParent()!=null){
-                 sum.setParentId(d.getParent().getId());
-                }
+                sum.setId(d.getId());                
                 sum.setReference(d.getReference());
                 sum.setGdsPnr(d.getPnr().getGdsPnr());
                 sum.setAirLine(d.getPnr().getAirLineCode());
@@ -142,7 +141,16 @@ public class TransactionReceipt {
                 sum.setStatus(d.getStatus());
                 lines.add(sum);
                 total = total.add(d.getDocumentedAmount());
-
+                
+                if (d.getParent() != null) {
+                    sum.setParentId(d.getParent().getId());
+                    Set<Ticket> tickets = d.getParent().getTickets();
+                    if (tickets != null && !tickets.isEmpty()) {
+                        Ticket leadPax = PnrUtil.calculateLeadPaxTicket(tickets);
+                        sum.setLeadPsgr(leadPax.getFullPaxName() + "/" + leadPax.getFullTicketNo());
+                    }
+                }
+                
                 if (d.getPnr() != null && clientName == null) {
                     Pnr pnr = d.getPnr();
                     if (pnr.getTicketing_agent() != null) {
@@ -168,7 +176,9 @@ public class TransactionReceipt {
             for (OtherSalesAcDoc d : odocs) {
                 OtherInvoiceSummery sum = new OtherInvoiceSummery();
                 sum.setId(d.getId());
-                sum.setParentId(d.getParent().getId());
+                if (d.getParent() != null) {
+                 sum.setParentId(d.getParent().getId());
+                }
                 sum.setReference(d.getReference());
                 sum.setRemark(d.getRemark());
                 sum.setDocumentedAmount(d.getDocumentedAmount().abs());

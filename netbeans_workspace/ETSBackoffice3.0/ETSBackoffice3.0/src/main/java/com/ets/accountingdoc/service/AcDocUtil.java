@@ -3,7 +3,9 @@ package com.ets.accountingdoc.service;
 import com.ets.accountingdoc.domain.*;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -12,6 +14,17 @@ import java.util.Set;
  */
 public class AcDocUtil {
 
+    public static List<TicketingSalesAcDoc> getVoidSalesInvoices(List<TicketingSalesAcDoc> invoices) {
+        List<TicketingSalesAcDoc> filteredDocs = new ArrayList<>();
+
+        for (TicketingSalesAcDoc d : invoices) {
+            if (d.getStatus().equals(Enums.AcDocStatus.VOID)) {
+                filteredDocs.add(d);
+            }
+        }
+        return filteredDocs;
+    }
+        
     public static Set<TicketingSalesAcDoc> filterVoidRelatedDocuments(Set<TicketingSalesAcDoc> relatedDocuments) {
         Set<TicketingSalesAcDoc> filteredDocs = new LinkedHashSet<>();
 

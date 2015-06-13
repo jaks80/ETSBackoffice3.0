@@ -96,16 +96,16 @@ public class AIRReader {
                     }
 
                     //Third party fare make 0.00
-                    if (air.getType().equals("BT")||air.getType().equals("ET")||
-                            !AppSettingsService.mainAgent.getOfficeID().contains(pnr.getTicketingAgtOid())) {
-                        //Its third party or BT, so force purchase fare 0.00
-                        for (Ticket t : tickets) {
-                            t.setBaseFare(new BigDecimal("0.00"));
-                            t.setTax(new BigDecimal("0.00"));
-                            t.setCommission(new BigDecimal("0.00"));
-                            t.setFee(new BigDecimal("0.00"));
-                        }
-                    }
+//                    if (air.getType().equals("BT")||air.getType().equals("ET")||
+//                            !AppSettingsService.mainAgent.getOfficeID().contains(pnr.getTicketingAgtOid())) {
+//                        //Its third party or BT, so force purchase fare 0.00
+//                        for (Ticket t : tickets) {
+//                            t.setBaseFare(new BigDecimal("0.00"));
+//                            t.setTax(new BigDecimal("0.00"));
+//                            t.setCommission(new BigDecimal("0.00"));
+//                            t.setFee(new BigDecimal("0.00"));
+//                        }
+//                    }
 
                     if (issued) {
                         service.savePnr(pnr);

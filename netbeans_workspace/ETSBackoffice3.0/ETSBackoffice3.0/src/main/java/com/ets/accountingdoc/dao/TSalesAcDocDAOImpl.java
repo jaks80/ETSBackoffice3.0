@@ -72,6 +72,26 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     }
 
     @Override
+    public TicketingSalesAcDoc getByTicket(Long pnrId, Long ticketNo) {
+//        String hql = "select distinct a from TicketingSalesAcDoc as a "
+//                + "left join fetch a.tickets as t "
+//                + "left join fetch a.pnr as p "
+//                + "left join fetch a.relatedDocuments as a1 "
+//                + "left join fetch a1.payment as p "
+//                + "where p.id = :pnrId and t.ticketNo = :ticketNo";
+//
+//        Query query = getSession().createQuery(hql);
+//        query.setParameter("pnrId", pnrId);
+//        List<TicketingSalesAcDoc> result = query.list();
+//        if (!result.isEmpty()) {
+//            return result.get(0);
+//        } else {
+//            return null;
+//        }
+        return null;
+    }
+
+    @Override
     public List<TicketingSalesAcDoc> getByGDSPnr(String GdsPnr) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -204,7 +224,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         if (!clientcondition.isEmpty()) {
             query.setParameter("clientid", clientid);
         }
-        
+
         query.setParameter("dateFrom", dateFrom);
         query.setParameter("dateEnd", dateEnd);
 
@@ -253,7 +273,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     @Override
     public TicketingSalesAcDoc voidSimpleDocument(TicketingSalesAcDoc doc) {
         doc.setStatus(Enums.AcDocStatus.VOID);
-        save(doc);  
+        save(doc);
         return doc;
     }
 
@@ -265,8 +285,8 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         TicketingPurchaseAcDoc purchaseDoc = null;
         if (!tickets.isEmpty()) {
             purchaseDoc = tPurchaseAcDocDAO.getByTicketId(tickets.iterator().next().getId());
-            if(purchaseDoc!=null){
-             purchaseDoc.setTickets(null);
+            if (purchaseDoc != null) {
+                purchaseDoc.setTickets(null);
             }
         }
 
@@ -275,7 +295,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
             t.setTicketingSalesAcDoc(null);
             t.setTicketingPurchaseAcDoc(null);
         }
-        
+
         //3. Save tickets
         if (!tickets.isEmpty()) {
             ticketDAO.saveBulk(new ArrayList(tickets));
@@ -291,7 +311,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         doc.setStatus(Enums.AcDocStatus.VOID);
         doc.setDocumentedAmount(new BigDecimal("0.00"));
         save(doc);
-        
+
         //5. Delete/VOID purchase doc as its goin to be created agian while saving sales document.
         if (purchaseDoc != null) {
             //purchaseDoc = tPurchaseAcDocDAO.getWithChildrenById(purchaseDoc.getId());
@@ -406,8 +426,8 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
 
     @Override
     @Transactional(readOnly = true)
-    public Map<String, BigDecimal> allAgentOutstandingReport(Date from,Date to) {
-       
+    public Map<String, BigDecimal> allAgentOutstandingReport(Date from, Date to) {
+
         String sql = " select agt.name as agentname, coalesce(sum(acdoc.documentedAmount), 0) as balance "
                 + "from tkt_sales_acdoc invoice "
                 + "left outer join tkt_sales_acdoc acdoc on invoice.reference=acdoc.reference and (acdoc.status<>2) "
@@ -421,7 +441,7 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
         Query query = getSession().createSQLQuery(sql);
         query.setParameter("from", from);
         query.setParameter("to", to);
-        
+
         List results = query.list();
         Map<String, BigDecimal> map = new LinkedHashMap<>();
 

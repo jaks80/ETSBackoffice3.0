@@ -15,33 +15,35 @@ import java.util.Map;
  */
 public interface TSalesAcDocDAO extends GenericDAO<TicketingSalesAcDoc, Long> {
 
-    public Long getNewAcDocRef();        
+    public Long getNewAcDocRef();
 
     public TicketingSalesAcDoc getWithChildrenById(Long id);
+
+    public TicketingSalesAcDoc getByTicketId(Long ticketId);
     
-     public TicketingSalesAcDoc getByTicketId(Long ticketId);
+    public TicketingSalesAcDoc getByTicket(Long pnrId,Long ticketNo);
 
     public List<TicketingSalesAcDoc> findAllById(Long... id);
-    
+
     public List<TicketingSalesAcDoc> getByPnrId(Long pnrId);
 
     public List<TicketingSalesAcDoc> getByGDSPnr(String GdsPnr);
-    
+
     public TicketingSalesAcDoc voidSimpleDocument(TicketingSalesAcDoc doc);
-    
+
     public TicketingSalesAcDoc voidTicketedDocument(TicketingSalesAcDoc doc);
-    
-    public List<TicketingSalesAcDoc> findOutstandingDocuments(Enums.AcDocType type,Enums.ClientType clienttype,Long clientid,Date dateStart,Date dateEnd);      
-    
-    public List<TicketingSalesAcDoc> outstandingFlightReport(Enums.ClientType clienttype,Long clientid,Date dateFrom, Date dateEnd);      
-    
-    public List<TicketingSalesAcDoc> findInvoiceHistory(Enums.ClientType clienttype,Long clientid,Date dateStart,Date dateEnd);
-    
-    public List<TicketingSalesAcDoc> findAllDocuments(Enums.ClientType clienttype,Long clientid,Date dateStart,Date dateEnd);
-        
-    public BigDecimal getAccountBallanceToDate(Enums.ClientType clienttype,Long clientid,Date dateEnd);
-    
-    public Map<User,BigDecimal> userProductivityReport(Date dateStart,Date dateEnd);
-    
-    public Map<String,BigDecimal> allAgentOutstandingReport(Date dateStart,Date dateEnd);
+
+    public List<TicketingSalesAcDoc> findOutstandingDocuments(Enums.AcDocType type, Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd);
+
+    public List<TicketingSalesAcDoc> outstandingFlightReport(Enums.ClientType clienttype, Long clientid, Date dateFrom, Date dateEnd);
+
+    public List<TicketingSalesAcDoc> findInvoiceHistory(Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd);
+
+    public List<TicketingSalesAcDoc> findAllDocuments(Enums.ClientType clienttype, Long clientid, Date dateStart, Date dateEnd);
+
+    public BigDecimal getAccountBallanceToDate(Enums.ClientType clienttype, Long clientid, Date dateEnd);
+
+    public Map<User, BigDecimal> userProductivityReport(Date dateStart, Date dateEnd);
+
+    public Map<String, BigDecimal> allAgentOutstandingReport(Date dateStart, Date dateEnd);
 }

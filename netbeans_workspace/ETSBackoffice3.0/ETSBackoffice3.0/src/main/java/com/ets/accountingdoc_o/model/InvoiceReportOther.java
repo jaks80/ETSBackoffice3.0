@@ -7,6 +7,7 @@ import com.ets.client.domain.Contactable;
 import com.ets.report.model.Letterhead;
 import com.ets.settings.service.AppSettingsService;
 import com.ets.util.DateUtil;
+import com.ets.util.Enums;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class InvoiceReportOther implements Serializable {
 
         InvoiceReportOther report = new InvoiceReportOther();
         for (OtherSalesAcDoc invoice : invoices) {
-
+            
             if (invoice.getRelatedDocuments() != null) {
                 Set<OtherSalesAcDoc> relatedDocs = AcDocUtil.filterVoidRelatedDocumentsOther(invoice.getRelatedDocuments());
                 invoice.setRelatedDocuments(relatedDocs);
@@ -107,12 +108,14 @@ public class InvoiceReportOther implements Serializable {
             invSummery.setCustomer(invoice.getCustomer());
             invSummery.setInvBy(invoice.getCreatedBy().calculateFullName());
             
+            if(!invoice.getStatus().equals(Enums.AcDocStatus.VOID)){
             totalInvAmount = totalInvAmount.add(invoice.getDocumentedAmount());
             totalDMAmount = totalDMAmount.add(invoice.calculateTotalDebitMemo());
             totalCMAmount = totalCMAmount.add(invoice.calculateTotalCreditMemo());
             totalPayment = totalPayment.add(invoice.calculateTotalPayment());
             totalRefund = totalRefund.add(invoice.calculateTotalRefund());
             totalDue = totalDue.add(invoice.calculateDueAmount());
+            }
 
             report.addInvoice(invSummery);
         }

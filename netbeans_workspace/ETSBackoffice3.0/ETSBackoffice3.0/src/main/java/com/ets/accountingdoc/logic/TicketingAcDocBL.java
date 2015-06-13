@@ -82,7 +82,7 @@ public class TicketingAcDocBL {
     public TicketingPurchaseAcDoc newTicketingPurchaseInvoice(TicketingSalesAcDoc salesInvoice,
             TicketingPurchaseAcDoc pinvoice) {
         
-        pinvoice.setType(Enums.AcDocType.INVOICE);
+        pinvoice.setType(salesInvoice.getType());
         pinvoice.setDocIssueDate(salesInvoice.getDocIssueDate());
         pinvoice.setTickets(salesInvoice.getTickets());
         pinvoice.setReference(salesInvoice.getReference());

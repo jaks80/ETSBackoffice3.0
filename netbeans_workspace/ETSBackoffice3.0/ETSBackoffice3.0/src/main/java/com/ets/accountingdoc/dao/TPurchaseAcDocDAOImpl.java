@@ -3,15 +3,16 @@ package com.ets.accountingdoc.dao;
 import com.ets.GenericDAOImpl;
 import com.ets.accountingdoc.domain.AdditionalChargeLine;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
-import com.ets.accountingdoc.service.AcDocUtil;
 import com.ets.pnr.dao.TicketDAO;
 import com.ets.pnr.domain.Ticket;
 import com.ets.util.Enums;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -108,6 +109,56 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> findOutstandingInvoiceReference(Enums.AcDocType acDocType, Long agentid, Date from, Date to) {
+
+        String operator = ">";
+
+        if (acDocType.equals(Enums.AcDocType.REFUND)) {
+            operator = "<";//To get outstanding refund
+        } else if (acDocType.equals(Enums.AcDocType.INVOICE)) {
+            operator = ">";//To get outstanding invoice
+        }
+
+        String hql = "select a.reference from TicketingPurchaseAcDoc a "
+                + "left join a.pnr as p  "
+                + "inner join p.ticketing_agent as tktingagent "
+                + "where a.status<>2 and a.type <> 1 and a.type <> 4 and "
+                + "(select sum(b.documentedAmount) as total "
+                + "from TicketingPurchaseAcDoc b "
+                + "where a.reference=b.reference and b.status = 0 group by b.reference)" + operator + "0 "
+                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
+                + "and (:agentid is null or tktingagent.id = :agentid) group by a.reference order by a.docIssueDate,a.id";
+
+        Query query = getSession().createQuery(hql);
+
+        query.setParameter("from", from);
+        query.setParameter("to", to);
+        query.setParameter("agentid", agentid);
+
+        List<Long> results = query.list();
+        return results;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TicketingPurchaseAcDoc> findInvoiceByRef(List<Long> references) {
+
+        String hql = "select distinct a from TicketingPurchaseAcDoc as a "
+                + "left join fetch a.relatedDocuments as r "
+                + "left join fetch a.tickets as t "
+                + "left join fetch a.pnr as p "
+                + "left join fetch p.segments "
+                + "inner join fetch p.ticketing_agent as tktingagent "
+                + "where a.status <> 2 and a.type = 0 and a.reference in (:references)";
+        Query query = getSession().createQuery(hql);
+
+        query.setParameterList("references", references);
+        List<TicketingPurchaseAcDoc> dueInvoices = query.list();
+        return dueInvoices;
+    }
+
     /**
      * acDocType Invoice return due invoices acDocType Refund return due refund
      *
@@ -135,7 +186,7 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
                 + "left join fetch a.pnr as p "
                 + "left join fetch p.segments "
                 + "inner join fetch p.ticketing_agent as tktingagent "
-                + "where a.status = 0 and a.type = 0 and "
+                + "where a.status <> 2 and a.type = 0 and "
                 + "(select sum(b.documentedAmount) as total "
                 + "from TicketingPurchaseAcDoc b "
                 + "where a.reference=b.reference and b.status = 0 group by b.reference)" + operator + "0 "
@@ -158,25 +209,73 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
 
         String hql = "select distinct a from TicketingPurchaseAcDoc as a "
                 + "left join fetch a.relatedDocuments as r "
-                //+ "left join fetch a.tickets as t "
+                + "left join fetch a.tickets as t "
                 + "left join fetch a.pnr as p "
-                //+ "left join fetch r.tickets as t1 "
+                + "left join fetch p.segments "
+                + "left join fetch r.tickets as rt "
                 + "inner join fetch p.ticketing_agent as tktingagent "
-                + "where a.status = 0 and a.type = 0 and "
+                + "left join fetch a.parent as parent "
+                + "left join fetch parent.relatedDocuments as pr "
+                + "left join fetch parent.tickets as pt "
+                + "left join fetch parent.pnr as pp "
+                + "left join fetch pp.segments "
+                + "left join fetch parent.tickets as prt "
+                //+ "inner join fetch p.ticketing_agent as tktingagent "
+                + "where a.status = 0 and a.type <> 1 and a.type <> 4 and "
                 + "(select sum(b.documentedAmount) as total "
                 + "from TicketingPurchaseAcDoc b "
                 + "where a.reference=b.reference and b.status = 0 group by b.reference) <> 0 "
-                + "and a.docIssueDate <= :to "
+                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
                 + "and tktingagent.id = :agentid order by a.docIssueDate,a.id";
 
         Query query = getSession().createQuery(hql);
 
-        //query.setParameter("from", from);
+        query.setParameter("from", from);
         query.setParameter("to", to);
         query.setParameter("agentid", agentid);
 
         List<TicketingPurchaseAcDoc> dueInvoices = query.list();
         return dueInvoices;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TicketingPurchaseAcDoc> find_ADM_ACM(Long agentid, Date from, Date to, Enums.AcDocType acDocType) {
+
+        String operator = ">";
+
+        if (acDocType.equals(Enums.AcDocType.REFUND)) {
+            operator = "<";//To get outstanding refund
+        } else if (acDocType.equals(Enums.AcDocType.INVOICE)) {
+            operator = ">";//To get outstanding invoice
+        }
+
+        String hql = "select distinct a from TicketingPurchaseAcDoc as a "
+                + "left join fetch a.relatedDocuments as r "
+                + "left join fetch a.tickets as t "
+                + "left join fetch a.pnr as p "
+                + "inner join fetch p.ticketing_agent as tktingagent "
+                + "left join fetch a.parent as parent "
+                + "left join fetch parent.relatedDocuments as pr "
+                + "left join fetch parent.tickets as pt "
+                + "left join fetch parent.pnr as pp "
+                + "left join fetch pp.segments "
+                + "left join fetch parent.tickets as prt "
+                + "where a.status = 0 and (a.type = 2 or a.type = 3) and"
+                + "(select sum(b.documentedAmount) as total "
+                + "from TicketingPurchaseAcDoc b "
+                + "where a.reference=b.reference and b.status = 0 group by b.reference)" + operator + "0 "
+                + "and a.docIssueDate >= :from and a.docIssueDate <= :to "
+                + "and (:agentid is null or tktingagent.id = :agentid) order by a.docIssueDate,a.id";
+
+        Query query = getSession().createQuery(hql);
+
+        query.setParameter("from", from);
+        query.setParameter("to", to);
+        query.setParameter("agentid", agentid);
+
+        List<TicketingPurchaseAcDoc> docs = query.list();
+        return docs;
     }
 
     @Override

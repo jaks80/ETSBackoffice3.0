@@ -11,6 +11,7 @@ import com.ets.util.Enums;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -137,6 +138,23 @@ public class TicketingPurchaseAcDocWS {
 
         BSPReport report = service.dueBSPReport(agentid, dateFrom, dateTo);
         return report;
+    }
+
+    @GET
+    @Path("/due_bspinvoices")
+    @PermitAll
+    public TicketingPurchaseAcDocs outstandingBSPInvoice(
+            @QueryParam("agentid") Long agentid,
+            @QueryParam("dateStart") String dateStart,
+            @QueryParam("dateEnd") String dateEnd) {
+
+        Date dateFrom = DateUtil.stringToDate(dateStart, "ddMMMyyyy");
+        Date dateTo = DateUtil.stringToDate(dateEnd, "ddMMMyyyy");
+
+        List<TicketingPurchaseAcDoc> list = service.dueBSPInvoices(agentid, dateFrom, dateTo);
+        TicketingPurchaseAcDocs ticketingPurchaseAcDoc = new TicketingPurchaseAcDocs();
+        ticketingPurchaseAcDoc.setList(list);
+        return ticketingPurchaseAcDoc;
     }
 
     //*****************Reporting Methods are Bellow******************//

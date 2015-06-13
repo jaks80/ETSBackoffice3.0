@@ -75,7 +75,8 @@ public class TicketingSalesAcDocWS {
     @Path("/draftdoc")
     @RolesAllowed("GS")
     public TicketingSalesAcDoc newDraftDocument(@QueryParam("pnrid") Long pnrid) {
-        TicketingSalesAcDoc doc = service.newDraftDocument(pnrid);
+        //TicketingSalesAcDoc doc = service.newDraftDocument(pnrid);
+        TicketingSalesAcDoc doc = service.newDraftDocumentUpdate(pnrid);
         return doc;
     }
 

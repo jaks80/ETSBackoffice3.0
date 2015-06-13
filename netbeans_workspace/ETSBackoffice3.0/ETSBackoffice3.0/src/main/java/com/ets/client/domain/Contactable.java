@@ -24,6 +24,8 @@ public abstract class Contactable extends PersistentObject implements Serializab
     private static final long serialVersionUID = 1L;
 
     @XmlElement
+    private String contactPerson;
+    @XmlElement
     private String addLine1;
     @XmlElement
     private String addLine2;
@@ -130,6 +132,7 @@ public abstract class Contactable extends PersistentObject implements Serializab
         return fullAddress;
     }
 
+    
     public String getAddLine1() {
         return addLine1;
     }
@@ -216,5 +219,13 @@ public abstract class Contactable extends PersistentObject implements Serializab
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
     }
 }

@@ -13,6 +13,7 @@ import com.ets.settings.domain.User;
 import com.ets.util.*;
 import com.ets.util.Enums.AcDocType;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,75 @@ public class TSalesAcDocService {
     TPurchaseAcDocService purchase_service;
 
     /**
+     * It is really important accounting documents are loaded in order by id.
+     *
+     * @param pnrid
+     * @return
+     */
+    public synchronized TicketingSalesAcDoc newDraftDocumentUpdate(Long pnrid) {
+
+        TicketingSalesAcDoc draftDocument = new TicketingSalesAcDoc();
+
+        Pnr pnr = pnrService.getByIdWithChildren(pnrid);
+        List<TicketingSalesAcDoc> acdocList = dao.getByPnrId(pnrid);
+        List<TicketingSalesAcDoc> invoices = new ArrayList<>();
+
+        for (TicketingSalesAcDoc doc : acdocList) {
+            if (doc.getType().equals(AcDocType.INVOICE)) {
+                invoices.add(doc);
+            }
+        }
+
+        Set<Ticket> uninvoicedIssuedTicket = PnrUtil.getUnInvoicedIssuedTicket(pnr, Enums.SaleType.TKTSALES);
+        Set<Ticket> uninvoicedReIssuedTicket = PnrUtil.getUnInvoicedReIssuedTicket(pnr, Enums.SaleType.TKTSALES);
+        Set<Ticket> uninvoicedRefundTicket = PnrUtil.getUnRefundedTickets(pnr, Enums.SaleType.TKTSALES);
+
+        TicketingAcDocBL logic = new TicketingAcDocBL(pnr);
+
+        if (!uninvoicedIssuedTicket.isEmpty()) {
+            if (invoices.isEmpty()) {
+                draftDocument = logic.newTicketingDraftInvoice(new TicketingSalesAcDoc(), uninvoicedIssuedTicket);
+            } else {
+                List<TicketingSalesAcDoc> void_invoices = AcDocUtil.getVoidSalesInvoices(invoices);
+                TicketingSalesAcDoc void_invoice = void_invoices.iterator().next();
+                draftDocument = logic.newTicketingDraftInvoice(void_invoice, uninvoicedIssuedTicket);
+            }
+        } else if (!uninvoicedReIssuedTicket.isEmpty()) {
+            if (invoices.isEmpty()) {
+                draftDocument = logic.newTicketingDraftInvoice(new TicketingSalesAcDoc(), uninvoicedReIssuedTicket);
+            } else {
+                List<TicketingSalesAcDoc> void_invoices = AcDocUtil.getVoidSalesInvoices(invoices);
+                if (void_invoices.isEmpty()) {
+                    draftDocument = logic.newTicketingDraftInvoice(new TicketingSalesAcDoc(), uninvoicedReIssuedTicket);
+                } else {
+                    TicketingSalesAcDoc void_invoice = void_invoices.iterator().next();
+                    draftDocument = logic.newTicketingDraftInvoice(void_invoice, uninvoicedReIssuedTicket);
+                }
+            }
+        } else if (!uninvoicedRefundTicket.isEmpty()) {
+
+            if (invoices.size() == 1) {
+                TicketingSalesAcDoc invoice = invoices.get(0);
+                //We need only Invoice here not children
+                invoice.setTickets(null);
+                invoice.setRelatedDocuments(null);
+                invoice.setAdditionalChargeLines(null);
+                draftDocument = logic.newTicketingDraftCMemo(invoice, uninvoicedRefundTicket);
+            } else {
+                //For multiple invoices rfd tickets needs to be allocated properly. Which invoice credits which tickets
+                // So improve logic in this area.   
+                TicketingSalesAcDoc invoice = invoices.get(0);
+                //We need only Invoice here not children
+                invoice.setTickets(null);
+                invoice.setRelatedDocuments(null);
+                invoice.setAdditionalChargeLines(null);
+                draftDocument = logic.newTicketingDraftCMemo(invoice, uninvoicedRefundTicket);
+            }
+        }
+        return draftDocument;
+    }
+
+    /**
      * If there is no accounting document in Pnr it creates an invoiced.
      * Afterwards according to ticket issue sequence it creates debit memo or
      * credit memo. For re-Issued tickets it create debit memo and for refund it
@@ -44,51 +114,52 @@ public class TSalesAcDocService {
      * @param pnrid
      * @return
      */
-    public synchronized TicketingSalesAcDoc newDraftDocument(Long pnrid) {
-
-        Pnr pnr = pnrService.getByIdWithChildren(pnrid);
-        List<TicketingSalesAcDoc> acdocList = dao.getByPnrId(pnrid);
-
-        TicketingAcDocBL logic = new TicketingAcDocBL(pnr);
-
-        TicketingSalesAcDoc invoice = null;
-
-        for (TicketingSalesAcDoc doc : acdocList) {
-            if (doc.getType().equals(AcDocType.INVOICE)) {
-                invoice = doc;
-                break;
-            }
-        }
-
-        TicketingSalesAcDoc draftDocument = new TicketingSalesAcDoc();
-        if (invoice == null) {
-            invoice = new TicketingSalesAcDoc();
-            Set<Ticket> uninvoicedTicket = PnrUtil.getUnInvoicedTicket(pnr);
-            draftDocument = logic.newTicketingDraftInvoice(invoice, uninvoicedTicket);
-
-        } else if (invoice.getStatus().equals(Enums.AcDocStatus.VOID)) {
-            Set<Ticket> uninvoicedTicket = PnrUtil.getUnInvoicedTicket(pnr);
-            draftDocument = logic.newTicketingDraftInvoice(invoice, uninvoicedTicket);
-            draftDocument.setRelatedDocuments(null);
-        } else {
-
-            Set<Ticket> reIssuedTickets = PnrUtil.getUnInvoicedReIssuedTicket(pnr, Enums.SaleType.TKTSALES);
-            Set<Ticket> refundedTickets = PnrUtil.getUnRefundedTickets(pnr, Enums.SaleType.TKTSALES);
-
-            //We need only Invoice here not children
-            invoice.setTickets(null);
-            invoice.setRelatedDocuments(null);
-            invoice.setAdditionalChargeLines(null);
-
-            if (!reIssuedTickets.isEmpty()) {
-                draftDocument = logic.newTicketingDraftDMemo(invoice, reIssuedTickets);
-            } else if (!refundedTickets.isEmpty()) {
-                draftDocument = logic.newTicketingDraftCMemo(invoice, refundedTickets);
-            }
-        }
-
-        return draftDocument;
-    }
+//    public synchronized TicketingSalesAcDoc newDraftDocument(Long pnrid) {
+//
+//        Pnr pnr = pnrService.getByIdWithChildren(pnrid);
+//        List<TicketingSalesAcDoc> acdocList = dao.getByPnrId(pnrid);
+//
+//        TicketingAcDocBL logic = new TicketingAcDocBL(pnr);
+//        TicketingSalesAcDoc invoice = null;
+//
+//        for (TicketingSalesAcDoc doc : acdocList) {
+//            if (doc.getType().equals(AcDocType.INVOICE)) {
+//                invoice = doc;
+//                break;
+//            }
+//        }
+//
+//        TicketingSalesAcDoc draftDocument = new TicketingSalesAcDoc();
+//        if (invoice == null) {
+//            invoice = new TicketingSalesAcDoc();
+//            Set<Ticket> uninvoicedTicket = PnrUtil.getUnInvoicedTicket(pnr);
+//            draftDocument = logic.newTicketingDraftInvoice(invoice, uninvoicedTicket);
+//
+//        } else if (invoice.getStatus().equals(Enums.AcDocStatus.VOID)) {
+//            Set<Ticket> uninvoicedTicket = PnrUtil.getUnInvoicedTicket(pnr);
+//            draftDocument = logic.newTicketingDraftInvoice(invoice, uninvoicedTicket);
+//            draftDocument.setRelatedDocuments(null);
+//        } else {
+//
+//            Set<Ticket> reIssuedUnInvoicedTickets = PnrUtil.getUnInvoicedReIssuedTicket(pnr, Enums.SaleType.TKTSALES);
+//            Set<Ticket> refundedTickets = PnrUtil.getUnRefundedTickets(pnr, Enums.SaleType.TKTSALES);
+//
+//            //We need only Invoice here not children
+//            invoice.setTickets(null);
+//            invoice.setRelatedDocuments(null);
+//            invoice.setAdditionalChargeLines(null);
+//
+//            if (!reIssuedUnInvoicedTickets.isEmpty()) {
+//                invoice = new TicketingSalesAcDoc();
+//                draftDocument = logic.newTicketingDraftInvoice(invoice, reIssuedUnInvoicedTickets);
+//                //draftDocument = logic.newTicketingDraftDMemo(invoice, reIssuedTickets);
+//            } else if (!refundedTickets.isEmpty()) {
+//                draftDocument = logic.newTicketingDraftCMemo(invoice, refundedTickets);
+//            }
+//        }
+//
+//        return draftDocument;
+//    }
 
     /**
      * Synchronize this to avoid acdoc ref duplication This method uses to
@@ -119,18 +190,28 @@ public class TSalesAcDocService {
 
         TicketingPurchaseAcDoc p_doc = null;
         if (!doc.getTickets().isEmpty()) {
-            p_doc = autoCreatePurchaseDocuments(doc, doc.getPnr().getId());
+            p_doc = autoCreatePurchaseDocumentUpdate(doc);
         }
 
         doc.setStatus(Enums.AcDocStatus.ACTIVE);
         dao.save(doc);
 
         AcDocUtil.undefineTSAcDoc(doc, doc.getTickets());
-        AcDocUtil.undefineTPAcDoc(p_doc, doc.getTickets());
+
         if (doc.getAdditionalChargeLines() != null && !doc.getAdditionalChargeLines().isEmpty()) {
             AcDocUtil.undefineAddChgLine(doc, doc.getAdditionalChargeLines());
         }
         return doc;
+    }
+
+    private TicketingPurchaseAcDoc autoCreatePurchaseDocumentUpdate(TicketingSalesAcDoc doc) {
+        TicketingPurchaseAcDoc p_doc = new TicketingPurchaseAcDoc();
+        TicketingAcDocBL logic = new TicketingAcDocBL(doc.getPnr());
+
+        p_doc = logic.newTicketingPurchaseInvoice(doc, p_doc);
+        purchase_service.createNewDocument(p_doc);
+
+        return p_doc;
     }
 
     /**
@@ -141,35 +222,35 @@ public class TSalesAcDocService {
      *
      * @param doc
      */
-    private TicketingPurchaseAcDoc autoCreatePurchaseDocuments(TicketingSalesAcDoc doc, Long pnrid) {
-
-        TicketingPurchaseAcDoc p_doc = new TicketingPurchaseAcDoc();
-        TicketingAcDocBL logic = new TicketingAcDocBL(doc.getPnr());
-
-        if (doc.getType().equals(Enums.AcDocType.INVOICE)) {
-            List<TicketingPurchaseAcDoc> acdocList = purchase_service.getByPnrId(pnrid);
-            for (TicketingPurchaseAcDoc p : acdocList) {
-                if (p.getType().equals(Enums.AcDocType.INVOICE)) {
-                    p_doc = p;
-                    break;
-                }
-            }
-
-            p_doc = logic.newTicketingPurchaseInvoice(doc,p_doc);
-            purchase_service.createNewDocument(p_doc);
-
-        } else if (doc.getType().equals(Enums.AcDocType.DEBITMEMO)) {
-            TicketingPurchaseAcDoc invoice = purchase_service.findInvoiceByPnrId(doc.getPnr().getId());
-            p_doc = logic.newTicketingPurchaseDMemo(doc, invoice);
-            purchase_service.createNewDocument(p_doc);
-
-        } else if (doc.getType().equals(Enums.AcDocType.CREDITMEMO)) {
-            TicketingPurchaseAcDoc invoice = purchase_service.findInvoiceByPnrId(doc.getPnr().getId());
-            p_doc = logic.newTicketingPurchaseCMemo(doc, invoice);
-            purchase_service.createNewDocument(p_doc);
-        }
-        return p_doc;
-    }
+//    private TicketingPurchaseAcDoc autoCreatePurchaseDocuments(TicketingSalesAcDoc doc, Long pnrid) {
+//
+//        TicketingPurchaseAcDoc p_doc = new TicketingPurchaseAcDoc();
+//        TicketingAcDocBL logic = new TicketingAcDocBL(doc.getPnr());
+//
+//        if (doc.getType().equals(Enums.AcDocType.INVOICE)) {
+//            List<TicketingPurchaseAcDoc> acdocList = purchase_service.getByPnrId(pnrid);
+//            for (TicketingPurchaseAcDoc p : acdocList) {
+//                if (p.getType().equals(Enums.AcDocType.INVOICE)) {
+//                    p_doc = p;
+//                    break;
+//                }
+//            }
+//
+//            p_doc = logic.newTicketingPurchaseInvoice(doc, p_doc);
+//            purchase_service.createNewDocument(p_doc);
+//
+//        } else if (doc.getType().equals(Enums.AcDocType.DEBITMEMO)) {
+//            TicketingPurchaseAcDoc invoice = purchase_service.findInvoiceByPnrId(doc.getPnr().getId());
+//            p_doc = logic.newTicketingPurchaseDMemo(doc, invoice);
+//            purchase_service.createNewDocument(p_doc);
+//
+//        } else if (doc.getType().equals(Enums.AcDocType.CREDITMEMO)) {
+//            TicketingPurchaseAcDoc invoice = purchase_service.findInvoiceByPnrId(doc.getPnr().getId());
+//            p_doc = logic.newTicketingPurchaseCMemo(doc, invoice);
+//            purchase_service.createNewDocument(p_doc);
+//        }
+//        return p_doc;
+//    }
 
     public TicketingSalesAcDoc getWithChildrenById(long id) {
         TicketingSalesAcDoc doc = dao.getWithChildrenById(id);
@@ -231,7 +312,9 @@ public class TSalesAcDocService {
         for (TicketingSalesAcDoc a : list) {
             a.setRelatedDocuments(null);
             if (a.getType().equals(Enums.AcDocType.PAYMENT) || a.getType().equals(Enums.AcDocType.REFUND)) {
-                AcDocUtil.undefineTSAcDocumentInPayment(a);
+                if (a.getParent() != null) {
+                    AcDocUtil.undefineTSAcDocumentInPayment(a);
+                }
             }
             for (Ticket t : a.getTickets()) {
                 t.setTicketingSalesAcDoc(null);
