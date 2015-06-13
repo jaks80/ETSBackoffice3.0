@@ -24,6 +24,8 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         doc.setDocumentFilter(new DocumentSizeFilter(45));
         doc = (AbstractDocument) txtForeName.getDocument();
         doc.setDocumentFilter(new DocumentSizeFilter(45));
+        doc = (AbstractDocument) txtContactPerson.getDocument();
+        doc.setDocumentFilter(new DocumentSizeFilter(45));
         doc = (AbstractDocument) txtAddLine1.getDocument();
         doc.setDocumentFilter(new DocumentSizeFilter(45));
         doc = (AbstractDocument) txtAddLine2.getDocument();
@@ -66,6 +68,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         if (customer != null) {
             txtSurName.setText(customer.getSurName());
             txtForeName.setText(customer.getForeName());
+            txtContactPerson.setText(customer.getContactPerson());
             txtAddLine1.setText(customer.getAddLine1());
             txtAddLine2.setText(customer.getAddLine2());
             txtCity.setText(customer.getCity());
@@ -89,6 +92,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         if (save) {
             customer.setSurName(txtSurName.getText().trim());
             customer.setForeName(txtForeName.getText().trim());
+            customer.setContactPerson(txtContactPerson.getText().trim());
             customer.setAddLine1(txtAddLine1.getText().trim());
             customer.setAddLine2(txtAddLine2.getText().trim());
             customer.setCity(txtCity.getText().trim());
@@ -143,6 +147,8 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         txtEmail = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtRemark = new javax.swing.JTextArea();
+        jLabel12 = new javax.swing.JLabel();
+        txtContactPerson = new javax.swing.JTextField();
         btnSave = new javax.swing.JButton();
         btnClose = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
@@ -171,7 +177,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         jLabel3.setText("Address Line1*");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 2);
         jPanel1.add(jLabel3, gridBagConstraints);
@@ -179,7 +185,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         jLabel4.setText("Address Line 2");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 2);
         jPanel1.add(jLabel4, gridBagConstraints);
@@ -187,7 +193,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         jLabel5.setText("City");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 2);
         jPanel1.add(jLabel5, gridBagConstraints);
@@ -195,7 +201,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         jLabel6.setText("Province");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 2);
         jPanel1.add(jLabel6, gridBagConstraints);
@@ -203,7 +209,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         jLabel7.setText("Post Code *");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 2);
         jPanel1.add(jLabel7, gridBagConstraints);
@@ -211,7 +217,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         jLabel8.setText("Tel No *");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 2);
         jPanel1.add(jLabel8, gridBagConstraints);
@@ -219,7 +225,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         jLabel9.setText("Mobile");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 2);
         jPanel1.add(jLabel9, gridBagConstraints);
@@ -227,7 +233,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         jLabel10.setText("Fax");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 2);
         jPanel1.add(jLabel10, gridBagConstraints);
@@ -235,7 +241,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         jLabel11.setText("Email");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 2);
         jPanel1.add(jLabel11, gridBagConstraints);
@@ -261,63 +267,63 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         jPanel1.add(txtForeName, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtAddLine2, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtAddLine1, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.ipadx = 150;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtCity, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.ipadx = 150;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtProvince, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.ipadx = 150;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtPostCode, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtTelNo, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtMobile, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(txtFax, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
@@ -336,6 +342,19 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel1.add(jScrollPane1, gridBagConstraints);
+
+        jLabel12.setText("Contact Person");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 2);
+        jPanel1.add(jLabel12, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel1.add(txtContactPerson, gridBagConstraints);
 
         btnSave.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/save18.png"))); // NOI18N
@@ -425,6 +444,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -442,6 +462,7 @@ public class CustomerDlg extends javax.swing.JDialog implements ActionListener {
     private javax.swing.JTextField txtAddLine1;
     private javax.swing.JTextField txtAddLine2;
     private javax.swing.JTextField txtCity;
+    private javax.swing.JTextField txtContactPerson;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtFax;
     private javax.swing.JTextField txtForeName;

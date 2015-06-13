@@ -764,6 +764,7 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
         btnView.setPreferredSize(new java.awt.Dimension(35, 22));
 
         btnRefund.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/refund1-18.png"))); // NOI18N
+        btnRefund.setToolTipText("Refund Ticket");
         btnRefund.setMaximumSize(new java.awt.Dimension(35, 22));
         btnRefund.setMinimumSize(new java.awt.Dimension(35, 22));
         btnRefund.setPreferredSize(new java.awt.Dimension(35, 22));
@@ -774,6 +775,7 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
         });
 
         btnReIssue.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/reissue.png"))); // NOI18N
+        btnReIssue.setToolTipText("Re-Issue Issued Ticket");
         btnReIssue.setMaximumSize(new java.awt.Dimension(35, 22));
         btnReIssue.setMinimumSize(new java.awt.Dimension(35, 22));
         btnReIssue.setPreferredSize(new java.awt.Dimension(35, 22));
@@ -784,6 +786,7 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
         });
 
         btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete18.png"))); // NOI18N
+        btnDelete.setToolTipText("Delete Ticket");
         btnDelete.setMaximumSize(new java.awt.Dimension(35, 22));
         btnDelete.setMinimumSize(new java.awt.Dimension(35, 22));
         btnDelete.setPreferredSize(new java.awt.Dimension(35, 22));
@@ -794,6 +797,7 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
         });
 
         btnVoid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/void18-1.png"))); // NOI18N
+        btnVoid.setToolTipText("VOID Ticket");
         btnVoid.setMaximumSize(new java.awt.Dimension(35, 22));
         btnVoid.setMinimumSize(new java.awt.Dimension(35, 22));
         btnVoid.setPreferredSize(new java.awt.Dimension(35, 22));
@@ -804,6 +808,7 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
         });
 
         btnNewTicket.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/plus18.png"))); // NOI18N
+        btnNewTicket.setToolTipText("Add Ticket Manually");
         btnNewTicket.setMaximumSize(new java.awt.Dimension(35, 22));
         btnNewTicket.setMinimumSize(new java.awt.Dimension(35, 22));
         btnNewTicket.setPreferredSize(new java.awt.Dimension(35, 22));
@@ -1056,10 +1061,6 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
         }
     }//GEN-LAST:event_txtFeesKeyReleased
 
-    private void dtIssueDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dtIssueDateActionPerformed
-        ticket.setDocIssuedate(dtIssueDate.getDate());
-    }//GEN-LAST:event_dtIssueDateActionPerformed
-
     private void cmbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStatusActionPerformed
         ticket.setTktStatus((Enums.TicketStatus) cmbStatus.getSelectedItem());
     }//GEN-LAST:event_cmbStatusActionPerformed
@@ -1123,6 +1124,10 @@ public class TicketComponent extends javax.swing.JPanel implements PropertyChang
             tblTicket.setRowSelectionInterval(selectedRow, selectedRow);
         }
     }//GEN-LAST:event_btnPrevActionPerformed
+
+    private void dtIssueDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dtIssueDateActionPerformed
+        ticket.setDocIssuedate(dtIssueDate.getDate());
+    }//GEN-LAST:event_dtIssueDateActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

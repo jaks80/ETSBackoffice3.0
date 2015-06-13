@@ -181,8 +181,8 @@ public class DlgLogin extends JDialog implements PropertyChangeListener {
 
         txtUserName.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         txtUserName.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtUserNameKeyPressed(evt);
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtUserNameKeyReleased(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -282,13 +282,6 @@ public class DlgLogin extends JDialog implements PropertyChangeListener {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtUserNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUserNameKeyPressed
-        int key = evt.getKeyCode();
-        if (key == KeyEvent.VK_ENTER || key == KeyEvent.VK_DOWN) {
-            txtPWord.requestFocus();
-        }
-    }//GEN-LAST:event_txtUserNameKeyPressed
-
     private void txtPWordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPWordKeyReleased
         int key = evt.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
@@ -310,6 +303,13 @@ public class DlgLogin extends JDialog implements PropertyChangeListener {
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         System.exit(0);
     }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void txtUserNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUserNameKeyReleased
+        int key = evt.getKeyCode();
+        if (key == KeyEvent.VK_ENTER || key == KeyEvent.VK_DOWN) {
+            txtPWord.requestFocus();
+        }
+    }//GEN-LAST:event_txtUserNameKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

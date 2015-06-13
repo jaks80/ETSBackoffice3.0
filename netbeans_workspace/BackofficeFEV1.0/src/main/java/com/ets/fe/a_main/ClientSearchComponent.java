@@ -9,6 +9,7 @@ import com.ets.fe.client.collection.Customers;
 import com.ets.fe.client.gui.*;
 import com.ets.fe.client.model.*;
 import com.ets.fe.util.Enums;
+import com.ets.fe.util.PnrUtil;
 import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -95,7 +96,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
                 cmbSearchResult.setEnabled(true);
                 List<String> list = new ArrayList<>();
                 for (Customer a : customerlist) {
-                    list.add(a.calculateFullName() + "-" + a.getPostCode());
+                    list.add(PnrUtil.calculatePartialName(a.calculateFullName(),20) + "-" + a.getPostCode());
                 }
                 this.customer = null;
                 setTxtCustomerDetails(this.getCustomer());
@@ -299,6 +300,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 4, 0);
         jPanel1.add(txtContactableSearch, gridBagConstraints);
 
@@ -336,7 +338,8 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 4, 0);
         jPanel1.add(jScrollPane1, gridBagConstraints);
 
-        cmbSearchResult.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        cmbSearchResult.setEditable(true);
+        cmbSearchResult.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         cmbSearchResult.setToolTipText("Select customer from List or Add new.");
         cmbSearchResult.setEnabled(false);
         cmbSearchResult.setPreferredSize(new java.awt.Dimension(56, 19));
@@ -345,6 +348,7 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
         gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         jPanel1.add(cmbSearchResult, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -392,7 +396,9 @@ public class ClientSearchComponent extends JPanel implements PropertyChangeListe
     // End of variables declaration//GEN-END:variables
 
     private void setCmbSearchResult(List<String> list) {
-        list.add("Add New");
+        if(rdoCustomer.isSelected()){
+         list.add("Add New");
+        }
         DefaultComboBoxModel cmbSearchResultModel = new DefaultComboBoxModel(list.toArray());
         cmbSearchResult.setModel(cmbSearchResultModel);
     }

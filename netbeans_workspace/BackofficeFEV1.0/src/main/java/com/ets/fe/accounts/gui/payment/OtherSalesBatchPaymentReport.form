@@ -115,7 +115,7 @@
           <SubComponents>
             <Component class="com.ets.fe.acdoc.gui.comp.ClientSearchComp" name="documentSearchComponent">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ets.fe.acdoc.gui.comp.ClientSearchComp(false, false, false,Enums.AgentType.ALL)"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ets.fe.acdoc.gui.comp.ClientSearchComp(true, true, true,Enums.AgentType.ALL)"/>
               </AuxValues>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
@@ -436,7 +436,9 @@
                                   <Component id="btnEmail" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                                   <Component id="btnSearch" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="603" max="32767" attributes="0"/>
+                                  <EmptySpace pref="555" max="32767" attributes="0"/>
+                                  <Component id="btnDelete" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btnVoid" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               </Group>
@@ -448,6 +450,7 @@
                               <Component id="btnEmail" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
                               <Component id="btnSearch" alignment="1" min="-2" pref="25" max="-2" attributes="0"/>
                               <Component id="btnVoid" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
+                              <Component id="btnDelete" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
@@ -524,6 +527,19 @@
                           </Properties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVoidActionPerformed"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JButton" name="btnDelete">
+                          <Properties>
+                            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                              <Image iconType="3" name="/icons/delete18.png"/>
+                            </Property>
+                            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                              <Dimension value="[35, 22]"/>
+                            </Property>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteActionPerformed"/>
                           </Events>
                         </Component>
                       </SubComponents>

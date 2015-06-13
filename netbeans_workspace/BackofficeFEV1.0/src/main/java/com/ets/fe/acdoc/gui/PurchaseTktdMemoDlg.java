@@ -204,6 +204,7 @@ public class PurchaseTktdMemoDlg extends JDialog implements PropertyChangeListen
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Ticketed Credit Memo");
         setResizable(false);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());

@@ -113,7 +113,7 @@
           <SubComponents>
             <Component class="com.ets.fe.acdoc.gui.comp.ClientSearchComp" name="documentSearchComponent">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ets.fe.acdoc.gui.comp.ClientSearchComp(false, false, false,Enums.AgentType.ALL)"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new com.ets.fe.acdoc.gui.comp.ClientSearchComp(true, true, true,Enums.AgentType.ALL)"/>
               </AuxValues>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">

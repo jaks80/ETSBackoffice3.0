@@ -730,6 +730,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/refund1-18.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Refund Ticket"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[35, 22]"/>
             </Property>
@@ -749,6 +750,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/reissue.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Re-Issue Issued Ticket"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[35, 22]"/>
             </Property>
@@ -768,6 +770,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/delete18.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Delete Ticket"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[35, 22]"/>
             </Property>
@@ -787,6 +790,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/void18-1.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="VOID Ticket"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[35, 22]"/>
             </Property>
@@ -806,6 +810,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/icons/plus18.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Add Ticket Manually"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[35, 22]"/>
             </Property>

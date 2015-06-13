@@ -123,6 +123,7 @@
               </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JXTable(){&#xd;&#xa;public Component prepareRenderer(TableCellRenderer renderer,int rowIndex, int vColIndex) &#xd;&#xa;{&#xd;&#xa;Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);&#xd;&#xa;String s = this.getModel().getValueAt(rowIndex, 5).toString();&#xd;&#xa;if(s.equalsIgnoreCase(&quot;VOID&quot;)){&#xd;&#xa;Map  attributes = c.getFont().getAttributes();&#xd;&#xa;attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);&#xd;&#xa;Font newFont = new Font(attributes);&#xd;&#xa;c.setFont(newFont);}&#xd;&#xa;return c;} &#xd;&#xa;}"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="tblSales.getSelectionModel().addListSelectionListener(tblSalesListener);"/>
               </AuxValues>
             </Component>
           </SubComponents>
@@ -197,6 +198,7 @@
               </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JXTable(){&#xd;&#xa;public Component prepareRenderer(TableCellRenderer renderer,int rowIndex, int vColIndex) &#xd;&#xa;{&#xd;&#xa;Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);&#xd;&#xa;String s = this.getModel().getValueAt(rowIndex, 5).toString();&#xd;&#xa;if(s.equalsIgnoreCase(&quot;VOID&quot;)){&#xd;&#xa;Map  attributes = c.getFont().getAttributes();&#xd;&#xa;attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);&#xd;&#xa;Font newFont = new Font(attributes);&#xd;&#xa;c.setFont(newFont);}&#xd;&#xa;return c;} &#xd;&#xa;}"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="tblPurchase.getSelectionModel().addListSelectionListener(tblPurchaseListener);"/>
               </AuxValues>
             </Component>
           </SubComponents>

@@ -484,7 +484,7 @@ public class AgentFrame extends JInternalFrame implements PropertyChangeListener
     }//GEN-LAST:event_txtOfficeIdKeyReleased
 
     private void btnImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportActionPerformed
-        
+        int returnVal = fileChooser.showOpenDialog(this);
         File file = fileChooser.getSelectedFile();
         txtFilePath.setText(file.getAbsolutePath());
         create(convertCSV(file));

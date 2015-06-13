@@ -22,8 +22,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import org.jdesktop.swingx.JXTable;
@@ -102,7 +105,8 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
             saleType = SaleType.TKTSALES;
             if (index != -1) {
                 doc = tSAcDocList.get(index);
-                if (doc.getType().equals(Enums.AcDocType.PAYMENT) || doc.getType().equals(Enums.AcDocType.REFUND)) {
+                if (doc.getType().equals(Enums.AcDocType.PAYMENT)
+                        || doc.getType().equals(Enums.AcDocType.REFUND)) {
                     JOptionPane.showMessageDialog(null, "Delete Payment in Payment History", "Delete Payment", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
@@ -185,6 +189,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         } else {
             model.insertRow(row, new Object[]{"", "", "", "", "", ""});
         }
+        tblSales.setRowSelectionInterval(0, 0);
     }
 
     private void populateTblPurchase() {
@@ -204,6 +209,8 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         } else {
             model.insertRow(row, new Object[]{"", "", "", "", "", ""});
         }
+        
+        tblPurchase.setRowSelectionInterval(0, 0);
     }
 
     /**
@@ -265,6 +272,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         });
         tblSales.setSortable(false);
         tblSales.getTableHeader().setReorderingAllowed(false);
+        tblSales.getSelectionModel().addListSelectionListener(tblSalesListener);
         tblSales.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblSalesMouseClicked(evt);
@@ -292,6 +300,7 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
         });
         tblPurchase.setSortable(false);
         tblPurchase.getTableHeader().setReorderingAllowed(false);
+        tblPurchase.getSelectionModel().addListSelectionListener(tblPurchaseListener);
         tblPurchase.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblPurchaseMouseClicked(evt);
@@ -411,15 +420,15 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                                 TicketingSalesAcDoc temp_doc = (TicketingSalesAcDoc) doc;
 
                                 tSAcDocList.add(temp_doc);
-                                if (temp_doc.getType().equals(AcDocType.INVOICE)) {
-                                    salesSummeryInvoice = temp_doc;
-                                }
+//                                if (temp_doc.getType().equals(AcDocType.INVOICE)) {
+//                                    salesSummeryInvoice = temp_doc;
+//                                }
                             } else {
                                 TicketingPurchaseAcDoc temp_doc = (TicketingPurchaseAcDoc) doc;
                                 tPAcDocList.add(temp_doc);
-                                if (temp_doc.getType().equals(AcDocType.INVOICE)) {
-                                    purchaseSummeryInvoice = temp_doc;
-                                }
+//                                if (temp_doc.getType().equals(AcDocType.INVOICE)) {
+//                                    purchaseSummeryInvoice = temp_doc;
+//                                }
                             }
                         }
 
@@ -490,6 +499,40 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                     search(pnrId);
                 } else {
                     saleType = "";
+                }
+            }
+        }
+    };
+
+    private ListSelectionListener tblSalesListener = new ListSelectionListener() {
+
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if (e.getValueIsAdjusting()) {
+                return;
+            }
+            int row = tblSales.getSelectedRow();
+            if (row != -1) {
+                TicketingSalesAcDoc doc = tSAcDocList.get(row);
+                if (doc.getType().equals(Enums.AcDocType.INVOICE)) {
+                    salesSummeryInvoice = doc;
+                }
+            }
+        }
+    };
+
+    private ListSelectionListener tblPurchaseListener = new ListSelectionListener() {
+
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if (e.getValueIsAdjusting()) {
+                return;
+            }
+            int row = tblPurchase.getSelectedRow();
+            if (row != -1) {
+                TicketingPurchaseAcDoc doc = tPAcDocList.get(row);
+                if (doc.getType().equals(Enums.AcDocType.INVOICE)) {
+                    purchaseSummeryInvoice = doc;
                 }
             }
         }

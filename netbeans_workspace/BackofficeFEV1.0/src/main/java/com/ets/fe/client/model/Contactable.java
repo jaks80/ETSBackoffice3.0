@@ -15,7 +15,9 @@ import javax.xml.bind.annotation.*;
 public abstract class Contactable extends PersistentObject implements Serializable{
     
     private static final long serialVersionUID = 1L;
-    
+
+        @XmlElement
+    private String contactPerson;
     @XmlElement
     private String addLine1;
     @XmlElement
@@ -45,6 +47,15 @@ public abstract class Contactable extends PersistentObject implements Serializab
     
     public abstract String calculateFullName();
 
+    
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
+    }
+    
     public String getAddLine1() {
         return addLine1;
     }

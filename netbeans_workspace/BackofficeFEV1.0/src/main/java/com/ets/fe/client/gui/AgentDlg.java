@@ -196,7 +196,7 @@ public class AgentDlg extends JDialog implements ActionListener {
         gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 2);
         jPanel1.add(jLabel1, gridBagConstraints);
 
-        jLabel2.setText("Contact Person *");
+        jLabel2.setText("Contact Person");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;

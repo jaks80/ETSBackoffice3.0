@@ -7,7 +7,6 @@ import com.ets.fe.accounts.model.TransactionReceipt;
 import com.ets.fe.accounts.model.TransactionReceipts;
 import com.ets.fe.accounts.task.PaymentTask;
 import com.ets.fe.accounts.task.ReceiptTask;
-import com.ets.fe.acdoc.model.report.InvoiceReport;
 import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
 import com.ets.fe.report.BeanJasperReport;
 import com.ets.fe.util.DateUtil;
@@ -65,11 +64,12 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
     private void search() {
         taskType = Enums.TaskType.READ;
         btnSearch.setEnabled(false);
+        Enums.ClientType clientType = documentSearchComponent.getClient_type();
         Long client_id = documentSearchComponent.getClient_id();
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
 
-        task = new ReceiptTask(Enums.ClientType.AGENT, client_id, from, to, Enums.SaleType.TKTSALES, progressBar);
+        task = new ReceiptTask(clientType, client_id, from, to, Enums.SaleType.TKTSALES, progressBar);
         task.addPropertyChangeListener(this);
         task.execute();
     }
@@ -126,7 +126,7 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
 
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel4 = new javax.swing.JPanel();
-        documentSearchComponent = new com.ets.fe.acdoc.gui.comp.ClientSearchComp(false, false, false,Enums.AgentType.ALL);
+        documentSearchComponent = new com.ets.fe.acdoc.gui.comp.ClientSearchComp(true, true, true,Enums.AgentType.ALL);
         jLabel6 = new javax.swing.JLabel();
         dtFrom = new org.jdesktop.swingx.JXDatePicker();
         jLabel8 = new javax.swing.JLabel();
@@ -464,8 +464,11 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
         int index_doc = tblPaymentDocs.getSelectedRow();
 
         if (index_pay != -1 && index_doc != -1) {
-            Long id = payments.get(index_pay).getLines().get(index_doc).getParentId();
-
+            TktingInvoiceSummery doc = payments.get(index_pay).getLines().get(index_doc);
+            if(doc.getStatus()==Enums.AcDocStatus.VOID){
+             return;
+            }
+            Long id = doc.getParentId();
             Window w = SwingUtilities.getWindowAncestor(this);
             Frame owner = w instanceof Frame ? (Frame) w : null;
             SalesInvoiceDlg dlg = new SalesInvoiceDlg(owner);
@@ -496,7 +499,7 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
 
     private void btnVoidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoidActionPerformed
         int index = tblPayment.getSelectedRow();
-        int choice = JOptionPane.showConfirmDialog(null, "VOID Payment?", "VOID Payment", JOptionPane.YES_NO_OPTION);
+        int choice = JOptionPane.showConfirmDialog(null, "VOID Payment!!!Are you sure?", "VOID Payment", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.NO_OPTION) {
             return;
         }
@@ -515,7 +518,7 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
        int index = tblPayment.getSelectedRow();
-        int choice = JOptionPane.showConfirmDialog(null, "Delete Payment?", "Delete Payment", JOptionPane.YES_NO_OPTION);
+        int choice = JOptionPane.showConfirmDialog(null, "Delete Payment!!!Are you sure?", "Delete Payment", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.NO_OPTION) {
             return;
         }
@@ -594,19 +597,24 @@ public class TSalesBatchPaymentReport extends javax.swing.JInternalFrame impleme
                 return;
             }
             int selectedRow = tblPayment.getSelectedRow();
-            if (selectedRow != -1) {
+            if (selectedRow != -1 && payments.size()>0) {
                 TransactionReceipt payment = payments.get(selectedRow);
                 populatePaymentDocuments(payment);
             }
         }
     };
 
-    private void initButton() {
-        Application.getLoggedOnUser();
-        if (Application.getLoggedOnUser().getUserType().getId() >= 2) {
-            btnVoid.setVisible(true);
+    private void initButton() {     
+        if (Application.getLoggedOnUser().getUserType().getId() >= 1) {
+            btnVoid.setVisible(true);          
         } else {
             btnVoid.setVisible(false);
+        }
+        
+        if (Application.getLoggedOnUser().getUserType().getId() >= 2) {
+            btnDelete.setVisible(true);
+        } else {
+            btnDelete.setVisible(false);
         }
     }
 

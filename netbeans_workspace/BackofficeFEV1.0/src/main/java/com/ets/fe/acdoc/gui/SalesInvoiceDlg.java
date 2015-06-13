@@ -371,6 +371,7 @@ public class SalesInvoiceDlg extends JDialog implements PropertyChangeListener {
         btnATOLFront = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Sales Invoice");
         setResizable(false);
 
         lblTitle.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N

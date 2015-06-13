@@ -9,6 +9,12 @@ import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JDesktopPane;
@@ -90,6 +96,7 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        fileChooser = new javax.swing.JFileChooser();
         jPanel3 = new javax.swing.JPanel();
         progressBar = new javax.swing.JProgressBar();
         jSeparator1 = new javax.swing.JSeparator();
@@ -110,12 +117,17 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
         btnEmail = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
         btnPrint = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        txtFilePath = new javax.swing.JTextField();
+        btnImport1 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtMessage1 = new javax.swing.JTextArea();
 
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
         setTitle("Customer Management");
-        setPreferredSize(new java.awt.Dimension(1000, 450));
+        setPreferredSize(new java.awt.Dimension(1000, 550));
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel3.setMaximumSize(new java.awt.Dimension(32767, 30));
@@ -351,14 +363,56 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
             .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Import", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+
+        txtFilePath.setEditable(false);
+        txtFilePath.setToolTipText("CSV Import:\nFORENAME,SURNAME,CONTACTPERSON,ADDLINE1,ADDLINE2,CITY,EMAIL,FAX,MOBILE,POSTCODE,PROVINCE,TELNO");
+
+        btnImport1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnImport1.setText("Import");
+        btnImport1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImport1ActionPerformed(evt);
+            }
+        });
+
+        txtMessage1.setEditable(false);
+        txtMessage1.setColumns(16);
+        txtMessage1.setFont(new java.awt.Font("Courier New", 0, 13)); // NOI18N
+        txtMessage1.setRows(5);
+        jScrollPane3.setViewportView(txtMessage1);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(txtFilePath)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnImport1))
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(txtFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4)
+                .addComponent(btnImport1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 984, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
                 .addComponent(jTabbedPane1))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -368,10 +422,13 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(4, 4, 4))
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -455,25 +512,38 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
         txtPostCode.setText("");
     }//GEN-LAST:event_txtTelNoFocusGained
 
+    private void btnImport1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImport1ActionPerformed
+        int returnVal = fileChooser.showOpenDialog(this);
+        File file = fileChooser.getSelectedFile();
+        txtFilePath.setText(file.getAbsolutePath());
+        create(convertCSV(file));
+    }//GEN-LAST:event_btnImport1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnEmail;
+    private javax.swing.JButton btnImport1;
     private javax.swing.JButton btnNew;
     private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSearch;
+    private javax.swing.JFileChooser fileChooser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblInfo;
     private javax.swing.JProgressBar progressBar;
     private org.jdesktop.swingx.JXTable tblCustomer;
+    private javax.swing.JTextField txtFilePath;
+    private javax.swing.JTextArea txtMessage1;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtPostCode;
     private javax.swing.JTextField txtTelNo;
@@ -494,5 +564,47 @@ public class CustomerFrame extends JInternalFrame implements PropertyChangeListe
                 }
             }
         }
+    }
+
+    public void create(List<Customer> customers) {
+        CustomerTask updatetask = new CustomerTask(customers, "BULKCREATE");
+        updatetask.addPropertyChangeListener(this);
+        updatetask.execute();
+    }
+        
+    public List<Customer> convertCSV(File file) {
+        List<Customer> customers = new ArrayList<>();
+        try {
+            BufferedReader bf = null;
+            bf = new BufferedReader(new FileReader(file));
+            String line = null;
+            while ((line = bf.readLine()) != null) {
+                //FORENAME,SURNAME,CONTACTPERSON,ADDLINE1,ADDLINE2,CITY,EMAIL,FAX,MOBILE,POSTCODE,PROVINCE,TELNO
+                try{
+                String[] vals = line.split(",", -1);
+                System.out.println("Name:"+vals[0]+" "+vals[1]);
+                Customer customer = new Customer();
+                customer.setForeName(vals[0]); 
+                customer.setSurName(vals[1]);                     
+                customer.setContactPerson(vals[2]);
+                customer.setAddLine1(vals[3]);
+                customer.setAddLine2(vals[4]);
+                customer.setCity(vals[5]);
+                customer.setEmail(vals[6]);
+                customer.setFax(vals[7]);
+                customer.setMobile(vals[8]);
+                customer.setPostCode(vals[9]);
+                customer.setProvince(vals[10]);
+                customer.setTelNo(vals[11]);
+                customers.add(customer);
+                }catch(Exception e){
+                
+                }
+            }
+        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
+        }
+
+        return customers;
     }
 }

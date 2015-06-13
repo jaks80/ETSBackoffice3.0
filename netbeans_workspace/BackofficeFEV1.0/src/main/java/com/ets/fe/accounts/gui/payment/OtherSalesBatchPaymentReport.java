@@ -6,6 +6,7 @@ import com.ets.fe.accounts.model.TransactionReceipt;
 import com.ets.fe.accounts.model.TransactionReceipts;
 import com.ets.fe.accounts.task.PaymentTask;
 import com.ets.fe.accounts.task.ReceiptTask;
+import com.ets.fe.acdoc.model.report.TktingInvoiceSummery;
 import com.ets.fe.acdoc_o.gui.OtherInvoiceDlg;
 import com.ets.fe.acdoc_o.model.report.OtherInvoiceSummery;
 import com.ets.fe.report.BeanJasperReport;
@@ -57,16 +58,31 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
         initComponents();
         dtFrom.setDate(DateUtil.getBeginingOfMonth());
         dtTo.setDate(DateUtil.getEndOfMonth());
+        initButton();
+    }
+
+    private void initButton() {        
+        if (Application.getLoggedOnUser().getUserType().getId() >= 1) {
+            btnVoid.setVisible(true);          
+        } else {
+            btnVoid.setVisible(false);
+        }
+        
+        if (Application.getLoggedOnUser().getUserType().getId() >= 2) {
+            btnDelete.setVisible(true);
+        } else {
+            btnDelete.setVisible(false);
+        }
     }
 
     private void search() {
         btnSearch.setEnabled(false);
         taskType = Enums.TaskType.READ;
+        Enums.ClientType clientType = documentSearchComponent.getClient_type();
         Long client_id = documentSearchComponent.getClient_id();
         Date from = dtFrom.getDate();
         Date to = dtTo.getDate();
-
-        task = new ReceiptTask(Enums.ClientType.AGENT, client_id, from, to, Enums.SaleType.OTHERSALES, progressBar);
+        task = new ReceiptTask(clientType, client_id, from, to, Enums.SaleType.OTHERSALES, progressBar);
         task.addPropertyChangeListener(this);
         task.execute();
     }
@@ -85,8 +101,8 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
         } else {
             tableModel.insertRow(0, new Object[]{"", ""});
         }
-        
-         tblPayment.setRowSelectionInterval(selectedRow, selectedRow);
+
+        tblPayment.setRowSelectionInterval(selectedRow, selectedRow);
     }
 
     private void populatePaymentDocuments(TransactionReceipt payment) {
@@ -124,7 +140,7 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
 
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel4 = new javax.swing.JPanel();
-        documentSearchComponent = new com.ets.fe.acdoc.gui.comp.ClientSearchComp(false, false, false,Enums.AgentType.ALL);
+        documentSearchComponent = new com.ets.fe.acdoc.gui.comp.ClientSearchComp(true, true, true,Enums.AgentType.ALL);
         jLabel6 = new javax.swing.JLabel();
         dtFrom = new org.jdesktop.swingx.JXDatePicker();
         jLabel8 = new javax.swing.JLabel();
@@ -159,6 +175,7 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
         btnEmail = new javax.swing.JButton();
         btnSearch = new javax.swing.JButton();
         btnVoid = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
         reportPane = new javax.swing.JScrollPane();
 
         setClosable(true);
@@ -384,6 +401,14 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
             }
         });
 
+        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delete18.png"))); // NOI18N
+        btnDelete.setPreferredSize(new java.awt.Dimension(35, 22));
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout toolBarPanelLayout = new javax.swing.GroupLayout(toolBarPanel);
         toolBarPanel.setLayout(toolBarPanelLayout);
         toolBarPanelLayout.setHorizontalGroup(
@@ -394,7 +419,9 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
                 .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
                 .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 603, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 555, Short.MAX_VALUE)
+                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
@@ -404,6 +431,7 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
             .addComponent(btnEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(btnVoid, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -453,7 +481,11 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
         int index_doc = tblPaymentDocs.getSelectedRow();
 
         if (index_pay != -1 && index_doc != -1) {
-            Long id = payments.get(index_pay).getOlines().get(index_doc).getParentId();
+            OtherInvoiceSummery doc = payments.get(index_pay).getOlines().get(index_doc);
+            if (doc.getStatus() == Enums.AcDocStatus.VOID) {
+                return;
+            }
+            Long id = doc.getParentId();
 
             Window w = SwingUtilities.getWindowAncestor(this);
             Frame owner = w instanceof Frame ? (Frame) w : null;
@@ -484,7 +516,7 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
 
     private void btnVoidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoidActionPerformed
         int index = tblPayment.getSelectedRow();
-        int choice = JOptionPane.showConfirmDialog(null, "VOID Payment?", "VOID Payment", JOptionPane.YES_NO_OPTION);
+        int choice = JOptionPane.showConfirmDialog(null, "VOID Payment!!!Are you sure?", "VOID Payment", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.NO_OPTION) {
             return;
         }
@@ -501,8 +533,28 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
         }
     }//GEN-LAST:event_btnVoidActionPerformed
 
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int index = tblPayment.getSelectedRow();
+        int choice = JOptionPane.showConfirmDialog(null, "Delete Payment!!!Are you sure?", "Delete Payment", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.NO_OPTION) {
+            return;
+        }
+
+        if (index != -1) {
+            selectedRow = index;
+            Long id = payments.get(selectedRow).getId();
+            Payment payment = new Payment();
+            payment.setId(id);
+            taskType = Enums.TaskType.DELETE;
+            paymentTask = new PaymentTask(payment, taskType);
+            paymentTask.addPropertyChangeListener(this);
+            paymentTask.execute();
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEmail;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnViewInvoice;
@@ -544,6 +596,8 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
                         populateTblPayment();
                     } else if (taskType.equals(Enums.TaskType.VOID)) {
                         search();
+                    } else if (taskType.equals(Enums.TaskType.DELETE)) {
+                        search();
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(OtherSalesBatchPaymentReport.class.getName()).log(Level.SEVERE, null, ex);
@@ -561,7 +615,7 @@ public class OtherSalesBatchPaymentReport extends javax.swing.JInternalFrame imp
                 return;
             }
             int selectedRow = tblPayment.getSelectedRow();
-            if (selectedRow != -1) {
+            if (selectedRow != -1 && payments.size() > 0) {
                 TransactionReceipt payment = payments.get(selectedRow);
                 populatePaymentDocuments(payment);
             }

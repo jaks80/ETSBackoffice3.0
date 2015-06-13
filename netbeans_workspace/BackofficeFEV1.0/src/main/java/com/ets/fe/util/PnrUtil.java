@@ -105,6 +105,14 @@ public class PnrUtil {
         }
     }
 
+    public static String calculatePartialName(String name,int length) {
+        if (name.length() < length) {
+            return name;
+        } else {
+            return name.substring(0, length);
+        }
+    }
+        
     public static Enums.TicketStatus tjqStatusConverter(String TRNC) {
 
         switch (TRNC) {

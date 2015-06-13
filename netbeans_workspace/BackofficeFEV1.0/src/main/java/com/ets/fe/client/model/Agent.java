@@ -14,8 +14,6 @@ public class Agent extends Contactable implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @XmlElement
-    private String contactPerson;
-    @XmlElement
     private String name;
     @XmlElement
     private String web;
@@ -65,14 +63,6 @@ public class Agent extends Contactable implements Serializable {
 
     public void setOfficeID(String officeID) {
         this.officeID = officeID;
-    }
-
-    public String getContactPerson() {
-        return contactPerson;
-    }
-
-    public void setContactPerson(String contactPerson) {
-        this.contactPerson = contactPerson;
     }
 
     public String getIata() {

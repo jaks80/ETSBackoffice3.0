@@ -323,8 +323,13 @@ public class ClientSearchComp extends javax.swing.JPanel implements PropertyChan
     public Enums.ClientType getContactableType() {
         return client_type;
     }
+    
     public Long getClient_id() {
         return client_id;
+    }
+
+    public Enums.ClientType getClient_type() {
+        return client_type;
     }
     
 }

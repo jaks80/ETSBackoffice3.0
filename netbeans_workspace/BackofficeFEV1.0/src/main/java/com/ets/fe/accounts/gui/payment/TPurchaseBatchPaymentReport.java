@@ -449,7 +449,11 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
         int index_doc = tblPaymentDocs.getSelectedRow();
 
         if (index_pay != -1 && index_doc != -1) {
-            Long id = payments.get(index_pay).getLines().get(index_doc).getParentId();
+            TktingInvoiceSummery doc = payments.get(index_pay).getLines().get(index_doc);
+            if(doc.getStatus()==Enums.AcDocStatus.VOID){
+             return;
+            }
+            Long id = doc.getParentId();
 
             Window w = SwingUtilities.getWindowAncestor(this);
             Frame owner = w instanceof Frame ? (Frame) w : null;
@@ -485,7 +489,7 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
 
     private void btnVoidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoidActionPerformed
         int index = tblPayment.getSelectedRow();
-        int choice = JOptionPane.showConfirmDialog(null, "VOID Payment?", "VOID Payment", JOptionPane.YES_NO_OPTION);
+        int choice = JOptionPane.showConfirmDialog(null, "VOID Payment!!!Are you sure?", "VOID Payment", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.NO_OPTION) {
             return;
         }
@@ -504,7 +508,7 @@ public class TPurchaseBatchPaymentReport extends javax.swing.JInternalFrame impl
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         int index = tblPayment.getSelectedRow();
-        int choice = JOptionPane.showConfirmDialog(null, "Delete Payment?", "Delete Payment", JOptionPane.YES_NO_OPTION);
+        int choice = JOptionPane.showConfirmDialog(null, "Delete Payment!!!Are you sure?", "Delete Payment", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.NO_OPTION) {
             return;
         }
