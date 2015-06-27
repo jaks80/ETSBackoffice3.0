@@ -186,10 +186,11 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                     DateUtil.dateToString(s.getDocIssueDate()), amount, s.getCreatedBy().calculateFullName(), s.getStatus()});
                 row++;
             }
+            tblSales.setRowSelectionInterval(0, 0);
         } else {
             model.insertRow(row, new Object[]{"", "", "", "", "", ""});
-        }
-        tblSales.setRowSelectionInterval(0, 0);
+            //tblSales.setRowSelectionInterval(-1, -1);
+        }        
     }
 
     private void populateTblPurchase() {
@@ -206,11 +207,10 @@ public class AccountingDocumentsComponent extends javax.swing.JPanel implements 
                     DateUtil.dateToString(s.getDocIssueDate()), amount, s.getStatus()});
                 row++;
             }
+            tblPurchase.setRowSelectionInterval(0, 0);
         } else {
             model.insertRow(row, new Object[]{"", "", "", "", "", ""});
-        }
-        
-        tblPurchase.setRowSelectionInterval(0, 0);
+        }                
     }
 
     /**

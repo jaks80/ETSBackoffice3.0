@@ -14,12 +14,14 @@ import com.ets.fe.util.RestClientUtil;
 public class ApplicationWSClient {
 
     public User login(String loginId, String password, String newPassword) {
-        String url = APIConfig.get("ws.user.login") + "?loginId=" + loginId + "&password=" + password;
-
-        if (newPassword != null && !newPassword.isEmpty()) {
-            url = url + "&newPassword=" + newPassword;
-        }
-        User user = RestClientUtil.getEntity(User.class, url, new User());
+        String url = APIConfig.get("ws.user.login");
+        
+        User user = new User();
+        user.setLoginID(loginId);
+        user.setPassword(password);
+        user.setNewPassword(newPassword);
+                       
+        user = RestClientUtil.postEntity(User.class, url, user);
         return user;
     }
 

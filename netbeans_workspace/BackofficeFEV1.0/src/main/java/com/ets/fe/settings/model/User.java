@@ -20,6 +20,8 @@ public class User extends Contactable implements Serializable {
     @XmlElement
     private String password;
     @XmlElement
+    private String newPassword;
+    @XmlElement
     private String surName;
     @XmlElement
     private String foreName;
@@ -126,5 +128,13 @@ public class User extends Contactable implements Serializable {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }

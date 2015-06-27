@@ -5,6 +5,7 @@ import com.ets.fe.acdoc_o.model.AccountingDocumentLine;
 import com.ets.fe.pnr.model.Pnr;
 import com.ets.fe.pnr.model.Ticket;
 import com.ets.fe.util.Enums;
+import com.ets.fe.util.PnrUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public class AcDocUtil {
 
         boolean valid = true;
         if (pnr.getTicketing_agent() == null) {
-            valid = false;
+            valid = !PnrUtil.getUnInvoicedBookedTicket(pnr, Enums.SaleType.TKTSALES).isEmpty();
         }
 
         if (pnr.getAgent() == null && pnr.getCustomer() == null) {

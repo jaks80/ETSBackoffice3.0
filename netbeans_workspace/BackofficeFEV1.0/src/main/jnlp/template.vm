@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jnlp href="launch.jnlp" codebase="http://rjnetworking.uk/app/" spec="1.0+">
+    <information>
+        <title>ETSBackoffice</title>
+        <vendor>EType Systems</vendor>
+        <homepage href=""/>
+        <description>Backoffice System for Travel Agents</description>
+        <description kind="short">Backoffice System</description>
+        <icon kind="default"  href="ETSLogo64.png"/>
+        <icon kind="shortcut" href="ETSLogo16.png" width="16" height="16"/>
+        <icon kind="shortcut" href="ETSLogo32.png" width="32" height="32"/>
+        <icon kind="shortcut" href="ETSLogo64.png" width="64" height="64"/>
+        
+        <shortcut>
+            <desktop/>
+            <menu submenu="ETSBackoffice"/>
+        </shortcut>
+    </information>
+    <update check="always"/>
+    <security>
+        <all-permissions/>
+    </security>
+    <resources>
+        <j2se version="1.8+"/>
+        <jar href="BackofficeFE.jar" main="true"/>
+        <jar href="barbecue-1.5-beta1.jar"/>
+        <jar href="commons-lang-2.6.jar"/>
+        <jar href="httpclient-4.4.jar"/>
+        <jar href="jasperreports-6.0.3.jar"/>
+        <jar href="jasperreports-extensions-3.5.3.jar"/>
+        <jar href="log4j-1.2.16.jar"/>
+        <jar href="mail-1.4.5.jar"/>
+        <jar href="poi-3.10.1.jar"/>
+        <jar href="spring-context-support-4.1.2.RELEASE.jar"/>
+        <jar href="swingx-all-1.6.4.jar"/>
+        <jar href="xalan-2.7.1.jar"/>
+        <jar href="activation-1.1.jar"/>
+        <jar href="aopalliance-1.0.jar"/>
+        <jar href="castor-core-1.3.3.jar"/>
+        <jar href="castor-xml-1.3.3.jar"/>
+        <jar href="com-jhlabs-filters-2.0.235-201002241238.jar"/>
+        <jar href="commons-beanutils-1.9.0.jar"/>
+        <jar href="commons-codec-1.5.jar"/>
+        <jar href="commons-collections-3.2.1.jar"/>
+        <jar href="commons-digester-2.1.jar"/>
+        <jar href="commons-logging-1.1.1.jar"/>
+        <jar href="ecj-4.3.1.jar"/>
+        <jar href="filters-2.0.235.jar"/>
+        <jar href="httpcore-4.4.jar"/>
+        <jar href="itext-pdfa-5.5.0.jar"/>
+        <jar href="itextpdf-5.5.0.jar"/>
+        <jar href="jackson-annotations-2.1.4.jar"/>
+        <jar href="jackson-core-2.1.4.jar"/>
+        <jar href="jackson-databind-2.1.4.jar"/>
+        <jar href="jakarta-regexp-1.4.jar"/>
+        <jar href="javax.inject-1.jar"/>
+        <jar href="jcommon-1.0.15.jar"/>
+        <jar href="jfreechart-1.0.12.jar"/>
+        <jar href="lucene-analyzers-common-4.5.1.jar"/>
+        <jar href="lucene-core-4.5.1.jar"/>
+        <jar href="lucene-queries-4.5.1.jar"/>
+        <jar href="lucene-queryparser-4.5.1.jar"/>
+        <jar href="lucene-sandbox-4.5.1.jar"/>
+        <jar href="olap4j-0.9.7.309-JS-3.jar"/>
+        <jar href="serializer-2.7.1.jar"/>
+        <jar href="spring-aop-4.1.2.RELEASE.jar"/>
+        <jar href="spring-beans-4.1.2.RELEASE.jar"/>
+        <jar href="spring-context-4.1.2.RELEASE.jar"/>
+        <jar href="spring-core-4.1.2.RELEASE.jar"/>
+        <jar href="spring-expression-4.1.2.RELEASE.jar"/>
+        <jar href="stax-1.2.0.jar"/>
+        <jar href="stax-api-1.0-2.jar"/>
+        <jar href="stax-api-1.0.1.jar"/>
+        <jar href="swing-worker-1.1.jar"/>
+        <jar href="swingx-1.6.jar"/>
+        <jar href="xml-apis-1.3.02.jar"/>    
+    </resources>
+    <application-desc main-class="com.ext.jnlptest.MainFrame">
+    </application-desc>
+</jnlp>

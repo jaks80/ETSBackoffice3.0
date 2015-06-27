@@ -3,6 +3,7 @@ package com.ets.fe.a_main;
 import com.ets.fe.APIConfig;
 import com.ets.fe.Application;
 import com.ets.fe.LockApp;
+import com.ets.fe.security.Cryptography;
 import com.ets.fe.settings.task.LoginTask;
 import com.ets.fe.settings.model.User;
 import com.ets.fe.util.DirectoryHandler;
@@ -23,34 +24,51 @@ import javax.swing.SwingUtilities;
 public class DlgLogin extends JDialog implements PropertyChangeListener {
 
     private boolean login;
-    private LoginTask task;
-    private APIConfig aPIConfig = new APIConfig();
+    private LoginTask loginTask;
+    private APIConfig aPIConfig;
     private Main main = null;
 
     public DlgLogin() {
-        //super("Login", true);
+
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension dimension = tk.getScreenSize();
         int screenWidth = dimension.width;
         int screenHeight = dimension.height;
         setLocation(screenWidth / 2 - 200, screenHeight / 2 - 200);
-        initComponents();
+        initComponents();       
+        aPIConfig = new APIConfig();
+    }
+
+    private void writeConfProps() {
+        String agentId = JOptionPane.showInputDialog("Enter 10 Digit Alpha Numaric Agent ID: ");
+
+        if (agentId != null && !agentId.isEmpty()) {
+                APIConfig.writeConfProps(agentId.trim());
+        }
+
     }
 
     private void loginTask() {
         btnLogin.setEnabled(false);
         if (txtUserName.getText().isEmpty() || txtPWord.getPassword().length == 0) {
-            JOptionPane.showMessageDialog(null, "Enter UserName & Password...", "ETSBackoffice login....", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Enter UserName & Password...",
+                    "ETSBackoffice login....", JOptionPane.WARNING_MESSAGE);
         } else {
             String loginId = txtUserName.getText().trim();
             char[] p = txtPWord.getPassword();
             char[] newP = txtNewPassword.getPassword();
-            String password = new String(p).trim();
-            String newPassword = new String(newP).trim();
 
-            task = new LoginTask(loginId, password, newPassword);
-            task.addPropertyChangeListener(this);
-            task.execute();
+            String enc_loginId = Cryptography.encryptString(loginId);
+            String enc_password = Cryptography.encryptString(p);
+            String enc_newPassword = null;
+
+            if (newP.length > 0) {
+                enc_newPassword = Cryptography.encryptString(newP);
+            }
+
+            loginTask = new LoginTask(enc_loginId, enc_password, enc_newPassword, progressBar);
+            loginTask.addPropertyChangeListener(this);
+            loginTask.execute();
         }
     }
 
@@ -102,6 +120,7 @@ public class DlgLogin extends JDialog implements PropertyChangeListener {
                     DlgLogin dlgLogin = new DlgLogin();
                     dlgLogin.setVisible(true);
                 } catch (RuntimeException ex) {
+                    ex.printStackTrace();
                     JOptionPane.showMessageDialog(null, "ETSBackoffice is already running!", "ETSBAckoffice", JOptionPane.WARNING_MESSAGE);
                     System.exit(0);
                     return;
@@ -132,6 +151,7 @@ public class DlgLogin extends JDialog implements PropertyChangeListener {
         txtPWord = new javax.swing.JPasswordField();
         txtNewPassword = new javax.swing.JPasswordField();
         lblMessage = new javax.swing.JLabel();
+        lblSettings = new javax.swing.JLabel();
         lblBanner = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -258,6 +278,20 @@ public class DlgLogin extends JDialog implements PropertyChangeListener {
         gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 2);
         jPanel1.add(lblMessage, gridBagConstraints);
 
+        lblSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/settings24.png"))); // NOI18N
+        lblSettings.setToolTipText("Enter Agent ID");
+        lblSettings.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblSettingsMouseClicked(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel1.add(lblSettings, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -311,6 +345,10 @@ public class DlgLogin extends JDialog implements PropertyChangeListener {
         }
     }//GEN-LAST:event_txtUserNameKeyReleased
 
+    private void lblSettingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSettingsMouseClicked
+        writeConfProps();
+    }//GEN-LAST:event_lblSettingsMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
@@ -321,6 +359,7 @@ public class DlgLogin extends JDialog implements PropertyChangeListener {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblBanner;
     private javax.swing.JLabel lblMessage;
+    private javax.swing.JLabel lblSettings;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JPasswordField txtNewPassword;
     private javax.swing.JPasswordField txtPWord;
@@ -334,7 +373,7 @@ public class DlgLogin extends JDialog implements PropertyChangeListener {
             progressBar.setValue(progress);
             if (progress == 100) {
                 try {
-                    User user = task.get();
+                    User user = loginTask.get();
                     if (user != null && user.getUserType() != null) {
                         txtUserName.setText(user.getLoginID());//Leave login id here for automated logout
                         txtPWord.setText("");
@@ -343,11 +382,11 @@ public class DlgLogin extends JDialog implements PropertyChangeListener {
                         Application.setLoggedOnUser(user);
                         setVisible(false);
                         Application.loadSettings();
-                        if (main == null) {                                                        
+                        if (main == null) {
                             showMainFrame(this);
-                            
+
                         }
-                                                
+
                     } else {
                         btnLogin.setEnabled(true);
                         lblMessage.setText("Could not login...");

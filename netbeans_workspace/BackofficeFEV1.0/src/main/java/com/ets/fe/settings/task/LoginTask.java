@@ -20,10 +20,11 @@ public class LoginTask extends SwingWorker<User, Integer> {
     private String newPassword;
    
 
-    public LoginTask(String loginId, String password, String newPassword) {
+    public LoginTask(String loginId, String password, String newPassword,JProgressBar progressBar) {
         this.loginId = loginId;
         this.password = password;
         this.newPassword = newPassword;
+        this.progressBar = progressBar;
     }
 
     @Override
@@ -33,11 +34,10 @@ public class LoginTask extends SwingWorker<User, Integer> {
         Progress p = new Progress();
         Thread t = new Thread(p);
         t.start();
-        
-        
+
         ApplicationWSClient client = new ApplicationWSClient();        
         User user = client.login(loginId, password, newPassword);
-                
+        
         p.cancel();
         return user;
     }
@@ -65,6 +65,7 @@ public class LoginTask extends SwingWorker<User, Integer> {
                     }
 
                     if (i == 99) {
+                        System.out.println("Bar:"+progressBar);
                         progressBar.setIndeterminate(true);
                         break;
                     }

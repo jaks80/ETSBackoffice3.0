@@ -58,13 +58,13 @@ public class Main extends JFrame implements PropertyChangeListener {
     }
 
     //private Application appSettings;
-    private APIConfig aPIConfig;
+    //private APIConfig aPIConfig;
     private String taskType = "";
 
     public Main() {
         initComponents();
         initMenu();
-        aPIConfig = new APIConfig();
+        //aPIConfig = new APIConfig();
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset,

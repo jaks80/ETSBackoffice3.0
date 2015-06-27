@@ -55,6 +55,9 @@ public class TicketingAgentComponent extends javax.swing.JPanel implements Prope
     public void populateComponent() {
 
         for (Agent a : this.agentlist) {
+            if(pnr.getTicketingAgtOid()==null){
+             return;
+            }
             if (pnr.getTicketingAgtOid().equals(a.getOfficeID())) {
                 pnr.setTicketing_agent(a);
                 setTxtAgentDetails(a);

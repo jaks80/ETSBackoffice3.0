@@ -1,0 +1,2 @@
+http://stackoverflow.com/questions/19458676/signing-a-jar-file-with-trusted-certificate-for-jws-deployment
+https://weblogs.java.net/blog/2005/05/20/signing-jars-javanet-web-start-applications

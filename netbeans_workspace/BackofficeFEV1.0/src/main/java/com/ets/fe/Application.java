@@ -6,7 +6,6 @@ import com.ets.fe.client.model.MainAgent;
 import com.ets.fe.os.model.AdditionalCharge;
 import com.ets.fe.report.model.Letterhead;
 import com.ets.fe.settings.ws.ApplicationWSClient;
-import com.itextpdf.xmp.impl.Base64;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -99,11 +98,11 @@ public class Application {
         if (loggedOnUser != null) {
             StringBuilder sb = new StringBuilder();
             sb.append(loggedOnUser.getLoginID());
-            sb.append(":");
+            sb.append("crsplitter");
             sb.append(loggedOnUser.getPassword());
             userpassword = sb.toString();
         }
-        String encodedString = Base64.encode(userpassword);
+        String encodedString = userpassword;
         return encodedString;
     }
 

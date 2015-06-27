@@ -5,6 +5,7 @@ import com.ets.fe.APIConfig;
 import com.ets.fe.Application;
 import com.ets.fe.a_main.Main;
 import com.ets.fe.pnr.ws.PnrWSClient;
+import com.ets.fe.security.Cryptography;
 import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,7 +34,7 @@ import org.apache.http.util.EntityUtils;
  */
 public class RestClientUtil {
 
-    private static final String domain = APIConfig.get("ws.domain");
+    private static final String domain = APIConfig.get("ws.domain")+"/"+Cryptography.decryptString(APIConfig.getConfProp("ws.id"))+"/"+APIConfig.get("ws.webservicepath");     
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
 
     public static void showMessage(HttpResponse response,String title) {
@@ -79,7 +80,7 @@ public class RestClientUtil {
 
     public synchronized static String getXML(String destUrl) {
         HttpClient httpClient = HttpClientBuilder.create().build();
-
+        System.out.println("Making web service call1..."+destUrl);
         int status = 0;
         String apiOutput = "";
         try {

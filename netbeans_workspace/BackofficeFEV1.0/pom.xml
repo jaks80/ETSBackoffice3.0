@@ -91,6 +91,53 @@
     </properties>
     <build>
         <plugins>
+                      <!--
+            <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>2.4</version>
+            <configuration>
+                <archive>
+                    <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+                </archive>
+            </configuration>
+        </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo.webstart</groupId>
+                <artifactId>webstart-maven-plugin</artifactId>
+                <executions>
+                    <execution>                        
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jnlp-inline</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <finalName>${artifactId}-${version}</finalName>
+                    <excludeTransitive>false</excludeTransitive>
+                    <outputJarVersions>true</outputJarVersions>
+                    
+                    <jnlp>                                               
+                        <inputTemplate>src/main/jnlp/template.vm</inputTemplate>                        
+                        <mainClass>com.ets.fe.a_main.DlgLogin</mainClass>
+                    </jnlp>
+
+                <sign>
+                        <keystore>G:\Amadeus\Security\MyKeyStore</keystore>
+                        <keypass>ets215</keypass> 
+                        <storepass>ets215</storepass> 
+                        <storetype>JKS</storetype>
+                        <alias>033644e3-12bc-11e5-bed4-b8763fad0657</alias>
+                        <verify>true</verify> 
+                    </sign>
+                    <pack200>false</pack200>
+                    <gzip>true</gzip>
+                    <outputJarVersions>false</outputJarVersions>
+                    <verbose>true</verbose>
+                </configuration>
+            </plugin>
+            -->
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -104,6 +151,7 @@
                 </executions>
                 <configuration>
                     <finalName>${artifactId}-${version}</finalName>
+                    
                     <transformers>
 
                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
@@ -112,6 +160,7 @@
                     </transformers>
                 </configuration>
             </plugin>
+                        
         </plugins>
     </build>
     <repositories>

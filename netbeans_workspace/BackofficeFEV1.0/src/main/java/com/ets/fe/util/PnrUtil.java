@@ -7,7 +7,9 @@ import com.ets.fe.pnr.model.Ticket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -125,5 +127,53 @@ public class PnrUtil {
             default:
                 return null;
         }
+    }
+    
+    public static Set<Ticket> getUnInvoicedBookedTicket(Pnr pnr, Enums.SaleType saleType) {
+        Set<Ticket> tickets = new LinkedHashSet<>();
+
+        for (Ticket t : pnr.getTickets()) {
+            if (t.getTktStatus().equals(Enums.TicketStatus.BOOK)) {
+
+                if (saleType.equals(Enums.SaleType.TKTSALES) && t.getTicketingSalesAcDoc() == null) {
+                    tickets.add(t);
+                } else if (saleType.equals(Enums.SaleType.TKTPURCHASE) && t.getTicketingPurchaseAcDoc() == null) {
+                    tickets.add(t);
+                }
+            }
+        }
+        return tickets;
+    }
+    
+    public static Set<Ticket> getUnInvoicedIssuedTicket(Pnr pnr, Enums.SaleType saleType) {
+        Set<Ticket> tickets = new LinkedHashSet<>();
+
+        for (Ticket t : pnr.getTickets()) {
+            if (t.getTktStatus().equals(Enums.TicketStatus.ISSUE)) {
+
+                if (saleType.equals(Enums.SaleType.TKTSALES) && t.getTicketingSalesAcDoc() == null) {
+                    tickets.add(t);
+                } else if (saleType.equals(Enums.SaleType.TKTPURCHASE) && t.getTicketingPurchaseAcDoc() == null) {
+                    tickets.add(t);
+                }
+            }
+        }
+        return tickets;
+    }
+    
+    public static Set<Ticket> getUnInvoicedReIssuedTicket(Pnr pnr, Enums.SaleType saleType) {
+        Set<Ticket> tickets = new LinkedHashSet<>();
+
+        for (Ticket t : pnr.getTickets()) {
+            if (t.getTktStatus().equals(Enums.TicketStatus.REISSUE)) {
+
+                if (saleType.equals(Enums.SaleType.TKTSALES) && t.getTicketingSalesAcDoc() == null) {
+                    tickets.add(t);
+                } else if (saleType.equals(Enums.SaleType.TKTPURCHASE) && t.getTicketingPurchaseAcDoc() == null) {
+                    tickets.add(t);
+                }
+            }
+        }
+        return tickets;
     }
 }
