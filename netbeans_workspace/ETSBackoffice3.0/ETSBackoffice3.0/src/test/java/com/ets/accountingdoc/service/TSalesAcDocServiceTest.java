@@ -173,7 +173,7 @@ public class TSalesAcDocServiceTest {
         issuedPnr.setTickets(issuedTickets);
         issuedPnr.setSegments(issuedSegments);
 
-        airService.savePnr(issuedPnr);
+        airService.savePnr(issuedPnr,"");
         return issuedPnr;
     }
 

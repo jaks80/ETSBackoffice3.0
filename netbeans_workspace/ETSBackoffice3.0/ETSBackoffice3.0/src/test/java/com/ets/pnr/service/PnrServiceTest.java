@@ -75,7 +75,7 @@ public class PnrServiceTest {
         bookedPnr.setTickets(bookedTickets);
         bookedPnr.setSegments(bookedSegments);
 
-        airService.savePnr(bookedPnr);
+        airService.savePnr(bookedPnr,"");
 
         Pnr persistedPnr = airService.findPnr(bookedPnr.getGdsPnr(), bookedPnr.getPnrCreationDate());
         assertNotNull(persistedPnr);
@@ -107,7 +107,7 @@ public class PnrServiceTest {
         issuedPnr.setTickets(issuedTickets);
         issuedPnr.setSegments(issuedSegments);
 
-        airService.savePnr(issuedPnr);
+        airService.savePnr(issuedPnr,"");
         assertEquals("LONU123IT", issuedPnr.getTicketingAgtOid());
         assertNotNull(issuedPnr);
 
@@ -132,7 +132,7 @@ public class PnrServiceTest {
         issuedPnr.setTickets(issuedTickets);
         issuedPnr.setSegments(issuedSegments);
 
-        airService.savePnr(issuedPnr);
+        airService.savePnr(issuedPnr,"");
         assertEquals("LONU123IT", issuedPnr.getTicketingAgtOid());
         assertNotNull(issuedPnr);
 

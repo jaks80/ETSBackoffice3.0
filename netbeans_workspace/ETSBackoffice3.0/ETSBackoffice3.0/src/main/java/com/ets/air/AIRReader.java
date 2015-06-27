@@ -48,7 +48,7 @@ public class AIRReader {
                     pnr.setTickets(new LinkedHashSet(tickets));
                     pnr.setSegments(new LinkedHashSet(segments));
                     pnr.setRemarks(new LinkedHashSet(remarks));
-                    service.savePnr(pnr);
+                    service.savePnr(pnr,air.getType());
                     break;
                 }
                 case "TRFP": {
@@ -108,11 +108,11 @@ public class AIRReader {
 //                    }
 
                     if (issued) {
-                        service.savePnr(pnr);
+                        service.savePnr(pnr,air.getType());
                     } else {
                         pnr.setTicketingAgtOid(null);
                         pnr.setTicketingAgentSine(null);
-                        service.savePnr(pnr);
+                        service.savePnr(pnr,air.getType());
                     }
                     break;
                 }

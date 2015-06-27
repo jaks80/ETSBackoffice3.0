@@ -1,5 +1,6 @@
 package com.ets.settings.service;
 
+import com.ets.security.Cryptography;
 import com.ets.security.LoginManager;
 import com.ets.settings.dao.UserDAO;
 import com.ets.settings.domain.User;
@@ -7,7 +8,6 @@ import com.ets.util.Enums;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,7 +20,7 @@ public class UserService {
     @Resource(name = "userDAO")
     private UserDAO dao;
 
-    public List<User> findAll() {
+    public List<User> findAllOperational() {
 
         List<User> users = dao.findAll(User.class);
         List<User> operational_users = new ArrayList<>();
@@ -34,13 +34,24 @@ public class UserService {
         return operational_users;
     }
 
-    public User login(String loginId, String password, String newPassword) {
+    public User login(String enc_loginId, String enc_password, String enc_newPassword) {
 
-        List<User> dbUsers = findAll();
+        String loginId = Cryptography.decryptString(enc_loginId);
+        String password = Cryptography.decryptString(enc_password);
+        String newPassword = null;
+
+        if (enc_newPassword != null) {
+            newPassword = Cryptography.decryptString(enc_newPassword);
+        }
+
+        List<User> dbUsers = dao.findAll(User.class);
         User authenticatedUser = null;
 
         for (User user : dbUsers) {
-            if (user.getLoginID().equals(loginId) && user.getPassword().equals(password) && user.isActive()) {
+            String loginIdDB = Cryptography.decryptString(user.getLoginID());
+            String passwordDB = Cryptography.decryptString(user.getPassword());
+            
+            if (loginIdDB.equals(loginId) && passwordDB.equals(password) && user.isActive()) {
                 authenticatedUser = user;
                 break;
             }
@@ -48,8 +59,13 @@ public class UserService {
 
         LoginManager.addLogin(authenticatedUser);
 
+        if (authenticatedUser != null) {
+            authenticatedUser.setLoginID(enc_loginId);
+            authenticatedUser.setPassword(enc_password);
+        }
+
         if (authenticatedUser != null && newPassword != null) {
-            authenticatedUser.setPassword(newPassword);
+            authenticatedUser.setPassword(enc_newPassword);
             dao.save(authenticatedUser);
         }
 

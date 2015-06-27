@@ -24,14 +24,12 @@ public class UserWS {
     @Autowired
     UserService service;
 
-    @GET
+    @POST
     @Path("/login")
     @PermitAll
-    public User login(@QueryParam("loginId") String loginId,
-            @QueryParam("password") String password,
-            @QueryParam("newPassword") String newPassword) {
-
-        User user = service.login(loginId, password, newPassword);
+    public User login(User user) {        
+            
+        user = service.login(user.getLoginID(), user.getPassword(), user.getNewPassword());
         return user;
     }
 
@@ -46,7 +44,7 @@ public class UserWS {
     @Path("/users")
     @RolesAllowed("SM")
     public Users find() {
-        List<User> list = service.findAll();
+        List<User> list = service.findAllOperational();
         Users users = new Users();
         users.setList(list);
         return users;

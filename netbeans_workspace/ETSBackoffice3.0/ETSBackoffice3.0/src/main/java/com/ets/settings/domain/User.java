@@ -8,6 +8,7 @@ import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -30,6 +31,8 @@ public class User extends PersistentObject implements Serializable{
     private String loginID;
     @XmlElement
     private String password;
+    @XmlElement
+    private String newPassword;
     @XmlElement
     private String surName;
     @XmlElement
@@ -95,5 +98,14 @@ public class User extends PersistentObject implements Serializable{
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    @Transient
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }

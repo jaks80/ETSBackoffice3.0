@@ -92,6 +92,25 @@ public class TSalesAcDocDAOImpl extends GenericDAOImpl<TicketingSalesAcDoc, Long
     }
 
     @Override
+    public TicketingSalesAcDoc findInvoiceByPaxName(String surName, Enums.TicketStatus tktStatus, Long pnrId) {
+        String hql = "select distinct a from TicketingSalesAcDoc as a "
+                + "left join fetch a.tickets as t "
+                + "left join fetch a.pnr as p "
+                + "where p.id = :pnrId and t.surName = :surName and t.tktStatus = :tktStatus group by a ";
+
+        Query query = getSession().createQuery(hql);
+        query.setParameter("surName", surName);
+        query.setParameter("tktStatus", tktStatus);
+        query.setParameter("pnrId", pnrId);
+        List<TicketingSalesAcDoc> result = query.list();
+        if (!result.isEmpty()) {
+            return result.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public List<TicketingSalesAcDoc> getByGDSPnr(String GdsPnr) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

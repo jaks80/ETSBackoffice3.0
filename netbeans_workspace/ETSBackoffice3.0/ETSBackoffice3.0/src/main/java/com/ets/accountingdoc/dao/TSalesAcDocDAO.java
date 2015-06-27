@@ -24,6 +24,8 @@ public interface TSalesAcDocDAO extends GenericDAO<TicketingSalesAcDoc, Long> {
     public TicketingSalesAcDoc getByTicket(Long pnrId,Long ticketNo);
 
     public List<TicketingSalesAcDoc> findAllById(Long... id);
+    
+    public TicketingSalesAcDoc findInvoiceByPaxName(String surName,Enums.TicketStatus ticketStatus, Long pnrId);
 
     public List<TicketingSalesAcDoc> getByPnrId(Long pnrId);
 

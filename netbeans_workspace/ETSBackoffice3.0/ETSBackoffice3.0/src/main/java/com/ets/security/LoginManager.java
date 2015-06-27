@@ -36,6 +36,14 @@ public class LoginManager {
 
     public synchronized static void addLogin(User user) {
         Login login = new Login();
+        
+        /*
+        Encrypt loginId and password. We need to validate logged on user every time a webservice
+        call received. Encrypting logged on users details everytime will be time consuming.
+        */
+        user.setLoginID(Cryptography.decryptString(user.getLoginID()));
+        user.setPassword(Cryptography.decryptString(user.getPassword()));
+        
         login.setUser(user);
         Date currentTime = new java.util.Date();
 

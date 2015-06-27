@@ -209,6 +209,23 @@ public class PnrUtil {
         return refundTickets;
     }
 
+    public static Set<Ticket> getUnInvoicedBookedTicket(Set<Ticket> tickets, Enums.SaleType saleType) {
+
+        Set<Ticket> bookedTickets = new LinkedHashSet<>();
+
+        for (Ticket t : tickets) {
+            if (t.getTktStatus().equals(Enums.TicketStatus.BOOK)) {
+
+                if (saleType.equals(Enums.SaleType.TKTSALES) && t.getTicketingSalesAcDoc() == null) {
+                    bookedTickets.add(t);
+                } else if (saleType.equals(Enums.SaleType.TKTPURCHASE) && t.getTicketingPurchaseAcDoc() == null) {
+                    bookedTickets.add(t);
+                }
+            }
+        }
+        return bookedTickets;
+    }
+
     public static Set<Ticket> getUnInvoicedIssuedTicket(Pnr pnr, Enums.SaleType saleType) {
         Set<Ticket> tickets = new LinkedHashSet<>();
 
