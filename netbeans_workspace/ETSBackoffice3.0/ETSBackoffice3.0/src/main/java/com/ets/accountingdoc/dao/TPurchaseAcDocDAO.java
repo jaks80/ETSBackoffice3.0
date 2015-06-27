@@ -4,11 +4,9 @@ import com.ets.GenericDAO;
 import com.ets.accountingdoc.domain.TicketingPurchaseAcDoc;
 import com.ets.util.Enums;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -28,7 +26,7 @@ public interface TPurchaseAcDocDAO extends GenericDAO<TicketingPurchaseAcDoc, Lo
 
     public List<Long> findOutstandingInvoiceReference(Enums.AcDocType acDocType, Long agentid, Date from, Date to);
 
-    public List<TicketingPurchaseAcDoc> findInvoiceByRef(List<Long> references);
+    public TicketingPurchaseAcDoc findInvoiceByRef(Long... reference);
 
     public List<TicketingPurchaseAcDoc> findOutstandingInvoice(Enums.AcDocType type, Long agentid, Date dateStart, Date dateEnd);
 

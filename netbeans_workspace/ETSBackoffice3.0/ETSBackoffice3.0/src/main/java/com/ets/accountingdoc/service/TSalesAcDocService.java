@@ -63,7 +63,7 @@ public class TSalesAcDocService {
         Set<Ticket> uninvoicedReIssuedTicket = PnrUtil.getUnInvoicedReIssuedTicket(pnr, Enums.SaleType.TKTSALES);
         Set<Ticket> uninvoicedRefundTicket = PnrUtil.getUnRefundedTickets(pnr, Enums.SaleType.TKTSALES);
         Set<Ticket> uninvoicedBookedTicket = PnrUtil.getUnInvoicedBookedTicket(pnr.getTickets(), Enums.SaleType.TKTSALES);
-        
+
         TicketingAcDocBL logic = new TicketingAcDocBL(pnr);
 
         if (!uninvoicedIssuedTicket.isEmpty()) {
@@ -111,7 +111,7 @@ public class TSalesAcDocService {
                 invoice.setAdditionalChargeLines(null);
                 draftDocument = logic.newTicketingDraftCMemo(invoice, uninvoicedRefundTicket);
             }
-        }else if (!uninvoicedBookedTicket.isEmpty()) {
+        } else if (!uninvoicedBookedTicket.isEmpty()) {
             if (invoices.isEmpty()) {
                 draftDocument = logic.newTicketingDraftInvoice(new TicketingSalesAcDoc(), uninvoicedBookedTicket);
             } else {
@@ -157,10 +157,10 @@ public class TSalesAcDocService {
         }
 
         TicketingPurchaseAcDoc p_doc = null;
-        if (!doc.getTickets().isEmpty()) {            
+        if (!doc.getTickets().isEmpty()) {
             Set<Ticket> bookedTickets = PnrUtil.getUnInvoicedBookedTicket(doc.getTickets(), Enums.SaleType.TKTPURCHASE);
-            if(bookedTickets.isEmpty()){
-             p_doc = autoCreatePurchaseDocumentUpdate(doc);
+            if (bookedTickets.isEmpty()) {
+                p_doc = autoCreatePurchaseDocumentUpdate(doc);
             }
         }
 
@@ -175,8 +175,15 @@ public class TSalesAcDocService {
         return doc;
     }
 
+    /*
+    Check if invoice already was in database. In case of VOID.
+    */
     private TicketingPurchaseAcDoc autoCreatePurchaseDocumentUpdate(TicketingSalesAcDoc doc) {
-        TicketingPurchaseAcDoc p_doc = new TicketingPurchaseAcDoc();
+        TicketingPurchaseAcDoc p_doc = purchase_service.findInvoiceByReference(doc.getReference());
+        if (p_doc == null || !p_doc.getStatus().equals(Enums.AcDocStatus.VOID)) {
+            p_doc = new TicketingPurchaseAcDoc();
+        }
+
         TicketingAcDocBL logic = new TicketingAcDocBL(doc.getPnr());
 
         p_doc = logic.newTicketingPurchaseInvoice(doc, p_doc);
@@ -298,6 +305,9 @@ public class TSalesAcDocService {
         return dao.findInvoiceByPaxName(surName, ticketStatus, pnrId);
     }
 
+    /*
+     Do not delete corresponding purchase document, it might have bsppayment
+     */
     public int delete(long id) {
         TicketingSalesAcDoc document = dao.getWithChildrenById(id);
         Set<TicketingSalesAcDoc> relatedDocs = document.getRelatedDocuments();

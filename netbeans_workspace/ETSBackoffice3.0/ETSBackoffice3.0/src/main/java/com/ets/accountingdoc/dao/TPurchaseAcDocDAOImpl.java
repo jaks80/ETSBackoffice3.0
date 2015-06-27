@@ -143,20 +143,26 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
 
     @Override
     @Transactional(readOnly = true)
-    public List<TicketingPurchaseAcDoc> findInvoiceByRef(List<Long> references) {
+    public TicketingPurchaseAcDoc findInvoiceByRef(Long... references) {
 
         String hql = "select distinct a from TicketingPurchaseAcDoc as a "
+                + "left join fetch a.additionalChargeLines as adl "
+                + "left join fetch adl.additionalCharge "
                 + "left join fetch a.relatedDocuments as r "
                 + "left join fetch a.tickets as t "
                 + "left join fetch a.pnr as p "
-                + "left join fetch p.segments "
-                + "inner join fetch p.ticketing_agent as tktingagent "
-                + "where a.status <> 2 and a.type = 0 and a.reference in (:references)";
+                + "left join fetch p.ticketing_agent as tktingagent "
+                + "where a.type = 0 and a.reference in (:references)";
+        
         Query query = getSession().createQuery(hql);
 
         query.setParameterList("references", references);
-        List<TicketingPurchaseAcDoc> dueInvoices = query.list();
-        return dueInvoices;
+        List<TicketingPurchaseAcDoc> invoices = query.list();
+        if(!invoices.isEmpty()){
+         return invoices.get(0);
+        }
+        
+        return null;
     }
 
     /**

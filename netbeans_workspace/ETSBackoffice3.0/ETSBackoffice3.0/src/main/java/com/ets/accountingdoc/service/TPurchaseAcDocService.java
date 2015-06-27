@@ -104,16 +104,9 @@ public class TPurchaseAcDocService {
         return undefineChildren(doc);
     }
     
-    public List<TicketingPurchaseAcDoc> getByReffference(int refNo) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public TicketingPurchaseAcDoc findInvoiceByReference(Long refNo) {
+        return dao.findInvoiceByRef(refNo);
     }
-//
-//    private void validateDocumentedAmount(TicketingPurchaseAcDoc doc) {
-//        if (doc.calculateDocumentedAmount().compareTo(doc.getDocumentedAmount()) != 0) {
-//            doc.setDocumentedAmount(doc.calculateDocumentedAmount());
-//            dao.save(doc);
-//        }
-//    }
 
     private TicketingPurchaseAcDoc undefineChildren(TicketingPurchaseAcDoc doc) {
         

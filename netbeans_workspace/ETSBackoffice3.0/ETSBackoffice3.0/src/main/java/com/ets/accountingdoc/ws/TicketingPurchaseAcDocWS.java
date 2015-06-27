@@ -62,11 +62,9 @@ public class TicketingPurchaseAcDocWS {
     @GET
     @Path("/byref/{refference}")
     @RolesAllowed("GS")
-    public TicketingPurchaseAcDocs getByRefNo(@PathParam("refference") Integer refference) {
-        List<TicketingPurchaseAcDoc> list = service.getByReffference(refference);
-        TicketingPurchaseAcDocs docs = new TicketingPurchaseAcDocs();
-        docs.setList(list);
-        return docs;
+    public TicketingPurchaseAcDoc getByRefNo(@PathParam("refference") Long refference) {
+        TicketingPurchaseAcDoc invoice = service.findInvoiceByReference(refference);              
+        return invoice;
     }
 
     @POST
