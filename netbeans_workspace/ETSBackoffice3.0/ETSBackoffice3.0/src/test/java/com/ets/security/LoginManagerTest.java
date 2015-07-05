@@ -67,7 +67,7 @@ public class LoginManagerTest {
 
         user = new User();
         //maks80 maks215
-        user.setLoginID("IrZr0/Cm5smlhB3Bu80Avw==partition[48, 89, -86, 57, 54, -70, -36, 57, -91, 41, -62, -28, 92, 68, -35, 57]");
+        user.setLoginID("maks80");
         user.setPassword("NXA5GYX+Vac/bJVtFEwJjw==partition[119, -19, -44, -54, -125, 4, 32, 105, 118, -102, -31, -79, 103, -128, -122, 94]");
         user.setUserType(Enums.UserType.GS);
         LoginManager.addLogin(user);

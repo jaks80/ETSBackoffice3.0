@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class LoginManager {
 
     private static Map<String, Login> loginList = new HashMap<>();
-    private static final int LOGIN_EXPIRE_TIME = 30;//Minutes
+    private static final int LOGIN_EXPIRE_TIME = 180;//Minutes
 
     public synchronized static User getUserById(Long id) {
         Iterator it = getLoginList().entrySet().iterator();
@@ -41,7 +41,7 @@ public class LoginManager {
         Encrypt loginId and password. We need to validate logged on user every time a webservice
         call received. Encrypting logged on users details everytime will be time consuming.
         */
-        user.setLoginID(Cryptography.decryptString(user.getLoginID()));
+        user.setLoginID(user.getLoginID());
         user.setPassword(Cryptography.decryptString(user.getPassword()));
         
         login.setUser(user);

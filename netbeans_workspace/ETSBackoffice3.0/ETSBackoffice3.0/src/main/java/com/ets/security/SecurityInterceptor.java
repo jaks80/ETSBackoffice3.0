@@ -57,10 +57,9 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
            
             final String[] tokenizer =authorization.get(0).split("crsplitter");            
             
-            final String enc_username = tokenizer[0];
+            final String username = tokenizer[0];
             final String enc_password = tokenizer[1];
-            
-            final String username = Cryptography.decryptString(enc_username);
+                        
             final String password = Cryptography.decryptString(enc_password);
 
             //Verify user access

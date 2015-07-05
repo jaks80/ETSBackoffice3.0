@@ -34,9 +34,8 @@ public class UserService {
         return operational_users;
     }
 
-    public User login(String enc_loginId, String enc_password, String enc_newPassword) {
-
-        String loginId = Cryptography.decryptString(enc_loginId);
+    public User login(String loginId, String enc_password, String enc_newPassword) {
+        
         String password = Cryptography.decryptString(enc_password);
         String newPassword = null;
 
@@ -48,7 +47,7 @@ public class UserService {
         User authenticatedUser = null;
 
         for (User user : dbUsers) {
-            String loginIdDB = Cryptography.decryptString(user.getLoginID());
+            String loginIdDB = user.getLoginID();
             String passwordDB = Cryptography.decryptString(user.getPassword());
             
             if (loginIdDB.equals(loginId) && passwordDB.equals(password) && user.isActive()) {
@@ -60,7 +59,7 @@ public class UserService {
         LoginManager.addLogin(authenticatedUser);
 
         if (authenticatedUser != null) {
-            authenticatedUser.setLoginID(enc_loginId);
+            authenticatedUser.setLoginID(loginId);
             authenticatedUser.setPassword(enc_password);
         }
 

@@ -175,6 +175,8 @@ public class AirService {
     public void voidSalesInvoice(Ticket ticket, Pnr persistedPnr) {
         TicketingSalesAcDoc invoice = tSalesAcDocService.findInvoiceByPaxName(ticket.getSurName(),
                 ticket.getTktStatus(), persistedPnr.getId());
-        tSalesAcDocService.voidInvoiceByAIRReader(invoice);
+        if(invoice!=null){
+         tSalesAcDocService.voidInvoiceByAIRReader(invoice);
+        }
     }
 }

@@ -397,14 +397,15 @@ public class TPurchaseAcDocDAOImpl extends GenericDAOImpl<TicketingPurchaseAcDoc
             doc.setAdditionalChargeLines(null);
         }
 
-        if (doc.getType().equals(Enums.AcDocType.INVOICE)) {
-            Set<TicketingPurchaseAcDoc> related_docs = doc.getRelatedDocuments();
-            for (TicketingPurchaseAcDoc d : related_docs) {
-                d.setParent(null);
-                d.setStatus(Enums.AcDocStatus.VOID);
-            }
-            saveBulk(new ArrayList(related_docs));
-        }
+        //Do we need to void related documents Exp: Payment for purchase invoice.
+//        if (doc.getType().equals(Enums.AcDocType.INVOICE)) {
+//            Set<TicketingPurchaseAcDoc> related_docs = doc.getRelatedDocuments();
+//            for (TicketingPurchaseAcDoc d : related_docs) {
+//                d.setParent(null);
+//                d.setStatus(Enums.AcDocStatus.VOID);
+//            }
+//            saveBulk(new ArrayList(related_docs));
+//        }
 
         doc.setStatus(Enums.AcDocStatus.VOID);
         doc.setDocumentedAmount(new BigDecimal("0.00"));
