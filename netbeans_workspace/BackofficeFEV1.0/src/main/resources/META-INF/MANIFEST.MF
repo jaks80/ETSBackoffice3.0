@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Trusted-Library: true
 Application-Library-Allowable-Codebase: *
-Trusted-Only: false
-Application-Name: ETSBackoffice (By EType Systems)
+Trusted-Only: true
+Application-Name: ETSBackoffice (By EType System)
 Permissions: all-permissions
 Created-By: 1.6.0_16 (Sun Microsystems Inc.)
 Caller-Allowable-Codebase: *
-Codebase: *
+Codebase: http://rjnetworking.uk/app/

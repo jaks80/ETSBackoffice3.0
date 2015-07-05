@@ -40,7 +40,7 @@ public class DlgLogin extends JDialog implements PropertyChangeListener {
     }
 
     private void writeConfProps() {
-        String agentId = JOptionPane.showInputDialog("Enter 10 Digit Alpha Numaric Agent ID: ");
+        String agentId = JOptionPane.showInputDialog("Enter API Key: ");
 
         if (agentId != null && !agentId.isEmpty()) {
                 APIConfig.writeConfProps(agentId.trim());
@@ -58,7 +58,7 @@ public class DlgLogin extends JDialog implements PropertyChangeListener {
             char[] p = txtPWord.getPassword();
             char[] newP = txtNewPassword.getPassword();
 
-            String enc_loginId = Cryptography.encryptString(loginId);
+            
             String enc_password = Cryptography.encryptString(p);
             String enc_newPassword = null;
 
@@ -66,7 +66,7 @@ public class DlgLogin extends JDialog implements PropertyChangeListener {
                 enc_newPassword = Cryptography.encryptString(newP);
             }
 
-            loginTask = new LoginTask(enc_loginId, enc_password, enc_newPassword, progressBar);
+            loginTask = new LoginTask(loginId, enc_password, enc_newPassword, progressBar);
             loginTask.addPropertyChangeListener(this);
             loginTask.execute();
         }

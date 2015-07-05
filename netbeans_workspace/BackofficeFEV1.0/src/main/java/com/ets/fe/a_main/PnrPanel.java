@@ -217,7 +217,7 @@ public class PnrPanel extends JPanel implements PropertyChangeListener, Componen
         }
 
         if (AcDocUtil.validateSellingFare(pnr.getTickets())&&
-                AcDocUtil.validatePurchaseFare(pnr.getTickets()) && 
+                //AcDocUtil.validatePurchaseFare(pnr.getTickets()) && 
                 AcDocUtil.validateContactable(pnr)) {
             this.taskType = "AC_DOCUMENT";
             newTSalesDocumentTask = new NewTSalesDocumentTask(pnrId, progressBar);

@@ -37,7 +37,7 @@ public class LoginTask extends SwingWorker<User, Integer> {
 
         ApplicationWSClient client = new ApplicationWSClient();        
         User user = client.login(loginId, password, newPassword);
-        
+        System.out.println("User>>>>"+user);
         p.cancel();
         return user;
     }

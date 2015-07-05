@@ -34,10 +34,10 @@ import org.apache.http.util.EntityUtils;
  */
 public class RestClientUtil {
 
-    private static final String domain = APIConfig.get("ws.domain")+"/"+Cryptography.decryptString(APIConfig.getConfProp("ws.id"))+"/"+APIConfig.get("ws.webservicepath");     
-    private static final String AUTHORIZATION_PROPERTY = "Authorization";
+    private static String domain = APIConfig.get("ws.domain")+"/"+Cryptography.decryptString(APIConfig.getConfProp("ws.id"))+"/"+APIConfig.get("ws.webservicepath");
+    private static String AUTHORIZATION_PROPERTY = "Authorization";
 
-    public static void showMessage(HttpResponse response,String title) {
+    public static void showMessage(HttpResponse response, String title) {
         BufferedReader reader = null;
         String string = "";
 
@@ -80,7 +80,7 @@ public class RestClientUtil {
 
     public synchronized static String getXML(String destUrl) {
         HttpClient httpClient = HttpClientBuilder.create().build();
-        System.out.println("Making web service call1..."+destUrl);
+        System.out.println("Making web service call1..." + destUrl);
         int status = 0;
         String apiOutput = "";
         try {
@@ -159,7 +159,8 @@ public class RestClientUtil {
         return response;
     }
 
-    public synchronized static <T> T postEntity(final Class<T> type, String destUrl, T entity) {
+    public synchronized static <T> T postEntity(Class<T> type, String destUrl, T entity) {
+        System.out.println("in static method");
         T persistentEntity = null;
         HttpClient httpClient = HttpClientBuilder.create().build();
         try {

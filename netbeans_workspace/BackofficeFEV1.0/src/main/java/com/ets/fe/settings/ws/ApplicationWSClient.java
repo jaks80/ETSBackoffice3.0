@@ -20,7 +20,7 @@ public class ApplicationWSClient {
         user.setLoginID(loginId);
         user.setPassword(password);
         user.setNewPassword(newPassword);
-                       
+        System.out.println("Property 1>>>:"+url);               
         user = RestClientUtil.postEntity(User.class, url, user);
         return user;
     }

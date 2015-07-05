@@ -9,8 +9,6 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -59,15 +57,14 @@ public class Cryptography {
             ivString = Arrays.toString(ivBytes);
 
         } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidParameterSpecException | IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException ex) {
-            Logger.getLogger(Cryptography.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
 
         return DatatypeConverter.printBase64Binary(encryptedTextBytes).concat("partition").concat(ivString);
     }
 
     
-    public static String decryptString(String encryptedString) {
-
+    public static String decryptString(String encryptedString) {    
         byte[] decryptedTextBytes = null;
 
         String[] vals = encryptedString.split("partition");
@@ -94,10 +91,11 @@ public class Cryptography {
             try {
                 decryptedTextBytes = cipher.doFinal(encryptedTextBytes);
             } catch (IllegalBlockSizeException | BadPaddingException e) {
+                e.printStackTrace();
             }
 
         } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException ex) {
-            Logger.getLogger(Cryptography.class.getName()).log(Level.SEVERE, null, ex);
+           ex.printStackTrace();
         }
         return new String(decryptedTextBytes);
     }
@@ -111,11 +109,21 @@ public class Cryptography {
     }
 
     public static void main(String[] args) throws Exception {
-        String message = "ets215Ets2!5";
+        String message = "ETSBackoffice3.0";
         System.out.println("Message: " + String.valueOf(message));
 
         String encs = encryptString(message);
         System.out.println("Encrypted: " + encs);
         System.out.println("Decrypted: " + decryptString(encs));
+        
+        
+        message = "mozir";
+        System.out.println("Message: " + String.valueOf(message));
+
+        encs = encryptString(message);
+        System.out.println("Encrypted: " + encs);
+        System.out.println("Decrypted: " + decryptString(encs));
+        
+        
     }
 }

@@ -8,8 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -26,9 +24,9 @@ public class APIConfig {
         try {
             sdkis = APIConfig.class.getResourceAsStream("/api.properties");
             apiprop = new Properties();
-            apiprop.load(sdkis);
-
-            File conf_file = new File(DirectoryHandler.getAPP_CONF_DIR().getAbsolutePath() + "/conf.properties");
+            apiprop.load(sdkis);            
+            
+            File conf_file = new File(DirectoryHandler.getAPP_CONF_DIR().getAbsolutePath() + "/conf.properties");            
             if (conf_file.exists()) {
                 is = new FileInputStream(conf_file);
                 confprop = new Properties();
@@ -36,7 +34,7 @@ public class APIConfig {
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(APIConfig.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         } finally {
             try {
                 if (sdkis != null) {
@@ -47,7 +45,7 @@ public class APIConfig {
                     is.close();
                 }
             } catch (IOException ex) {
-                Logger.getLogger(APIConfig.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         }
     }
@@ -57,29 +55,29 @@ public class APIConfig {
         try {
             Properties properties = new Properties();
             properties.setProperty("ws.id", encryptedagent_id);
-
+                        
             File file = new File(DirectoryHandler.getAPP_CONF_DIR().getAbsolutePath() + "/conf.properties");
             fileOut = new FileOutputStream(file);
             properties.store(fileOut, "Conf");
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(APIConfig.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         } catch (IOException ex) {
-            Logger.getLogger(APIConfig.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         } finally {
             try {
                 fileOut.close();
             } catch (IOException ex) {
-                Logger.getLogger(APIConfig.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         }
     }
 
-    public static String get(String key) {
+    public static String get(String key) {        
         return apiprop.getProperty(key);
     }
 
-    public static String getConfProp(String key) {
+    public static String getConfProp(String key) {        
         return confprop.getProperty(key);
     }
 }
